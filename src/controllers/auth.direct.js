@@ -68,4 +68,28 @@ const checkSubscription = async (req, res) => {
   }
 };
 
-module.exports = { directLoginMPIN, checkSubscription };
+
+const changeMPIN = async (req, res) => {
+  try {
+    const { mobile, currentMpin, newMpin } = req.body;
+    if (!mobile || !currentMpin || !newMpin) {
+      return res.status(400).json({ success: false, message: 'All fields required' });
+    }
+    if (!/^\d{6}$/.test(newMpin)) {
+      return res.status(400).json({ success: false, message: 'New MPIN must be 6 digits' });
+    }
+    const result = await pool.query('SELECT * FROM users WHERE mobile = $1', [mobile]);
+    if (!result.rows.length) return res.status(404).json({ success: false, message: 'User not found' });
+    const user = result.rows[0];
+    const valid = await bcrypt.compare(currentMpin, user.mpin_hash);
+    if (!valid) return res.status(401).json({ success: false, message: 'Current MPIN is incorrect' });
+    const newHash = await bcrypt.hash(newMpin, 10);
+    await pool.query('UPDATE users SET mpin_hash = $1, updated_at = NOW() WHERE mobile = $2', [newHash, mobile]);
+    return res.json({ success: true, message: 'MPIN updated successfully' });
+  } catch (err) {
+    console.error('changeMPIN error:', err);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+module.exports = { directLoginMPIN, checkSubscription, changeMPIN };
