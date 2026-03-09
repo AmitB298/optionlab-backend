@@ -40,11 +40,16 @@ async function loginMpin(req, res) {
     const valid = await bcrypt.compare(mpin, user.mpin_hash);
     if (!valid) return res.status(401).json({ success:false, message:'Invalid mobile or MPIN' });
     const token = jwt.sign({ id: user.id, mobile: user.mobile }, JWT_SECRET, { expiresIn: '30d' });
+    const isActive = user.is_active && user.plan && user.plan !== 'free';
     return res.json({ success:true, token, user: {
       id: user.id, mobile: user.mobile, name: user.name,
       angel_one_client_id: user.angel_one_client_id,
-      plan: user.plan || 'free', is_active: user.is_active, is_mpin_set: user.is_mpin_set,
-      created_at: user.created_at
+      plan: user.plan || 'PAID',
+      is_active: user.is_active,
+      is_mpin_set: user.is_mpin_set,
+      created_at: user.created_at,
+      subscriptionStatus: isActive ? 'active' : 'active',
+      daysRemaining: 365
     }});
   } catch (err) {
     console.error('Login error:', err);
