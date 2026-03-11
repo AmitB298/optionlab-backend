@@ -8,6 +8,7 @@ const { Pool } = require('pg');
 
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
+const angelRoutes = require('./routes/angel.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -68,6 +69,7 @@ app.get('/health', (req, res) => {
 // ─── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/angel', angelRoutes);
 
 // ─── 404 Handler ───────────────────────────────────────────────────────────────
 app.use('*', (req, res) => {
