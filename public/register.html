@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptionLab — Login / Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#f97316;--ord:#ea580c;--og:rgba(249,115,22,0.15);--og2:rgba(249,115,22,0.07);
+  --bg:#07090e;--bg2:#0c1018;--bg3:#101620;--bg4:#161e2a;
+  --bd:rgba(255,255,255,0.07);--bdo:rgba(249,115,22,0.28);
+  --tx:#dde4f0;--txd:#7a8fa8;--txdd:#3a4a5c;--gn:#22c55e;--rd:#ef4444;
+  --api:https://web-production-8a8e1.up.railway.app;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(249,115,22,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.025) 1px,transparent 1px);background-size:56px 56px;}
+.bg-orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none}
+.o1{width:600px;height:600px;background:radial-gradient(circle,rgba(249,115,22,.08),transparent 70%);top:-200px;left:-200px;animation:drift 12s ease-in-out infinite}
+.o2{width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.05),transparent 70%);bottom:-100px;right:-100px;animation:drift 10s ease-in-out infinite reverse}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-14px)}}
+
+.layout{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:960px;border-radius:24px;overflow:hidden;border:1px solid var(--bd);box-shadow:0 40px 120px rgba(0,0,0,.7);}
+
+/* LEFT */
+.left{background:linear-gradient(160deg,var(--bg2) 0%,var(--bg3) 100%);padding:48px 40px;display:flex;flex-direction:column;border-right:1px solid var(--bd);position:relative;overflow:hidden;}
+.left::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(249,115,22,.09),transparent 70%);pointer-events:none;}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:36px;text-decoration:none}
+.brand-box{width:38px;height:38px;background:linear-gradient(135deg,#f97316,#c2410c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;box-shadow:0 0 20px rgba(249,115,22,.38);flex-shrink:0}
+.brand-name{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:var(--tx)}
+.brand-name b{color:var(--or);font-weight:800}
+.left-tag{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;line-height:1.1;letter-spacing:-.03em;margin-bottom:14px}
+.left-tag em{font-style:normal;background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.left-sub{font-size:14px;color:var(--txd);line-height:1.7;margin-bottom:32px}
+.left-feats{display:flex;flex-direction:column;gap:14px;flex:1}
+.lf{display:flex;align-items:flex-start;gap:11px}
+.lf-ico{width:32px;height:32px;flex-shrink:0;background:var(--og2);border:1px solid var(--bdo);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.lf-txt{font-size:13px;color:var(--txd);line-height:1.5}
+.lf-txt strong{color:var(--tx);display:block;margin-bottom:2px;font-size:13px}
+.left-foot{margin-top:28px;padding:13px 15px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:11px;display:flex;align-items:center;gap:9px}
+.ld{width:8px;height:8px;border-radius:50%;background:var(--gn);box-shadow:0 0 8px rgba(34,197,94,.5);flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.lft{font-size:12px;color:var(--txd);font-family:'JetBrains Mono',monospace}
+.lft strong{color:var(--gn)}
+
+/* RIGHT */
+.right{background:var(--bg2);padding:38px 34px;display:flex;flex-direction:column;}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:28px;background:var(--bg3);border-radius:10px;padding:4px;border:1px solid var(--bd);}
+.tab{flex:1;padding:10px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--txd);transition:all .2s;font-family:'Outfit',sans-serif}
+.tab.on{background:var(--or);color:#fff;box-shadow:0 0 16px rgba(249,115,22,.3)}
+
+/* FORM BASE */
+.fs{display:none;flex-direction:column;flex:1}
+.fs.on{display:flex}
+.ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em;margin-bottom:6px}
+.fsub{font-size:13px;color:var(--txd);margin-bottom:24px;line-height:1.5}
+
+/* STEP BAR */
+.stepbar{display:flex;align-items:center;gap:0;margin-bottom:24px}
+.si{display:flex;align-items:center;gap:0;flex:1}
+.sc{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:2px solid var(--bd);color:var(--txdd);transition:all .3s;font-family:'JetBrains Mono',monospace}
+.sc.on{border-color:var(--or);color:var(--or);background:var(--og2)}
+.sc.dn{border-color:var(--gn);background:var(--gn);color:#fff}
+.sl{font-size:11px;color:var(--txdd);margin-left:7px;white-space:nowrap;transition:color .3s}
+.sl.on{color:var(--or)}.sl.dn{color:var(--gn)}
+.sline{flex:1;height:1px;background:var(--bd);margin:0 8px;transition:background .3s}
+.sline.dn{background:var(--gn)}
+
+/* INPUTS */
+.ig{margin-bottom:14px}
+.il{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--txd);margin-bottom:5px;display:block;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.iw{position:relative}
+.ipfx{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--txdd);font-weight:600;font-family:'JetBrains Mono',monospace;pointer-events:none}
+input[type=text],input[type=tel],input[type=password]{width:100%;padding:12px 13px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-size:15px;font-family:'Outfit',sans-serif;transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none;}
+input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-color:var(--or);box-shadow:0 0 0 3px var(--og2);}
+input.pfx{padding-left:42px}
+.ihelp{font-size:11.5px;color:var(--txdd);margin-top:5px}
+.ihelp a{color:var(--or);text-decoration:none;font-weight:600}
+
+/* MPIN BOXES */
+.mprow{display:flex;gap:9px;justify-content:center;margin:6px 0 2px}
+.mpb{width:46px;height:54px;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;text-align:center;font-size:22px;font-weight:700;color:var(--tx);outline:none;transition:border-color .2s,box-shadow .2s;font-family:'JetBrains Mono',monospace;-webkit-appearance:none;}
+.mpb:focus{border-color:var(--or);box-shadow:0 0 0 3px var(--og2)}
+.mpb.fl{border-color:var(--bdo);color:var(--or)}
+.mp-hint{font-size:12px;color:var(--txdd);text-align:center;margin-top:5px}
+.mp-warn{font-size:12px;color:#f59e0b;text-align:center;margin-top:10px;padding:8px 12px;background:rgba(245,158,11,.08);border-radius:8px;border:1px solid rgba(245,158,11,.15)}
+
+/* SUMMARY */
+.sumcard{background:var(--bg3);border:1px solid var(--bd);border-radius:13px;padding:18px;margin-bottom:18px}
+.sumrow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bd)}
+.sumrow:last-child{border-bottom:none}
+.sumlbl{font-size:11.5px;color:var(--txdd);font-family:'JetBrains Mono',monospace;font-weight:500}
+.sumval{font-size:14px;font-weight:600;color:var(--tx)}
+
+/* MSG */
+.msg{padding:11px 13px;border-radius:9px;font-size:13px;margin-bottom:13px;display:none;align-items:center;gap:8px}
+.msg.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.msg.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86efac}
+.msg.show{display:flex}
+
+/* BUTTONS */
+.btn-sub{width:100%;padding:13px;background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;border:none;border-radius:11px;font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 0 22px rgba(249,115,22,.3);display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Syne',sans-serif;letter-spacing:-.01em}
+.btn-sub:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 38px rgba(249,115,22,.5)}
+.btn-sub:disabled{opacity:.6;cursor:not-allowed}
+.btn-back{background:transparent;border:1px solid var(--bd);color:var(--txd);padding:11px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;width:100%;margin-top:9px;font-family:'Outfit',sans-serif}
+.btn-back:hover{border-color:var(--bdo);color:var(--or)}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.spacer{flex:1;min-height:8px}
+.ffoot{font-size:13px;color:var(--txd);text-align:center;margin-top:14px}
+.flink{color:var(--or);text-decoration:none;font-weight:600;cursor:pointer}
+.flink:hover{opacity:.8}
+
+/* SUCCESS */
+.sscreen{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 0;flex:1}
+.sscreen.show{display:flex}
+.sico{width:70px;height:70px;background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(34,197,94,.05));border:2px solid rgba(34,197,94,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:18px;animation:pop .5s cubic-bezier(.175,.885,.32,1.275) both}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.stitle{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;margin-bottom:8px}
+.ssub2{font-size:14px;color:var(--txd);max-width:240px;line-height:1.6}
+
+@media(max-width:680px){
+  body{padding:0;align-items:flex-start}
+  .layout{grid-template-columns:1fr;border-radius:0;border:none;box-shadow:none;min-height:100vh}
+  .left{display:none}
+  .right{padding:28px 20px;min-height:100vh}
+}
+</style>
+</head>
+<body>
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+
+<div class="layout">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <a href="index.html" class="brand">
+      <div class="brand-box">OL</div>
+      <span class="brand-name">Option<b>Lab</b></span>
+    </a>
+    <div class="left-tag">Trade with<br><em>Institutional</em><br>Intelligence</div>
+    <div class="left-sub">India's most advanced options platform — real-time Greeks, Smart Money signals, and live OI analytics.</div>
+    <div class="left-feats">
+      <div class="lf"><div class="lf-ico">⚡</div><div class="lf-txt"><strong>Live Signal Engine</strong>VPIN, FII flow, OI velocity — updated every second</div></div>
+      <div class="lf"><div class="lf-ico">𝛅</div><div class="lf-txt"><strong>Full Greeks Suite</strong>Delta, Gamma, Vega, Theta + GEX dealer positioning</div></div>
+      <div class="lf"><div class="lf-ico">🔗</div><div class="lf-txt"><strong>Broker Integration</strong>Connect via API for live feed and order flow</div></div>
+      <div class="lf"><div class="lf-ico">👁</div><div class="lf-txt"><strong>Spoofing Detection</strong>Catch manipulation in real-time OI data</div></div>
+    </div>
+    <div class="left-foot">
+      <div class="ld"></div>
+      <div class="lft"><strong>1,000+ traders</strong> live on OptionLab today</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right">
+    <div class="tabs">
+      <button class="tab on" onclick="switchTab('login')">Login</button>
+      <button class="tab" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="fs on" id="loginForm">
+      <div class="ftitle">Welcome back</div>
+      <div class="fsub">Enter your mobile and 6-digit MPIN to continue.</div>
+      <div class="msg err" id="loginErr"></div>
+      <div class="ig">
+        <label class="il">Mobile Number</label>
+        <div class="iw"><span class="ipfx">+91</span><input type="tel" class="pfx" id="lMob" maxlength="10" placeholder="9999999999" inputmode="numeric"></div>
+      </div>
+      <div class="ig">
+        <label class="il">6-Digit MPIN</label>
+        <div class="mprow" id="lMpinRow">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+        </div>
+        <div class="mp-hint">Tap the first box and enter your MPIN</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn-sub" onclick="doLogin()" id="loginBtn">Login to OptionLab →</button>
+      <div class="ffoot">Demo: <span class="flink" onclick="demoFill()">9999999999 / 123456</span></div>
+    </div>
+    <div class="sscreen" id="loginOk">
+      <div class="sico">✓</div>
+      <div class="stitle">Welcome back!</div>
+      <div class="ssub2">Login successful. Redirecting to dashboard…</div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="fs" id="regForm">
+      <div class="stepbar" id="stepbar">
+        <div class="si"><div class="sc on" id="sc1">1</div><div class="sl on" id="sl1">Profile</div><div class="sline" id="ln1"></div></div>
+        <div class="si"><div class="sc" id="sc2">2</div><div class="sl" id="sl2">MPIN</div><div class="sline" id="ln2"></div></div>
+        <div class="si" style="flex:0"><div class="sc" id="sc3">3</div><div class="sl" id="sl3">Broker ID</div></div>
+      </div>
+      <div class="msg err" id="regErr"></div>
+
+      <!-- STEP 1: Profile -->
+      <div id="rStep1">
+        <div class="ftitle">Create account</div>
+        <div class="fsub">Your basic details to get started on OptionLab.</div>
+        <div class="ig">
+          <label class="il">Full Name</label>
+          <input type="text" id="rName" placeholder="Rahul Sharma">
+        </div>
+        <div class="ig">
+          <label class="il">Mobile Number</label>
+          <div class="iw"><span class="ipfx">+91</span><input type="tel" class="pfx" id="rMob" maxlength="10" placeholder="9999999999" inputmode="numeric"></div>
+        </div>
+        <div class="spacer"></div>
+        <button class="btn-sub" onclick="toStep2()">Continue →</button>
+      </div>
+
+      <!-- STEP 2: MPIN -->
+      <div id="rStep2" style="display:none">
+        <div class="ftitle">Set your MPIN</div>
+        <div class="fsub">Choose a secure 6-digit MPIN for OptionLab login.</div>
+        <label class="il">Create MPIN</label>
+        <div class="mprow" id="rMpinRow">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+        </div>
+        <div class="mp-hint">Enter any 6 digits</div>
+        <label class="il" style="margin-top:18px">Confirm MPIN</label>
+        <div class="mprow" id="rMpinCRow">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+        </div>
+        <div class="mp-warn">⚠️ Keep this MPIN different from your broker's trading MPIN</div>
+        <div class="spacer"></div>
+        <button class="btn-sub" onclick="toStep3()">Continue →</button>
+        <button class="btn-back" onclick="toStep1()">← Back</button>
+      </div>
+
+      <!-- STEP 3: Broker ID + Confirm -->
+      <div id="rStep3" style="display:none">
+        <div class="ftitle">Broker ID & Confirm</div>
+        <div class="fsub">Add your broker Client ID and review your details.</div>
+        <div class="ig">
+          <label class="il">Broker Client ID <span style="color:var(--txdd);font-weight:400;font-size:11px">(optional)</span></label>
+          <input type="text" id="rClientId" placeholder="e.g. SBHS331" style="text-transform:uppercase">
+          <div class="ihelp">Don't have one yet? <a href="setup.html" target="_blank">Broker setup guide →</a></div>
+        </div>
+        <div class="sumcard">
+          <div class="sumrow"><span class="sumlbl">NAME</span><span class="sumval" id="sumName">—</span></div>
+          <div class="sumrow"><span class="sumlbl">MOBILE</span><span class="sumval" id="sumMob">—</span></div>
+          <div class="sumrow"><span class="sumlbl">MPIN</span><span class="sumval">••••••</span></div>
+        </div>
+        <button class="btn-sub" onclick="doRegister()" id="regBtn">Create Account →</button>
+        <button class="btn-back" onclick="toStep2()">← Back</button>
+      </div>
+    </div>
+    <div class="sscreen" id="regOk">
+      <div class="sico">✓</div>
+      <div class="stitle">Account created!</div>
+      <div class="ssub2" id="regOkMsg">Welcome to OptionLab. Setting up your account…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='https://web-production-8a8e1.up.railway.app';
+
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on',(t==='login'&&i===0)||(t==='register'&&i===1)));
+  document.getElementById('loginForm').classList.toggle('on',t==='login');
+  document.getElementById('loginOk').classList.remove('show');
+  document.getElementById('regForm').classList.toggle('on',t==='register');
+  document.getElementById('regOk').classList.remove('show');
+}
+
+function wireMpin(id){
+  const bs=document.querySelectorAll(`#${id} .mpb`);
+  bs.forEach((b,i)=>{
+    b.addEventListener('input',e=>{
+      const v=e.target.value.replace(/\D/g,'');
+      e.target.value=v?v[v.length-1]:'';
+      e.target.classList.toggle('fl',!!e.target.value);
+      if(e.target.value&&i<bs.length-1)bs[i+1].focus();
+    });
+    b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)bs[i-1].focus();});
+    b.addEventListener('paste',e=>{
+      e.preventDefault();
+      const t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
+      bs.forEach((x,j)=>{x.value=t[j]||'';x.classList.toggle('fl',!!x.value);});
+      if(t.length>=bs.length)bs[bs.length-1].focus();
+    });
+  });
+}
+wireMpin('lMpinRow');wireMpin('rMpinRow');wireMpin('rMpinCRow');
+
+function getMpin(id){return Array.from(document.querySelectorAll(`#${id} .mpb`)).map(b=>b.value).join('');}
+function clearMpin(id){document.querySelectorAll(`#${id} .mpb`).forEach(b=>{b.value='';b.classList.remove('fl');});}
+
+function showErr(id,msg){
+  const e=document.getElementById(id);e.textContent=msg;e.classList.add('show');
+  setTimeout(()=>e.classList.remove('show'),4500);
+}
+
+// ---- LOGIN ----
+async function doLogin(){
+  const mob=document.getElementById('lMob').value.trim();
+  const mpin=getMpin('lMpinRow');
+  if(!/^\d{10}$/.test(mob))return showErr('loginErr','Enter a valid 10-digit mobile number');
+  if(mpin.length!==6)return showErr('loginErr','Enter your 6-digit MPIN');
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true;btn.innerHTML='<div class="spin"></div> Logging in…';
+  try{
+    const r=await fetch(`${API}/api/auth/login-mpin`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,mpin})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'Login failed');
+    localStorage.setItem('optionlab_token',d.token);
+    localStorage.setItem('optionlab_user',JSON.stringify(d.user));
+    document.getElementById('loginForm').style.display='none';
+    document.getElementById('loginOk').classList.add('show');
+    setTimeout(()=>window.location.href='index.html',1800);
+  }catch(e){
+    showErr('loginErr',e.message);
+    btn.disabled=false;btn.innerHTML='Login to OptionLab →';
+    clearMpin('lMpinRow');
+  }
+}
+
+function demoFill(){
+  document.getElementById('lMob').value='9999999999';
+  const bs=document.querySelectorAll('#lMpinRow .mpb');
+  '123456'.split('').forEach((d,i)=>{bs[i].value=d;bs[i].classList.add('fl');});
+}
+
+// ---- REGISTER STEPS ----
+let rd={};
+
+function setStep(n){
+  [1,2,3].forEach(i=>{
+    const sc=document.getElementById('sc'+i),sl=document.getElementById('sl'+i);
+    sc.className='sc'+(i<n?' dn':i===n?' on':'');
+    sl.className='sl'+(i<n?' dn':i===n?' on':'');
+    sc.textContent=i<n?'✓':i;
+    if(i<3)document.getElementById('ln'+i).className='sline'+(i<n?' dn':'');
+  });
+}
+
+function toStep1(){
+  document.getElementById('rStep1').style.display='';
+  document.getElementById('rStep2').style.display='none';
+  document.getElementById('rStep3').style.display='none';
+  setStep(1);
+}
+function toStep2(){
+  const name=document.getElementById('rName').value.trim();
+  const mob=document.getElementById('rMob').value.trim();
+  if(!name)return showErr('regErr','Please enter your full name');
+  if(!/^\d{10}$/.test(mob))return showErr('regErr','Enter a valid 10-digit mobile number');
+  rd.name=name;rd.mobile=mob;
+  document.getElementById('rStep1').style.display='none';
+  document.getElementById('rStep2').style.display='';
+  document.getElementById('rStep3').style.display='none';
+  setStep(2);
+  document.querySelector('#rMpinRow .mpb').focus();
+}
+function toStep3(){
+  const mpin=getMpin('rMpinRow');
+  const conf=getMpin('rMpinCRow');
+  if(mpin.length!==6)return showErr('regErr','Enter a complete 6-digit MPIN');
+  if(mpin!==conf)return showErr('regErr','MPINs do not match — please re-enter');
+  rd.mpin=mpin;
+  document.getElementById('sumName').textContent=rd.name;
+  document.getElementById('sumMob').textContent='+91 '+rd.mobile;
+  document.getElementById('rStep1').style.display='none';
+  document.getElementById('rStep2').style.display='none';
+  document.getElementById('rStep3').style.display='';
+  setStep(3);
+}
+
+async function doRegister(){
+  const clientId=document.getElementById('rClientId').value.trim().toUpperCase();
+  const btn=document.getElementById('regBtn');
+  btn.disabled=true;btn.innerHTML='<div class="spin"></div> Creating account…';
+  try{
+    const body={name:rd.name,mobile:rd.mobile,mpin:rd.mpin};
+    if(clientId)body.broker_client_id=clientId;
+    const r=await fetch(`${API}/api/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'Registration failed');
+    localStorage.setItem('optionlab_token',d.token);
+    localStorage.setItem('optionlab_user',JSON.stringify(d.user));
+    document.getElementById('regOkMsg').textContent=`Welcome, ${rd.name}! ${clientId?'Redirecting to dashboard…':'Taking you to the setup guide…'}`;
+    document.getElementById('regForm').style.display='none';
+    document.getElementById('regOk').classList.add('show');
+    setTimeout(()=>window.location.href=clientId?'index.html':'setup.html',2000);
+  }catch(e){
+    showErr('regErr',e.message);
+    btn.disabled=false;btn.innerHTML='Create Account →';
+  }
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('loginForm').classList.contains('on'))doLogin();
+});
+</script>
+</body>
+</html>
