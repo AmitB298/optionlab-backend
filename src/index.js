@@ -192,6 +192,16 @@ async function runMigration() {
 }
 
 // ─── Start Server ──────────────────────────────────────────────────────────────
+
+// ── Static frontend serving (added by MIGRATE-TO-RAILWAY.ps1) ──
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
+// Catch-all: serve index.html for any non-API route
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
+});
 app.listen(PORT, async () => {
   console.log(`\nOptionLab API running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -201,3 +211,4 @@ app.listen(PORT, async () => {
   console.log('Running database migration...');
   await runMigration();
 });
+
