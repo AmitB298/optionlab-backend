@@ -14,7 +14,7 @@ async function adminLogin(req, res) {
     if (!await bcrypt.compare(mpin, admin.mpin_hash)) return res.status(401).json({ success:false, message:'Invalid credentials' });
     const token = jwt.sign({ adminId:admin.id, mobile:admin.mobile, role:'admin' }, JWT_SECRET, { expiresIn:'12h' });
     return res.json({ success:true, token, admin:{ id:admin.id, name:admin.name, mobile:admin.mobile } });
-  } catch(err) { console.error('[adminLogin]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[adminLogin]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 async function getDashboardStats(req, res) {
@@ -34,7 +34,7 @@ async function getDashboardStats(req, res) {
       freeUsers: parseInt(free.rows[0].count),
       flaggedUsers: parseInt(flagged.rows[0].count),
     }, recentUsers: recent.rows });
-  } catch(err) { console.error('[getDashboardStats]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[getDashboardStats]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 async function getAllUsers(req, res) {
@@ -52,7 +52,7 @@ async function getAllUsers(req, res) {
     );
     const total = await pool.query('SELECT COUNT(*) FROM users');
     return res.json({ success:true, users:users.rows, total:parseInt(total.rows[0].count), page:parseInt(page), pages:Math.ceil(total.rows[0].count/limit) });
-  } catch(err) { console.error('[getAllUsers]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[getAllUsers]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 async function addUser(req, res) {
@@ -69,7 +69,7 @@ async function addUser(req, res) {
       [name||null, mobile, hash, angel_client_code||null, plan||'FREE']
     );
     return res.json({ success:true, message:'User added', user:result.rows[0] });
-  } catch(err) { console.error('[addUser]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[addUser]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 async function assignPlan(req, res) {
@@ -80,7 +80,7 @@ async function assignPlan(req, res) {
   try {
     await pool.query('UPDATE users SET plan=$1 WHERE id=$2', [plan, userId]);
     return res.json({ success:true, message:`Plan updated to ${plan}` });
-  } catch(err) { console.error('[assignPlan]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[assignPlan]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 async function toggleUserStatus(req, res) {
@@ -89,7 +89,7 @@ async function toggleUserStatus(req, res) {
   try {
     await pool.query('UPDATE users SET is_active=$1 WHERE id=$2', [isActive, userId]);
     return res.json({ success:true, message:`User ${isActive?'activated':'deactivated'}` });
-  } catch(err) { console.error('[toggleUserStatus]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[toggleUserStatus]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 async function toggleFlagged(req, res) {
@@ -98,7 +98,7 @@ async function toggleFlagged(req, res) {
   try {
     await pool.query('UPDATE users SET flagged=$1 WHERE id=$2', [flagged, userId]);
     return res.json({ success:true, message:`User ${flagged?'flagged':'unflagged'}` });
-  } catch(err) { console.error('[toggleFlagged]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[toggleFlagged]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 async function setupAdmin(req, res) {
@@ -110,9 +110,10 @@ async function getUserHistory(req, res) {
   try {
     const user = await pool.query('SELECT id,name,mobile,angel_client_code,plan,is_active,flagged,role,created_at FROM users WHERE id=$1', [userId]);
     return res.json({ success:true, user:user.rows[0]||null });
-  } catch(err) { console.error('[getUserHistory]', err.message); return res.status(500).json({ success:false, message:'Server error' }); }
+  } catch(err) { console.error('[getUserHistory]', err.message); return res.status(500).json({ success:false, message:'Server error', debug: err.message }); }
 }
 
 module.exports = { adminLogin, getDashboardStats, getAllUsers, addUser, assignPlan, toggleUserStatus, toggleFlagged, setupAdmin, getUserHistory };
+
 
 
