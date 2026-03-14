@@ -2,8 +2,9 @@
  * scripts/migrate.js
  * Run: node scripts/migrate.js
  *
- * Safe to run multiple times — skips already-ran migrations.
- * Handles partially-created tables via ALTER TABLE ADD COLUMN IF NOT EXISTS.
+ * Runs ALL migrations in order. Safe to run multiple times —
+ * every migration uses IF NOT EXISTS / IF NOT EXISTS patterns.
+ * Tracks which migrations have run in a migrations_log table.
  */
 
 'use strict';
@@ -13,43 +14,30 @@ require('dotenv').config();
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
+// ─── All migrations in order ──────────────────────────────────────────────────
 const migrations = [
 
-  // 001: Core users table
+  // ─── 001: Core users table extensions ─────────────────────────────────────
   {
-    id: '001_users',
+    id: '001_users_extensions',
     sql: `
-      CREATE TABLE IF NOT EXISTS users (
-        id                SERIAL PRIMARY KEY,
-        name              VARCHAR(255) NOT NULL,
-        mobile            VARCHAR(15)  NOT NULL UNIQUE,
-        mpin_hash         VARCHAR(255) NOT NULL,
-        plan              VARCHAR(50)  DEFAULT 'FREE',
-        is_active         BOOLEAN      DEFAULT true,
-        role              VARCHAR(20)  DEFAULT 'user',
-        notes             TEXT,
-        flagged           BOOLEAN      DEFAULT false,
-        flag_reason       TEXT,
-        angel_client_code VARCHAR(20),
-        created_at        TIMESTAMPTZ  DEFAULT NOW()
-      );
+      ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS role          VARCHAR(20)  DEFAULT 'user',
+        ADD COLUMN IF NOT EXISTS notes         TEXT,
+        ADD COLUMN IF NOT EXISTS flagged       BOOLEAN      DEFAULT false,
+        ADD COLUMN IF NOT EXISTS flag_reason   TEXT,
+        ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMPTZ,
+        ADD COLUMN IF NOT EXISTS login_count   INTEGER      DEFAULT 0,
+        ADD COLUMN IF NOT EXISTS created_at    TIMESTAMPTZ  DEFAULT NOW();
 
-      -- Safely add columns that may be missing from a partial table
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS flagged           BOOLEAN     DEFAULT false;
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS flag_reason       TEXT;
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS angel_client_code VARCHAR(20);
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS notes             TEXT;
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS role              VARCHAR(20) DEFAULT 'user';
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS is_active         BOOLEAN     DEFAULT true;
-      ALTER TABLE users ADD COLUMN IF NOT EXISTS plan              VARCHAR(50) DEFAULT 'FREE';
-
-      CREATE INDEX IF NOT EXISTS idx_users_mobile  ON users(mobile);
+      CREATE INDEX IF NOT EXISTS idx_users_role    ON users(role);
       CREATE INDEX IF NOT EXISTS idx_users_plan    ON users(plan);
       CREATE INDEX IF NOT EXISTS idx_users_flagged ON users(flagged);
+      CREATE INDEX IF NOT EXISTS idx_users_mobile  ON users(mobile);
     `,
   },
 
-  // 002: Trusted devices + OTP
+  // ─── 002: Trusted devices + OTP ───────────────────────────────────────────
   {
     id: '002_trusted_devices',
     sql: `
@@ -68,6 +56,7 @@ const migrations = [
         created_at       TIMESTAMPTZ  DEFAULT NOW(),
         UNIQUE(user_id, device_id)
       );
+
       CREATE TABLE IF NOT EXISTS device_otp (
         id         SERIAL PRIMARY KEY,
         user_id    INTEGER      NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -78,12 +67,13 @@ const migrations = [
         used       BOOLEAN      DEFAULT false,
         created_at TIMESTAMPTZ  DEFAULT NOW()
       );
-      CREATE INDEX IF NOT EXISTS idx_trusted_devices_user ON trusted_devices(user_id, device_id);
-      CREATE INDEX IF NOT EXISTS idx_device_otp_user      ON device_otp(user_id, device_id);
+
+      CREATE INDEX IF NOT EXISTS idx_trusted_devices_user_device ON trusted_devices(user_id, device_id);
+      CREATE INDEX IF NOT EXISTS idx_device_otp_user_device      ON device_otp(user_id, device_id);
     `,
   },
 
-  // 003: Remember-me tokens
+  // ─── 003: Remember-me tokens ──────────────────────────────────────────────
   {
     id: '003_remember_tokens',
     sql: `
@@ -99,12 +89,13 @@ const migrations = [
         created_at   TIMESTAMPTZ  DEFAULT NOW(),
         UNIQUE(user_id, device_id)
       );
+
       CREATE INDEX IF NOT EXISTS idx_remember_tokens_hash    ON remember_tokens(token_hash);
       CREATE INDEX IF NOT EXISTS idx_remember_tokens_expires ON remember_tokens(expires_at);
     `,
   },
 
-  // 004: Admin + activity tables
+  // ─── 004: Admin tables ────────────────────────────────────────────────────
   {
     id: '004_admin_tables',
     sql: `
@@ -119,6 +110,7 @@ const migrations = [
         user_agent     TEXT,
         created_at     TIMESTAMPTZ  DEFAULT NOW()
       );
+
       CREATE TABLE IF NOT EXISTS admin_announcements (
         id         SERIAL PRIMARY KEY,
         title      VARCHAR(255) NOT NULL,
@@ -130,16 +122,18 @@ const migrations = [
         created_at TIMESTAMPTZ  DEFAULT NOW(),
         expires_at TIMESTAMPTZ
       );
+
       CREATE TABLE IF NOT EXISTS user_activity (
-        user_id        INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-        total_logins   INTEGER     DEFAULT 0,
-        last_login_at  TIMESTAMPTZ,
-        last_login_ip  VARCHAR(50),
-        last_device    VARCHAR(255),
-        session_count  INTEGER     DEFAULT 0,
-        failed_logins  INTEGER     DEFAULT 0,
+        user_id       INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        total_logins  INTEGER     DEFAULT 0,
+        last_login_at TIMESTAMPTZ,
+        last_login_ip VARCHAR(50),
+        last_device   VARCHAR(255),
+        session_count INTEGER     DEFAULT 0,
+        failed_logins INTEGER     DEFAULT 0,
         last_failed_at TIMESTAMPTZ
       );
+
       CREATE TABLE IF NOT EXISTS subscription_history (
         id          SERIAL PRIMARY KEY,
         user_id     INTEGER       NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -151,82 +145,77 @@ const migrations = [
         payment_ref VARCHAR(255),
         created_at  TIMESTAMPTZ   DEFAULT NOW()
       );
+
+      CREATE INDEX IF NOT EXISTS idx_audit_log_admin    ON admin_audit_log(admin_id);
+      CREATE INDEX IF NOT EXISTS idx_audit_log_target   ON admin_audit_log(target_user_id);
       CREATE INDEX IF NOT EXISTS idx_audit_log_created  ON admin_audit_log(created_at DESC);
       CREATE INDEX IF NOT EXISTS idx_sub_history_user   ON subscription_history(user_id);
       CREATE INDEX IF NOT EXISTS idx_user_activity_last ON user_activity(last_login_at DESC);
     `,
   },
 
-  // 005: Admins table
+  // ─── 005: Angel One credentials ───────────────────────────────────────────
   {
-    id: '005_admins',
+    id: '005_angel_credentials',
     sql: `
-      CREATE TABLE IF NOT EXISTS admins (
-        id         SERIAL PRIMARY KEY,
-        name       VARCHAR(255) NOT NULL,
-        mobile     VARCHAR(15)  NOT NULL UNIQUE,
-        mpin_hash  VARCHAR(255) NOT NULL,
-        is_active  BOOLEAN      DEFAULT true,
-        created_at TIMESTAMPTZ  DEFAULT NOW()
+      CREATE TABLE IF NOT EXISTS angel_credentials (
+        user_id     INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        api_key     TEXT NOT NULL,
+        client_code VARCHAR(50) NOT NULL,
+        mpin        TEXT NOT NULL,
+        totp_secret TEXT,
+        updated_at  TIMESTAMPTZ DEFAULT NOW()
       );
     `,
   },
-
 ];
 
+// ─── Migration runner ─────────────────────────────────────────────────────────
 async function run() {
   const client = await pool.connect();
+
   try {
     // Create migrations tracking table
     await client.query(`
       CREATE TABLE IF NOT EXISTS migrations_log (
-        id        SERIAL PRIMARY KEY,
-        migration VARCHAR(255) UNIQUE NOT NULL,
-        ran_at    TIMESTAMPTZ DEFAULT NOW()
+        id         SERIAL PRIMARY KEY,
+        migration  VARCHAR(255) UNIQUE NOT NULL,
+        ran_at     TIMESTAMPTZ DEFAULT NOW()
       )
     `);
 
-    // IMPORTANT: Remove 001_users from migrations_log if it failed before
-    // so we can re-run it cleanly with the ALTER TABLE fixes
-    const { rows: existing } = await client.query(
-      `SELECT id FROM migrations_log WHERE migration = '001_users'`
-    );
-    if (existing.length > 0) {
-      // Check if flagged column actually exists
-      const { rows: cols } = await client.query(`
-        SELECT column_name FROM information_schema.columns
-        WHERE table_name = 'users' AND column_name = 'flagged'
-      `);
-      if (cols.length === 0) {
-        console.log('  ⚠  001_users log entry found but table is incomplete — re-running...');
-        await client.query(`DELETE FROM migrations_log WHERE migration = '001_users'`);
-      }
-    }
-
     let ran = 0;
-    for (const m of migrations) {
+    for (const migration of migrations) {
+      // Check if already ran
       const { rows } = await client.query(
-        `SELECT id FROM migrations_log WHERE migration = $1`, [m.id]
+        `SELECT id FROM migrations_log WHERE migration = $1`,
+        [migration.id]
       );
       if (rows.length > 0) {
-        console.log(`  ⊘  ${m.id} — already ran`);
+        console.log(`  ⊘  ${migration.id} — already ran, skipping`);
         continue;
       }
-      console.log(`  ▶  Running ${m.id}...`);
+
+      console.log(`  ▶  Running ${migration.id}...`);
       await client.query('BEGIN');
       try {
-        await client.query(m.sql);
-        await client.query(`INSERT INTO migrations_log (migration) VALUES ($1)`, [m.id]);
+        await client.query(migration.sql);
+        await client.query(
+          `INSERT INTO migrations_log (migration) VALUES ($1)`,
+          [migration.id]
+        );
         await client.query('COMMIT');
-        console.log(`  ✓  ${m.id} — done`);
+        console.log(`  ✓  ${migration.id} — done`);
         ran++;
       } catch (err) {
         await client.query('ROLLBACK');
-        console.error(`  ✗  ${m.id} — FAILED: ${err.message}`);
+        console.error(`  ✗  ${migration.id} — FAILED: ${err.message}`);
         throw err;
       }
     }
-    console.log(`\n  ✅ Done. ${ran} migration(s) ran.\n`);
+
+    console.log(`\n  Migrations complete. ${ran} new migration(s) ran.\n`);
+
   } finally {
     client.release();
     await pool.end();
@@ -234,6 +223,6 @@ async function run() {
 }
 
 run().catch(err => {
-  console.error('\n[Migrate] Fatal:', err.message);
+  console.error('\n[Migrate] Fatal error:', err.message);
   process.exit(1);
 });

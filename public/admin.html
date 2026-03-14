@@ -2,529 +2,1340 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>OptionLab Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Jobber Pro — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #0a0c10;
-  --surface: #111318;
-  --surface2: #181c24;
-  --border: #1e2330;
-  --accent: #00d4aa;
-  --accent2: #0088ff;
-  --warn: #ff6b35;
-  --danger: #ff3d5a;
-  --text: #e8eaf0;
-  --muted: #5a6070;
-  --paid: #00d4aa;
-  --free: #5a6070;
-  --trial: #f59e0b;
-  --expired: #ff3d5a;
+:root{
+  --bg:#07080c;--sidebar:#0c0e14;--surface:#10121a;--surface2:#161923;
+  --border:#1a1f2e;--border2:#222840;
+  --amber:#f5a623;--amber-dim:rgba(245,166,35,0.1);
+  --green:#00d68f;--green-dim:rgba(0,214,143,0.08);
+  --red:#ff4757;--red-dim:rgba(255,71,87,0.1);
+  --blue:#3d8bff;--blue-dim:rgba(61,139,255,0.1);
+  --text:#e0e4f0;--muted:#444d6a;--muted2:#2a3048;
+  --radius:10px;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
 
-/* ── LOGIN ── */
-#login-screen{
-  display:flex;align-items:center;justify-content:center;min-height:100vh;
-  background: radial-gradient(ellipse at 30% 50%, #001a12 0%, var(--bg) 60%);
-}
-.login-box{
-  width:360px;padding:48px 40px;
-  background:var(--surface);border:1px solid var(--border);border-radius:16px;
-  box-shadow:0 0 60px rgba(0,212,170,0.08);
-}
-.login-logo{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px;}
-.login-title{font-size:24px;font-weight:700;margin-bottom:6px;}
-.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px;}
-.field{margin-bottom:16px;}
-.field label{display:block;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.field input{
-  width:100%;padding:12px 14px;
-  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  color:var(--text);font-family:'Sora',sans-serif;font-size:14px;outline:none;
-  transition:border-color .2s;
-}
-.field input:focus{border-color:var(--accent);}
-.btn-primary{
-  width:100%;padding:13px;margin-top:8px;
-  background:var(--accent);color:#000;border:none;border-radius:8px;
-  font-family:'Sora',sans-serif;font-weight:700;font-size:14px;cursor:pointer;
-  transition:opacity .2s,transform .1s;
-}
-.btn-primary:hover{opacity:.9;}
-.btn-primary:active{transform:scale(.98);}
-.msg{margin-top:12px;font-size:13px;color:var(--danger);text-align:center;min-height:18px;}
+/* ── Layout ── */
+.shell{display:grid;grid-template-columns:220px 1fr;height:100vh;}
 
-/* ── SHELL ── */
-#app{display:none;flex-direction:column;min-height:100vh;}
+/* ── Sidebar ── */
+.sidebar{background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.sb-logo{padding:24px 20px 16px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.2em;color:var(--amber);border-bottom:1px solid var(--border);}
+.sb-logo span{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.15em;margin-top:2px;}
+.sb-nav{flex:1;overflow-y:auto;padding:12px 0;}
+.nav-section{font-size:9px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.15em;color:var(--muted);padding:12px 20px 6px;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.15s;border-left:2px solid transparent;}
+.nav-item:hover{color:var(--text);background:var(--surface);}
+.nav-item.active{color:var(--amber);background:var(--amber-dim);border-left-color:var(--amber);}
+.nav-item .ni{font-size:15px;width:20px;text-align:center;}
+.sb-bottom{padding:16px;border-top:1px solid var(--border);}
+.admin-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:var(--radius);}
+.admin-av{width:32px;height:32px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--amber);}
+.admin-info{flex:1;min-width:0;}
+.admin-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.admin-role{font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace;}
 
-/* topbar */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:56px;
-  background:var(--surface);border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:100;
-}
-.topbar-brand{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
-.topbar-right{display:flex;align-items:center;gap:16px;}
-.admin-badge{font-size:12px;color:var(--muted);}
-.admin-name{font-size:13px;font-weight:600;color:var(--text);}
-.btn-logout{padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;transition:all .2s;}
-.btn-logout:hover{border-color:var(--danger);color:var(--danger);}
+/* ── Main ── */
+.main{display:flex;flex-direction:column;overflow:hidden;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:60px;border-bottom:1px solid var(--border);background:var(--sidebar);flex-shrink:0;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.content{flex:1;overflow-y:auto;padding:28px;}
 
-/* nav tabs */
-.nav-tabs{
-  display:flex;gap:4px;padding:12px 28px 0;
-  background:var(--surface);border-bottom:1px solid var(--border);
-}
-.nav-tab{
-  padding:8px 18px 10px;font-size:13px;font-weight:600;color:var(--muted);
-  border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;
-  transition:all .2s;letter-spacing:.3px;
-}
-.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.nav-tab:hover:not(.active){color:var(--text);}
+/* ── Pages ── */
+.page{display:none;}
+.page.active{display:block;}
 
-/* content */
-.content{flex:1;padding:28px;}
-.tab-pane{display:none;}
-.tab-pane.active{display:block;}
+/* ── Stat cards ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat-card.amber::before{background:var(--amber);}
+.stat-card.green::before{background:var(--green);}
+.stat-card.blue::before{background:var(--blue);}
+.stat-card.red::before{background:var(--red);}
+.stat-label{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1;letter-spacing:0.02em;}
+.stat-card.amber .stat-val{color:var(--amber);}
+.stat-card.green .stat-val{color:var(--green);}
+.stat-card.blue  .stat-val{color:var(--blue);}
+.stat-card.red   .stat-val{color:var(--red);}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace;}
 
-/* stat cards */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px;}
-.stat-card{
-  padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  transition:border-color .2s;
-}
-.stat-card:hover{border-color:var(--accent);}
-.stat-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-.stat-value{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;line-height:1;}
-.stat-value.green{color:var(--accent);}
-.stat-value.blue{color:var(--accent2);}
-.stat-value.orange{color:var(--trial);}
-.stat-value.red{color:var(--danger);}
+/* ── Section card ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
+.card-title{font-size:13px;font-weight:700;letter-spacing:0.03em;}
+.card-body{padding:20px;}
 
-/* section header */
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.section-title{font-size:15px;font-weight:700;letter-spacing:.3px;}
-.search-box{
-  padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;
-  color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;width:220px;
-  transition:border-color .2s;
-}
-.search-box:focus{border-color:var(--accent);}
+/* ── Table ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{text-align:left;padding:10px 14px;font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;cursor:pointer;}
+tbody tr:hover{background:var(--surface2);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:12px 14px;vertical-align:middle;}
+.td-mono{font-family:'IBM Plex Mono',monospace;font-size:12px;}
 
-/* table */
-.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-table{width:100%;border-collapse:collapse;}
-th{padding:11px 16px;text-align:left;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;}
-td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:rgba(255,255,255,.02);}
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+.badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,214,143,0.2);}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,71,87,0.2);}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.2);}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(61,139,255,0.2);}
+.badge-muted{background:var(--muted2);color:var(--muted);border:1px solid var(--border2);}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot-green{background:var(--green);box-shadow:0 0 4px var(--green);}
+.dot-red{background:var(--red);}
+.dot-amber{background:var(--amber);}
 
-/* badges */
-.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px;}
-.badge-paid{background:rgba(0,212,170,.15);color:var(--paid);}
-.badge-free{background:rgba(90,96,112,.15);color:var(--free);}
-.badge-trial{background:rgba(245,158,11,.15);color:var(--trial);}
-.badge-expired{background:rgba(255,61,90,.15);color:var(--expired);}
-.badge-active{background:rgba(0,212,170,.1);color:var(--accent);}
-.badge-inactive{background:rgba(255,61,90,.1);color:var(--danger);}
-.badge-flagged{background:rgba(255,107,53,.15);color:var(--warn);}
+/* ── Inputs ── */
+.inp{background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text);outline:none;transition:border-color 0.15s;}
+.inp:focus{border-color:var(--amber);}
+.inp::placeholder{color:var(--muted);}
+.inp-sm{padding:7px 10px;font-size:12px;}
+select.inp{cursor:pointer;}
 
-/* action buttons */
-.action-btn{
-  padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;
-  border:1px solid transparent;transition:all .15s;background:transparent;
-}
-.action-btn.plan{color:var(--accent2);border-color:rgba(0,136,255,.3);}
-.action-btn.plan:hover{background:rgba(0,136,255,.1);}
-.action-btn.toggle{color:var(--muted);border-color:var(--border);}
-.action-btn.toggle:hover{color:var(--text);border-color:var(--muted);}
-.action-btn.flag{color:var(--warn);border-color:rgba(255,107,53,.3);}
-.action-btn.flag:hover{background:rgba(255,107,53,.1);}
+/* ── Buttons ── */
+.btn{padding:8px 16px;border-radius:8px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all 0.15s;letter-spacing:0.03em;}
+.btn-amber{background:var(--amber);color:#000;}
+.btn-amber:hover{background:#ffc040;}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--muted);color:var(--text);}
+.btn-red{background:var(--red-dim);border:1px solid rgba(255,71,87,0.3);color:var(--red);}
+.btn-red:hover{background:rgba(255,71,87,0.2);}
+.btn-green{background:var(--green-dim);border:1px solid rgba(0,214,143,0.3);color:var(--green);}.btn-blue{background:var(--blue-dim);border:1px solid rgba(61,139,255,0.3);color:var(--blue);}
+.btn-green:hover{background:rgba(0,214,143,0.15);}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn:disabled{opacity:0.4;cursor:not-allowed;}
 
-/* add user form */
-.form-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:500px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.form-grid .full{grid-column:1/-1;}
-.form-title{font-size:15px;font-weight:700;margin-bottom:20px;}
-.btn-submit{
-  margin-top:8px;padding:11px 24px;
-  background:var(--accent);color:#000;border:none;border-radius:8px;
-  font-family:'Sora',sans-serif;font-weight:700;font-size:13px;cursor:pointer;
-  transition:opacity .2s;
-}
-.btn-submit:hover{opacity:.85;}
-.form-msg{margin-top:12px;font-size:13px;min-height:18px;}
-.form-msg.ok{color:var(--accent);}
-.form-msg.err{color:var(--danger);}
+/* ── Search bar ── */
+.search-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
 
-/* pagination */
-.pagination{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:16px;}
-.page-btn{
-  padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;
-  color:var(--muted);font-size:12px;cursor:pointer;transition:all .2s;
-}
-.page-btn:hover{border-color:var(--accent);color:var(--accent);}
-.page-btn:disabled{opacity:.3;cursor:default;}
-.page-info{font-size:12px;color:var(--muted);}
+/* ── Pagination ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.pg-btns{display:flex;gap:6px;}
+.pg-btn{padding:5px 10px;border-radius:6px;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:12px;font-family:'IBM Plex Mono',monospace;transition:all 0.15s;}
+.pg-btn:hover:not(:disabled){border-color:var(--amber);color:var(--amber);}
+.pg-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.pg-btn.current{background:var(--amber-dim);border-color:var(--amber);color:var(--amber);}
 
-/* loader */
-.loader{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
+/* ── Modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;}
+.modal-bg.show{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:14px;width:560px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;transition:color 0.15s;padding:4px;}
+.modal-close:hover{color:var(--text);}
+.modal-body{padding:24px;overflow-y:auto;flex:1;}
+.modal-foot{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
 
-/* modal */
-.modal-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;
-  align-items:center;justify-content:center;
-}
-.modal-overlay.open{display:flex;}
-.modal{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:28px;width:340px;
-}
-.modal-title{font-size:15px;font-weight:700;margin-bottom:16px;}
-.modal-footer{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
-.btn-cancel{padding:8px 16px;background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:13px;cursor:pointer;}
-.btn-confirm{padding:8px 16px;background:var(--accent2);border:none;border-radius:7px;color:#fff;font-weight:600;font-size:13px;cursor:pointer;}
+/* ── Detail rows ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.detail-item{padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;}
+.detail-label{font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:5px;}
+.detail-val{font-size:13px;color:var(--text);font-weight:500;}
+.detail-val.mono{font-family:'IBM Plex Mono',monospace;font-size:12px;}
 
-select.field-select{
-  width:100%;padding:11px 14px;
-  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  color:var(--text);font-family:'Sora',sans-serif;font-size:14px;outline:none;
-}
+/* ── Action buttons row ── */
+.action-row{display:flex;flex-wrap:wrap;gap:8px;padding:16px;background:var(--surface2);border-radius:10px;margin-bottom:20px;}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;transform:translateY(80px);opacity:0;transition:all 0.3s;font-family:'IBM Plex Mono',monospace;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{background:var(--green-dim);border:1px solid rgba(0,214,143,0.3);color:var(--green);}
+.toast.err{background:var(--red-dim);border:1px solid rgba(255,71,87,0.3);color:var(--red);}
+
+/* ── Flag indicator ── */
+.flag-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--red);font-family:'IBM Plex Mono',monospace;}
+
+/* ── Checkbox ── */
+input[type=checkbox]{accent-color:var(--amber);width:15px;height:15px;cursor:pointer;}
+
+/* ── Login screen ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center;}
+.login-card{width:380px;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:40px;text-align:center;}
+.login-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.2em;color:var(--amber);margin-bottom:4px;}
+.login-sub{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted);margin-bottom:32px;}
+.login-field{text-align:left;margin-bottom:14px;}
+.login-field label{display:block;font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:7px;}
+.login-field input{width:100%;}
+#msg-login{font-size:12px;color:var(--red);font-family:'IBM Plex Mono',monospace;margin-bottom:12px;min-height:18px;}
+
+/* ── Responsive ── */
+@media(max-width:1100px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ── LOGIN ── -->
 <div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">OptionLab</div>
-    <div class="login-title">Admin Console</div>
-    <div class="login-sub">Sign in with your admin credentials</div>
-    <div class="field"><label>Mobile Number</label><input id="l-mobile" type="tel" placeholder="10-digit mobile" maxlength="10"/></div>
-    <div class="field"><label>MPIN</label><input id="l-mpin" type="password" placeholder="6-digit MPIN" maxlength="20"/></div>
-    <button class="btn-primary" onclick="doLogin()">Sign In</button>
-    <div class="msg" id="login-msg"></div>
+  <div class="login-card">
+    <div class="login-logo">JOBBER PRO</div>
+    <div class="login-sub">ADMIN CONTROL PANEL</div>
+    <div id="msg-login"></div>
+    <div class="login-field">
+      <label>Admin Mobile</label>
+      <input class="inp" type="tel" id="lg-mobile" placeholder="9000000001" maxlength="10"/>
+    </div>
+    <div class="login-field">
+      <label>MPIN</label>
+      <input class="inp" type="password" id="lg-mpin" placeholder="••••" maxlength="4"
+             onkeyup="if(event.key==='Enter')doAdminLogin()"/>
+    </div>
+    <button class="btn btn-amber" style="width:100%;padding:12px;margin-top:8px;font-size:14px" onclick="doAdminLogin()" id="btn-lg">
+      Login to Admin →
+    </button>
   </div>
 </div>
 
-<!-- APP SHELL -->
-<div id="app">
-  <div class="topbar">
-    <div class="topbar-brand">OptionLab · Admin</div>
-    <div class="topbar-right">
-      <span class="admin-badge">Logged in as</span>
-      <span class="admin-name" id="admin-name-display">—</span>
-      <button class="btn-logout" onclick="logout()">Logout</button>
+<!-- ── SHELL ── -->
+<div class="shell" id="shell" style="display:none">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-logo">JOBBER PRO <span>ADMIN PANEL</span></div>
+    <nav class="sb-nav">
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" onclick="showPage('page-dash')" data-page="page-dash">
+        <span class="ni">◈</span> Dashboard
+      </div>
+      <div class="nav-section">Users</div>
+      <div class="nav-item" onclick="showPage('page-users')" data-page="page-users">
+        <span class="ni">◉</span> All Users
+      </div>
+      <div class="nav-item" onclick="showPage('page-flagged')" data-page="page-flagged">
+        <span class="ni">⚑</span> Flagged
+      </div>
+      <div class="nav-section">System</div>
+      <div class="nav-item" onclick="showPage('page-audit')" data-page="page-audit">
+        <span class="ni">◎</span> Audit Log
+      </div>
+      <div class="nav-item" onclick="showPage('page-announce')" data-page="page-announce">
+        <span class="ni">◈</span> Announcements
+      </div>
+      <div class="nav-section">Data</div>
+      <div class="nav-item" onclick="showPage('page-export')" data-page="page-export">
+        <span class="ni">↓</span> Export Data
+      </div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="admin-chip">
+        <div class="admin-av" id="sb-av">A</div>
+        <div class="admin-info">
+          <div class="admin-name" id="sb-name">Admin</div>
+          <div class="admin-role">SUPER ADMIN</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showTab('dashboard',this)">Dashboard</button>
-    <button class="nav-tab" onclick="showTab('users',this)">Users</button>
-    <button class="nav-tab" onclick="showTab('add-user',this)">Add User</button>
-  </div>
-
-  <div class="content">
-
-    <!-- DASHBOARD -->
-    <div class="tab-pane active" id="tab-dashboard">
-      <div class="stats-grid" id="stats-grid">
-        <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value green" id="s-total">—</div></div>
-        <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value blue" id="s-active">—</div></div>
-        <div class="stat-card"><div class="stat-label">Paid</div><div class="stat-value green" id="s-paid">—</div></div>
-        <div class="stat-card"><div class="stat-label">Free</div><div class="stat-value" id="s-free">—</div></div>
-        <div class="stat-card"><div class="stat-label">Flagged</div><div class="stat-value red" id="s-flagged">—</div></div>
-      </div>
-
-      <div class="section-header"><div class="section-title">Recent Registrations</div></div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>#</th><th>Name</th><th>Mobile</th><th>Plan</th><th>Status</th><th>Joined</th></tr></thead>
-          <tbody id="recent-tbody"><tr><td colspan="6" class="loader">Loading…</td></tr></tbody>
-        </table>
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">DASHBOARD</div>
+      <div class="topbar-right">
+        <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted)" id="topbar-time"></span>
+        <button class="btn btn-ghost btn-sm" onclick="adminLogout()">Logout</button>
       </div>
     </div>
 
-    <!-- USERS -->
-    <div class="tab-pane" id="tab-users">
-      <div class="section-header">
-        <div class="section-title">All Users</div>
-        <input class="search-box" id="search-input" placeholder="Search name or mobile…" oninput="debounceSearch()"/>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Name</th><th>Mobile</th><th>Angel Code</th><th>Plan</th><th>Status</th><th>Flagged</th><th>Joined</th><th>Actions</th></tr></thead>
-          <tbody id="users-tbody"><tr><td colspan="8" class="loader">Loading…</td></tr></tbody>
-        </table>
-      </div>
-      <div class="pagination">
-        <button class="page-btn" id="btn-prev" onclick="changePage(-1)">← Prev</button>
-        <span class="page-info" id="page-info">—</span>
-        <button class="page-btn" id="btn-next" onclick="changePage(1)">Next →</button>
-      </div>
-    </div>
+    <div class="content">
 
-    <!-- ADD USER -->
-    <div class="tab-pane" id="tab-add-user">
-      <div class="form-card">
-        <div class="form-title">Add New User</div>
-        <div class="form-grid">
-          <div class="field full"><label>Full Name</label><input id="au-name" type="text" placeholder="e.g. Rahul Sharma" maxlength="12"/></div>
-          <div class="field"><label>Mobile</label><input id="au-mobile" type="tel" placeholder="10-digit" maxlength="10"/></div>
-          <div class="field"><label>MPIN</label><input id="au-mpin" type="password" placeholder="6-digit" maxlength="6"/></div>
-          <div class="field"><label>Angel Client Code</label><input id="au-angel" type="text" placeholder="Optional"/></div>
-          <div class="field">
-            <label>Plan</label>
-            <select id="au-plan" class="field-select">
-              <option value="FREE">FREE</option>
-              <option value="TRIAL">TRIAL</option>
-              <option value="PAID">PAID</option>
-            </select>
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dash">
+        <div class="stat-grid" id="stat-grid">
+          <div class="stat-card amber"><div class="stat-label">Total Users</div><div class="stat-val" id="s-total">—</div><div class="stat-sub" id="s-new7">Loading...</div></div>
+          <div class="stat-card green"><div class="stat-label">Paid Users</div><div class="stat-val" id="s-paid">—</div><div class="stat-sub" id="s-active">— active</div></div>
+          <div class="stat-card blue"><div class="stat-label">DAU / MAU</div><div class="stat-val" id="s-dau">—</div><div class="stat-sub" id="s-mau">— monthly</div></div>
+          <div class="stat-card red"><div class="stat-label">Flagged</div><div class="stat-val" id="s-flagged">—</div><div class="stat-sub">Needs review</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Recent Users</div><button class="btn btn-ghost btn-sm" onclick="showPage('page-users')">View All</button></div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Mobile</th><th>Plan</th><th>Status</th><th>Joined</th></tr></thead>
+                <tbody id="recent-users-body"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Recent Audit</div><button class="btn btn-ghost btn-sm" onclick="showPage('page-audit')">View All</button></div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Action</th><th>Target</th><th>Time</th></tr></thead>
+                <tbody id="recent-audit-body"><tr><td colspan="3" style="text-align:center;color:var(--muted);padding:24px">Loading...</td></tr></tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <button class="btn-submit" onclick="addUser()">Add User</button>
-        <div class="form-msg" id="au-msg"></div>
       </div>
-    </div>
 
+      <!-- ── USERS ── -->
+      <div class="page" id="page-users">
+        <div class="search-row">
+          <input class="inp" style="width:220px" type="text" id="u-search" placeholder="Search name / mobile..." oninput="debounceSearch()"/>
+          <select class="inp inp-sm" id="u-plan" onchange="loadUsers()">
+            <option value="">All Plans</option>
+            <option value="FREE">FREE</option>
+            <option value="PAID">PAID</option>
+            <option value="TRIAL">TRIAL</option>
+          </select>
+          <select class="inp inp-sm" id="u-status" onchange="loadUsers()">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <select class="inp inp-sm" id="u-sort" onchange="loadUsers()">
+            <option value="created_at">Newest First</option>
+            <option value="last_login_at">Last Login</option>
+            <option value="name">Name A-Z</option>
+          </select>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button class="btn btn-red btn-sm" id="btn-bulk-deact" disabled onclick="bulkAction('deactivate')" title="Deactivate selected">⊘ Deactivate</button>
+            <button class="btn btn-green btn-sm" id="btn-bulk-act" disabled onclick="bulkAction('activate')" title="Activate selected">✓ Activate</button>
+            <button class="btn btn-ghost btn-sm" id="btn-bulk-logout" disabled onclick="bulkAction('force_logout')">⏏ Logout All</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="chk-all" onchange="toggleAllChecks()"/></th>
+                  <th>User</th><th>Mobile</th><th>Plan</th><th>Status</th>
+                  <th>Devices</th><th>Angel</th><th>Last Login</th><th>Logins</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-body">
+                <tr><td colspan="10" style="text-align:center;color:var(--muted);padding:32px">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span id="pg-info">—</span>
+            <div class="pg-btns" id="pg-btns"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── FLAGGED ── -->
+      <div class="page" id="page-flagged">
+        <div class="card">
+          <div class="card-head"><div class="card-title">⚑ Flagged Users</div></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>User</th><th>Mobile</th><th>Plan</th><th>Flag Reason</th><th>Actions</th></tr></thead>
+              <tbody id="flagged-body"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AUDIT LOG ── -->
+      <div class="page" id="page-audit">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Audit Log</div></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Action</th><th>Admin</th><th>Target User</th><th>IP</th><th>Result</th><th>Time</th></tr></thead>
+              <tbody id="audit-body"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span id="audit-pg-info">—</span>
+            <div class="pg-btns" id="audit-pg-btns"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ANNOUNCEMENTS ── -->
+      <div class="page" id="page-announce">
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-head"><div class="card-title">New Announcement</div></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <input class="inp" type="text" id="an-title" placeholder="Announcement title"/>
+              <select class="inp" id="an-type">
+                <option value="info">ℹ Info</option>
+                <option value="warning">⚠ Warning</option>
+                <option value="critical">🚨 Critical</option>
+              </select>
+              <select class="inp" id="an-target">
+                <option value="all">All Users</option>
+                <option value="paid">PAID Only</option>
+                <option value="free">FREE Only</option>
+              </select>
+              <input class="inp" type="datetime-local" id="an-expires" placeholder="Expires (optional)"/>
+            </div>
+            <textarea class="inp" id="an-body" rows="3" style="width:100%;resize:vertical;margin-bottom:12px" placeholder="Announcement message..."></textarea>
+            <button class="btn btn-amber" onclick="createAnnouncement()">Publish Announcement</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-title">Active Announcements</div></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Title</th><th>Type</th><th>Target</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="announce-body"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── EXPORT DATA ── -->
+      <div class="page" id="page-export">
+
+        <!-- Quick export cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px">
+          <div class="card" style="border-top:2px solid var(--green)">
+            <div class="card-body" style="text-align:center;padding:24px 16px">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--green);margin-bottom:6px">USERS</div>
+              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">All user accounts</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <button class="btn btn-green btn-sm" onclick="quickExport('users','csv')">↓ CSV</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('users','xlsx')">↓ Excel</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('users','json')">↓ JSON</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="border-top:2px solid var(--amber)">
+            <div class="card-body" style="text-align:center;padding:24px 16px">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--amber);margin-bottom:6px">SUBSCRIPTIONS</div>
+              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">Plan change history</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <button class="btn btn-amber btn-sm" onclick="quickExport('subscriptions','csv')">↓ CSV</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('subscriptions','xlsx')">↓ Excel</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('subscriptions','json')">↓ JSON</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="border-top:2px solid var(--blue)">
+            <div class="card-body" style="text-align:center;padding:24px 16px">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--blue);margin-bottom:6px">DEVICES</div>
+              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">Trusted device list</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <button class="btn btn-blue btn-sm" onclick="quickExport('devices','csv')">↓ CSV</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('devices','xlsx')">↓ Excel</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('devices','json')">↓ JSON</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="border-top:2px solid var(--red)">
+            <div class="card-body" style="text-align:center;padding:24px 16px">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--red);margin-bottom:6px">AUDIT LOG</div>
+              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">Admin action log</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <button class="btn btn-red btn-sm" onclick="quickExport('audit','csv')">↓ CSV</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('audit','xlsx')">↓ Excel</button>
+                <button class="btn btn-ghost btn-sm" onclick="quickExport('audit','json')">↓ JSON</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced filtered export -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Advanced Export — With Filters</div>
+            <button class="btn btn-amber btn-sm" onclick="runAdvancedExport()">↓ Export Now</button>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px">
+              <div>
+                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Dataset</div>
+                <select class="inp" style="width:100%" id="exp-type">
+                  <option value="users">Users</option>
+                  <option value="subscriptions">Subscriptions</option>
+                  <option value="devices">Devices</option>
+                  <option value="audit">Audit Log</option>
+                  <option value="summary">Full Summary (JSON)</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Format</div>
+                <select class="inp" style="width:100%" id="exp-format">
+                  <option value="csv">CSV (Excel-compatible)</option>
+                  <option value="xlsx">Excel (.xls)</option>
+                  <option value="json">JSON</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Plan Filter</div>
+                <select class="inp" style="width:100%" id="exp-plan">
+                  <option value="">All Plans</option>
+                  <option value="PAID">PAID</option>
+                  <option value="FREE">FREE</option>
+                  <option value="TRIAL">TRIAL</option>
+                  <option value="SUSPENDED">SUSPENDED</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Status Filter</div>
+                <select class="inp" style="width:100%" id="exp-status">
+                  <option value="">All Status</option>
+                  <option value="active">Active Only</option>
+                  <option value="inactive">Inactive Only</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">From Date</div>
+                <input class="inp" type="date" id="exp-from" style="width:100%"/>
+              </div>
+              <div>
+                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">To Date</div>
+                <input class="inp" type="date" id="exp-to" style="width:100%"/>
+              </div>
+            </div>
+
+            <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
+              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:4px">ℹ WHAT IS EXPORTED</div>
+              <div id="exp-info" style="font-size:12px;color:var(--text)">
+                Users: ID, Name, Mobile, Plan, Status, Flagged, Joined, Last Login, Total Logins, Last IP, Devices count, Angel Creds status, Admin Notes
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export log (recent exports this session) -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Export History (This Session)</div></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Dataset</th><th>Format</th><th>Filters</th><th>Time</th><th></th></tr></thead>
+              <tbody id="export-log-body">
+                <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px;font-family:'IBM Plex Mono',monospace;font-size:12px">No exports yet this session</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ── USER DETAIL MODAL ── -->
+<div class="modal-bg" id="modal-user">
+  <div class="modal" style="width:700px">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-uname">USER DETAIL</div>
+      <button class="modal-close" onclick="closeModal('modal-user')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-ubody">Loading...</div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-user')">Close</button>
+    </div>
   </div>
 </div>
 
-<!-- PLAN MODAL -->
-<div class="modal-overlay" id="plan-modal">
-  <div class="modal">
-    <div class="modal-title">Change Plan</div>
-    <div class="field">
-      <label>Select Plan</label>
-      <select id="modal-plan" class="field-select">
-        <option value="FREE">FREE</option>
-        <option value="TRIAL">TRIAL</option>
-        <option value="PAID">PAID</option>
-        <option value="EXPIRED">EXPIRED</option>
-      </select>
+<!-- ── ACTION MODAL ── -->
+<div class="modal-bg" id="modal-action">
+  <div class="modal" style="width:420px">
+    <div class="modal-head">
+      <div class="modal-title" id="action-title">ACTION</div>
+      <button class="modal-close" onclick="closeModal('modal-action')">✕</button>
     </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-confirm" onclick="confirmPlan()">Save</button>
+    <div class="modal-body" id="action-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-action')">Cancel</button>
+      <button class="btn btn-amber" id="action-confirm" onclick="executeAction()">Confirm</button>
     </div>
   </div>
 </div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
-const BASE = '';   // same origin
-let TOKEN = '';
+// ══════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════
+const API    = '/api/admin';
+const PUBAPI = '/api/admin';
+let TOKEN    = localStorage.getItem('admin_token') || '';
+let ADMIN    = JSON.parse(localStorage.getItem('admin_info') || 'null');
 let currentPage = 1;
-let totalPages = 1;
-let searchTimer = null;
-let planUserId = null;
+let pendingAction = null;
+let selectedUsers = new Set();
+let searchTimer   = null;
 
-// ── AUTH ──
-async function doLogin() {
-  const mobile = document.getElementById('l-mobile').value.trim();
-  const mpin   = document.getElementById('l-mpin').value.trim();
-  const msg    = document.getElementById('login-msg');
-  msg.textContent = '';
-  if (!mobile || !mpin) { msg.textContent = 'Enter mobile and MPIN'; return; }
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  if (TOKEN && ADMIN) {
+    showShell();
+  }
+});
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('topbar-time').textContent =
+    now.toLocaleDateString('en-IN') + '  ' + now.toLocaleTimeString('en-IN');
+}
+
+// ══════════════════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════════════════
+async function doAdminLogin() {
+  const mobile = document.getElementById('lg-mobile').value.trim();
+  const mpin   = document.getElementById('lg-mpin').value.trim();
+  const btn    = document.getElementById('btn-lg');
+  const msg    = document.getElementById('msg-login');
+
+  if (!mobile || mpin.length < 4) { msg.textContent = 'Enter mobile and 4-digit MPIN'; return; }
+
+  btn.disabled = true; btn.textContent = 'Verifying...';
+
   try {
-    const r = await fetch('/api/admin/login', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({mobile, mpin})
+    const res  = await fetch(`${PUBAPI}/login`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ mobile, mpin }),
     });
-    const d = await r.json();
-    if (!d.success) { msg.textContent = d.message; return; }
-    TOKEN = d.token;
-    document.getElementById('admin-name-display').textContent = d.admin.name || d.admin.mobile;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    loadDashboard();
-  } catch(e) { msg.textContent = 'Connection error'; }
+    const data = await res.json();
+
+    if (data.token) {
+      TOKEN = data.token;
+      ADMIN = data.admin;
+      localStorage.setItem('admin_token', TOKEN);
+      localStorage.setItem('admin_info', JSON.stringify(ADMIN));
+      showShell();
+    } else {
+      msg.textContent = data.error || 'Login failed';
+    }
+  } catch(e) {
+    msg.textContent = 'Connection error';
+  }
+  btn.disabled = false; btn.textContent = 'Login to Admin →';
 }
 
-function logout() {
-  TOKEN = '';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('l-mpin').value = '';
+function showShell() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('shell').style.display = 'grid';
+
+  const name = ADMIN?.name || 'Admin';
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-av').textContent   = name.charAt(0).toUpperCase();
+
+  loadDashboard();
+  loadUsers();
+  loadFlagged();
+  loadAudit();
+  loadAnnouncements();
 }
 
-// ── TABS ──
-function showTab(name, btn) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  btn.classList.add('active');
-  if (name === 'dashboard') loadDashboard();
-  if (name === 'users') { currentPage = 1; loadUsers(); }
+function adminLogout() {
+  localStorage.removeItem('admin_token');
+  localStorage.removeItem('admin_info');
+  TOKEN = ''; ADMIN = null;
+  location.reload();
 }
 
-// ── DASHBOARD ──
+// ══════════════════════════════════════════════════════════
+// API HELPER
+// ══════════════════════════════════════════════════════════
+async function api(path, opts = {}) {
+  const res = await fetch(`${API}${path}`, {
+    ...opts,
+    headers: {
+      'Content-Type':  'application/json',
+      'Authorization': `Bearer ${TOKEN}`,
+      ...(opts.headers || {}),
+    },
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  if (res.status === 401) { adminLogout(); return null; }
+  return res.json();
+}
+
+// ══════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════
+const PAGE_TITLES = {
+  'page-dash':'DASHBOARD','page-users':'ALL USERS','page-flagged':'FLAGGED USERS',
+  'page-audit':'AUDIT LOG','page-announce':'ANNOUNCEMENTS','page-export':'EXPORT DATA',
+};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`[data-page="${id}"]`)?.classList.add('active');
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[id] || 'ADMIN';
+}
+
+// ══════════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════════
 async function loadDashboard() {
-  try {
-    const r = await fetch('/api/admin/dashboard', { headers:{ Authorization:'Bearer '+TOKEN } });
-    const d = await r.json();
-    if (!d.success) return;
-    const s = d.stats;
-    document.getElementById('s-total').textContent   = s.totalUsers;
-    document.getElementById('s-active').textContent  = s.activeUsers;
-    document.getElementById('s-paid').textContent    = s.paidUsers;
-    document.getElementById('s-free').textContent    = s.freeUsers;
-    document.getElementById('s-flagged').textContent = s.flaggedUsers;
-    const tbody = document.getElementById('recent-tbody');
-    if (!d.recentUsers.length) { tbody.innerHTML = '<tr><td colspan="6" class="loader">No users yet</td></tr>'; return; }
-    tbody.innerHTML = d.recentUsers.map((u,i) => `
-      <tr>
-        <td style="color:var(--muted);font-family:'JetBrains Mono',monospace">${i+1}</td>
-        <td>${u.name||'—'}</td>
-        <td style="font-family:'JetBrains Mono',monospace">${u.mobile}</td>
+  const data = await api('/stats');
+  if (!data) return;
+
+  const u = data.users, a = data.activity, r = data.revenue;
+  document.getElementById('s-total').textContent   = u.total;
+  document.getElementById('s-new7').textContent    = `+${u.new_7d} this week`;
+  document.getElementById('s-paid').textContent    = u.paid;
+  document.getElementById('s-active').textContent  = `${u.active} active accounts`;
+  document.getElementById('s-dau').textContent     = a.dau;
+  document.getElementById('s-mau').textContent     = `${a.mau} monthly`;
+  document.getElementById('s-flagged').textContent = u.flagged;
+
+  // Recent users
+  const ur = await api('/users?limit=5&sort=created_at');
+  if (ur?.users) {
+    document.getElementById('recent-users-body').innerHTML = ur.users.map(u => `
+      <tr onclick="openUser(${u.id})">
+        <td>${esc(u.name||'—')}</td>
+        <td class="td-mono">${esc(u.mobile)}</td>
         <td>${planBadge(u.plan)}</td>
-        <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-inactive">Inactive</span>'}</td>
-        <td style="color:var(--muted);font-size:12px">${fmtDate(u.created_at)}</td>
-      </tr>`).join('');
-  } catch(e) { console.error(e); }
+        <td>${statusBadge(u.is_active)}</td>
+        <td class="td-mono" style="color:var(--muted)">${fmtDate(u.created_at)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Recent audit
+  const ar = await api('/audit?limit=8');
+  if (ar?.logs) {
+    document.getElementById('recent-audit-body').innerHTML = ar.logs.slice(0,8).map(l => `
+      <tr>
+        <td><span class="badge badge-muted">${esc(l.action)}</span></td>
+        <td class="td-mono" style="color:var(--muted)">${esc(l.target_name||'—')}</td>
+        <td class="td-mono" style="color:var(--muted)">${fmtDate(l.created_at)}</td>
+      </tr>
+    `).join('');
+  }
 }
 
-// ── USERS ──
-async function loadUsers(page=currentPage) {
-  const search = document.getElementById('search-input')?.value.trim()||'';
-  const tbody  = document.getElementById('users-tbody');
-  tbody.innerHTML = '<tr><td colspan="8" class="loader">Loading…</td></tr>';
-  try {
-    const q = new URLSearchParams({ page, limit:20, search });
-    const r = await fetch(`/api/admin/users?${q}`, { headers:{ Authorization:'Bearer '+TOKEN } });
-    const d = await r.json();
-    if (!d.success) { tbody.innerHTML = '<tr><td colspan="8" class="loader">Error loading users</td></tr>'; return; }
-    totalPages = d.pages||1;
-    document.getElementById('page-info').textContent = `Page ${d.page} of ${totalPages} · ${d.total} users`;
-    document.getElementById('btn-prev').disabled = d.page <= 1;
-    document.getElementById('btn-next').disabled = d.page >= totalPages;
-    if (!d.users.length) { tbody.innerHTML = '<tr><td colspan="8" class="loader">No users found</td></tr>'; return; }
-    tbody.innerHTML = d.users.map(u => `
-      <tr>
-        <td>${u.name||'—'}</td>
-        <td style="font-family:'JetBrains Mono',monospace">${u.mobile}</td>
-        <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">${u.angel_client_code||'—'}</td>
-        <td>${planBadge(u.plan)}</td>
-        <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-inactive">Inactive</span>'}</td>
-        <td>${u.flagged ? '<span class="badge badge-flagged">Flagged</span>' : '<span style="color:var(--muted);font-size:12px">—</span>'}</td>
-        <td style="color:var(--muted);font-size:12px">${fmtDate(u.created_at)}</td>
-        <td style="white-space:nowrap">
-          <button class="action-btn plan" onclick="openPlanModal(${u.id})">Plan</button>
-          <button class="action-btn toggle" onclick="toggleStatus(${u.id},${!u.is_active})">${u.is_active?'Deactivate':'Activate'}</button>
-          <button class="action-btn flag" onclick="toggleFlag(${u.id},${!u.flagged})">${u.flagged?'Unflag':'Flag'}</button>
-        </td>
-      </tr>`).join('');
-  } catch(e) { tbody.innerHTML = '<tr><td colspan="8" class="loader">Connection error</td></tr>'; }
+// ══════════════════════════════════════════════════════════
+// USERS LIST
+// ══════════════════════════════════════════════════════════
+async function loadUsers(page = 1) {
+  currentPage = page;
+  const search = document.getElementById('u-search')?.value || '';
+  const plan   = document.getElementById('u-plan')?.value   || '';
+  const status = document.getElementById('u-status')?.value || '';
+  const sort   = document.getElementById('u-sort')?.value   || 'created_at';
+
+  const qs = new URLSearchParams({ page, limit: 20, search, plan, status, sort }).toString();
+  const data = await api(`/users?${qs}`);
+  if (!data) return;
+
+  selectedUsers.clear();
+  document.getElementById('chk-all').checked = false;
+  updateBulkButtons();
+
+  const tbody = document.getElementById('users-body');
+  if (!data.users.length) {
+    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:32px">No users found</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.users.map(u => `
+    <tr>
+      <td><input type="checkbox" class="row-chk" value="${u.id}" onchange="toggleCheck(${u.id})"/></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${u.flagged ? '<span title="Flagged" style="color:var(--red)">⚑</span>' : ''}
+          <span style="font-weight:600;cursor:pointer;color:var(--text)" onclick="openUser(${u.id})">${esc(u.name||'—')}</span>
+        </div>
+      </td>
+      <td class="td-mono">${esc(u.mobile)}</td>
+      <td>${planBadge(u.plan)}</td>
+      <td>${statusBadge(u.is_active)}</td>
+      <td class="td-mono" style="color:${u.trusted_devices>0?'var(--green)':'var(--muted)'}">
+        ${u.trusted_devices} device${u.trusted_devices!=1?'s':''}
+      </td>
+      <td>${u.has_angel_credentials
+        ? '<span class="badge badge-green">✓ Set</span>'
+        : '<span class="badge badge-muted">—</span>'}</td>
+      <td class="td-mono" style="color:var(--muted)">${u.last_login_at ? fmtDate(u.last_login_at) : '—'}</td>
+      <td class="td-mono" style="color:var(--muted)">${u.total_logins||0}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="openUser(${u.id})">View</button>
+          <button class="btn btn-${u.is_active?'red':'green'} btn-sm"
+            onclick="quickToggle(${u.id},${!u.is_active},'${esc(u.name||u.mobile)}')">
+            ${u.is_active ? 'Deact' : 'Act'}
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  renderPagination(data.pagination, 'pg-info', 'pg-btns', loadUsers);
 }
 
 function debounceSearch() {
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => { currentPage=1; loadUsers(1); }, 400);
+  searchTimer = setTimeout(() => loadUsers(1), 400);
 }
 
-function changePage(dir) {
-  const np = currentPage + dir;
-  if (np < 1 || np > totalPages) return;
-  currentPage = np;
-  loadUsers(currentPage);
+// ══════════════════════════════════════════════════════════
+// CHECKBOXES & BULK
+// ══════════════════════════════════════════════════════════
+function toggleCheck(uid) {
+  if (selectedUsers.has(uid)) selectedUsers.delete(uid);
+  else selectedUsers.add(uid);
+  updateBulkButtons();
 }
 
-// ── ACTIONS ──
-async function toggleStatus(userId, isActive) {
-  try {
-    const r = await fetch(`/api/admin/users/${userId}/status`, {
-      method:'PATCH', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
-      body: JSON.stringify({isActive})
+function toggleAllChecks() {
+  const all = document.getElementById('chk-all').checked;
+  document.querySelectorAll('.row-chk').forEach(c => {
+    c.checked = all;
+    const uid = parseInt(c.value);
+    if (all) selectedUsers.add(uid);
+    else selectedUsers.delete(uid);
+  });
+  updateBulkButtons();
+}
+
+function updateBulkButtons() {
+  const n = selectedUsers.size;
+  ['btn-bulk-deact','btn-bulk-act','btn-bulk-logout'].forEach(id => {
+    document.getElementById(id).disabled = n === 0;
+  });
+}
+
+async function bulkAction(action) {
+  if (!selectedUsers.size) return;
+  const userIds = [...selectedUsers];
+  const labels  = {activate:'Activate', deactivate:'Deactivate', force_logout:'Force Logout'};
+  if (!confirm(`${labels[action]} ${userIds.length} selected user(s)?`)) return;
+
+  const data = await api('/users/bulk-action', {
+    method: 'POST', body: { userIds, action },
+  });
+  if (data?.success) { toast(data.message, 'ok'); loadUsers(currentPage); }
+  else toast(data?.error || 'Failed', 'err');
+}
+
+// ══════════════════════════════════════════════════════════
+// FLAGGED
+// ══════════════════════════════════════════════════════════
+async function loadFlagged() {
+  const data = await api('/users?flagged=true&limit=100');
+  if (!data) return;
+
+  document.getElementById('flagged-body').innerHTML = data.users.length
+    ? data.users.map(u => `
+        <tr>
+          <td style="font-weight:600;cursor:pointer" onclick="openUser(${u.id})">${esc(u.name||'—')}</td>
+          <td class="td-mono">${esc(u.mobile)}</td>
+          <td>${planBadge(u.plan)}</td>
+          <td style="color:var(--red);font-size:12px">${esc(u.flag_reason||'—')}</td>
+          <td>
+            <button class="btn btn-ghost btn-sm" onclick="unflagUser(${u.id})">Clear Flag</button>
+          </td>
+        </tr>`)
+      .join('')
+    : `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">No flagged users</td></tr>`;
+}
+
+async function unflagUser(uid) {
+  const data = await api(`/users/${uid}/flag`, { method:'PATCH', body:{flagged:false,flag_reason:null} });
+  if (data?.success) { toast('Flag cleared','ok'); loadFlagged(); loadUsers(currentPage); }
+}
+
+// ══════════════════════════════════════════════════════════
+// USER DETAIL MODAL
+// ══════════════════════════════════════════════════════════
+async function openUser(uid) {
+  document.getElementById('modal-uname').textContent = 'LOADING...';
+  document.getElementById('modal-ubody').innerHTML   = '<div style="text-align:center;padding:40px;color:var(--muted)">Loading user details...</div>';
+  openModal('modal-user');
+
+  const data = await api(`/users/${uid}`);
+  if (!data) return;
+
+  const u  = data.user;
+  document.getElementById('modal-uname').textContent = (u.name || u.mobile).toUpperCase();
+
+  document.getElementById('modal-ubody').innerHTML = `
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="btn btn-${u.is_active?'red':'green'} btn-sm"
+        onclick="closeModal('modal-user');quickToggle(${u.id},${!u.is_active},'${esc(u.name||u.mobile)}')">
+        ${u.is_active ? '⊘ Deactivate' : '✓ Activate'}
+      </button>
+      <button class="btn btn-amber btn-sm" onclick="showChangePlan(${u.id},'${u.plan}')">
+        ↑ Change Plan
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="showResetMpin(${u.id})">
+        ⌘ Reset MPIN
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="forceLogout(${u.id})">
+        ⏏ Force Logout
+      </button>
+      <button class="btn btn-${u.flagged?'amber':'red'} btn-sm"
+        onclick="showFlagUser(${u.id},${u.flagged})">
+        ⚑ ${u.flagged ? 'Unflag' : 'Flag User'}
+      </button>
+    </div>
+
+    <!-- Details -->
+    <div class="detail-grid" style="margin-bottom:20px">
+      <div class="detail-item"><div class="detail-label">Mobile</div><div class="detail-val mono">${esc(u.mobile)}</div></div>
+      <div class="detail-item"><div class="detail-label">Name</div><div class="detail-val">${esc(u.name||'—')}</div></div>
+      <div class="detail-item"><div class="detail-label">Plan</div><div class="detail-val">${planBadge(u.plan)}</div></div>
+      <div class="detail-item"><div class="detail-label">Status</div><div class="detail-val">${statusBadge(u.is_active)}</div></div>
+      <div class="detail-item"><div class="detail-label">Total Logins</div><div class="detail-val mono">${u.total_logins||0}</div></div>
+      <div class="detail-item"><div class="detail-label">Last Login</div><div class="detail-val mono">${u.last_login_at?fmtDate(u.last_login_at):'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Last IP</div><div class="detail-val mono">${esc(u.last_login_ip||'—')}</div></div>
+      <div class="detail-item"><div class="detail-label">Angel Creds</div><div class="detail-val">${u.has_angel_creds?'<span class="badge badge-green">Set</span>':'<span class="badge badge-muted">Not set</span>'}</div></div>
+      <div class="detail-item"><div class="detail-label">Joined</div><div class="detail-val mono">${fmtDate(u.created_at)}</div></div>
+      <div class="detail-item"><div class="detail-label">Failed Logins</div><div class="detail-val mono" style="color:${(u.failed_logins||0)>5?'var(--red)':'inherit'}">${u.failed_logins||0}</div></div>
+    </div>
+
+    <!-- Notes -->
+    <div style="margin-bottom:20px">
+      <div class="detail-label" style="margin-bottom:6px">Admin Notes</div>
+      <textarea class="inp" id="user-notes-${u.id}" rows="2" style="width:100%;resize:vertical"
+        placeholder="Private notes about this user...">${esc(u.notes||'')}</textarea>
+      <button class="btn btn-ghost btn-sm" style="margin-top:6px"
+        onclick="saveNotes(${u.id})">Save Notes</button>
+    </div>
+
+    <!-- Devices -->
+    ${data.devices.length ? `
+    <div style="margin-bottom:20px">
+      <div class="detail-label" style="margin-bottom:8px">Trusted Devices (${data.devices.length})</div>
+      <table style="width:100%;font-size:12px">
+        <thead><tr style="background:var(--surface2)">
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Device</th>
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Platform</th>
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Last Seen</th>
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Status</th>
+          <th style="padding:8px 10px"></th>
+        </tr></thead>
+        <tbody>
+        ${data.devices.map(d => `
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:8px 10px">${esc(d.device_name||'Unknown')}</td>
+            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${esc(d.platform||'—')}</td>
+            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${fmtDate(d.last_seen_at)}</td>
+            <td style="padding:8px 10px">${d.is_trusted?'<span class="badge badge-green">Trusted</span>':'<span class="badge badge-muted">Pending</span>'}</td>
+            <td style="padding:8px 10px"><button class="btn btn-red btn-sm" onclick="revokeDevice(${u.id},${d.id})">Revoke</button></td>
+          </tr>
+        `).join('')}
+        </tbody>
+      </table>
+    </div>` : ''}
+
+    <!-- Subscription History -->
+    ${data.subHistory.length ? `
+    <div style="margin-bottom:20px">
+      <div class="detail-label" style="margin-bottom:8px">Subscription History</div>
+      <table style="width:100%;font-size:12px">
+        <thead><tr style="background:var(--surface2)">
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Change</th>
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">By</th>
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Amount</th>
+          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Date</th>
+        </tr></thead>
+        <tbody>
+        ${data.subHistory.map(s => `
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:8px 10px">${planBadge(s.plan_from)} → ${planBadge(s.plan_to)}</td>
+            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${esc(s.changed_by_name||'system')}</td>
+            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--green)">${s.amount?'₹'+s.amount:'—'}</td>
+            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${fmtDate(s.created_at)}</td>
+          </tr>
+        `).join('')}
+        </tbody>
+      </table>
+    </div>` : ''}
+
+    <!-- Recent Admin Actions on this user -->
+    ${data.auditTrail.length ? `
+    <div>
+      <div class="detail-label" style="margin-bottom:8px">Admin Actions on This User</div>
+      ${data.auditTrail.slice(0,8).map(a => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span class="badge badge-muted">${esc(a.action)}</span>
+          <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${fmtDate(a.created_at)}</span>
+        </div>
+      `).join('')}
+    </div>` : ''}
+  `;
+}
+
+// ══════════════════════════════════════════════════════════
+// QUICK ACTIONS
+// ══════════════════════════════════════════════════════════
+async function quickToggle(uid, newState, name) {
+  if (!confirm(`${newState?'Activate':'Deactivate'} user "${name}"?`)) return;
+  const data = await api(`/users/${uid}/status`, { method:'PATCH', body:{is_active:newState} });
+  if (data?.success) { toast(data.message,'ok'); loadUsers(currentPage); loadFlagged(); }
+  else toast(data?.error||'Failed','err');
+}
+
+async function forceLogout(uid) {
+  const data = await api(`/users/${uid}/force-logout`, { method:'POST' });
+  if (data?.success) toast('User logged out from all devices','ok');
+  else toast(data?.error||'Failed','err');
+}
+
+async function revokeDevice(uid, deviceId) {
+  if (!confirm('Revoke this device?')) return;
+  const data = await api(`/users/${uid}/devices/${deviceId}`, { method:'DELETE' });
+  if (data?.success) { toast('Device revoked','ok'); openUser(uid); }
+  else toast(data?.error||'Failed','err');
+}
+
+async function saveNotes(uid) {
+  const notes = document.getElementById(`user-notes-${uid}`)?.value || '';
+  const data = await api(`/users/${uid}/notes`, { method:'PATCH', body:{notes} });
+  if (data?.success) toast('Notes saved','ok');
+}
+
+// ── Change Plan ──
+function showChangePlan(uid, currentPlan) {
+  closeModal('modal-user');
+  document.getElementById('action-title').textContent = 'CHANGE PLAN';
+  document.getElementById('action-body').innerHTML = `
+    <div style="margin-bottom:14px">
+      <div class="detail-label" style="margin-bottom:6px">Current Plan</div>
+      ${planBadge(currentPlan)}
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="detail-label" style="margin-bottom:6px">New Plan</div>
+      <select class="inp" id="new-plan" style="width:100%">
+        <option value="FREE">FREE</option>
+        <option value="PAID">PAID</option>
+        <option value="TRIAL">TRIAL</option>
+        <option value="SUSPENDED">SUSPENDED</option>
+      </select>
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="detail-label" style="margin-bottom:6px">Amount (optional)</div>
+      <input class="inp" type="number" id="plan-amount" placeholder="e.g. 999" style="width:100%"/>
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="detail-label" style="margin-bottom:6px">Payment Reference (optional)</div>
+      <input class="inp" id="plan-payref" placeholder="UPI ref / txn ID" style="width:100%"/>
+    </div>
+    <div>
+      <div class="detail-label" style="margin-bottom:6px">Reason</div>
+      <input class="inp" id="plan-reason" placeholder="e.g. Paid via UPI" style="width:100%"/>
+    </div>
+  `;
+  pendingAction = async () => {
+    const data = await api(`/users/${uid}/plan`, {
+      method:'PATCH',
+      body:{
+        plan:       document.getElementById('new-plan').value,
+        reason:     document.getElementById('plan-reason').value,
+        amount:     document.getElementById('plan-amount').value || null,
+        payment_ref:document.getElementById('plan-payref').value || null,
+      }
     });
-    const d = await r.json();
-    if (d.success) loadUsers();
-    else alert(d.message);
-  } catch(e) { alert('Error'); }
+    if (data?.success) { toast(data.message,'ok'); loadUsers(currentPage); }
+    else toast(data?.error||'Failed','err');
+  };
+  openModal('modal-action');
 }
 
-async function toggleFlag(userId, flagged) {
-  try {
-    const r = await fetch(`/api/admin/users/${userId}/flag`, {
-      method:'PATCH', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
-      body: JSON.stringify({flagged})
-    });
-    const d = await r.json();
-    if (d.success) loadUsers();
-    else alert(d.message);
-  } catch(e) { alert('Error'); }
+// ── Reset MPIN ──
+function showResetMpin(uid) {
+  closeModal('modal-user');
+  document.getElementById('action-title').textContent = 'RESET MPIN';
+  document.getElementById('action-body').innerHTML = `
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">
+      Enter a new temporary MPIN for the user. They will be logged out of all devices and must re-login with this MPIN.
+    </p>
+    <div class="detail-label" style="margin-bottom:6px">New MPIN (4 digits)</div>
+    <input class="inp" id="new-mpin" type="text" maxlength="4" inputmode="numeric" placeholder="••••" style="width:100%;letter-spacing:0.3em;font-size:20px;text-align:center"/>
+  `;
+  pendingAction = async () => {
+    const mpin = document.getElementById('new-mpin').value;
+    if (mpin.length !== 4) { toast('Enter 4-digit MPIN','err'); return; }
+    const data = await api(`/users/${uid}/reset-mpin`, { method:'POST', body:{new_mpin:mpin} });
+    if (data?.success) toast(data.message,'ok');
+    else toast(data?.error||'Failed','err');
+  };
+  openModal('modal-action');
 }
 
-function openPlanModal(userId) {
-  planUserId = userId;
-  document.getElementById('plan-modal').classList.add('open');
+// ── Flag ──
+function showFlagUser(uid, isFlagged) {
+  closeModal('modal-user');
+  if (isFlagged) {
+    pendingAction = async () => {
+      await api(`/users/${uid}/flag`, { method:'PATCH', body:{flagged:false,flag_reason:null} });
+      toast('Flag cleared','ok'); loadUsers(currentPage); loadFlagged();
+    };
+    document.getElementById('action-title').textContent = 'CLEAR FLAG';
+    document.getElementById('action-body').innerHTML = '<p style="color:var(--muted);font-size:13px">Remove the flag from this user?</p>';
+  } else {
+    document.getElementById('action-title').textContent = 'FLAG USER';
+    document.getElementById('action-body').innerHTML = `
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Flag this user for review. This will appear on the flagged users list.</p>
+      <div class="detail-label" style="margin-bottom:6px">Reason</div>
+      <input class="inp" id="flag-reason" placeholder="e.g. Suspicious activity" style="width:100%"/>
+    `;
+    pendingAction = async () => {
+      const reason = document.getElementById('flag-reason').value;
+      const data = await api(`/users/${uid}/flag`, { method:'PATCH', body:{flagged:true,flag_reason:reason} });
+      if (data?.success) { toast('User flagged','ok'); loadUsers(currentPage); loadFlagged(); }
+    };
+  }
+  openModal('modal-action');
 }
 
-function closeModal() {
-  document.getElementById('plan-modal').classList.remove('open');
-  planUserId = null;
+function executeAction() {
+  if (pendingAction) { pendingAction(); closeModal('modal-action'); }
 }
 
-async function confirmPlan() {
-  const plan = document.getElementById('modal-plan').value;
-  try {
-    const r = await fetch(`/api/admin/users/${planUserId}/plan`, {
-      method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
-      body: JSON.stringify({plan})
-    });
-    const d = await r.json();
-    closeModal();
-    if (d.success) loadUsers();
-    else alert(d.message);
-  } catch(e) { alert('Error'); }
+// ══════════════════════════════════════════════════════════
+// AUDIT
+// ══════════════════════════════════════════════════════════
+let auditPage = 1;
+async function loadAudit(page = 1) {
+  auditPage = page;
+  const data = await api(`/audit?page=${page}`);
+  if (!data) return;
+
+  document.getElementById('audit-body').innerHTML = data.logs.length
+    ? data.logs.map(l => `
+        <tr>
+          <td><span class="badge badge-muted">${esc(l.action)}</span></td>
+          <td class="td-mono" style="color:var(--muted)">${esc(l.admin_name||'—')}</td>
+          <td class="td-mono" style="color:var(--muted)">${l.target_name?`${esc(l.target_name)} (${esc(l.target_mobile||'')})` :'—'}</td>
+          <td class="td-mono" style="color:var(--muted)">${esc(l.ip_address||'—')}</td>
+          <td>${l.success?'<span class="badge badge-green">OK</span>':'<span class="badge badge-red">FAIL</span>'}</td>
+          <td class="td-mono" style="color:var(--muted)">${fmtDate(l.created_at)}</td>
+        </tr>
+      `).join('')
+    : `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">No audit logs</td></tr>`;
 }
 
-// ── ADD USER ──
-async function addUser() {
-  const name   = document.getElementById('au-name').value.trim();
-  const mobile = document.getElementById('au-mobile').value.trim();
-  const mpin   = document.getElementById('au-mpin').value.trim();
-  const angel  = document.getElementById('au-angel').value.trim();
-  const plan   = document.getElementById('au-plan').value;
-  const msg    = document.getElementById('au-msg');
-  msg.textContent=''; msg.className='form-msg';
-  try {
-    const r = await fetch('/api/admin/users', {
-      method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
-      body: JSON.stringify({name,mobile,mpin,angel_client_code:angel||null,plan})
-    });
-    const d = await r.json();
-    if (d.success) {
-      msg.textContent = `✓ User added! ID: ${d.user.id}`;
-      msg.className = 'form-msg ok';
-      document.getElementById('au-name').value='';
-      document.getElementById('au-mobile').value='';
-      document.getElementById('au-mpin').value='';
-      document.getElementById('au-angel').value='';
-    } else {
-      msg.textContent = d.message;
-      msg.className = 'form-msg err';
+// ══════════════════════════════════════════════════════════
+// ANNOUNCEMENTS
+// ══════════════════════════════════════════════════════════
+async function loadAnnouncements() {
+  const data = await api('/announcements');
+  if (!data) return;
+
+  const typeBadge = t => ({info:'badge-blue',warning:'badge-amber',critical:'badge-red'}[t]||'badge-muted');
+  document.getElementById('announce-body').innerHTML = data.announcements.length
+    ? data.announcements.map(a => `
+        <tr>
+          <td style="font-weight:600">${esc(a.title)}</td>
+          <td><span class="badge ${typeBadge(a.type)}">${a.type}</span></td>
+          <td><span class="badge badge-muted">${a.target}</span></td>
+          <td class="td-mono" style="color:var(--muted)">${a.expires_at?fmtDate(a.expires_at):'Never'}</td>
+          <td>${a.is_active?'<span class="badge badge-green">Active</span>':'<span class="badge badge-muted">Off</span>'}</td>
+          <td>
+            <button class="btn btn-ghost btn-sm" onclick="toggleAnnouncement(${a.id},${!a.is_active})">
+              ${a.is_active ? 'Disable' : 'Enable'}
+            </button>
+          </td>
+        </tr>
+      `).join('')
+    : `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">No announcements</td></tr>`;
+}
+
+async function createAnnouncement() {
+  const title = document.getElementById('an-title').value.trim();
+  const body  = document.getElementById('an-body').value.trim();
+  if (!title || !body) { toast('Title and message required','err'); return; }
+
+  const data = await api('/announcements', {
+    method:'POST',
+    body:{
+      title,
+      body,
+      type:      document.getElementById('an-type').value,
+      target:    document.getElementById('an-target').value,
+      expires_at:document.getElementById('an-expires').value || null,
     }
-  } catch(e) { msg.textContent='Connection error'; msg.className='form-msg err'; }
+  });
+  if (data?.success) {
+    toast('Announcement published','ok');
+    document.getElementById('an-title').value = '';
+    document.getElementById('an-body').value  = '';
+    loadAnnouncements();
+  } else toast(data?.error||'Failed','err');
 }
 
-// ── HELPERS ──
+async function toggleAnnouncement(id, active) {
+  await api(`/announcements/${id}`, { method:'PATCH', body:{is_active:active} });
+  toast(active?'Enabled':'Disabled','ok');
+  loadAnnouncements();
+}
+
+// ══════════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); pendingAction=null; }
+
+function toast(msg, type='ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = `toast ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
 function planBadge(plan) {
-  const map = { PAID:'badge-paid', FREE:'badge-free', TRIAL:'badge-trial', EXPIRED:'badge-expired' };
-  return `<span class="badge ${map[plan]||'badge-free'}">${plan||'FREE'}</span>`;
+  const map = { PAID:'badge-green', FREE:'badge-muted', TRIAL:'badge-blue', SUSPENDED:'badge-red' };
+  return `<span class="badge ${map[plan]||'badge-muted'}">${plan||'—'}</span>`;
 }
 
-function fmtDate(dt) {
-  if (!dt) return '—';
-  return new Date(dt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+function statusBadge(active) {
+  return active
+    ? `<span class="badge badge-green"><span class="dot dot-green"></span>Active</span>`
+    : `<span class="badge badge-red">Inactive</span>`;
 }
 
-// Enter key on login
-document.getElementById('l-mpin').addEventListener('keyup', e => { if(e.key==='Enter') doLogin(); });
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderPagination(pg, infoId, btnsId, loadFn) {
+  document.getElementById(infoId).textContent =
+    `Showing ${((pg.page-1)*pg.limit)+1}–${Math.min(pg.page*pg.limit,pg.total)} of ${pg.total}`;
+
+  const wrap = document.getElementById(btnsId);
+  wrap.innerHTML = '';
+
+  const prev = document.createElement('button');
+  prev.className = 'pg-btn'; prev.textContent = '←';
+  prev.disabled = pg.page <= 1;
+  prev.onclick  = () => loadFn(pg.page - 1);
+  wrap.appendChild(prev);
+
+  const start = Math.max(1, pg.page - 2);
+  const end   = Math.min(pg.pages, pg.page + 2);
+  for (let i = start; i <= end; i++) {
+    const b = document.createElement('button');
+    b.className = `pg-btn${i===pg.page?' current':''}`;
+    b.textContent = i;
+    b.onclick = () => loadFn(i);
+    wrap.appendChild(b);
+  }
+
+  const next = document.createElement('button');
+  next.className = 'pg-btn'; next.textContent = '→';
+  next.disabled = pg.page >= pg.pages;
+  next.onclick  = () => loadFn(pg.page + 1);
+  wrap.appendChild(next);
+}
+
+
+// ══════════════════════════════════════════════════════════
+// EXPORT
+// ══════════════════════════════════════════════════════════
+const exportLogEntries = [];
+
+const EXP_INFO = {
+  users:         'User ID, Name, Mobile, Plan, Status, Flagged, Flag Reason, Joined, Last Login, Total Logins, Last IP, Last Device, Failed Logins, Trusted Devices, Angel Creds, Angel Client Code, Admin Notes',
+  subscriptions: 'ID, User Name, Mobile, From Plan, To Plan, Reason, Amount (INR), Payment Ref, Changed By, Changed At',
+  devices:       'Device ID, User Name, Mobile, Plan, Device Name, Platform, IP Address, Trusted, Verified At, Last Seen, Trust Expires, First Seen',
+  audit:         'Log ID, Action, Admin, Target User, Target Mobile, Success, Admin IP, Timestamp',
+  summary:       'Full JSON snapshot: platform stats + all users + all subscription history',
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const expType = document.getElementById('exp-type');
+  if (expType) expType.addEventListener('change', () => {
+    const el = document.getElementById('exp-info');
+    if (el) el.textContent = EXP_INFO[expType.value] || '';
+  });
+});
+
+function quickExport(type, format) {
+  const url = buildExportUrl(type, format, {});
+  doDownload(url, type, format);
+}
+
+function runAdvancedExport() {
+  const type   = document.getElementById('exp-type').value;
+  const format = type === 'summary' ? 'json' : document.getElementById('exp-format').value;
+  const filters = {
+    plan:   document.getElementById('exp-plan').value,
+    status: document.getElementById('exp-status').value,
+    from:   document.getElementById('exp-from').value,
+    to:     document.getElementById('exp-to').value,
+  };
+  doDownload(buildExportUrl(type, format, filters), type, format, filters);
+}
+
+function buildExportUrl(type, format, filters) {
+  const params = new URLSearchParams({ format });
+  if (filters && filters.plan)   params.set('plan', filters.plan);
+  if (filters && filters.status) params.set('status', filters.status);
+  if (filters && filters.from)   params.set('from', filters.from);
+  if (filters && filters.to)     params.set('to', filters.to);
+  return API + '/export/' + type + '?' + params.toString();
+}
+
+function doDownload(url, type, format, filters) {
+  fetch(url, { headers: { 'Authorization': 'Bearer ' + TOKEN } })
+    .then(function(r) {
+      if (!r.ok) { toast('Export failed', 'err'); return null; }
+      return r.blob();
+    })
+    .then(function(blob) {
+      if (!blob) return;
+      var ext  = format === 'xlsx' ? 'xls' : format;
+      var name = 'jobber_pro_' + type + '_' + new Date().toISOString().slice(0,10) + '.' + ext;
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = name;
+      link.click();
+      URL.revokeObjectURL(link.href);
+
+      var filterStr = filters ? Object.entries(filters).filter(function(e){ return e[1]; }).map(function(e){ return e[0]+':'+e[1]; }).join(', ') : 'none';
+      exportLogEntries.unshift({ type: type, format: format, filters: filterStr || 'none', time: new Date().toLocaleTimeString('en-IN'), url: url });
+      renderExportLog();
+      toast(type + ' exported as ' + format.toUpperCase(), 'ok');
+    })
+    .catch(function() { toast('Export failed', 'err'); });
+}
+
+function renderExportLog() {
+  var tbody = document.getElementById('export-log-body');
+  if (!tbody || !exportLogEntries.length) return;
+  tbody.innerHTML = exportLogEntries.map(function(e) {
+    return '<tr>' +
+      '<td><span class="badge badge-muted">' + esc(e.type.toUpperCase()) + '</span></td>' +
+      '<td class="td-mono" style="color:var(--amber)">' + esc(e.format.toUpperCase()) + '</td>' +
+      '<td class="td-mono" style="color:var(--muted);font-size:11px">' + esc(e.filters) + '</td>' +
+      '<td class="td-mono" style="color:var(--muted)">' + esc(e.time) + '</td>' +
+      '<td><button class="btn btn-ghost btn-sm" onclick="doDownload('' + e.url + '','' + e.type + '','' + e.format + '',{})">↓ Again</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+// Close modals on bg click
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('show'); });
+});
 </script>
 </body>
 </html>
-
