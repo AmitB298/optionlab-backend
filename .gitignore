@@ -6,3 +6,4 @@ dist/
 
 # Added by MIGRATE-TO-RAILWAY.ps1
 *.bak
+node_modules
