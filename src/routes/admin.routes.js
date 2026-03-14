@@ -56,15 +56,7 @@ router.get('/stats', async (req, res) => {
   try {
     const [users, devices, activity, revenue] = await Promise.all([
       pool.query(`
-        SELECT
-          COUNT(*)                                                       AS total,
-          COUNT(*) FILTER (WHERE is_active = true)                      AS active,
-          COUNT(*) FILTER (WHERE plan = 'PAID')                         AS paid,
-          COUNT(*) FILTER (WHERE plan = 'FREE')                         AS free,
-          COUNT(*) FILTER (WHERE flagged = true)                        AS flagged,
-          COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '7 days')  AS new_7d,
-          COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '30 days') AS new_30d
-        FROM users WHERE role = 'user'
+        SELECT id, name, mobile, plan, is_active, role, flagged, flag_reason, notes, angel_client_code, created_at, last_login_at, login_count FROM users WHERE role = 'user'
       `),
       pool.query(`
         SELECT
@@ -78,7 +70,7 @@ router.get('/stats', async (req, res) => {
           COUNT(*) FILTER (WHERE last_login_at > NOW() - INTERVAL '1 day')  AS dau,
           COUNT(*) FILTER (WHERE last_login_at > NOW() - INTERVAL '7 days') AS wau,
           COUNT(*) FILTER (WHERE last_login_at > NOW() - INTERVAL '30 days')AS mau
-        FROM user_activity
+         FROM users
       `),
       pool.query(`
         SELECT
@@ -115,7 +107,7 @@ router.get('/users', async (req, res) => {
     const status = ['active', 'inactive'].includes(statusRaw) ? statusRaw : '';
 
     // SORT: whitelist prevents ORDER BY injection
-    const SORT_COLS = { created_at: 'u', last_login_at: 'ua', name: 'u', mobile: 'u' };
+    const SORT_COLS = { created_at: 'u', last_login_at: 'u', name: 'u', mobile: 'u' };
     const sortKey   = V.sortColumn(req.query.sort, Object.keys(SORT_COLS), 'created_at');
     const sortDir   = V.sortDir(req.query.dir);
     const sortTable = SORT_COLS[sortKey.value];
@@ -143,14 +135,11 @@ router.get('/users', async (req, res) => {
       SELECT
         u.id, u.name, u.mobile, u.plan, u.is_active, u.flagged,
         u.flag_reason, u.notes, u.created_at,
-        ua.last_login_at, ua.total_logins, ua.last_login_ip, ua.last_device,
-        ua.failed_logins,
+        u.last_login_at, u.login_count AS total_logins,
+        u.angel_client_code,
         (SELECT COUNT(*) FROM trusted_devices td
-         WHERE td.user_id = u.id AND td.is_trusted = true)       AS trusted_devices,
-        CASE WHEN ac.user_id IS NOT NULL THEN true ELSE false END AS has_angel_credentials
+         WHERE td.user_id = u.id AND td.is_trusted = true) AS trusted_devices
       FROM users u
-      LEFT JOIN user_activity ua ON ua.user_id = u.id
-      LEFT JOIN angel_credentials ac ON ac.user_id = u.id
       ${whereClause}
       ORDER BY ${orderExpr}
       LIMIT $${params.length - 1} OFFSET $${params.length}
@@ -159,8 +148,7 @@ router.get('/users', async (req, res) => {
     // Count query with same filters
     const countParams = params.slice(0, -2);
     const { rows: countRows } = await pool.query(
-      `SELECT COUNT(*) FROM users u
-       LEFT JOIN user_activity ua ON ua.user_id = u.id ${whereClause}`,
+      `SELECT COUNT(*) FROM users u ${whereClause}`,
       countParams
     );
 
@@ -189,14 +177,10 @@ router.get('/users/:userId', async (req, res) => {
       pool.query(`
         SELECT u.id, u.name, u.mobile, u.plan, u.is_active, u.flagged,
                u.flag_reason, u.notes, u.role, u.created_at,
-               ua.total_logins, ua.last_login_at, ua.last_login_ip,
-               ua.last_device, ua.failed_logins, ua.session_count,
-               CASE WHEN ac.user_id IS NOT NULL THEN true ELSE false END AS has_angel_creds,
-               ac.client_code AS angel_client_code
-        FROM users u
-        LEFT JOIN user_activity ua ON ua.user_id = u.id
-        LEFT JOIN angel_credentials ac ON ac.user_id = u.id
-        WHERE u.id = $1
+               u.login_count AS total_logins, u.last_login_at,
+               u.angel_client_code
+         FROM users u
+         WHERE u.id = $1
       `, [uid]),
 
       pool.query(`
