@@ -1327,7 +1327,7 @@ function renderExportLog() {
       '<td class="td-mono" style="color:var(--amber)">' + esc(e.format.toUpperCase()) + '</td>' +
       '<td class="td-mono" style="color:var(--muted);font-size:11px">' + esc(e.filters) + '</td>' +
       '<td class="td-mono" style="color:var(--muted)">' + esc(e.time) + '</td>' +
-      '<td><button class="btn btn-ghost btn-sm" onclick="doDownload('' + e.url + '','' + e.type + '','' + e.format + '',{})">↓ Again</button></td>' +
+      '<td><button class="btn btn-ghost btn-sm" onclick="doDownload(\'' + e.url + '\',\'' + e.type + '\',\'' + e.format + '\',{})">↓ Again</button></td>' +
       '</tr>';
   }).join('');
 }
