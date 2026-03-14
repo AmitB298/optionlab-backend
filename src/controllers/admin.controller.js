@@ -115,3 +115,4 @@ async function getUserHistory(req, res) {
 }
 
 module.exports = { adminLogin, getDashboardStats, getAllUsers, addUser, assignPlan, toggleUserStatus, toggleFlagged, setupAdmin, getUserHistory };
+
