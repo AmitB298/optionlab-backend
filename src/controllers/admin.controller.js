@@ -1,8 +1,7 @@
 'use strict';
-const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = require('../db/pool');
 const JWT_SECRET = process.env.JWT_SECRET || 'optionlab-secret-2024';
 
 async function adminLogin(req, res) {
@@ -115,4 +114,5 @@ async function getUserHistory(req, res) {
 }
 
 module.exports = { adminLogin, getDashboardStats, getAllUsers, addUser, assignPlan, toggleUserStatus, toggleFlagged, setupAdmin, getUserHistory };
+
 
