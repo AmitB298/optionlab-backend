@@ -27,6 +27,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
       'http://localhost:5173',
       'https://optionlab.in',
       'https://www.optionlab.in',
+    'https://web-production-8a8e1.up.railway.app',
     ];
 
 app.use(cors({
@@ -208,5 +209,6 @@ app.listen(PORT, async () => {
   console.log('Running database migration...');
   await runMigration();
 });
+
 
 
