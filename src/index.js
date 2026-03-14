@@ -19,25 +19,7 @@ app.use(helmet({
   contentSecurityPolicy: false, // allow inline scripts in HTML files
 }));
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
-  : [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:5173',
-      'https://optionlab.in',
-      'https://www.optionlab.in',
-    'https://web-production-8a8e1.up.railway.app',
-    ];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-}));
+app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -209,6 +191,7 @@ app.listen(PORT, async () => {
   console.log('Running database migration...');
   await runMigration();
 });
+
 
 
 
