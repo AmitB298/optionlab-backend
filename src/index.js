@@ -1,5 +1,6 @@
 // src/index.js
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -14,7 +15,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ─── Security Middleware ───────────────────────────────────────────────────────
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // allow inline scripts in HTML files
+}));
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
@@ -28,7 +31,6 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, Electron)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
@@ -66,14 +68,20 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ─── Routes ────────────────────────────────────────────────────────────────────
+// ─── API Routes ────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/angel', angelRoutes);
 
-// ─── 404 Handler ───────────────────────────────────────────────────────────────
-app.use('*', (req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
+// ─── Static Frontend (must come AFTER API routes, BEFORE 404) ─────────────────
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+app.get('*', (req, res) => {
+  // API routes already handled above — this catches all non-API paths
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ success: false, message: 'Route not found' });
+  }
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 // ─── Error Handler ─────────────────────────────────────────────────────────────
@@ -192,23 +200,11 @@ async function runMigration() {
 }
 
 // ─── Start Server ──────────────────────────────────────────────────────────────
-
-// ── Static frontend serving (added by MIGRATE-TO-RAILWAY.ps1) ──
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
-// Catch-all: serve index.html for any non-API route
-app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  }
-});
 app.listen(PORT, async () => {
   console.log(`\nOptionLab API running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Health: http://localhost:${PORT}/health\n`);
 
-  // Run migration on every startup (safe - uses CREATE TABLE IF NOT EXISTS)
   console.log('Running database migration...');
   await runMigration();
 });
-
