@@ -598,7 +598,7 @@ async function doAdminLogin() {
   const btn    = document.getElementById('btn-lg');
   const msg    = document.getElementById('msg-login');
 
-  if (!mobile || mpin.length < 1) { msg.textContent = 'Enter mobile and 4-digit MPIN'; return; }
+  if (!mobile || mpin.length < 1) { msg.textContent = 'Enter mobile and MPIN'; return; }
 
   btn.disabled = true; btn.textContent = 'Verifying...';
 
@@ -1066,7 +1066,7 @@ function showResetMpin(uid) {
   `;
   pendingAction = async () => {
     const mpin = document.getElementById('new-mpin').value;
-    if (mpin.length !== 4) { toast('Enter 4-digit MPIN','err'); return; }
+    if (mpin.length < 1) { toast('Enter MPIN','err'); return; }
     const data = await api(`/users/${uid}/reset-mpin`, { method:'POST', body:{new_mpin:mpin} });
     if (data?.success) toast(data.message,'ok');
     else toast(data?.error||'Failed','err');
