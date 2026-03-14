@@ -598,7 +598,7 @@ async function doAdminLogin() {
   const btn    = document.getElementById('btn-lg');
   const msg    = document.getElementById('msg-login');
 
-  if (!mobile || mpin.length < 4) { msg.textContent = 'Enter mobile and 4-digit MPIN'; return; }
+  if (!mobile || mpin.length < 1) { msg.textContent = 'Enter mobile and 4-digit MPIN'; return; }
 
   btn.disabled = true; btn.textContent = 'Verifying...';
 
@@ -1339,3 +1339,5 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
 </script>
 </body>
 </html>
+
+
