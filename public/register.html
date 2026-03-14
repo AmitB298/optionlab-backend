@@ -211,9 +211,15 @@
                  maxlength="10"
                  placeholder="E.G. SBHS331"
                  autocomplete="off"
-                 oninput="onClientInput(this)"/>
+                 oninput="onClientInput(this)"
+                 onfocus="this.select()"/>
         </div>
         <div class="field-note" id="client-format-hint" style="display:none;"></div>
+        <div id="client-confirm-btn-wrap" style="display:none;margin-top:8px;">
+          <button type="button" onclick="showClientHelp()" style="width:100%;padding:10px;background:var(--orange-dim);border:1px solid rgba(255,106,0,0.4);border-radius:6px;color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;letter-spacing:0.05em;text-align:center;">
+            🔒 Tap to verify &amp; confirm this Client ID
+          </button>
+        </div>
         <div class="field-note warning">⚠ Cannot be changed later — double check before submitting</div>
       </div>
 
@@ -413,17 +419,27 @@ function onClientInput(el) {
     el.classList.add('valid'); el.classList.remove('error');
     hint.style.display = 'block';
     hint.style.color = 'var(--green)';
-    hint.textContent = '✓ Format looks valid — click confirm to lock this ID';
+    hint.textContent = '✓ Format looks valid — confirm below to lock this ID';
+    document.getElementById('client-confirm-btn-wrap').style.display = 'block';
   } else {
     el.classList.remove('valid'); el.classList.add('error');
     hint.style.display = 'block';
     hint.style.color = 'var(--red)';
     hint.textContent = '✗ Format: 1-4 letters followed by 3-6 digits (e.g. SBHS331, A123456)';
+    document.getElementById('client-confirm-btn-wrap').style.display = 'none';
   }
 }
 
-// Trigger popup when user clicks into the client ID field (after typing something)
+// Trigger popup on blur (click away) if valid value entered
 document.getElementById('inp-client').addEventListener('blur', function() {
+  var val = this.value.trim();
+  if (val.length > 0 && ANGEL_REGEX.test(val) && !S.clientConfirmed) {
+    setTimeout(function(){ showClientConfirmPopup(val); }, 150);
+  }
+});
+
+// Also trigger popup on click/focus if field already has a valid value
+document.getElementById('inp-client').addEventListener('click', function() {
   var val = this.value.trim();
   if (val.length > 0 && ANGEL_REGEX.test(val) && !S.clientConfirmed) {
     showClientConfirmPopup(val);
