@@ -54,8 +54,8 @@ const authLimiter = rateLimit({
   message: { success: false, message: 'Too many auth attempts, please try again in 15 minutes.' }
 });
 
-app.use('/api', globalLimiter);
-app.use('/api/auth', authLimiter);
+// app.use('/api', globalLimiter);
+// app.use('/api/auth', authLimiter);
 
 // ─── Health Check ──────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => {
@@ -208,3 +208,4 @@ app.listen(PORT, async () => {
   console.log('Running database migration...');
   await runMigration();
 });
+
