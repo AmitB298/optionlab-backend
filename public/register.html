@@ -1,418 +1,580 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OptionLab — Login / Register</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --or:#f97316;--ord:#ea580c;--og:rgba(249,115,22,0.15);--og2:rgba(249,115,22,0.07);
-  --bg:#07090e;--bg2:#0c1018;--bg3:#101620;--bg4:#161e2a;
-  --bd:rgba(255,255,255,0.07);--bdo:rgba(249,115,22,0.28);
-  --tx:#dde4f0;--txd:#7a8fa8;--txdd:#3a4a5c;--gn:#22c55e;--rd:#ef4444;
-  --api:https://web-production-8a8e1.up.railway.app;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(249,115,22,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.025) 1px,transparent 1px);background-size:56px 56px;}
-.bg-orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none}
-.o1{width:600px;height:600px;background:radial-gradient(circle,rgba(249,115,22,.08),transparent 70%);top:-200px;left:-200px;animation:drift 12s ease-in-out infinite}
-.o2{width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.05),transparent 70%);bottom:-100px;right:-100px;animation:drift 10s ease-in-out infinite reverse}
-@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-14px)}}
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OptionLab — Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#06070a; --panel:#0d0f14; --border:#161922; --border2:#1f2433;
+      --orange:#ff6a00; --orange-dim:rgba(255,106,0,0.08); --orange-glow:rgba(255,106,0,0.18);
+      --green:#0dff9a; --green-dim:rgba(13,255,154,0.08);
+      --text:#dde2f0; --muted:#4a5270; --red:#ff3d5a;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);}
+    .ticker-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;opacity:0.04;z-index:0;}
+    .ticker-row{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--orange);white-space:nowrap;padding:6px 0;animation:ticker 60s linear infinite;}
+    .ticker-row:nth-child(even){animation-direction:reverse;animation-duration:80s;}
+    @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    .layout{display:grid;grid-template-columns:1fr 480px;min-height:100vh;position:relative;z-index:1;}
+    .left{display:flex;flex-direction:column;justify-content:space-between;padding:48px;border-right:1px solid var(--border);overflow:hidden;}
+    .brand{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.25em;color:var(--orange);}
+    .headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7vw,88px);line-height:0.95;letter-spacing:0.02em;}
+    .headline .dim{color:var(--muted);}
+    .headline .acc{color:var(--orange);}
+    .stats-row{display:flex;gap:32px;}
+    .stat{border-top:1px solid var(--border2);padding-top:16px;}
+    .stat-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--text);}
+    .stat-label{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
+    .right{display:flex;flex-direction:column;justify-content:center;padding:48px 44px;background:var(--panel);}
 
-.layout{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:960px;border-radius:24px;overflow:hidden;border:1px solid var(--bd);box-shadow:0 40px 120px rgba(0,0,0,.7);}
+    /* Stepper */
+    .stepper{display:flex;align-items:center;gap:0;margin-bottom:36px;}
+    .step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;}
+    .step-circle{width:36px;height:36px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.3s;}
+    .step.active .step-circle{border-color:var(--orange);background:var(--orange-dim);color:var(--orange);}
+    .step.done .step-circle{border-color:var(--green);background:rgba(13,255,154,0.08);color:var(--green);}
+    .step-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+    .step.active .step-label{color:var(--orange);}
+    .step.done .step-label{color:var(--green);}
+    .step-line{flex:1;height:1px;background:var(--border2);margin-top:-16px;max-width:40px;}
+    .step.done + .step-line, .step.active + .step-line{background:var(--orange);}
 
-/* LEFT */
-.left{background:linear-gradient(160deg,var(--bg2) 0%,var(--bg3) 100%);padding:48px 40px;display:flex;flex-direction:column;border-right:1px solid var(--bd);position:relative;overflow:hidden;}
-.left::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(249,115,22,.09),transparent 70%);pointer-events:none;}
-.brand{display:flex;align-items:center;gap:11px;margin-bottom:36px;text-decoration:none}
-.brand-box{width:38px;height:38px;background:linear-gradient(135deg,#f97316,#c2410c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;box-shadow:0 0 20px rgba(249,115,22,.38);flex-shrink:0}
-.brand-name{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:var(--tx)}
-.brand-name b{color:var(--or);font-weight:800}
-.left-tag{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;line-height:1.1;letter-spacing:-.03em;margin-bottom:14px}
-.left-tag em{font-style:normal;background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.left-sub{font-size:14px;color:var(--txd);line-height:1.7;margin-bottom:32px}
-.left-feats{display:flex;flex-direction:column;gap:14px;flex:1}
-.lf{display:flex;align-items:flex-start;gap:11px}
-.lf-ico{width:32px;height:32px;flex-shrink:0;background:var(--og2);border:1px solid var(--bdo);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
-.lf-txt{font-size:13px;color:var(--txd);line-height:1.5}
-.lf-txt strong{color:var(--tx);display:block;margin-bottom:2px;font-size:13px}
-.left-foot{margin-top:28px;padding:13px 15px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:11px;display:flex;align-items:center;gap:9px}
-.ld{width:8px;height:8px;border-radius:50%;background:var(--gn);box-shadow:0 0 8px rgba(34,197,94,.5);flex-shrink:0;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
-.lft{font-size:12px;color:var(--txd);font-family:'JetBrains Mono',monospace}
-.lft strong{color:var(--gn)}
+    /* Screens */
+    .screen{display:none;animation:fadeIn 0.3s ease;}
+    .screen.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+    .form-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:0.05em;margin-bottom:6px;}
+    .form-sub{font-size:13px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:28px;line-height:1.5;}
+    .field{margin-bottom:16px;}
+    .field label{display:flex;align-items:center;gap:8px;font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;}
+    .field input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:13px 16px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:var(--text);outline:none;transition:border-color 0.15s,box-shadow 0.15s;}
+    .field input:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+    .field input.valid{border-color:var(--green);box-shadow:0 0 0 3px var(--green-dim);}
+    .field input.error{border-color:var(--red);}
+    .field input::placeholder{color:var(--muted);font-size:13px;}
+    .phone-wrap{position:relative;display:flex;align-items:center;}
+    .phone-prefix{position:absolute;left:14px;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--muted);pointer-events:none;}
+    .phone-wrap input{padding-left:44px;}
+    .client-wrap{position:relative;}
+    .client-wrap input{padding-right:44px;text-transform:uppercase;letter-spacing:0.05em;}
+    .client-info-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;border:1px solid var(--border2);background:transparent;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+    .client-info-btn:hover{border-color:var(--orange);color:var(--orange);}
+    .field-note{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:6px;line-height:1.4;}
+    .field-note.warning{color:#ffaa00;}
+    .btn-primary{width:100%;padding:14px;background:var(--orange);color:#fff;font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.05em;border:none;border-radius:8px;cursor:pointer;transition:all 0.15s;margin-top:8px;}
+    .btn-primary:hover:not(:disabled){background:#ff8533;box-shadow:0 6px 20px rgba(255,106,0,0.35);transform:translateY(-1px);}
+    .btn-primary:disabled{opacity:0.45;cursor:not-allowed;}
+    .btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--muted);width:100%;padding:12px;border-radius:8px;font-family:'Manrope',sans-serif;font-size:13px;cursor:pointer;transition:all 0.15s;margin-top:8px;}
+    .btn-secondary:hover{border-color:var(--orange);color:var(--orange);}
+    .msg{font-size:12px;font-family:'IBM Plex Mono',monospace;padding:10px 14px;border-radius:6px;margin-bottom:16px;display:none;}
+    .msg.err{display:block;background:rgba(255,61,90,0.08);border:1px solid rgba(255,61,90,0.25);color:var(--red);}
+    .msg.ok{display:block;background:rgba(13,255,154,0.06);border:1px solid rgba(13,255,154,0.2);color:var(--green);}
+    .signin-link{text-align:center;font-size:12px;color:var(--muted);margin-top:20px;}
+    .signin-link a{color:var(--orange);text-decoration:none;font-weight:600;}
+    .otp-row{display:flex;gap:10px;justify-content:center;margin:16px 0;}
+    .otp-digit{width:48px;height:56px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:22px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);outline:none;transition:all 0.15s;}
+    .otp-digit:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+    .success-icon{width:64px;height:64px;border-radius:50%;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--green-dim);margin:0 auto 20px;box-shadow:0 0 24px rgba(13,255,154,0.2);}
 
-/* RIGHT */
-.right{background:var(--bg2);padding:38px 34px;display:flex;flex-direction:column;}
+    /* ─── Angel One Confirmation Popup ─── */
+    .popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;}
+    .popup-overlay.active{display:flex;}
+    .popup{background:var(--panel);border:1px solid var(--border2);border-radius:16px;padding:0;width:480px;max-width:calc(100vw - 32px);overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.6);}
+    .popup-header{background:linear-gradient(135deg,rgba(255,106,0,0.12),rgba(255,106,0,0.04));padding:24px 28px 20px;border-bottom:1px solid var(--border2);}
+    .popup-header-top{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+    .popup-icon{width:40px;height:40px;border-radius:10px;background:var(--orange-dim);border:1px solid rgba(255,106,0,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+    .popup-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.05em;color:var(--text);}
+    .popup-subtitle{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.05em;}
+    .popup-body{padding:24px 28px;}
+    .lang-tabs{display:flex;gap:8px;margin-bottom:20px;}
+    .lang-tab{flex:1;padding:8px;border:1px solid var(--border2);border-radius:6px;background:transparent;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;transition:all 0.15s;text-align:center;}
+    .lang-tab.active{border-color:var(--orange);background:var(--orange-dim);color:var(--orange);}
+    .lang-content{display:none;}
+    .lang-content.active{display:block;}
+    .client-preview{background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:16px 20px;margin-bottom:20px;text-align:center;}
+    .client-preview-label{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;}
+    .client-preview-value{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:500;color:var(--orange);letter-spacing:0.1em;}
+    .checklist{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+    .check-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);line-height:1.5;}
+    .check-item .ci{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(13,255,154,0.1);border:1px solid rgba(13,255,154,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green);margin-top:1px;}
+    .warning-box{background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.2);border-radius:8px;padding:12px 14px;font-size:12px;color:#ffaa00;font-family:'IBM Plex Mono',monospace;line-height:1.5;margin-bottom:20px;}
+    .warning-box .wi{margin-right:6px;}
+    .popup-footer{padding:0 28px 24px;display:flex;flex-direction:column;gap:10px;}
+    .btn-confirm{width:100%;padding:14px;background:var(--orange);color:#fff;font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;border:none;border-radius:8px;cursor:pointer;transition:all 0.15s;}
+    .btn-confirm:hover{background:#ff8533;box-shadow:0 6px 20px rgba(255,106,0,0.3);}
+    .btn-cancel-popup{width:100%;padding:12px;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Manrope',sans-serif;font-size:13px;border-radius:8px;cursor:pointer;transition:all 0.15s;}
+    .btn-cancel-popup:hover{border-color:var(--red);color:var(--red);}
+    .format-hint{background:rgba(13,255,154,0.04);border:1px solid rgba(13,255,154,0.1);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;line-height:1.5;margin-bottom:12px;}
+    .format-hint strong{color:var(--green);}
 
-/* TABS */
-.tabs{display:flex;gap:0;margin-bottom:28px;background:var(--bg3);border-radius:10px;padding:4px;border:1px solid var(--bd);}
-.tab{flex:1;padding:10px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--txd);transition:all .2s;font-family:'Outfit',sans-serif}
-.tab.on{background:var(--or);color:#fff;box-shadow:0 0 16px rgba(249,115,22,.3)}
-
-/* FORM BASE */
-.fs{display:none;flex-direction:column;flex:1}
-.fs.on{display:flex}
-.ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em;margin-bottom:6px}
-.fsub{font-size:13px;color:var(--txd);margin-bottom:24px;line-height:1.5}
-
-/* STEP BAR */
-.stepbar{display:flex;align-items:center;gap:0;margin-bottom:24px}
-.si{display:flex;align-items:center;gap:0;flex:1}
-.sc{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:2px solid var(--bd);color:var(--txdd);transition:all .3s;font-family:'JetBrains Mono',monospace}
-.sc.on{border-color:var(--or);color:var(--or);background:var(--og2)}
-.sc.dn{border-color:var(--gn);background:var(--gn);color:#fff}
-.sl{font-size:11px;color:var(--txdd);margin-left:7px;white-space:nowrap;transition:color .3s}
-.sl.on{color:var(--or)}.sl.dn{color:var(--gn)}
-.sline{flex:1;height:1px;background:var(--bd);margin:0 8px;transition:background .3s}
-.sline.dn{background:var(--gn)}
-
-/* INPUTS */
-.ig{margin-bottom:14px}
-.il{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--txd);margin-bottom:5px;display:block;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
-.iw{position:relative}
-.ipfx{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--txdd);font-weight:600;font-family:'JetBrains Mono',monospace;pointer-events:none}
-input[type=text],input[type=tel],input[type=password]{width:100%;padding:12px 13px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-size:15px;font-family:'Outfit',sans-serif;transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none;}
-input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{border-color:var(--or);box-shadow:0 0 0 3px var(--og2);}
-input.pfx{padding-left:42px}
-.ihelp{font-size:11.5px;color:var(--txdd);margin-top:5px}
-.ihelp a{color:var(--or);text-decoration:none;font-weight:600}
-
-/* MPIN BOXES */
-.mprow{display:flex;gap:9px;justify-content:center;margin:6px 0 2px}
-.mpb{width:46px;height:54px;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;text-align:center;font-size:22px;font-weight:700;color:var(--tx);outline:none;transition:border-color .2s,box-shadow .2s;font-family:'JetBrains Mono',monospace;-webkit-appearance:none;}
-.mpb:focus{border-color:var(--or);box-shadow:0 0 0 3px var(--og2)}
-.mpb.fl{border-color:var(--bdo);color:var(--or)}
-.mp-hint{font-size:12px;color:var(--txdd);text-align:center;margin-top:5px}
-.mp-warn{font-size:12px;color:#f59e0b;text-align:center;margin-top:10px;padding:8px 12px;background:rgba(245,158,11,.08);border-radius:8px;border:1px solid rgba(245,158,11,.15)}
-
-/* SUMMARY */
-.sumcard{background:var(--bg3);border:1px solid var(--bd);border-radius:13px;padding:18px;margin-bottom:18px}
-.sumrow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bd)}
-.sumrow:last-child{border-bottom:none}
-.sumlbl{font-size:11.5px;color:var(--txdd);font-family:'JetBrains Mono',monospace;font-weight:500}
-.sumval{font-size:14px;font-weight:600;color:var(--tx)}
-
-/* MSG */
-.msg{padding:11px 13px;border-radius:9px;font-size:13px;margin-bottom:13px;display:none;align-items:center;gap:8px}
-.msg.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
-.msg.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86efac}
-.msg.show{display:flex}
-
-/* BUTTONS */
-.btn-sub{width:100%;padding:13px;background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;border:none;border-radius:11px;font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 0 22px rgba(249,115,22,.3);display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Syne',sans-serif;letter-spacing:-.01em}
-.btn-sub:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 38px rgba(249,115,22,.5)}
-.btn-sub:disabled{opacity:.6;cursor:not-allowed}
-.btn-back{background:transparent;border:1px solid var(--bd);color:var(--txd);padding:11px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;width:100%;margin-top:9px;font-family:'Outfit',sans-serif}
-.btn-back:hover{border-color:var(--bdo);color:var(--or)}
-.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.spacer{flex:1;min-height:8px}
-.ffoot{font-size:13px;color:var(--txd);text-align:center;margin-top:14px}
-.flink{color:var(--or);text-decoration:none;font-weight:600;cursor:pointer}
-.flink:hover{opacity:.8}
-
-/* SUCCESS */
-.sscreen{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 0;flex:1}
-.sscreen.show{display:flex}
-.sico{width:70px;height:70px;background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(34,197,94,.05));border:2px solid rgba(34,197,94,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:18px;animation:pop .5s cubic-bezier(.175,.885,.32,1.275) both}
-@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.stitle{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;margin-bottom:8px}
-.ssub2{font-size:14px;color:var(--txd);max-width:240px;line-height:1.6}
-
-@media(max-width:680px){
-  body{padding:0;align-items:flex-start}
-  .layout{grid-template-columns:1fr;border-radius:0;border:none;box-shadow:none;min-height:100vh}
-  .left{display:none}
-  .right{padding:28px 20px;min-height:100vh}
-}
-</style>
+    @media(max-width:768px){
+      .layout{grid-template-columns:1fr;}
+      .left{display:none;}
+      .right{padding:32px 24px;min-height:100vh;}
+      .popup{width:calc(100vw - 32px);}
+    }
+  </style>
 </head>
 <body>
-<div class="bg-orb o1"></div>
-<div class="bg-orb o2"></div>
+
+<!-- Ticker background -->
+<div class="ticker-bg" aria-hidden="true">
+  <div class="ticker-row">NIFTY 22,450 ▲ BANKNIFTY 48,320 ▲ RELIANCE 2,840 ▼ TCS 3,920 ▲ INFY 1,580 ▼ HDFC 1,720 ▲ ICICI 1,050 ▲ AXISBANK 1,140 ▼ SBIN 780 ▲ LT 3,680 ▼ &nbsp;&nbsp;&nbsp; NIFTY 22,450 ▲ BANKNIFTY 48,320 ▲ RELIANCE 2,840 ▼ TCS 3,920 ▲ INFY 1,580 ▼ HDFC 1,720 ▲ ICICI 1,050 ▲</div>
+  <div class="ticker-row">CE 21900 ₹145 IV:18.2% &nbsp; PE 22000 ₹178 IV:19.1% &nbsp; CE 22100 ₹92 IV:17.8% &nbsp; PE 22200 ₹215 IV:20.4% &nbsp; CE 22300 ₹54 IV:16.9% &nbsp; CE 21900 ₹145 IV:18.2% &nbsp; PE 22000 ₹178 IV:19.1% &nbsp;</div>
+  <div class="ticker-row">OI: 23.4L &nbsp; PCR: 0.84 &nbsp; GEX: -12.4B &nbsp; VIX: 14.2 &nbsp; VPIN: 0.61 &nbsp; MAX PAIN: 22000 &nbsp; SPOT: 22,448 &nbsp; OI: 23.4L &nbsp; PCR: 0.84 &nbsp; GEX: -12.4B &nbsp; VIX: 14.2 &nbsp;</div>
+  <div class="ticker-row">NIFTY 22,450 ▲ BANKNIFTY 48,320 ▲ RELIANCE 2,840 ▼ TCS 3,920 ▲ INFY 1,580 ▼ HDFC 1,720 ▲ ICICI 1,050 ▲ AXISBANK 1,140 ▼ SBIN 780 ▲ LT 3,680 ▼ &nbsp;&nbsp;&nbsp; NIFTY 22,450 ▲ BANKNIFTY 48,320 ▲</div>
+</div>
 
 <div class="layout">
-  <!-- LEFT PANEL -->
+  <!-- Left Panel -->
   <div class="left">
-    <a href="index.html" class="brand">
-      <div class="brand-box">OL</div>
-      <span class="brand-name">Option<b>Lab</b></span>
-    </a>
-    <div class="left-tag">Trade with<br><em>Institutional</em><br>Intelligence</div>
-    <div class="left-sub">India's most advanced options platform — real-time Greeks, Smart Money signals, and live OI analytics.</div>
-    <div class="left-feats">
-      <div class="lf"><div class="lf-ico">⚡</div><div class="lf-txt"><strong>Live Signal Engine</strong>VPIN, FII flow, OI velocity — updated every second</div></div>
-      <div class="lf"><div class="lf-ico">𝛅</div><div class="lf-txt"><strong>Full Greeks Suite</strong>Delta, Gamma, Vega, Theta + GEX dealer positioning</div></div>
-      <div class="lf"><div class="lf-ico">🔗</div><div class="lf-txt"><strong>Broker Integration</strong>Connect via API for live feed and order flow</div></div>
-      <div class="lf"><div class="lf-ico">👁</div><div class="lf-txt"><strong>Spoofing Detection</strong>Catch manipulation in real-time OI data</div></div>
+    <div class="brand">OPTIONLAB</div>
+    <div>
+      <div class="headline">
+        <div>INDIA'S MOST</div>
+        <div class="dim">ADVANCED</div>
+        <div class="acc">OPTIONS</div>
+        <div>INTELLIGENCE</div>
+      </div>
     </div>
-    <div class="left-foot">
-      <div class="ld"></div>
-      <div class="lft"><strong>1,000+ traders</strong> live on OptionLab today</div>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-val">9</div>
+        <div class="stat-label">Spoofing Detectors</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">Real-time</div>
+        <div class="stat-label">Angel One Feed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">NSE</div>
+        <div class="stat-label">NIFTY 50 Focus</div>
+      </div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
+  <!-- Right Panel -->
   <div class="right">
-    <div class="tabs">
-      <button class="tab on" onclick="switchTab('login')">Login</button>
-      <button class="tab" onclick="switchTab('register')">Register</button>
+    <!-- Nav tabs -->
+    <div style="display:flex;gap:4px;margin-bottom:32px;">
+      <a href="/register.html" style="flex:1;padding:10px;background:var(--orange-dim);border:1px solid rgba(255,106,0,0.3);border-radius:8px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--orange);text-decoration:none;letter-spacing:0.08em;">REGISTER</a>
+      <a href="/login.html"    style="flex:1;padding:10px;background:transparent;border:1px solid var(--border2);border-radius:8px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:0.08em;">SIGN IN</a>
     </div>
 
-    <!-- LOGIN -->
-    <div class="fs on" id="loginForm">
-      <div class="ftitle">Welcome back</div>
-      <div class="fsub">Enter your mobile and 6-digit MPIN to continue.</div>
-      <div class="msg err" id="loginErr"></div>
-      <div class="ig">
-        <label class="il">Mobile Number</label>
-        <div class="iw"><span class="ipfx">+91</span><input type="tel" class="pfx" id="lMob" maxlength="10" placeholder="9999999999" inputmode="numeric"></div>
-      </div>
-      <div class="ig">
-        <label class="il">6-Digit MPIN</label>
-        <div class="mprow" id="lMpinRow">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-        </div>
-        <div class="mp-hint">Tap the first box and enter your MPIN</div>
-      </div>
-      <div class="spacer"></div>
-      <button class="btn-sub" onclick="doLogin()" id="loginBtn">Login to OptionLab →</button>
-      <div class="ffoot">Demo: <span class="flink" onclick="demoFill()">9999999999 / 123456</span></div>
-    </div>
-    <div class="sscreen" id="loginOk">
-      <div class="sico">✓</div>
-      <div class="stitle">Welcome back!</div>
-      <div class="ssub2">Login successful. Redirecting to dashboard…</div>
+    <!-- Stepper -->
+    <div class="stepper">
+      <div class="step active" id="step-1"><div class="step-circle">1</div><div class="step-label">Identity</div></div>
+      <div class="step-line"></div>
+      <div class="step" id="step-2"><div class="step-circle">2</div><div class="step-label">MPIN</div></div>
+      <div class="step-line"></div>
+      <div class="step" id="step-3"><div class="step-circle">3</div><div class="step-label">Confirm</div></div>
     </div>
 
-    <!-- REGISTER -->
-    <div class="fs" id="regForm">
-      <div class="stepbar" id="stepbar">
-        <div class="si"><div class="sc on" id="sc1">1</div><div class="sl on" id="sl1">Profile</div><div class="sline" id="ln1"></div></div>
-        <div class="si"><div class="sc" id="sc2">2</div><div class="sl" id="sl2">MPIN</div><div class="sline" id="ln2"></div></div>
-        <div class="si" style="flex:0"><div class="sc" id="sc3">3</div><div class="sl" id="sl3">Broker ID</div></div>
-      </div>
-      <div class="msg err" id="regErr"></div>
+    <!-- Screen 1: Identity -->
+    <div class="screen active" id="screen-identity">
+      <div class="form-title">Create Account</div>
+      <div class="form-sub">// enter your details below</div>
+      <div id="msg-identity" class="msg"></div>
 
-      <!-- STEP 1: Profile -->
-      <div id="rStep1">
-        <div class="ftitle">Create account</div>
-        <div class="fsub">Your basic details to get started on OptionLab.</div>
-        <div class="ig">
-          <label class="il">Full Name</label>
-          <input type="text" id="rName" placeholder="Rahul Sharma">
-        </div>
-        <div class="ig">
-          <label class="il">Mobile Number</label>
-          <div class="iw"><span class="ipfx">+91</span><input type="tel" class="pfx" id="rMob" maxlength="10" placeholder="9999999999" inputmode="numeric"></div>
-        </div>
-        <div class="spacer"></div>
-        <button class="btn-sub" onclick="toStep2()">Continue →</button>
+      <div class="field">
+        <label>Full Name</label>
+        <input id="inp-name" type="text" placeholder="e.g. Rahul Sharma" autocomplete="name" maxlength="80"/>
       </div>
 
-      <!-- STEP 2: MPIN -->
-      <div id="rStep2" style="display:none">
-        <div class="ftitle">Set your MPIN</div>
-        <div class="fsub">Choose a secure 6-digit MPIN for OptionLab login.</div>
-        <label class="il">Create MPIN</label>
-        <div class="mprow" id="rMpinRow">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+      <div class="field">
+        <label>Mobile Number</label>
+        <div class="phone-wrap">
+          <span class="phone-prefix">+91</span>
+          <input id="inp-mobile"
+                 type="tel"
+                 inputmode="numeric"
+                 maxlength="10"
+                 placeholder="10-digit number"
+                 pattern="[0-9]*"
+                 autocomplete="tel"/>
         </div>
-        <div class="mp-hint">Enter any 6 digits</div>
-        <label class="il" style="margin-top:18px">Confirm MPIN</label>
-        <div class="mprow" id="rMpinCRow">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-        </div>
-        <div class="mp-warn">⚠️ Keep this MPIN different from your broker's trading MPIN</div>
-        <div class="spacer"></div>
-        <button class="btn-sub" onclick="toStep3()">Continue →</button>
-        <button class="btn-back" onclick="toStep1()">← Back</button>
+        <div class="field-note">Cannot be changed later</div>
       </div>
 
-      <!-- STEP 3: Broker ID + Confirm -->
-      <div id="rStep3" style="display:none">
-        <div class="ftitle">Broker ID & Confirm</div>
-        <div class="fsub">Add your broker Client ID and review your details.</div>
-        <div class="ig">
-          <label class="il">Broker Client ID <span style="color:var(--txdd);font-weight:400;font-size:11px">(optional)</span></label>
-          <input type="text" id="rClientId" placeholder="e.g. SBHS331" style="text-transform:uppercase">
-          <div class="ihelp">Don't have one yet? <a href="setup.html" target="_blank">Broker setup guide →</a></div>
+      <div class="field">
+        <label>
+          Angel One Client ID
+          <button class="client-info-btn" onclick="showClientHelp()" title="What is this?">?</button>
+        </label>
+        <div class="client-wrap">
+          <input id="inp-client"
+                 type="text"
+                 inputmode="text"
+                 maxlength="10"
+                 placeholder="E.G. SBHS331"
+                 autocomplete="off"
+                 oninput="onClientInput(this)"/>
         </div>
-        <div class="sumcard">
-          <div class="sumrow"><span class="sumlbl">NAME</span><span class="sumval" id="sumName">—</span></div>
-          <div class="sumrow"><span class="sumlbl">MOBILE</span><span class="sumval" id="sumMob">—</span></div>
-          <div class="sumrow"><span class="sumlbl">MPIN</span><span class="sumval">••••••</span></div>
+        <div class="field-note" id="client-format-hint" style="display:none;"></div>
+        <div class="field-note warning">⚠ Cannot be changed later — double check before submitting</div>
+      </div>
+
+      <button class="btn-primary" id="btn-step1" onclick="goToMpin()">Continue → Step 2</button>
+      <div class="signin-link">Already registered? <a href="/login.html">Sign in here</a></div>
+    </div>
+
+    <!-- Screen 2: MPIN -->
+    <div class="screen" id="screen-mpin">
+      <div class="form-title">Set Your MPIN</div>
+      <div class="form-sub">// 4-digit security pin for login</div>
+      <div id="msg-mpin" class="msg"></div>
+
+      <div class="field">
+        <label>Choose MPIN</label>
+        <input id="inp-mpin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="new-password"/>
+      </div>
+      <div class="field">
+        <label>Confirm MPIN</label>
+        <input id="inp-mpin2" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="new-password"/>
+      </div>
+
+      <button class="btn-primary" onclick="goToConfirm()">Continue → Step 3</button>
+      <button class="btn-secondary" onclick="goBack('screen-identity', 2)">← Back</button>
+    </div>
+
+    <!-- Screen 3: Confirm & Register -->
+    <div class="screen" id="screen-confirm">
+      <div class="form-title">Confirm Details</div>
+      <div class="form-sub">// review before creating account</div>
+      <div id="msg-confirm" class="msg"></div>
+
+      <div style="background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:20px;margin-bottom:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Name</div>
+            <div id="conf-name" style="font-family:'IBM Plex Mono',monospace;font-size:14px;"></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Mobile</div>
+            <div id="conf-mobile" style="font-family:'IBM Plex Mono',monospace;font-size:14px;"></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Angel One ID</div>
+            <div id="conf-client" style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--orange);"></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Plan</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--green);">FREE</div>
+          </div>
         </div>
-        <button class="btn-sub" onclick="doRegister()" id="regBtn">Create Account →</button>
-        <button class="btn-back" onclick="toStep2()">← Back</button>
+      </div>
+
+      <div style="background:rgba(255,170,0,0.05);border:1px solid rgba(255,170,0,0.15);border-radius:8px;padding:12px 14px;font-size:12px;color:#ffaa00;font-family:'IBM Plex Mono',monospace;line-height:1.5;margin-bottom:20px;">
+        ⚠ Mobile number and Angel One Client ID cannot be changed after registration.
+      </div>
+
+      <button class="btn-primary" id="btn-register" onclick="doRegister()">Create Account →</button>
+      <button class="btn-secondary" onclick="goBack('screen-mpin', 3)">← Back</button>
+    </div>
+
+    <!-- Screen 4: Success -->
+    <div class="screen" id="screen-success">
+      <div class="success-icon">✓</div>
+      <div class="form-title" style="text-align:center;">Account Created!</div>
+      <div class="form-sub" style="text-align:center;">// welcome to OptionLab</div>
+      <div style="text-align:center;margin-top:8px;">
+        <a href="/login.html" class="btn-primary" style="display:inline-block;text-decoration:none;padding:14px 32px;width:auto;">Sign In Now →</a>
       </div>
     </div>
-    <div class="sscreen" id="regOk">
-      <div class="sico">✓</div>
-      <div class="stitle">Account created!</div>
-      <div class="ssub2" id="regOkMsg">Welcome to OptionLab. Setting up your account…</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ANGEL ONE CLIENT ID CONFIRMATION POPUP
+═══════════════════════════════════════════════════════ -->
+<div class="popup-overlay" id="popup-overlay" onclick="handleOverlayClick(event)">
+  <div class="popup">
+    <div class="popup-header">
+      <div class="popup-header-top">
+        <div class="popup-icon">🔒</div>
+        <div>
+          <div class="popup-title">Confirm Client ID</div>
+          <div class="popup-subtitle">ONE TIME ENTRY — CANNOT BE CHANGED</div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-body">
+      <!-- Language Tabs -->
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchLang('en')">🇬🇧 English</button>
+        <button class="lang-tab" onclick="switchLang('hi')">🇮🇳 हिंदी</button>
+      </div>
+
+      <!-- Client ID Preview -->
+      <div class="client-preview">
+        <div class="client-preview-label">Your Angel One Client ID</div>
+        <div class="client-preview-value" id="popup-client-display">—</div>
+      </div>
+
+      <!-- English Content -->
+      <div class="lang-content active" id="lang-en">
+        <div class="format-hint">
+          <strong>Valid Format:</strong> 4 letters + 3 digits (e.g. SBHS331) or 1-2 letters + 5-6 digits (e.g. A123456).<br>
+          Find it on your Angel One app → Profile → Client Code.
+        </div>
+        <div class="checklist">
+          <div class="check-item"><div class="ci">✓</div><span>I have verified this Client ID matches exactly what is shown in my Angel One app.</span></div>
+          <div class="check-item"><div class="ci">✓</div><span>I understand this cannot be changed after registration without contacting support.</span></div>
+          <div class="check-item"><div class="ci">✓</div><span>Entering a wrong Client ID will prevent the OptionLab desktop app from connecting to my Angel One account.</span></div>
+        </div>
+        <div class="warning-box">
+          <span class="wi">⚠</span>This is a permanent entry. Once saved, your Client ID is locked to your account and cannot be edited from the app.
+        </div>
+      </div>
+
+      <!-- Hindi Content -->
+      <div class="lang-content" id="lang-hi">
+        <div class="format-hint" style="font-family:'Manrope',sans-serif;">
+          <strong style="color:var(--green);">सही फॉर्मेट:</strong> 4 अक्षर + 3 अंक (जैसे SBHS331) या 1-2 अक्षर + 5-6 अंक (जैसे A123456)।<br>
+          Angel One ऐप → Profile → Client Code में देखें।
+        </div>
+        <div class="checklist" style="font-family:'Manrope',sans-serif;">
+          <div class="check-item"><div class="ci">✓</div><span>मैंने यह Client ID अपने Angel One ऐप में जाकर सत्यापित कर ली है।</span></div>
+          <div class="check-item"><div class="ci">✓</div><span>मैं समझता/समझती हूँ कि रजिस्ट्रेशन के बाद यह नहीं बदली जा सकती।</span></div>
+          <div class="check-item"><div class="ci">✓</div><span>गलत Client ID डालने पर OptionLab डेस्कटॉप ऐप मेरे Angel One से कनेक्ट नहीं हो पाएगा।</span></div>
+        </div>
+        <div class="warning-box" style="font-family:'Manrope',sans-serif;">
+          <span class="wi">⚠</span>यह एक स्थायी प्रविष्टि है। एक बार सेव होने के बाद, आपकी Client ID आपके अकाउंट से लॉक हो जाती है और ऐप से बदली नहीं जा सकती।
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <button class="btn-confirm" onclick="confirmClientId()">
+        ✓ Yes, this is correct — Save Client ID
+      </button>
+      <button class="btn-cancel-popup" onclick="cancelClientId()">
+        ✗ Let me re-check / मुझे दोबारा जाँचना है
+      </button>
     </div>
   </div>
 </div>
 
 <script>
-const API='https://web-production-8a8e1.up.railway.app';
+// ─── State ───────────────────────────────────────────────
+var S = {
+  name: '', mobile: '', clientId: '', mpin: '',
+  clientConfirmed: false
+};
 
-function switchTab(t){
-  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on',(t==='login'&&i===0)||(t==='register'&&i===1)));
-  document.getElementById('loginForm').classList.toggle('on',t==='login');
-  document.getElementById('loginOk').classList.remove('show');
-  document.getElementById('regForm').classList.toggle('on',t==='register');
-  document.getElementById('regOk').classList.remove('show');
-}
+// ─── API config ─────────────────────────────────────────
+var API = window.JBPRO_API || '';
 
-function wireMpin(id){
-  const bs=document.querySelectorAll(`#${id} .mpb`);
-  bs.forEach((b,i)=>{
-    b.addEventListener('input',e=>{
-      const v=e.target.value.replace(/\D/g,'');
-      e.target.value=v?v[v.length-1]:'';
-      e.target.classList.toggle('fl',!!e.target.value);
-      if(e.target.value&&i<bs.length-1)bs[i+1].focus();
-    });
-    b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)bs[i-1].focus();});
-    b.addEventListener('paste',e=>{
-      e.preventDefault();
-      const t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
-      bs.forEach((x,j)=>{x.value=t[j]||'';x.classList.toggle('fl',!!x.value);});
-      if(t.length>=bs.length)bs[bs.length-1].focus();
-    });
-  });
-}
-wireMpin('lMpinRow');wireMpin('rMpinRow');wireMpin('rMpinCRow');
+// ─── Mobile field: numbers only ─────────────────────────
+document.getElementById('inp-mobile').addEventListener('input', function() {
+  // Strip any non-digit character immediately
+  this.value = this.value.replace(/\D/g, '');
+});
+document.getElementById('inp-mobile').addEventListener('keypress', function(e) {
+  if (!/\d/.test(e.key)) e.preventDefault();
+});
+document.getElementById('inp-mobile').addEventListener('paste', function(e) {
+  e.preventDefault();
+  var pasted = (e.clipboardData || window.clipboardData).getData('text');
+  var digits = pasted.replace(/\D/g, '').slice(0, 10);
+  this.value = digits;
+  this.dispatchEvent(new Event('input'));
+});
 
-function getMpin(id){return Array.from(document.querySelectorAll(`#${id} .mpb`)).map(b=>b.value).join('');}
-function clearMpin(id){document.querySelectorAll(`#${id} .mpb`).forEach(b=>{b.value='';b.classList.remove('fl');});}
+// ─── MPIN fields: numbers only ──────────────────────────
+['inp-mpin','inp-mpin2'].forEach(function(id) {
+  var el = document.getElementById(id);
+  el.addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+  el.addEventListener('keypress', function(e) { if (!/\d/.test(e.key)) e.preventDefault(); });
+});
 
-function showErr(id,msg){
-  const e=document.getElementById(id);e.textContent=msg;e.classList.add('show');
-  setTimeout(()=>e.classList.remove('show'),4500);
-}
+// ─── Angel One Client ID: format validation ─────────────
+// Angel One Client IDs follow patterns like: SBHS331, A123456, AB12345
+var ANGEL_REGEX = /^[A-Z]{1,4}\d{3,6}$/;
 
-// ---- LOGIN ----
-async function doLogin(){
-  const mob=document.getElementById('lMob').value.trim();
-  const mpin=getMpin('lMpinRow');
-  if(!/^\d{10}$/.test(mob))return showErr('loginErr','Enter a valid 10-digit mobile number');
-  if(mpin.length!==6)return showErr('loginErr','Enter your 6-digit MPIN');
-  const btn=document.getElementById('loginBtn');
-  btn.disabled=true;btn.innerHTML='<div class="spin"></div> Logging in…';
-  try{
-    const r=await fetch(`${API}/api/auth/login-mpin`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,mpin})});
-    const d=await r.json();
-    if(!r.ok)throw new Error(d.error||'Login failed');
-    localStorage.setItem('optionlab_token',d.token);
-    localStorage.setItem('optionlab_user',JSON.stringify(d.user));
-    document.getElementById('loginForm').style.display='none';
-    document.getElementById('loginOk').classList.add('show');
-    setTimeout(()=>window.location.href='index.html',1800);
-  }catch(e){
-    showErr('loginErr',e.message);
-    btn.disabled=false;btn.innerHTML='Login to OptionLab →';
-    clearMpin('lMpinRow');
+function onClientInput(el) {
+  el.value = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+  var val = el.value;
+  var hint = document.getElementById('client-format-hint');
+
+  if (val.length === 0) {
+    el.classList.remove('valid','error');
+    hint.style.display = 'none';
+    S.clientConfirmed = false;
+    return;
+  }
+
+  S.clientConfirmed = false; // reset confirmation on any edit
+
+  if (ANGEL_REGEX.test(val)) {
+    el.classList.add('valid'); el.classList.remove('error');
+    hint.style.display = 'block';
+    hint.style.color = 'var(--green)';
+    hint.textContent = '✓ Format looks valid — click confirm to lock this ID';
+  } else {
+    el.classList.remove('valid'); el.classList.add('error');
+    hint.style.display = 'block';
+    hint.style.color = 'var(--red)';
+    hint.textContent = '✗ Format: 1-4 letters followed by 3-6 digits (e.g. SBHS331, A123456)';
   }
 }
 
-function demoFill(){
-  document.getElementById('lMob').value='9999999999';
-  const bs=document.querySelectorAll('#lMpinRow .mpb');
-  '123456'.split('').forEach((d,i)=>{bs[i].value=d;bs[i].classList.add('fl');});
+// Trigger popup when user clicks into the client ID field (after typing something)
+document.getElementById('inp-client').addEventListener('blur', function() {
+  var val = this.value.trim();
+  if (val.length > 0 && ANGEL_REGEX.test(val) && !S.clientConfirmed) {
+    showClientConfirmPopup(val);
+  }
+});
+
+// ─── Popup: show help / info ─────────────────────────────
+function showClientHelp() {
+  var val = document.getElementById('inp-client').value.trim();
+  if (val.length > 0 && ANGEL_REGEX.test(val)) {
+    showClientConfirmPopup(val);
+  } else {
+    showClientConfirmPopup('');
+  }
 }
 
-// ---- REGISTER STEPS ----
-let rd={};
+function showClientConfirmPopup(clientId) {
+  document.getElementById('popup-client-display').textContent = clientId || '(not entered yet)';
+  document.getElementById('popup-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
-function setStep(n){
-  [1,2,3].forEach(i=>{
-    const sc=document.getElementById('sc'+i),sl=document.getElementById('sl'+i);
-    sc.className='sc'+(i<n?' dn':i===n?' on':'');
-    sl.className='sl'+(i<n?' dn':i===n?' on':'');
-    sc.textContent=i<n?'✓':i;
-    if(i<3)document.getElementById('ln'+i).className='sline'+(i<n?' dn':'');
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('popup-overlay')) cancelClientId();
+}
+
+function switchLang(lang) {
+  document.querySelectorAll('.lang-tab').forEach(function(t,i){ t.classList.toggle('active', (i===0&&lang==='en')||(i===1&&lang==='hi')); });
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-hi').classList.toggle('active', lang === 'hi');
+}
+
+function confirmClientId() {
+  var val = document.getElementById('inp-client').value.trim();
+  if (!ANGEL_REGEX.test(val)) {
+    showMsg('msg-identity','Please enter a valid Angel One Client ID first.','err');
+    closePopup();
+    return;
+  }
+  S.clientConfirmed = true;
+  var el = document.getElementById('inp-client');
+  el.classList.add('valid'); el.classList.remove('error');
+  var hint = document.getElementById('client-format-hint');
+  hint.style.display = 'block';
+  hint.style.color = 'var(--green)';
+  hint.textContent = '✓ Client ID confirmed and locked';
+  el.readOnly = true;
+  el.style.opacity = '0.7';
+  closePopup();
+}
+
+function cancelClientId() {
+  S.clientConfirmed = false;
+  closePopup();
+  setTimeout(function(){ document.getElementById('inp-client').focus(); }, 100);
+}
+
+function closePopup() {
+  document.getElementById('popup-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ─── Stepper helpers ────────────────────────────────────
+function setStep(n) {
+  [1,2,3].forEach(function(i) {
+    var s = document.getElementById('step-'+i);
+    s.classList.remove('active','done');
+    if (i < n) s.classList.add('done');
+    else if (i === n) s.classList.add('active');
   });
 }
 
-function toStep1(){
-  document.getElementById('rStep1').style.display='';
-  document.getElementById('rStep2').style.display='none';
-  document.getElementById('rStep3').style.display='none';
-  setStep(1);
+function goBack(screenId, stepNum) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(screenId).classList.add('active');
+  setStep(stepNum - 1);
 }
-function toStep2(){
-  const name=document.getElementById('rName').value.trim();
-  const mob=document.getElementById('rMob').value.trim();
-  if(!name)return showErr('regErr','Please enter your full name');
-  if(!/^\d{10}$/.test(mob))return showErr('regErr','Enter a valid 10-digit mobile number');
-  rd.name=name;rd.mobile=mob;
-  document.getElementById('rStep1').style.display='none';
-  document.getElementById('rStep2').style.display='';
-  document.getElementById('rStep3').style.display='none';
+
+// ─── Step 1 → Step 2 ────────────────────────────────────
+function goToMpin() {
+  var name   = document.getElementById('inp-name').value.trim();
+  var mobile = document.getElementById('inp-mobile').value.trim();
+  var client = document.getElementById('inp-client').value.trim();
+
+  if (!name)                          return showMsg('msg-identity','Please enter your full name.','err');
+  if (!/^\d{10}$/.test(mobile))       return showMsg('msg-identity','Enter a valid 10-digit mobile number.','err');
+  if (!ANGEL_REGEX.test(client))      return showMsg('msg-identity','Enter a valid Angel One Client ID (e.g. SBHS331).','err');
+  if (!S.clientConfirmed)             return showMsg('msg-identity','Please confirm your Angel One Client ID using the confirmation popup.','err');
+
+  S.name = name; S.mobile = mobile; S.clientId = client;
+  hideMsg('msg-identity');
+  switchScreen('screen-mpin');
   setStep(2);
-  document.querySelector('#rMpinRow .mpb').focus();
 }
-function toStep3(){
-  const mpin=getMpin('rMpinRow');
-  const conf=getMpin('rMpinCRow');
-  if(mpin.length!==6)return showErr('regErr','Enter a complete 6-digit MPIN');
-  if(mpin!==conf)return showErr('regErr','MPINs do not match — please re-enter');
-  rd.mpin=mpin;
-  document.getElementById('sumName').textContent=rd.name;
-  document.getElementById('sumMob').textContent='+91 '+rd.mobile;
-  document.getElementById('rStep1').style.display='none';
-  document.getElementById('rStep2').style.display='none';
-  document.getElementById('rStep3').style.display='';
+
+// ─── Step 2 → Step 3 ────────────────────────────────────
+function goToConfirm() {
+  var m1 = document.getElementById('inp-mpin').value;
+  var m2 = document.getElementById('inp-mpin2').value;
+  if (!/^\d{4}$/.test(m1)) return showMsg('msg-mpin','MPIN must be exactly 4 digits.','err');
+  if (m1 !== m2)            return showMsg('msg-mpin','MPINs do not match.','err');
+  S.mpin = m1;
+
+  document.getElementById('conf-name').textContent   = S.name;
+  document.getElementById('conf-mobile').textContent = '+91 ' + S.mobile;
+  document.getElementById('conf-client').textContent = S.clientId;
+  hideMsg('msg-mpin');
+  switchScreen('screen-confirm');
   setStep(3);
 }
 
-async function doRegister(){
-  const clientId=document.getElementById('rClientId').value.trim().toUpperCase();
-  const btn=document.getElementById('regBtn');
-  btn.disabled=true;btn.innerHTML='<div class="spin"></div> Creating account…';
-  try{
-    const body={name:rd.name,mobile:rd.mobile,mpin:rd.mpin};
-    if(clientId)body.broker_client_id=clientId;
-    const r=await fetch(`${API}/api/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const d=await r.json();
-    if(!r.ok)throw new Error(d.error||'Registration failed');
-    localStorage.setItem('optionlab_token',d.token);
-    localStorage.setItem('optionlab_user',JSON.stringify(d.user));
-    document.getElementById('regOkMsg').textContent=`Welcome, ${rd.name}! ${clientId?'Redirecting to dashboard…':'Taking you to the setup guide…'}`;
-    document.getElementById('regForm').style.display='none';
-    document.getElementById('regOk').classList.add('show');
-    setTimeout(()=>window.location.href=clientId?'index.html':'setup.html',2000);
-  }catch(e){
-    showErr('regErr',e.message);
-    btn.disabled=false;btn.innerHTML='Create Account →';
+// ─── Step 3: Register ────────────────────────────────────
+async function doRegister() {
+  var btn = document.getElementById('btn-register');
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  hideMsg('msg-confirm');
+  try {
+    var res = await fetch(API + '/api/auth/register', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name: S.name, mobile: S.mobile, mpin: S.mpin, angel_client_code: S.clientId })
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Registration failed');
+    switchScreen('screen-success');
+  } catch(e) {
+    showMsg('msg-confirm', e.message, 'err');
+    btn.disabled = false; btn.textContent = 'Create Account →';
   }
 }
 
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&document.getElementById('loginForm').classList.contains('on'))doLogin();
-});
+// ─── Utilities ───────────────────────────────────────────
+function switchScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+function showMsg(id, txt, type) {
+  var el = document.getElementById(id);
+  el.textContent = txt;
+  el.className = 'msg ' + type;
+}
+function hideMsg(id) {
+  var el = document.getElementById(id); el.className = 'msg'; el.textContent = '';
+}
+
+// Keyboard: Enter key support
+document.getElementById('inp-name').addEventListener('keyup', function(e){ if(e.key==='Enter') document.getElementById('inp-mobile').focus(); });
+document.getElementById('inp-mobile').addEventListener('keyup', function(e){ if(e.key==='Enter') document.getElementById('inp-client').focus(); });
+document.getElementById('inp-mpin').addEventListener('keyup', function(e){ if(e.key==='Enter') document.getElementById('inp-mpin2').focus(); });
+document.getElementById('inp-mpin2').addEventListener('keyup', function(e){ if(e.key==='Enter') goToConfirm(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePopup(); });
 </script>
 </body>
 </html>
