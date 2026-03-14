@@ -1,6 +1,6 @@
 {
   "name": "optionlab-backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OptionLab Trading App Backend API",
   "main": "src/index.js",
   "scripts": {
@@ -26,3 +26,4 @@
     "node": ">=18.0.0"
   }
 }
+

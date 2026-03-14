@@ -62,7 +62,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     service: 'OptionLab API',
-    version: '1.0.0',
+    version: '1.0.1',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development'
   });
@@ -208,4 +208,5 @@ app.listen(PORT, async () => {
   console.log('Running database migration...');
   await runMigration();
 });
+
 
