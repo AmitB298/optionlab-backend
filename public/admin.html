@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OptionLab Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0c10;
+  --surface: #111318;
+  --surface2: #181c24;
+  --border: #1e2330;
+  --accent: #00d4aa;
+  --accent2: #0088ff;
+  --warn: #ff6b35;
+  --danger: #ff3d5a;
+  --text: #e8eaf0;
+  --muted: #5a6070;
+  --paid: #00d4aa;
+  --free: #5a6070;
+  --trial: #f59e0b;
+  --expired: #ff3d5a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ── LOGIN ── */
+#login-screen{
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background: radial-gradient(ellipse at 30% 50%, #001a12 0%, var(--bg) 60%);
+}
+.login-box{
+  width:360px;padding:48px 40px;
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  box-shadow:0 0 60px rgba(0,212,170,0.08);
+}
+.login-logo{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px;}
+.login-title{font-size:24px;font-weight:700;margin-bottom:6px;}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.field input{
+  width:100%;padding:12px 14px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Sora',sans-serif;font-size:14px;outline:none;
+  transition:border-color .2s;
+}
+.field input:focus{border-color:var(--accent);}
+.btn-primary{
+  width:100%;padding:13px;margin-top:8px;
+  background:var(--accent);color:#000;border:none;border-radius:8px;
+  font-family:'Sora',sans-serif;font-weight:700;font-size:14px;cursor:pointer;
+  transition:opacity .2s,transform .1s;
+}
+.btn-primary:hover{opacity:.9;}
+.btn-primary:active{transform:scale(.98);}
+.msg{margin-top:12px;font-size:13px;color:var(--danger);text-align:center;min-height:18px;}
+
+/* ── SHELL ── */
+#app{display:none;flex-direction:column;min-height:100vh;}
+
+/* topbar */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:56px;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+}
+.topbar-brand{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.admin-badge{font-size:12px;color:var(--muted);}
+.admin-name{font-size:13px;font-weight:600;color:var(--text);}
+.btn-logout{padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;transition:all .2s;}
+.btn-logout:hover{border-color:var(--danger);color:var(--danger);}
+
+/* nav tabs */
+.nav-tabs{
+  display:flex;gap:4px;padding:12px 28px 0;
+  background:var(--surface);border-bottom:1px solid var(--border);
+}
+.nav-tab{
+  padding:8px 18px 10px;font-size:13px;font-weight:600;color:var(--muted);
+  border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .2s;letter-spacing:.3px;
+}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.nav-tab:hover:not(.active){color:var(--text);}
+
+/* content */
+.content{flex:1;padding:28px;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px;}
+.stat-card{
+  padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  transition:border-color .2s;
+}
+.stat-card:hover{border-color:var(--accent);}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.stat-value{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;line-height:1;}
+.stat-value.green{color:var(--accent);}
+.stat-value.blue{color:var(--accent2);}
+.stat-value.orange{color:var(--trial);}
+.stat-value.red{color:var(--danger);}
+
+/* section header */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.section-title{font-size:15px;font-weight:700;letter-spacing:.3px;}
+.search-box{
+  padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;width:220px;
+  transition:border-color .2s;
+}
+.search-box:focus{border-color:var(--accent);}
+
+/* table */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+th{padding:11px 16px;text-align:left;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+
+/* badges */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px;}
+.badge-paid{background:rgba(0,212,170,.15);color:var(--paid);}
+.badge-free{background:rgba(90,96,112,.15);color:var(--free);}
+.badge-trial{background:rgba(245,158,11,.15);color:var(--trial);}
+.badge-expired{background:rgba(255,61,90,.15);color:var(--expired);}
+.badge-active{background:rgba(0,212,170,.1);color:var(--accent);}
+.badge-inactive{background:rgba(255,61,90,.1);color:var(--danger);}
+.badge-flagged{background:rgba(255,107,53,.15);color:var(--warn);}
+
+/* action buttons */
+.action-btn{
+  padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;
+  border:1px solid transparent;transition:all .15s;background:transparent;
+}
+.action-btn.plan{color:var(--accent2);border-color:rgba(0,136,255,.3);}
+.action-btn.plan:hover{background:rgba(0,136,255,.1);}
+.action-btn.toggle{color:var(--muted);border-color:var(--border);}
+.action-btn.toggle:hover{color:var(--text);border-color:var(--muted);}
+.action-btn.flag{color:var(--warn);border-color:rgba(255,107,53,.3);}
+.action-btn.flag:hover{background:rgba(255,107,53,.1);}
+
+/* add user form */
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:500px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid .full{grid-column:1/-1;}
+.form-title{font-size:15px;font-weight:700;margin-bottom:20px;}
+.btn-submit{
+  margin-top:8px;padding:11px 24px;
+  background:var(--accent);color:#000;border:none;border-radius:8px;
+  font-family:'Sora',sans-serif;font-weight:700;font-size:13px;cursor:pointer;
+  transition:opacity .2s;
+}
+.btn-submit:hover{opacity:.85;}
+.form-msg{margin-top:12px;font-size:13px;min-height:18px;}
+.form-msg.ok{color:var(--accent);}
+.form-msg.err{color:var(--danger);}
+
+/* pagination */
+.pagination{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:16px;}
+.page-btn{
+  padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  color:var(--muted);font-size:12px;cursor:pointer;transition:all .2s;
+}
+.page-btn:hover{border-color:var(--accent);color:var(--accent);}
+.page-btn:disabled{opacity:.3;cursor:default;}
+.page-info{font-size:12px;color:var(--muted);}
+
+/* loader */
+.loader{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
+
+/* modal */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;
+  align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:28px;width:340px;
+}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:16px;}
+.modal-footer{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+.btn-cancel{padding:8px 16px;background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:13px;cursor:pointer;}
+.btn-confirm{padding:8px 16px;background:var(--accent2);border:none;border-radius:7px;color:#fff;font-weight:600;font-size:13px;cursor:pointer;}
+
+select.field-select{
+  width:100%;padding:11px 14px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Sora',sans-serif;font-size:14px;outline:none;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">OptionLab</div>
+    <div class="login-title">Admin Console</div>
+    <div class="login-sub">Sign in with your admin credentials</div>
+    <div class="field"><label>Mobile Number</label><input id="l-mobile" type="tel" placeholder="10-digit mobile" maxlength="10"/></div>
+    <div class="field"><label>MPIN</label><input id="l-mpin" type="password" placeholder="6-digit MPIN" maxlength="6"/></div>
+    <button class="btn-primary" onclick="doLogin()">Sign In</button>
+    <div class="msg" id="login-msg"></div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">OptionLab · Admin</div>
+    <div class="topbar-right">
+      <span class="admin-badge">Logged in as</span>
+      <span class="admin-name" id="admin-name-display">—</span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('dashboard',this)">Dashboard</button>
+    <button class="nav-tab" onclick="showTab('users',this)">Users</button>
+    <button class="nav-tab" onclick="showTab('add-user',this)">Add User</button>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-pane active" id="tab-dashboard">
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value green" id="s-total">—</div></div>
+        <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value blue" id="s-active">—</div></div>
+        <div class="stat-card"><div class="stat-label">Paid</div><div class="stat-value green" id="s-paid">—</div></div>
+        <div class="stat-card"><div class="stat-label">Free</div><div class="stat-value" id="s-free">—</div></div>
+        <div class="stat-card"><div class="stat-label">Flagged</div><div class="stat-value red" id="s-flagged">—</div></div>
+      </div>
+
+      <div class="section-header"><div class="section-title">Recent Registrations</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Mobile</th><th>Plan</th><th>Status</th><th>Joined</th></tr></thead>
+          <tbody id="recent-tbody"><tr><td colspan="6" class="loader">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="tab-pane" id="tab-users">
+      <div class="section-header">
+        <div class="section-title">All Users</div>
+        <input class="search-box" id="search-input" placeholder="Search name or mobile…" oninput="debounceSearch()"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Mobile</th><th>Angel Code</th><th>Plan</th><th>Status</th><th>Flagged</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody id="users-tbody"><tr><td colspan="8" class="loader">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button class="page-btn" id="btn-prev" onclick="changePage(-1)">← Prev</button>
+        <span class="page-info" id="page-info">—</span>
+        <button class="page-btn" id="btn-next" onclick="changePage(1)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ADD USER -->
+    <div class="tab-pane" id="tab-add-user">
+      <div class="form-card">
+        <div class="form-title">Add New User</div>
+        <div class="form-grid">
+          <div class="field full"><label>Full Name</label><input id="au-name" type="text" placeholder="e.g. Rahul Sharma" maxlength="12"/></div>
+          <div class="field"><label>Mobile</label><input id="au-mobile" type="tel" placeholder="10-digit" maxlength="10"/></div>
+          <div class="field"><label>MPIN</label><input id="au-mpin" type="password" placeholder="6-digit" maxlength="6"/></div>
+          <div class="field"><label>Angel Client Code</label><input id="au-angel" type="text" placeholder="Optional"/></div>
+          <div class="field">
+            <label>Plan</label>
+            <select id="au-plan" class="field-select">
+              <option value="FREE">FREE</option>
+              <option value="TRIAL">TRIAL</option>
+              <option value="PAID">PAID</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-submit" onclick="addUser()">Add User</button>
+        <div class="form-msg" id="au-msg"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PLAN MODAL -->
+<div class="modal-overlay" id="plan-modal">
+  <div class="modal">
+    <div class="modal-title">Change Plan</div>
+    <div class="field">
+      <label>Select Plan</label>
+      <select id="modal-plan" class="field-select">
+        <option value="FREE">FREE</option>
+        <option value="TRIAL">TRIAL</option>
+        <option value="PAID">PAID</option>
+        <option value="EXPIRED">EXPIRED</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmPlan()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE = '';   // same origin
+let TOKEN = '';
+let currentPage = 1;
+let totalPages = 1;
+let searchTimer = null;
+let planUserId = null;
+
+// ── AUTH ──
+async function doLogin() {
+  const mobile = document.getElementById('l-mobile').value.trim();
+  const mpin   = document.getElementById('l-mpin').value.trim();
+  const msg    = document.getElementById('login-msg');
+  msg.textContent = '';
+  if (!mobile || !mpin) { msg.textContent = 'Enter mobile and MPIN'; return; }
+  try {
+    const r = await fetch('/api/admin/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({mobile, mpin})
+    });
+    const d = await r.json();
+    if (!d.success) { msg.textContent = d.message; return; }
+    TOKEN = d.token;
+    document.getElementById('admin-name-display').textContent = d.admin.name || d.admin.mobile;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    loadDashboard();
+  } catch(e) { msg.textContent = 'Connection error'; }
+}
+
+function logout() {
+  TOKEN = '';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('l-mpin').value = '';
+}
+
+// ── TABS ──
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'users') { currentPage = 1; loadUsers(); }
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+  try {
+    const r = await fetch('/api/admin/dashboard', { headers:{ Authorization:'Bearer '+TOKEN } });
+    const d = await r.json();
+    if (!d.success) return;
+    const s = d.stats;
+    document.getElementById('s-total').textContent   = s.totalUsers;
+    document.getElementById('s-active').textContent  = s.activeUsers;
+    document.getElementById('s-paid').textContent    = s.paidUsers;
+    document.getElementById('s-free').textContent    = s.freeUsers;
+    document.getElementById('s-flagged').textContent = s.flaggedUsers;
+    const tbody = document.getElementById('recent-tbody');
+    if (!d.recentUsers.length) { tbody.innerHTML = '<tr><td colspan="6" class="loader">No users yet</td></tr>'; return; }
+    tbody.innerHTML = d.recentUsers.map((u,i) => `
+      <tr>
+        <td style="color:var(--muted);font-family:'JetBrains Mono',monospace">${i+1}</td>
+        <td>${u.name||'—'}</td>
+        <td style="font-family:'JetBrains Mono',monospace">${u.mobile}</td>
+        <td>${planBadge(u.plan)}</td>
+        <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-inactive">Inactive</span>'}</td>
+        <td style="color:var(--muted);font-size:12px">${fmtDate(u.created_at)}</td>
+      </tr>`).join('');
+  } catch(e) { console.error(e); }
+}
+
+// ── USERS ──
+async function loadUsers(page=currentPage) {
+  const search = document.getElementById('search-input')?.value.trim()||'';
+  const tbody  = document.getElementById('users-tbody');
+  tbody.innerHTML = '<tr><td colspan="8" class="loader">Loading…</td></tr>';
+  try {
+    const q = new URLSearchParams({ page, limit:20, search });
+    const r = await fetch(`/api/admin/users?${q}`, { headers:{ Authorization:'Bearer '+TOKEN } });
+    const d = await r.json();
+    if (!d.success) { tbody.innerHTML = '<tr><td colspan="8" class="loader">Error loading users</td></tr>'; return; }
+    totalPages = d.pages||1;
+    document.getElementById('page-info').textContent = `Page ${d.page} of ${totalPages} · ${d.total} users`;
+    document.getElementById('btn-prev').disabled = d.page <= 1;
+    document.getElementById('btn-next').disabled = d.page >= totalPages;
+    if (!d.users.length) { tbody.innerHTML = '<tr><td colspan="8" class="loader">No users found</td></tr>'; return; }
+    tbody.innerHTML = d.users.map(u => `
+      <tr>
+        <td>${u.name||'—'}</td>
+        <td style="font-family:'JetBrains Mono',monospace">${u.mobile}</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">${u.angel_client_code||'—'}</td>
+        <td>${planBadge(u.plan)}</td>
+        <td>${u.is_active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-inactive">Inactive</span>'}</td>
+        <td>${u.flagged ? '<span class="badge badge-flagged">Flagged</span>' : '<span style="color:var(--muted);font-size:12px">—</span>'}</td>
+        <td style="color:var(--muted);font-size:12px">${fmtDate(u.created_at)}</td>
+        <td style="white-space:nowrap">
+          <button class="action-btn plan" onclick="openPlanModal(${u.id})">Plan</button>
+          <button class="action-btn toggle" onclick="toggleStatus(${u.id},${!u.is_active})">${u.is_active?'Deactivate':'Activate'}</button>
+          <button class="action-btn flag" onclick="toggleFlag(${u.id},${!u.flagged})">${u.flagged?'Unflag':'Flag'}</button>
+        </td>
+      </tr>`).join('');
+  } catch(e) { tbody.innerHTML = '<tr><td colspan="8" class="loader">Connection error</td></tr>'; }
+}
+
+function debounceSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => { currentPage=1; loadUsers(1); }, 400);
+}
+
+function changePage(dir) {
+  const np = currentPage + dir;
+  if (np < 1 || np > totalPages) return;
+  currentPage = np;
+  loadUsers(currentPage);
+}
+
+// ── ACTIONS ──
+async function toggleStatus(userId, isActive) {
+  try {
+    const r = await fetch(`/api/admin/users/${userId}/status`, {
+      method:'PATCH', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
+      body: JSON.stringify({isActive})
+    });
+    const d = await r.json();
+    if (d.success) loadUsers();
+    else alert(d.message);
+  } catch(e) { alert('Error'); }
+}
+
+async function toggleFlag(userId, flagged) {
+  try {
+    const r = await fetch(`/api/admin/users/${userId}/flag`, {
+      method:'PATCH', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
+      body: JSON.stringify({flagged})
+    });
+    const d = await r.json();
+    if (d.success) loadUsers();
+    else alert(d.message);
+  } catch(e) { alert('Error'); }
+}
+
+function openPlanModal(userId) {
+  planUserId = userId;
+  document.getElementById('plan-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('plan-modal').classList.remove('open');
+  planUserId = null;
+}
+
+async function confirmPlan() {
+  const plan = document.getElementById('modal-plan').value;
+  try {
+    const r = await fetch(`/api/admin/users/${planUserId}/plan`, {
+      method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
+      body: JSON.stringify({plan})
+    });
+    const d = await r.json();
+    closeModal();
+    if (d.success) loadUsers();
+    else alert(d.message);
+  } catch(e) { alert('Error'); }
+}
+
+// ── ADD USER ──
+async function addUser() {
+  const name   = document.getElementById('au-name').value.trim();
+  const mobile = document.getElementById('au-mobile').value.trim();
+  const mpin   = document.getElementById('au-mpin').value.trim();
+  const angel  = document.getElementById('au-angel').value.trim();
+  const plan   = document.getElementById('au-plan').value;
+  const msg    = document.getElementById('au-msg');
+  msg.textContent=''; msg.className='form-msg';
+  try {
+    const r = await fetch('/api/admin/users', {
+      method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer '+TOKEN},
+      body: JSON.stringify({name,mobile,mpin,angel_client_code:angel||null,plan})
+    });
+    const d = await r.json();
+    if (d.success) {
+      msg.textContent = `✓ User added! ID: ${d.user.id}`;
+      msg.className = 'form-msg ok';
+      document.getElementById('au-name').value='';
+      document.getElementById('au-mobile').value='';
+      document.getElementById('au-mpin').value='';
+      document.getElementById('au-angel').value='';
+    } else {
+      msg.textContent = d.message;
+      msg.className = 'form-msg err';
+    }
+  } catch(e) { msg.textContent='Connection error'; msg.className='form-msg err'; }
+}
+
+// ── HELPERS ──
+function planBadge(plan) {
+  const map = { PAID:'badge-paid', FREE:'badge-free', TRIAL:'badge-trial', EXPIRED:'badge-expired' };
+  return `<span class="badge ${map[plan]||'badge-free'}">${plan||'FREE'}</span>`;
+}
+
+function fmtDate(dt) {
+  if (!dt) return '—';
+  return new Date(dt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+// Enter key on login
+document.getElementById('l-mpin').addEventListener('keyup', e => { if(e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>
