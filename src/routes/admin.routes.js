@@ -23,13 +23,7 @@
 const express  = require('express');
 const router   = express.Router();
 const bcrypt   = require('bcryptjs');
-const { Pool } = require('pg');
-require('dotenv').config();
-
-const { requireAdmin, auditLog, adminSecurityHeaders } = require('../middleware/admin.middleware');
-const V = require('../lib/validate');
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = require('../db/sharedPool');
 
 // ─── Security headers + auth on every route ──────────────────────────────────
 router.use(adminSecurityHeaders);
