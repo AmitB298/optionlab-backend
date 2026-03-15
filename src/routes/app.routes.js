@@ -105,6 +105,7 @@ router.get('/status', auth, async (req, res) => {
       user: { id: user.id, name: user.name, mobile: user.mobile, plan: user.plan },
       session: sessionRes.rows[0] || null,
       announcements: announcementsRes.rows,
+      _debug: { userPlan, announcementCount: announcementsRes.rows.length, rawRows: announcementsRes.rowCount },
     });
   } catch (err) {
     console.error('[app/status]', err.message);
