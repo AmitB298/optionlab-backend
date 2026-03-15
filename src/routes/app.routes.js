@@ -93,7 +93,7 @@ router.get('/status', auth, async (req, res) => {
               OR (target = 'trial' AND $1 = 'TRIAL'))
        ORDER BY created_at DESC LIMIT 5`,
       [userPlan]
-    ).catch(() => ({ rows: [] }));
+    );
 
     if (!userRes.rows.length) return res.status(404).json({ success: false, message: 'User not found' });
 
