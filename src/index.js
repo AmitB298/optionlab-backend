@@ -50,11 +50,14 @@ app.use('/api/admin', adminRoutes);
 // Export routes (also protected — admin.routes.js applies requireAdmin internally)
 app.use('/api/admin/export', exportRoutes);
 
-// Angel One routes (if they exist)
+// App heartbeat routes (safe — no broker credentials)
 try {
-  const angelRoutes = require('./routes/angel.routes');
-  app.use('/api/angel', angelRoutes);
-} catch (_) { /* optional — skip if not present */ }
+  const appRoutes = require('./routes/app.routes');
+  app.use('/api/app', appRoutes);
+  console.log('✓ App routes mounted at /api/app');
+} catch (e) {
+  console.warn('⚠ App routes failed to load:', e.message);
+}
 
 // Auth routes for users
 try {
