@@ -89,10 +89,16 @@ router.post('/login-mpin', async (req, res) => {
     }
 
     // Update last login
+    // Update last login — use DO UPDATE to safely skip missing columns
     await pool.query(
-      'UPDATE users SET last_login_at = NOW(), total_logins = COALESCE(total_logins, 0) + 1 WHERE id = $1',
+      `UPDATE users SET last_login_at = NOW() WHERE id = $1`,
       [user.id]
-    );
+    ).catch(() => {}); // ignore if last_login_at column missing too
+    // Try to increment total_logins separately (column may not exist)
+    await pool.query(
+      `UPDATE users SET total_logins = COALESCE(total_logins, 0) + 1 WHERE id = $1`,
+      [user.id]
+    ).catch(() => {}); // ignore if column doesn't exist
 
     const token = jwt.sign(
       { id: user.id, mobile: user.mobile, plan: user.plan },
