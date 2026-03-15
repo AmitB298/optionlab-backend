@@ -30,6 +30,18 @@ async function runMigrations() {
 
     await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS plan_expires_at TIMESTAMPTZ');
     await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_started_at TIMESTAMPTZ');
+        await pool.query(`
+      CREATE TABLE IF NOT EXISTS announcements (
+        id         SERIAL PRIMARY KEY,
+        title      VARCHAR(120) NOT NULL,
+        body       TEXT NOT NULL,
+        type       VARCHAR(20) DEFAULT 'info',  -- info | warning | critical
+        target     VARCHAR(20) DEFAULT 'all',   -- all | paid | free | trial
+        is_active  BOOLEAN DEFAULT true,
+        expires_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
     console.log('✓ DB migrations OK');
   } catch (err) {
     console.error('⚠ Migration warning:', err.message);
