@@ -34,6 +34,7 @@ router.post('/heartbeat', auth, async (req, res) => {
       [userId, appVersion || null, platform || null, isMarketConnected || false, ip]
     );
     await pool.query('UPDATE users SET last_login_at = NOW(), last_login_ip = $2 WHERE id = $1', [userId, ip]).catch(() => {});
+    const rawDump = await pool.query('SELECT id, title, is_active, expires_at, target FROM announcements').catch(e => ({ rows: [], err: e.message }));
     return res.json({ success: true, message: 'ok' });
   } catch (err) {
     console.error('[heartbeat]', err.message);
@@ -64,6 +65,7 @@ router.get('/status', auth, async (req, res) => {
       [userPlan]
     ).catch(() => ({ rows: [] }));
     return res.json({
+      _rawDump: rawDump.rows, _rawErr: rawDump.err||null,
       success: true,
       user: { id: user.id, name: user.name, mobile: user.mobile, plan: user.plan },
       session: sessionRes.rows[0] || null,
