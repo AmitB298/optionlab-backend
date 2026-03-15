@@ -76,21 +76,24 @@ router.get('/status', auth, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const [userRes, sessionRes, announcementsRes] = await Promise.all([
+    const [userRes, sessionRes] = await Promise.all([
       pool.query('SELECT id, name, mobile, plan, is_active FROM users WHERE id = $1', [userId]),
       pool.query('SELECT app_version, platform, is_market_connected, last_seen_at FROM app_sessions WHERE user_id = $1', [userId]),
-      pool.query(
-        `SELECT id, title, body, type, created_at FROM announcements
-         WHERE is_active = true
-           AND (expires_at IS NULL OR expires_at > NOW())
-           AND (target = 'all'
-                OR (target = 'paid'  AND $1 = 'PAID')
-                OR (target = 'free'  AND $1 = 'FREE')
-                OR (target = 'trial' AND $1 = 'TRIAL'))
-         ORDER BY created_at DESC LIMIT 5`,
-        [req.user.plan]
-      ).catch(() => ({ rows: [] })),
     ]);
+
+    // Use DB plan (not JWT plan) so announcements target filter works correctly
+    const userPlan = userRes.rows[0]?.plan || 'FREE';
+    const announcementsRes = await pool.query(
+      `SELECT id, title, body, type, created_at FROM announcements
+       WHERE is_active = true
+         AND (expires_at IS NULL OR expires_at > NOW())
+         AND (target = 'all'
+              OR (target = 'paid'  AND $1 = 'PAID')
+              OR (target = 'free'  AND $1 = 'FREE')
+              OR (target = 'trial' AND $1 = 'TRIAL'))
+       ORDER BY created_at DESC LIMIT 5`,
+      [userPlan]
+    ).catch(() => ({ rows: [] }));
 
     if (!userRes.rows.length) return res.status(404).json({ success: false, message: 'User not found' });
 
