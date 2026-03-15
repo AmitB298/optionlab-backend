@@ -33,7 +33,7 @@ router.post('/heartbeat', auth, async (req, res) => {
          ip_address          = EXCLUDED.ip_address`,
       [userId, appVersion || null, platform || null, isMarketConnected || false, ip]
     );
-    await pool.query('UPDATE users SET last_login_at = NOW() WHERE id = $1', [userId]).catch(() => {});
+    await pool.query('UPDATE users SET last_login_at = NOW(), last_login_ip = $2 WHERE id = $1', [userId, ip]).catch(() => {});
     return res.json({ success: true, message: 'ok' });
   } catch (err) {
     console.error('[heartbeat]', err.message);
