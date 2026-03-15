@@ -28,6 +28,8 @@ async function runMigrations() {
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS total_logins INTEGER DEFAULT 0`);
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_ip VARCHAR(45)`);
 
+    await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS plan_expires_at TIMESTAMPTZ');
+    await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_started_at TIMESTAMPTZ');
     console.log('✓ DB migrations OK');
   } catch (err) {
     console.error('⚠ Migration warning:', err.message);
