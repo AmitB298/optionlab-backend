@@ -274,7 +274,15 @@ router.patch('/users/:userId/plan', auditLog('CHANGE_USER_PLAN'), async (req, re
     if (!rows.length) return res.status(404).json({ error: 'User not found' });
 
     const oldPlan = rows[0].plan;
-    await pool.query(`UPDATE users SET plan = $1 WHERE id = $2`, [planResult.value, uid]);
+    const days = parseInt(req.body?.days) || 365;
+    let expiresAt = null;
+    if (planResult.value === 'TRIAL') { expiresAt = new Date(Date.now() + 14*86400000); }
+    else if (planResult.value === 'PAID') { expiresAt = new Date(Date.now() + days*86400000); }
+    if (expiresAt) {
+      await pool.query(`UPDATE users SET plan=$1, plan_expires_at=$2 WHERE id=$3`, [planResult.value, expiresAt.toISOString(), uid]);
+    } else {
+      await pool.query(`UPDATE users SET plan=$1, plan_expires_at=NULL WHERE id=$2`, [planResult.value, uid]);
+    }
     await pool.query(
       `INSERT INTO subscription_history
          (user_id, plan_from, plan_to, changed_by, reason, amount, payment_ref)
