@@ -1,5 +1,9 @@
 'use strict';
 
+// ─── Run DB migrations on startup ────────────────────────────────────────────
+require('./db/migrate-startup')().catch(e => console.warn('Migration skipped:', e.message));
+
+
 const express  = require('express');
 const cors     = require('cors');
 const helmet   = require('helmet');
