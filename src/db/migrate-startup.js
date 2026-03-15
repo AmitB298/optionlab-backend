@@ -42,6 +42,7 @@ async function runMigrations() {
         created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
+    await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS force_logout_at TIMESTAMPTZ');
     console.log('✓ DB migrations OK');
   } catch (err) {
     console.error('⚠ Migration warning:', err.message);

@@ -24,6 +24,7 @@ const express  = require('express');
 const router   = express.Router();
 const bcrypt   = require('bcryptjs');
 const pool = require('../db/sharedPool');
+const { requireAdmin, auditLog, adminSecurityHeaders } = require('../middleware/admin.middleware');
 
 // ─── Security headers + auth on every route ──────────────────────────────────
 router.use(adminSecurityHeaders);
