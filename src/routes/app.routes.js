@@ -70,7 +70,7 @@ router.post('/heartbeat', auth, async (req, res) => {
   }
 });
 
-// ── GET /api/app/status ───────────────────────────────────────────────────────
+// ── GET /api/app/status (v2 — DB plan for announcements) ───────────────────────────────────────────────────────
 // App checks its own session and gets any admin announcements
 router.get('/status', auth, async (req, res) => {
   try {
