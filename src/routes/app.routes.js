@@ -42,6 +42,8 @@ router.post('/heartbeat', auth, async (req, res) => {
   try {
     const { appVersion, platform, isMarketConnected } = req.body;
     const userId = req.user.id;
+    const dbUrl = process.env.DATABASE_URL || 'NOT SET';
+    const dbHost = dbUrl.split('@')[1]?.split('/')[0] || 'unknown';
     const ip     = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress || null;
 
     // Upsert into app_sessions — one row per user, updated on each heartbeat
@@ -75,6 +77,8 @@ router.post('/heartbeat', auth, async (req, res) => {
 router.get('/status', auth, async (req, res) => {
   try {
     const userId = req.user.id;
+    const dbUrl = process.env.DATABASE_URL || 'NOT SET';
+    const dbHost = dbUrl.split('@')[1]?.split('/')[0] || 'unknown';
 
     const [userRes, sessionRes] = await Promise.all([
       pool.query('SELECT id, name, mobile, plan, is_active FROM users WHERE id = $1', [userId]),
