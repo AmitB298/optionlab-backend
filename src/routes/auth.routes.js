@@ -148,4 +148,52 @@ router.get('/validate', async (req, res) => {
   }
 });
 
+
+// ─── GET /api/auth/subscription ──────────────────────────────────────────────
+router.get('/subscription', async (req, res) => {
+  try {
+    const auth = req.headers.authorization;
+    if (!auth || !auth.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, message: 'No token' });
+    }
+    let decoded;
+    try { decoded = jwt.verify(auth.slice(7), process.env.JWT_SECRET || 'optionlab_secret'); }
+    catch { return res.status(401).json({ success: false, message: 'Invalid token' }); }
+
+    const result = await pool.query(
+      `SELECT id, name, mobile, plan, is_active, plan_expires_at, trial_started_at, created_at FROM users WHERE id = $1`,
+      [decoded.id]
+    );
+    if (!result.rows.length) return res.status(404).json({ success: false, message: 'User not found' });
+
+    const user = result.rows[0];
+    if (!user.is_active) return res.json({ success: true, status: 'expired', plan: user.plan, daysRemaining: 0 });
+
+    const now = new Date();
+    let status = 'active', daysRemaining = 36500, endDate = null;
+
+    if (user.plan === 'SUSPENDED') {
+      status = 'expired'; daysRemaining = 0;
+    } else if (user.plan === 'TRIAL') {
+      const trialEnd = new Date(user.trial_started_at || user.created_at);
+      trialEnd.setDate(trialEnd.getDate() + 14);
+      endDate = trialEnd.toISOString();
+      if (now > trialEnd) { status = 'expired'; daysRemaining = 0; }
+      else { status = 'active'; daysRemaining = Math.ceil((trialEnd - now) / 86400000); }
+    } else if (user.plan === 'PAID' && user.plan_expires_at) {
+      const expiry = new Date(user.plan_expires_at);
+      endDate = expiry.toISOString();
+      if (now > expiry) { status = 'expired'; daysRemaining = 0; }
+      else { status = 'active'; daysRemaining = Math.ceil((expiry - now) / 86400000); }
+    }
+
+    return res.json({
+      success: true, status, plan: user.plan, daysRemaining, endDate,
+      user: { id: user.id, name: user.name, mobile: user.mobile, plan: user.plan, subscriptionStatus: status, daysRemaining }
+    });
+  } catch (err) {
+    console.error('[subscription]', err.message);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
 module.exports = router;
