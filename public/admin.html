@@ -207,6 +207,9 @@ input[type=checkbox]{accent-color:var(--amber);width:15px;height:15px;cursor:poi
         <span class="ni">◈</span> Dashboard
       </div>
       <div class="nav-section">Users</div>
+      <div class="nav-item" onclick="showPage('page-live')" data-page="page-live">
+        <span class="ni">◉</span> Live Users
+      </div>
       <div class="nav-item" onclick="showPage('page-users')" data-page="page-users">
         <span class="ni">◉</span> All Users
       </div>
@@ -522,6 +525,87 @@ input[type=checkbox]{accent-color:var(--amber);width:15px;height:15px;cursor:poi
         </div>
 
       </div>
+
+      <!-- ── LIVE USERS ── -->
+      <div class="page" id="page-live">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.1em;color:var(--muted)">JOBBER APP</div>
+            <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:4px">
+              Users active in last <span style="color:var(--green)">5 minutes</span> are shown as online
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="loadLiveUsers()">⟳ Refresh</button>
+        </div>
+
+        <!-- Summary cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+          <div class="stat-card green">
+            <div class="stat-label">Online Now</div>
+            <div class="stat-val" id="live-online">—</div>
+            <div class="stat-sub">Active &lt; 5 min</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-label">Active Today</div>
+            <div class="stat-val" id="live-today">—</div>
+            <div class="stat-sub">Heartbeat today</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-label">Market Connected</div>
+            <div class="stat-val" id="live-market">—</div>
+            <div class="stat-sub">Angel One linked</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-label">Never Connected</div>
+            <div class="stat-val" id="live-never">—</div>
+            <div class="stat-sub">No heartbeat yet</div>
+          </div>
+        </div>
+
+        <!-- Live users table -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">App Sessions</div>
+            <div style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted)" id="live-updated">—</div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Mobile</th>
+                  <th>Plan</th>
+                  <th>Status</th>
+                  <th>App Version</th>
+                  <th>Platform</th>
+                  <th>Market</th>
+                  <th>Last Seen</th>
+                  <th>IP</th>
+                </tr>
+              </thead>
+              <tbody id="live-body">
+                <tr><td colspan="9" style="text-align:center;color:var(--muted);padding:32px">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Users who registered but never opened the app -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Registered — App Never Opened</div>
+            <div style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">Users who signed up but haven't launched Jobber yet</div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>User</th><th>Mobile</th><th>Plan</th><th>Registered</th></tr></thead>
+              <tbody id="never-body">
+                <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /shell -->
@@ -638,6 +722,7 @@ function showShell() {
   loadFlagged();
   loadAudit();
   loadAnnouncements();
+  loadLiveUsers();
 }
 
 function adminLogout() {
@@ -669,10 +754,11 @@ async function api(path, opts = {}) {
 // ══════════════════════════════════════════════════════════
 const PAGE_TITLES = {
   'page-dash':'DASHBOARD','page-users':'ALL USERS','page-flagged':'FLAGGED USERS',
-  'page-audit':'AUDIT LOG','page-announce':'ANNOUNCEMENTS','page-export':'EXPORT DATA',
+  'page-live':'LIVE USERS','page-audit':'AUDIT LOG','page-announce':'ANNOUNCEMENTS','page-export':'EXPORT DATA',
 };
 
 function showPage(id) {
+  if (id === 'page-live') loadLiveUsers();
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -1330,6 +1416,71 @@ function renderExportLog() {
       '<td><button class="btn btn-ghost btn-sm" onclick="doDownload(\'' + e.url + '\',\'' + e.type + '\',\'' + e.format + '\',{})">↓ Again</button></td>' +
       '</tr>';
   }).join('');
+}
+
+
+// ══════════════════════════════════════════════════════════
+// LIVE USERS
+// ══════════════════════════════════════════════════════════
+async function loadLiveUsers() {
+  const data = await api('/live-users');
+  if (!data) return;
+
+  const sessions  = data.sessions  || [];
+  const never     = data.never     || [];
+  const stats     = data.stats     || {};
+
+  // Update stat cards
+  document.getElementById('live-online').textContent  = stats.online  ?? '—';
+  document.getElementById('live-today').textContent   = stats.today   ?? '—';
+  document.getElementById('live-market').textContent  = stats.market  ?? '—';
+  document.getElementById('live-never').textContent   = never.length  ?? '—';
+  document.getElementById('live-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN');
+
+  // Sessions table
+  const tbody = document.getElementById('live-body');
+  if (!sessions.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:32px">No app sessions yet</td></tr>';
+  } else {
+    const now = Date.now();
+    tbody.innerHTML = sessions.map(s => {
+      const lastMs   = s.last_seen_at ? new Date(s.last_seen_at).getTime() : 0;
+      const diffMin  = Math.floor((now - lastMs) / 60000);
+      const isOnline = diffMin < 5;
+      return `<tr>
+        <td style="font-weight:600">${esc(s.name || '—')}</td>
+        <td class="td-mono">${esc(s.mobile)}</td>
+        <td>${planBadge(s.plan)}</td>
+        <td>
+          ${isOnline
+            ? '<span class="badge badge-green"><span class="dot dot-green"></span>Online</span>'
+            : `<span class="badge badge-muted">${diffMin < 60 ? diffMin+'m ago' : fmtDate(s.last_seen_at)}</span>`}
+        </td>
+        <td class="td-mono" style="color:var(--amber)">${esc(s.app_version || '—')}</td>
+        <td class="td-mono" style="color:var(--muted)">${esc(s.platform || '—')}</td>
+        <td>
+          ${s.is_market_connected
+            ? '<span class="badge badge-green">✓ Connected</span>'
+            : '<span class="badge badge-muted">—</span>'}
+        </td>
+        <td class="td-mono" style="color:var(--muted)">${s.last_seen_at ? fmtDate(s.last_seen_at) : '—'}</td>
+        <td class="td-mono" style="color:var(--muted);font-size:11px">${esc(s.ip_address || '—')}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Never opened table
+  const nbody = document.getElementById('never-body');
+  if (!never.length) {
+    nbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">All registered users have opened the app ✓</td></tr>';
+  } else {
+    nbody.innerHTML = never.map(u => `<tr>
+      <td style="font-weight:600;cursor:pointer" onclick="openUser(${u.id})">${esc(u.name || '—')}</td>
+      <td class="td-mono">${esc(u.mobile)}</td>
+      <td>${planBadge(u.plan)}</td>
+      <td class="td-mono" style="color:var(--muted)">${fmtDate(u.created_at)}</td>
+    </tr>`).join('');
+  }
 }
 
 // Close modals on bg click

@@ -506,4 +506,49 @@ router.patch('/announcements/:id', auditLog('TOGGLE_ANNOUNCEMENT'), async (req, 
   } catch (err) { return dbError(res, err); }
 });
 
+
+// ─── GET /api/admin/live-users ────────────────────────────────────────────────
+// Shows app_sessions joined with users — who is online in Jobber app
+router.get('/live-users', async (req, res) => {
+  try {
+    // All users with an app session
+    const sessions = await pool.query(`
+      SELECT
+        u.id, u.name, u.mobile, u.plan,
+        s.app_version, s.platform, s.is_market_connected,
+        s.last_seen_at, s.ip_address
+      FROM app_sessions s
+      JOIN users u ON u.id = s.user_id
+      ORDER BY s.last_seen_at DESC NULLS LAST
+    `);
+
+    // Users who registered but never sent a heartbeat
+    const never = await pool.query(`
+      SELECT u.id, u.name, u.mobile, u.plan, u.created_at
+      FROM users u
+      WHERE u.id NOT IN (SELECT user_id FROM app_sessions)
+      ORDER BY u.created_at DESC
+    `);
+
+    // Stats
+    const now = new Date();
+    const fiveMinAgo = new Date(now - 5 * 60 * 1000);
+    const todayStart = new Date(now); todayStart.setHours(0,0,0,0);
+
+    const online = sessions.rows.filter(s => s.last_seen_at && new Date(s.last_seen_at) > fiveMinAgo).length;
+    const today  = sessions.rows.filter(s => s.last_seen_at && new Date(s.last_seen_at) > todayStart).length;
+    const market = sessions.rows.filter(s => s.is_market_connected).length;
+
+    return res.json({
+      success: true,
+      sessions: sessions.rows,
+      never:    never.rows,
+      stats: { online, today, market },
+    });
+  } catch (err) {
+    console.error('[live-users]', err.message);
+    return res.status(500).json({ error: 'Database operation failed' });
+  }
+});
+
 module.exports = router;
