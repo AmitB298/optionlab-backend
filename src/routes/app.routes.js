@@ -83,9 +83,7 @@ router.get('/status', auth, async (req, res) => {
 
     // Use DB plan (not JWT plan) so announcements target filter works correctly
     const userPlan = userRes.rows[0]?.plan || 'FREE';
-    const announcementsRes = await pool.query('SELECT id, title, body, type, created_at FROM announcements ORDER BY created_at DESC LIMIT 5')
-
-    if (!userRes.rows.length) return res.status(404).json({ success: false, message: 'User not found' });
+    const announcementsRes = await pool.query('SELECT COUNT(*) as cnt FROM announcements')
 
     const user = userRes.rows[0];
     if (!user.is_active) return res.status(403).json({ success: false, message: 'Account deactivated' });
