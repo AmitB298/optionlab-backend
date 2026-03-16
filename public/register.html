@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | OptionLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a0f;
+    --card: #0e1118;
+    --border: #1a1f2e;
+    --accent: #f97316;
+    --accent2: #fb923c;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(249,115,22,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(40px); }
+  }
+
+  /* Glow orb */
+  body::after {
+    content: '';
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  }
+
+  .container {
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+    position: relative;
+    z-index: 10;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent), #c2410c);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(249,115,22,0.4);
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  /* Steps indicator */
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 28px;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+
+  .step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  .step.active .step-dot {
+    border-color: var(--accent);
+    background: rgba(249,115,22,0.1);
+    color: var(--accent);
+    box-shadow: 0 0 12px rgba(249,115,22,0.3);
+  }
+
+  .step.done .step-dot {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.1);
+    color: var(--success);
+  }
+
+  .step-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .step.active .step-label { color: var(--accent); }
+
+  .step-line {
+    width: 60px;
+    height: 2px;
+    background: var(--border);
+    margin: 0 4px;
+    margin-bottom: 18px;
+    transition: background 0.3s;
+  }
+
+  .step-line.done { background: var(--success); }
+
+  /* Form panels */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeUp 0.3s ease both; }
+
+  .panel-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .panel-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    pointer-events: none;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="password"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input.has-prefix { padding-left: 48px; }
+
+  input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+  }
+
+  /* MPIN boxes */
+  .mpin-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mpin-box {
+    flex: 1;
+    height: 52px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+  }
+
+  .mpin-box:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+  }
+
+  .mpin-box.filled {
+    border-color: rgba(249,115,22,0.5);
+    color: var(--accent);
+  }
+
+  /* Eye toggle */
+  .eye-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    width: fit-content;
+  }
+
+  .eye-toggle input[type="checkbox"] { display: none; }
+
+  .eye-toggle-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.5px;
+    user-select: none;
+  }
+
+  .eye-btn {
+    background: var(--border);
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    color: var(--muted);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    transition: all 0.2s;
+  }
+
+  .eye-btn:hover { background: rgba(249,115,22,0.2); color: var(--accent); }
+
+  /* Buttons */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #c2410c);
+    color: white;
+    box-shadow: 0 4px 20px rgba(249,115,22,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px rgba(249,115,22,0.45);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Message */
+  .msg {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    margin-top: 12px;
+    display: none;
+  }
+
+  .msg.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; display: block; }
+  .msg.success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #86efac; display: block; }
+
+  /* Summary card */
+  .summary {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-row:last-child { border-bottom: none; }
+
+  .summary-key {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .summary-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Success screen */
+  .success-screen {
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(34,197,94,0.1);
+    border: 2px solid rgba(34,197,94,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 20px;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .success-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--success);
+  }
+
+  .success-sub {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .footer-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .footer-link a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .footer-link a:hover { text-decoration: underline; }
+
+  /* Loading spinner */
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo">
+    <a class="logo-mark" href="/">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">Option<span>Lab</span></div>
+    </a>
+    <div class="tagline">Professional Options Intelligence</div>
+  </div>
+
+  <div class="card">
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step active" id="step1">
+        <div class="step-dot">1</div>
+        <div class="step-label">Identity</div>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step" id="step2">
+        <div class="step-dot">2</div>
+        <div class="step-label">MPIN</div>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step" id="step3">
+        <div class="step-dot">3</div>
+        <div class="step-label">Confirm</div>
+      </div>
+    </div>
+
+    <!-- Panel 1: Identity -->
+    <div class="panel active" id="panel1">
+      <div class="panel-title">Create Account</div>
+      <div class="panel-sub">// enter your details below</div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Your full name" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label>Mobile Number</label>
+        <div class="input-wrap">
+          <span class="prefix">+91</span>
+          <input type="tel" id="mobile" class="has-prefix" placeholder="10-digit mobile" maxlength="10" autocomplete="off">
+        </div>
+      </div>
+
+      <div id="msg1" class="msg"></div>
+      <button class="btn btn-primary" onclick="goStep2()">Continue →</button>
+    </div>
+
+    <!-- Panel 2: MPIN -->
+    <div class="panel" id="panel2">
+      <div class="panel-title">Set Your MPIN</div>
+      <div class="panel-sub">// 6-digit numeric pin for login</div>
+
+      <div class="field">
+        <label>Enter MPIN</label>
+        <div class="mpin-row" id="mpin1-row">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        </div>
+        <button class="eye-btn" onclick="toggleMpin('mpin1-row')" style="margin-top:8px">👁 Show</button>
+      </div>
+
+      <div class="field">
+        <label>Confirm MPIN</label>
+        <div class="mpin-row" id="mpin2-row">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+          <input class="mpin-box" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        </div>
+        <button class="eye-btn" onclick="toggleMpin('mpin2-row')" style="margin-top:8px">👁 Show</button>
+      </div>
+
+      <div id="msg2" class="msg"></div>
+      <button class="btn btn-primary" onclick="goStep3()">Continue →</button>
+    </div>
+
+    <!-- Panel 3: Confirm -->
+    <div class="panel" id="panel3">
+      <div class="panel-title">Confirm Details</div>
+      <div class="panel-sub">// review before submitting</div>
+
+      <div class="summary">
+        <div class="summary-row">
+          <span class="summary-key">Name</span>
+          <span class="summary-val" id="sum-name">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Mobile</span>
+          <span class="summary-val" id="sum-mobile">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">MPIN</span>
+          <span class="summary-val">••••••</span>
+        </div>
+      </div>
+
+      <div id="msg3" class="msg"></div>
+      <button class="btn btn-primary" id="submitBtn" onclick="doRegister()">Create Account</button>
+    </div>
+
+    <!-- Panel 4: Success -->
+    <div class="panel" id="panel4">
+      <div class="success-screen">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Account Created!</div>
+        <div class="success-sub">Welcome to OptionLab.<br>Your account is ready. Download the app to get started.</div>
+        <button class="btn btn-primary" onclick="window.location.href='/'">← Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-link" id="footerLink">
+    Already have an account? <a href="/#login">Sign In</a>
+  </div>
+</div>
+
+<script>
+  const API = 'https://web-production-8a8e1.up.railway.app/api';
+
+  let userData = { name: '', mobile: '', mpin: '' };
+
+  // MPIN box auto-focus
+  document.querySelectorAll('.mpin-row').forEach(row => {
+    const boxes = row.querySelectorAll('.mpin-box');
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', e => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val;
+        if (val && i < boxes.length - 1) boxes[i + 1].focus();
+        e.target.classList.toggle('filled', !!val);
+      });
+      box.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
+      });
+      box.addEventListener('paste', e => {
+        e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        boxes.forEach((b, j) => {
+          b.value = paste[j] || '';
+          b.classList.toggle('filled', !!b.value);
+        });
+        const next = Math.min(paste.length, boxes.length - 1);
+        boxes[next].focus();
+      });
+    });
+  });
+
+  function getMpin(rowId) {
+    return Array.from(document.querySelectorAll(`#${rowId} .mpin-box`)).map(b => b.value).join('');
+  }
+
+  function toggleMpin(rowId) {
+    const boxes = document.querySelectorAll(`#${rowId} .mpin-box`);
+    const isHidden = boxes[0].type === 'password';
+    boxes.forEach(b => b.type = isHidden ? 'text' : 'password');
+  }
+
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = `msg ${type}`;
+  }
+
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const panel = document.getElementById(`panel${i}`);
+      const step = document.getElementById(`step${i}`);
+      if (panel) panel.classList.toggle('active', i === n);
+      if (step) {
+        step.classList.remove('active', 'done');
+        if (i === n) step.classList.add('active');
+        else if (i < n) step.classList.add('done');
+      }
+    }
+    for (let i = 1; i <= 2; i++) {
+      const line = document.getElementById(`line${i}`);
+      if (line) line.classList.toggle('done', i < n);
+    }
+    if (n === 4) document.getElementById('footerLink').style.display = 'none';
+  }
+
+  function goStep2() {
+    const name = document.getElementById('name').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    if (!name) return showMsg('msg1', '⚠ Please enter your name', 'error');
+    if (!/^[6-9]\d{9}$/.test(mobile)) return showMsg('msg1', '⚠ Enter a valid 10-digit mobile number', 'error');
+    userData.name = name;
+    userData.mobile = mobile;
+    setStep(2);
+  }
+
+  function goStep3() {
+    const mpin1 = getMpin('mpin1-row');
+    const mpin2 = getMpin('mpin2-row');
+    if (mpin1.length !== 6) return showMsg('msg2', '⚠ Enter all 6 digits', 'error');
+    if (mpin1 !== mpin2) return showMsg('msg2', '⚠ MPINs do not match', 'error');
+    userData.mpin = mpin1;
+    document.getElementById('sum-name').textContent = userData.name;
+    document.getElementById('sum-mobile').textContent = '+91 ' + userData.mobile;
+    setStep(3);
+  }
+
+  async function doRegister() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Creating account...';
+
+    try {
+      const res = await fetch(`${API}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: userData.name,
+          mobile: userData.mobile,
+          mpin: userData.mpin
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showMsg('msg3', '⚠ ' + (data.message || 'Registration failed'), 'error');
+        btn.disabled = false;
+        btn.innerHTML = 'Create Account';
+        return;
+      }
+
+      setStep(4);
+    } catch (err) {
+      showMsg('msg3', '⚠ Cannot connect to server. Check your connection.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = 'Create Account';
+    }
+  }
+</script>
+</body>
+</html>
