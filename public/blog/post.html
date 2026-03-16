@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO tags injected by JS below -->
+  <title>OptionLab Blog</title>
+  <link rel="stylesheet" href="/mobile-fixes.css"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fb;color:#1a1a2e;line-height:1.7}
+    a{color:#2563eb;text-decoration:none}
+    /* Nav */
+    nav{background:#fff;border-bottom:1px solid #e8eaf0;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .nav-logo{font-weight:700;font-size:18px;color:#2563eb}
+    .nav-links{display:flex;gap:24px;font-size:14px}
+    .nav-links a{color:#555;transition:color .2s}.nav-links a:hover{color:#2563eb}
+    /* Layout */
+    .page{max-width:780px;margin:0 auto;padding:40px 24px 80px}
+    /* Breadcrumb */
+    .breadcrumb{font-size:13px;color:#888;margin-bottom:24px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+    .breadcrumb a{color:#2563eb}.breadcrumb span{color:#ccc}
+    /* Article */
+    .article-header{margin-bottom:32px}
+    .article-category{display:inline-block;background:#eff6ff;color:#2563eb;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;margin-bottom:14px}
+    .article-title{font-size:clamp(24px,4vw,38px);font-weight:700;line-height:1.25;color:#0f172a;margin-bottom:16px}
+    .article-meta{display:flex;gap:16px;font-size:13px;color:#888;flex-wrap:wrap;margin-bottom:20px}
+    .featured-img{width:100%;border-radius:12px;margin-bottom:32px;max-height:420px;object-fit:cover}
+    /* Tags */
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+    .tag{background:#f1f5f9;color:#475569;border-radius:20px;padding:4px 12px;font-size:12px}
+    .tag:hover{background:#e2e8f0}
+    /* Article body */
+    .article-body{font-size:17px;color:#374151;line-height:1.8}
+    .article-body h1,.article-body h2,.article-body h3{color:#0f172a;margin:32px 0 14px;line-height:1.3}
+    .article-body h2{font-size:24px}.article-body h3{font-size:20px}
+    .article-body p{margin-bottom:20px}
+    .article-body ul,.article-body ol{margin:0 0 20px 24px}
+    .article-body li{margin-bottom:6px}
+    .article-body strong{color:#0f172a}
+    .article-body a{border-bottom:1px solid #93c5fd}.article-body a:hover{border-color:#2563eb}
+    .article-body blockquote{border-left:4px solid #2563eb;padding:12px 20px;background:#eff6ff;border-radius:0 8px 8px 0;margin:24px 0;color:#374151;font-style:italic}
+    .article-body code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:14px;font-family:monospace;color:#1e40af}
+    .article-body pre{background:#1e293b;color:#e2e8f0;padding:20px;border-radius:8px;overflow-x:auto;margin:24px 0}
+    .article-body pre code{background:none;color:inherit;padding:0}
+    .article-body img{max-width:100%;border-radius:8px;margin:16px 0}
+    /* Related */
+    .related{margin-top:56px;padding-top:40px;border-top:1px solid #e8eaf0}
+    .related h2{font-size:20px;font-weight:600;margin-bottom:20px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .2s}
+    .related-card:hover{transform:translateY(-2px)}
+    .related-card img{width:100%;height:130px;object-fit:cover;background:#e8eaf0}
+    .related-card-body{padding:12px}
+    .related-card h3{font-size:14px;font-weight:600;color:#0f172a;line-height:1.4}
+    /* Comments */
+    .comments{margin-top:56px;padding-top:40px;border-top:1px solid #e8eaf0}
+    .comments h2{font-size:20px;font-weight:600;margin-bottom:24px}
+    .comment{padding:16px 0;border-bottom:1px solid #f1f5f9}
+    .comment-author{font-weight:600;font-size:14px;color:#0f172a}
+    .comment-date{font-size:12px;color:#94a3b8;margin-left:8px}
+    .comment-body{margin-top:8px;font-size:15px;color:#374151}
+    /* Comment form */
+    .comment-form{margin-top:32px}
+    .comment-form h3{font-size:17px;font-weight:600;margin-bottom:16px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .form-field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+    .form-field label{font-size:13px;font-weight:500;color:#475569}
+    .form-field input,.form-field textarea{border:1px solid #e0e3ea;border-radius:8px;padding:10px 14px;font-size:14px;outline:none;transition:border-color .2s;font-family:inherit;width:100%}
+    .form-field input:focus,.form-field textarea:focus{border-color:#2563eb}
+    .form-field textarea{resize:vertical;min-height:100px}
+    .submit-btn{background:#2563eb;color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:15px;cursor:pointer;transition:background .2s}.submit-btn:hover{background:#1d4ed8}.submit-btn:disabled{opacity:.6;cursor:not-allowed}
+    .form-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:14px 16px;border-radius:8px;font-size:14px;margin-top:12px}
+    .form-error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:14px 16px;border-radius:8px;font-size:14px;margin-top:12px}
+    /* Loading */
+    .loading{text-align:center;padding:80px;color:#94a3b8}
+    .spinner{width:36px;height:36px;border:3px solid #e0e3ea;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:600px){.form-row{grid-template-columns:1fr}.nav-links{display:none}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">OptionLab</a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/blog">Blog</a>
+    <a href="/register">Sign Up</a>
+  </div>
+</nav>
+
+<div id="app">
+  <div class="page">
+    <div class="loading"><div class="spinner"></div>Loading article…</div>
+  </div>
+</div>
+
+<script>
+  const API  = window.location.origin;
+  // Extract slug from URL: /blog/my-post-slug
+  const slug = window.location.pathname.replace(/^\/blog\//, '').replace(/\/$/, '');
+
+  if (!slug) { window.location.href = '/blog'; }
+
+  async function init() {
+    try {
+      const [postRes, commentsRes] = await Promise.all([
+        fetch(`${API}/api/blog/posts/${slug}`),
+        fetch(`${API}/api/blog/comments?post=${slug}`)
+      ]);
+
+      if (postRes.status === 404) {
+        document.getElementById('app').innerHTML =
+          `<div class="page"><h1 style="margin-top:40px">Post not found</h1><p style="margin-top:12px"><a href="/blog">← Back to blog</a></p></div>`;
+        return;
+      }
+
+      const post     = await postRes.json();
+      const comments = await commentsRes.json().catch(() => []);
+
+      // Inject SEO tags
+      injectSEO(post);
+
+      // Load related posts
+      let related = [];
+      try {
+        const r = await fetch(`${API}/api/blog/posts/related/${slug}`);
+        related = await r.json();
+      } catch {}
+
+      render(post, comments, related);
+    } catch (e) {
+      document.getElementById('app').innerHTML =
+        `<div class="page"><h1 style="margin-top:40px">Error loading post</h1><p style="margin-top:12px"><a href="/blog">← Back to blog</a></p></div>`;
+    }
+  }
+
+  function injectSEO(post) {
+    const title = post.meta_title || post.title;
+    const desc  = post.meta_description || post.excerpt || '';
+    const img   = post.og_image || post.featured_image || '';
+    const url   = window.location.href;
+
+    document.title = `${title} | OptionLab`;
+    setMeta('description', desc);
+    setMeta('og:title', title, true);
+    setMeta('og:description', desc, true);
+    setMeta('og:url', url, true);
+    setMeta('og:type', 'article', true);
+    if (img) setMeta('og:image', img, true);
+    setMeta('twitter:card', 'summary_large_image');
+    setMeta('twitter:title', title);
+    setMeta('twitter:description', desc);
+
+    // Canonical
+    const can = document.createElement('link');
+    can.rel = 'canonical';
+    can.href = post.canonical_url || url;
+    document.head.appendChild(can);
+
+    // JSON-LD
+    if (post.jsonLd) {
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.textContent = JSON.stringify(post.jsonLd);
+      document.head.appendChild(s);
+    }
+  }
+
+  function setMeta(name, content, isOg) {
+    const attr = isOg ? 'property' : 'name';
+    let el = document.querySelector(`meta[${attr}="${name}"]`);
+    if (!el) { el = document.createElement('meta'); el.setAttribute(attr, name); document.head.appendChild(el); }
+    el.setAttribute('content', content);
+  }
+
+  function formatDate(d) {
+    return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  }
+
+  function render(post, comments, related) {
+    document.getElementById('app').innerHTML = `
+      <div class="page">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+          <a href="/">Home</a><span>›</span>
+          <a href="/blog">Blog</a><span>›</span>
+          ${post.category_name ? `<a href="/blog/category/${post.category_slug}">${post.category_name}</a><span>›</span>` : ''}
+          <span>${post.title}</span>
+        </nav>
+
+        <article>
+          <header class="article-header">
+            ${post.category_name ? `<a class="article-category" href="/blog/category/${post.category_slug}">${post.category_name}</a>` : ''}
+            <h1 class="article-title">${post.title}</h1>
+            <div class="article-meta">
+              <span>By ${post.author_name || 'OptionLab Team'}</span>
+              <span>${post.published_at ? formatDate(post.published_at) : ''}</span>
+              <span>${post.reading_time_min || 1} min read</span>
+            </div>
+            ${post.tags && post.tags.length ? `
+              <div class="tags">
+                ${post.tags.map(t => `<a class="tag" href="/blog/tag/${t.slug}">#${t.name}</a>`).join('')}
+              </div>` : ''}
+          </header>
+
+          ${post.featured_image ? `<img class="featured-img" src="${post.featured_image}" alt="${post.featured_image_alt || post.title}"/>` : ''}
+
+          <div class="article-body">${post.content}</div>
+        </article>
+
+        ${related.length ? `
+          <section class="related">
+            <h2>Related articles</h2>
+            <div class="related-grid">
+              ${related.map(r => `
+                <a class="related-card" href="/blog/${r.slug}">
+                  ${r.featured_image ? `<img src="${r.featured_image}" alt="${r.title}"/>` : ''}
+                  <div class="related-card-body">
+                    <h3>${r.title}</h3>
+                    <p style="font-size:12px;color:#94a3b8;margin-top:4px">${r.reading_time_min || 1} min read</p>
+                  </div>
+                </a>`).join('')}
+            </div>
+          </section>` : ''}
+
+        <section class="comments">
+          <h2>Comments (${comments.length})</h2>
+          <div id="commentsList">
+            ${comments.length ? comments.map(c => `
+              <div class="comment">
+                <span class="comment-author">${c.author_name}</span>
+                <span class="comment-date">${formatDate(c.created_at)}</span>
+                <p class="comment-body">${c.body}</p>
+              </div>`).join('') : '<p style="color:#94a3b8;font-size:14px">No comments yet. Be the first!</p>'}
+          </div>
+
+          <form class="comment-form" id="commentForm">
+            <h3>Leave a comment</h3>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="commenterName">Name</label>
+                <input id="commenterName" type="text" placeholder="Your name" required/>
+              </div>
+              <div class="form-field">
+                <label for="commenterEmail">Email <span style="color:#94a3b8">(not published)</span></label>
+                <input id="commenterEmail" type="email" placeholder="your@email.com" required/>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="commenterBody">Comment</label>
+              <textarea id="commenterBody" placeholder="Share your thoughts…" required></textarea>
+            </div>
+            <button class="submit-btn" type="submit" id="submitBtn">Post comment</button>
+            <div id="formMsg"></div>
+          </form>
+        </section>
+      </div>
+    `;
+
+    // Comment form handler
+    document.getElementById('commentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const msg = document.getElementById('formMsg');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+      msg.innerHTML = '';
+
+      try {
+        const res = await fetch(`${API}/api/blog/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            post_id:      post.id,
+            author_name:  document.getElementById('commenterName').value,
+            author_email: document.getElementById('commenterEmail').value,
+            body:         document.getElementById('commenterBody').value
+          })
+        });
+        if (res.ok) {
+          msg.innerHTML = '<div class="form-success">Thanks! Your comment is awaiting moderation.</div>';
+          document.getElementById('commentForm').reset();
+        } else {
+          throw new Error('Submit failed');
+        }
+      } catch {
+        msg.innerHTML = '<div class="form-error">Something went wrong. Please try again.</div>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Post comment';
+      }
+    });
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /setup.html
+Disallow: /api/
+
+Sitemap: https://optionlab.io/sitemap.xml
