@@ -1,9 +1,22 @@
-# robots.txt
+# OptionLab — robots.txt
+# https://optionlab.in
+
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /admin.html
-Disallow: /setup.html
-Disallow: /api/
+Allow: /index.html
+Allow: /register.html
+Allow: /setup.html
+Allow: /og-image.png
+Allow: /og-setup.png
+Allow: /logo.png
 
-Sitemap: https://optionlab.io/sitemap.xml
+# Disallow private / API endpoints (if ever served from same domain)
+Disallow: /api/
+Disallow: /admin/
+Disallow: /*.json$
+
+# Sitemap
+Sitemap: https://optionlab.in/sitemap.xml
+
+# Crawl delay (be kind to small servers)
+Crawl-delay: 2

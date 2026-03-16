@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" itemscope itemtype="https://schema.org/HowTo">
+<head>
+<!-- ═══ CRITICAL META ═══ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- ═══ TITLE & DESCRIPTION ═══ -->
+<title>Angel One SmartAPI Broker Setup Guide | OptionLab — NSE Options Platform</title>
+<meta name="description" content="Step-by-step Angel One SmartAPI broker setup guide for OptionLab. Connect your demat account, configure API keys, whitelist IP and start live NSE Nifty 50 options analytics in 15 minutes.">
+<meta name="keywords" content="Angel One SmartAPI setup, OptionLab setup guide, NSE broker API, Nifty options live data, SmartAPI IP whitelist, options analytics setup India">
+<meta name="author" content="OptionLab">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="theme-color" content="#fb923c">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
+
+<!-- ═══ CANONICAL ═══ -->
+<link rel="canonical" href="https://optionlab.in/setup.html">
+
+<!-- ═══ OPEN GRAPH ═══ -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="OptionLab">
+<meta property="og:title" content="Angel One SmartAPI Setup Guide — Connect to OptionLab in 15 Minutes">
+<meta property="og:description" content="Step-by-step guide to connect your Angel One broker account with OptionLab for live NSE Nifty 50 options analytics.">
+<meta property="og:url" content="https://optionlab.in/setup.html">
+<meta property="og:image" content="https://optionlab.in/og-setup.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OptionLab Angel One SmartAPI Setup Guide">
+<meta property="og:locale" content="en_IN">
+<meta property="article:publisher" content="https://optionlab.in">
+
+<!-- ═══ TWITTER ═══ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Set Up Angel One SmartAPI for OptionLab">
+<meta name="twitter:description" content="Complete step-by-step setup guide for connecting Angel One broker to OptionLab NSE options analytics platform.">
+<meta name="twitter:image" content="https://optionlab.in/og-setup.png">
+
+<!-- ═══ GEO / LOCAL ═══ -->
+<meta name="geo.region" content="IN">
+<meta name="geo.country" content="India">
+<meta name="language" content="English">
+
+<!-- ═══ PWA ═══ -->
+<meta name="application-name" content="OptionLab">
+<meta name="apple-mobile-web-app-title" content="OptionLab Setup">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- ═══ PRECONNECT ═══ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://smartapi.angelbroking.com">
+<link rel="dns-prefetch" href="https://ipapi.co">
+
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" title="Sitemap">
+
+<!-- ═══ FONTS ═══ -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+
+<!-- ═══ STRUCTURED DATA — HowTo + BreadcrumbList ═══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HowTo",
+      "name": "How to Set Up Angel One SmartAPI for OptionLab",
+      "description": "Connect your Angel One broker account to OptionLab NSE options analytics platform in 4 phases: account setup, IP whitelisting, API key configuration, and OptionLab connection.",
+      "totalTime": "PT15M",
+      "estimatedCost": {"@type":"MonetaryAmount","currency":"INR","value":"0"},
+      "tool": [
+        {"@type":"HowToTool","name":"Angel One Demat Account"},
+        {"@type":"HowToTool","name":"SmartAPI Developer Portal"},
+        {"@type":"HowToTool","name":"OptionLab Platform"}
+      ],
+      "step": [
+        {
+          "@type": "HowToSection",
+          "name": "Phase 1: Angel One Account Setup",
+          "position": 1,
+          "itemListElement": [
+            {"@type":"HowToStep","position":1,"name":"Open Demat Account","text":"Open an Angel One demat account at angelone.in/open-demat-account if you don't have one."},
+            {"@type":"HowToStep","position":2,"name":"Enable SmartAPI","text":"Login to the Angel One app, go to Profile → SmartAPI and enable the API access."},
+            {"@type":"HowToStep","position":3,"name":"Set TOTP","text":"Set up your Time-based One Time Password (TOTP) via authenticator app for API authentication."}
+          ]
+        },
+        {
+          "@type": "HowToSection",
+          "name": "Phase 2: Detect Your IP Address",
+          "position": 2,
+          "itemListElement": [
+            {"@type":"HowToStep","position":4,"name":"Detect Public IP","text":"Use the built-in IP detector tool on this page to find your public IP address for Angel One API whitelisting."},
+            {"@type":"HowToStep","position":5,"name":"Copy IP Address","text":"Copy your detected public IP address to clipboard for use in the next step."}
+          ]
+        },
+        {
+          "@type": "HowToSection",
+          "name": "Phase 3: Create SmartAPI App",
+          "position": 3,
+          "itemListElement": [
+            {"@type":"HowToStep","position":6,"name":"Visit SmartAPI Portal","text":"Go to smartapi.angelbroking.com and login with your Angel One credentials."},
+            {"@type":"HowToStep","position":7,"name":"Create New App","text":"Click '+ADD APP', set app name as OptionLab, paste your IP as Primary Static IP, and save."},
+            {"@type":"HowToStep","position":8,"name":"Copy API Key","text":"Copy the API Key shown after creating your app."}
+          ]
+        },
+        {
+          "@type": "HowToSection",
+          "name": "Phase 4: Connect OptionLab",
+          "position": 4,
+          "itemListElement": [
+            {"@type":"HowToStep","position":9,"name":"Enter Credentials in OptionLab","text":"Open OptionLab, navigate to Broker Connect, and enter your Angel One Client ID, API Key, password and TOTP."},
+            {"@type":"HowToStep","position":10,"name":"Verify Live Data","text":"Confirm the live Nifty 50 options chain is streaming successfully in the OptionLab terminal."}
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://optionlab.in"},
+        {"@type":"ListItem","position":2,"name":"Broker Setup Guide","item":"https://optionlab.in/setup.html"}
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Which broker is supported by OptionLab?",
+          "acceptedAnswer": {"@type":"Answer","text":"OptionLab currently supports Angel One via the SmartAPI. Support for other brokers including Zerodha Kite, Upstox and Fyers is planned."}
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a paid Angel One account to use SmartAPI?",
+          "acceptedAnswer": {"@type":"Answer","text":"No. SmartAPI access is free for all Angel One demat account holders. You only need to enable it in your profile settings."}
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if my IP address changes?",
+          "acceptedAnswer": {"@type":"Answer","text":"If your ISP assigns a dynamic IP, you will need to re-whitelist your new IP in the SmartAPI portal and re-run the IP detector tool on this page. Consider asking your ISP for a static IP."}
+        },
+        {
+          "@type": "Question",
+          "name": "How long does the OptionLab setup take?",
+          "acceptedAnswer": {"@type":"Answer","text":"The complete setup including Angel One account activation (if new) takes about 15 minutes. If your account is already active, you can configure SmartAPI and connect OptionLab in under 5 minutes."}
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans','Segoe UI',sans-serif;background:#040507;color:#e2e8f0;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:#040507}
+::-webkit-scrollbar-thumb{background:#1e293b;border-radius:3px}
+a:hover{opacity:.85}
+button:active{transform:scale(.98)!important}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-20px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-40px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── ANIMATED BG ── */
+#animBg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+#animBg .base{position:absolute;inset:0;background:#040507}
+#animBg .orb1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(129,140,248,.06) 0%,transparent 70%);top:-200px;left:-100px;animation:drift1 20s ease-in-out infinite}
+#animBg .orb2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,.05) 0%,transparent 70%);bottom:-100px;right:-50px;animation:drift2 25s ease-in-out infinite}
+#animBg .orb3{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(52,211,153,.04) 0%,transparent 70%);top:40%;right:20%;animation:drift3 18s ease-in-out infinite}
+#animBg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px}
+
+/* ── SCREENS ── */
+.screen{display:none;position:relative;z-index:1}
+.screen.show{display:flex}
+
+/* ── LANDING ── */
+#landing{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;animation:fadeIn .6s ease}
+.land-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);border-radius:50px;padding:6px 18px;font-size:11px;color:#fb923c;letter-spacing:.1em;font-weight:700;margin-bottom:28px}
+.pulse-dot{width:6px;height:6px;background:#fb923c;border-radius:50%;animation:pulse 2s infinite;display:inline-block}
+#landing h1{font-size:clamp(32px,6vw,58px);font-weight:900;margin:0 0 16px;line-height:1.05;letter-spacing:-.03em;background:linear-gradient(135deg,#fff 0%,#94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#landing .sub{font-size:17px;color:#64748b;margin:0 auto 40px;line-height:1.7;max-width:520px}
+.phase-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px;max-width:700px;width:100%}
+.pc{padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.03);text-align:center;transition:transform .2s}
+.pc:hover{transform:translateY(-2px)}
+.pc-icon{font-size:22px;margin-bottom:8px}
+.pc-num{font-size:11px;font-weight:700;letter-spacing:.06em;margin-bottom:4px}
+.pc-title{font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px;line-height:1.2}
+.pc-time{font-size:11px;color:#475569}
+.req-toggle{background:none;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 20px;color:#94a3b8;font-size:13px;cursor:pointer;margin-bottom:0;font-family:'DM Sans',sans-serif;transition:border-color .2s}
+.req-toggle:hover{border-color:rgba(255,255,255,.16)}
+.req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:16px;animation:fadeInDown .3s ease;max-width:700px;width:100%}
+.req-card{padding:12px;border-radius:10px;text-align:center}
+.req-icon{font-size:22px;margin-bottom:6px}
+.req-label{font-size:13px;font-weight:600;color:#e2e8f0}
+.req-desc{font-size:11px;color:#64748b;margin-top:2px}
+.btn-begin{padding:16px 48px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#fb923c,#ea580c);color:#fff;font-size:17px;font-weight:800;letter-spacing:-.01em;box-shadow:0 8px 32px rgba(249,115,22,.4);transition:all .2s ease;margin-top:32px;font-family:'DM Sans',sans-serif}
+.btn-begin:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,115,22,.5)}
+.begin-hint{margin-top:14px;font-size:12px;color:#334155}
+
+/* ── TOP BAR ── */
+#topbar{position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(4,5,7,.88);backdrop-filter:blur(16px)}
+#topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;height:56px}
+.btn-back-top{background:none;border:none;color:#475569;cursor:pointer;font-size:13px;padding:4px 8px;border-radius:6px;font-family:'DM Sans',sans-serif;transition:color .2s}
+.btn-back-top:hover{color:#94a3b8}
+.phase-tabs{flex:1;display:flex;gap:0}
+.ptab{flex:1;cursor:pointer;position:relative}
+.ptab-bar{height:3px;transition:all .4s ease;border-radius:2px}
+.ptab-info{padding:8px 8px 4px;display:flex;align-items:center;gap:6px}
+.ptab-icon{font-size:14px}
+.ptab-num{font-size:10px;font-weight:700;letter-spacing:.05em}
+.ptab-title{font-size:11px;font-weight:400;color:#64748b;white-space:nowrap;transition:all .2s}
+.ptab-check{margin-left:auto;font-size:12px}
+.prog-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.prog-txt{font-size:12px;color:#475569}
+.prog-bar{width:80px;height:4px;background:rgba(255,255,255,.06);border-radius:2px}
+.prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#818cf8,#fb923c);transition:width .4s ease}
+.prog-pct{font-size:12px;font-weight:700;color:#fb923c}
+
+/* ── GUIDE LAYOUT ── */
+#guide{flex-direction:column}
+#guide-layout{flex:1;display:flex;max-width:1200px;margin:0 auto;width:100%;padding:24px 20px 60px;gap:24;position:relative;z-index:1}
+
+/* LEFT SIDEBAR */
+#sidebar{width:220px;flex-shrink:0;position:sticky;top:80px;align-self:flex-start;display:flex;flex-direction:column;gap:4px}
+.step-item{padding:10px 14px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s ease}
+.step-icon-wrap{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s ease;border-width:1.5px;border-style:solid}
+.step-label{font-size:12px;font-weight:400;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .2s}
+.step-time{font-size:10px;color:#334155}
+#phase-switcher{margin-top:20px;padding:14px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)}
+.ps-label{font-size:10px;color:#334155;font-weight:700;letter-spacing:.06em;margin-bottom:10px}
+.ps-phase{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:all .2s}
+.ps-picon{font-size:14px}
+.ps-info{flex:1;min-width:0}
+.ps-title{font-size:11px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .2s}
+.ps-mini-bar{height:2px;background:rgba(255,255,255,.04);border-radius:1px;margin-top:3px}
+.ps-mini-fill{height:100%;border-radius:1px;transition:width .4s}
+.ps-cnt{font-size:10px;font-weight:700;flex-shrink:0;transition:color .2s}
+
+/* MAIN CONTENT */
+#content{flex:1;min-width:0}
+.phase-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;animation:fadeIn .3s ease}
+.ph-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.ph-num{font-size:11px;font-weight:700;letter-spacing:.08em}
+.ph-title{font-size:18px;font-weight:800;color:#f1f5f9;line-height:1}
+.ph-step-ctr{margin-left:auto;font-size:12px;color:#475569}
+
+/* STEP CARD */
+.step-card{border-radius:20px;overflow:hidden;transition:all .3s ease;animation:slideIn .3s ease}
+.step-card-topbar{height:4px;transition:background .3s ease}
+.step-card-head{padding:24px 28px 20px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.sch-left{display:flex;align-items:center;gap:10px}
+.sch-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.sch-title{font-size:20px;font-weight:800;margin:0;color:#f1f5f9;letter-spacing:-.02em}
+.sch-tags{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:50px;font-size:11px;font-weight:600}
+.done-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all .3s}
+.step-card-body{padding:24px 28px}
+.step-content{font-size:15px;color:#94a3b8;line-height:1.8;margin:0 0 20px}
+.action-link{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:20px;transition:all .2s ease}
+.warn-box{padding:12px 16px;border-radius:10px;margin-bottom:14px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);font-size:13px;color:#fca5a5;line-height:1.7;display:flex;gap:10px}
+.tip-box{padding:12px 16px;border-radius:10px;margin-bottom:20px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);font-size:13px;color:#a5b4fc;line-height:1.7;display:flex;gap:10px}
+.wait-box{padding:16px 20px;border-radius:12px;margin-bottom:4px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2)}
+.wait-title{font-size:13px;font-weight:700;color:#fcd34d;margin-bottom:10px}
+.wait-item{display:flex;gap:10px;font-size:13px;color:#94a3b8;align-items:flex-start;margin-bottom:8px}
+.wait-arrow{color:#f59e0b;flex-shrink:0;margin-top:1px}
+.ip-confirmed{margin-top:12px;padding:12px 16px;border-radius:10px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);font-size:13px;color:#86efac;display:none}
+
+/* STEP ACTIONS */
+.step-actions{display:flex;gap:10px;margin-top:28px}
+.btn-prev-step{padding:12px 20px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#94a3b8;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-prev-step:hover{background:rgba(255,255,255,.07);color:#e2e8f0}
+.btn-mark-done{flex:1;padding:14px;border-radius:12px;border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:-.01em;transition:all .2s ease;font-family:'DM Sans',sans-serif}
+.btn-mark-done:hover{transform:translateY(-1px)}
+
+/* NEXT PREVIEW */
+.next-preview{margin-top:14px;padding:12px 18px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:12px}
+.np-label{font-size:10px;color:#334155;font-weight:700;letter-spacing:.06em;flex-shrink:0}
+.np-text{font-size:13px;color:#64748b}
+
+/* IP DETECTOR */
+.ip-widget{margin-top:24px;border-radius:16px;overflow:hidden;border:1px solid rgba(52,211,153,.2);background:linear-gradient(135deg,rgba(52,211,153,.04),rgba(6,95,70,.08))}
+.ip-head{padding:14px 20px;border-bottom:1px solid rgba(52,211,153,.1);display:flex;align-items:center;justify-content:space-between;background:rgba(52,211,153,.06)}
+.ip-head-left{display:flex;align-items:center;gap:10px}
+.ip-head-icon{width:32px;height:32px;border-radius:8px;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);display:flex;align-items:center;justify-content:center;font-size:16px}
+.ip-head-title{font-size:13px;font-weight:700;color:#e2e8f0}
+.ip-head-sub{font-size:11px;color:#64748b}
+.ip-head-right{display:flex;gap:8px;align-items:center}
+.ip-current{font-size:11px;font-family:'JetBrains Mono',monospace;color:#34d399;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);padding:4px 10px;border-radius:6px;display:none}
+.ip-body{padding:18px 20px}
+.btn-detect{padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-detect.idle{background:linear-gradient(135deg,#34d399,#10b981);color:#fff}
+.btn-detect.done{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
+.btn-detect:disabled{opacity:.5;cursor:not-allowed}
+
+/* IP states */
+.ip-sources-list{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ip-src-chip{padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600}
+.ip-running .prog-row{display:flex;justify-content:space-between;margin-bottom:6px}
+.ip-running .prog-msg{font-size:12px;color:#94a3b8}
+.ip-running .prog-pct2{font-size:12px;color:#34d399;font-weight:700}
+.ip-bar-wrap{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:16px}
+.ip-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#34d399,#6ee7b7);transition:width .3s ease;box-shadow:0 0 8px rgba(52,211,153,.5)}
+.ip-src-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.ip-src-card{padding:10px 6px;border-radius:10px;text-align:center;border:1px solid transparent;transition:all .3s}
+.ip-src-name{font-size:10px;color:#64748b;margin-bottom:3px;font-family:'JetBrains Mono',monospace}
+.ip-src-val{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;min-height:16px}
+.ip-result-main{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.ip-result-addr{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#34d399;letter-spacing:.02em}
+.ip-result-tags{display:flex;gap:6px;flex-wrap:wrap}
+.ip-result-meta{font-size:12px;color:#475569;margin-bottom:12px;font-family:'JetBrains Mono',monospace}
+.btn-copy{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;border:1px solid rgba(52,211,153,.25);background:rgba(52,211,153,.1);color:#34d399;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-copy:hover{background:rgba(52,211,153,.18)}
+.dynamic-warn{margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);font-size:12px;color:#fcd34d;line-height:1.6;display:none}
+.expand-btn{margin-top:12px;background:none;border:none;color:#475569;font-size:11px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif}
+.src-breakdown{margin-top:8px;display:none;flex-direction:column;gap:5px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);animation:fadeIn .2s ease}
+.src-row{display:flex;gap:10px;align-items:center;font-size:12px}
+.ip-next-note{margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);font-size:12px;color:#a5b4fc;line-height:1.7}
+.ip-error{padding:12px 14px;border-radius:8px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);font-size:13px;color:#fca5a5;margin-bottom:12px;display:none}
+.ip-fallback{font-size:12px;color:#64748b;line-height:1.8;display:none}
+
+/* COMPLETION */
+#completion{text-align:center;padding:60px 20px;animation:fadeIn .5s ease;display:none}
+.comp-emoji{font-size:72px;margin-bottom:20px;animation:bounce .6s ease}
+.comp-title{font-size:36px;font-weight:900;color:#22c55e;margin:0 0 12px;letter-spacing:-.02em}
+.comp-sub{color:#94a3b8;font-size:16px;margin:0 0 32px;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto}
+.comp-features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin:0 auto 32px}
+.comp-feat{padding:14px 10px;border-radius:12px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18);font-size:13px;color:#34d399;font-weight:600;text-align:center}
+.btn-dashboard{padding:16px 44px;border-radius:14px;background:linear-gradient(135deg,#fb923c,#ea580c);border:none;color:#fff;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 32px rgba(249,115,22,.4);font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-block}
+.btn-dashboard:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,115,22,.5)}
+
+/* ═══ MOBILE-FIRST RESPONSIVE ═══ */
+@media(max-width:760px){
+  .phase-cards{grid-template-columns:repeat(2,1fr);}
+  #guide-layout{flex-direction:column;gap:0;}
+  #sidebar{display:none;}
+  .ip-src-grid{grid-template-columns:repeat(3,1fr);}
+  .step-card-head{flex-direction:column;}
+  .step-card-body{padding:18px 20px;}
+  .sch-title{font-size:17px;}
+  #topbar-inner{padding:0 14px;}
+  .prog-wrap{display:none;}
+  .ptab-title{display:none;}
+  .step-content{font-size:14px;}
+  .action-link{font-size:13px;}
+  .warn-box,.tip-box{font-size:12px;}
+}
+@media(max-width:520px){
+  .phase-cards{grid-template-columns:1fr 1fr;}
+  #landing{padding:28px 16px;}
+  #landing h1{font-size:clamp(26px,8vw,44px);}
+  #landing .sub{font-size:15px;}
+  .btn-begin{padding:14px 36px;font-size:15px;}
+  .ph-title{font-size:16px;}
+  .step-card-topbar{height:3px;}
+  .ip-src-grid{grid-template-columns:repeat(2,1fr);}
+  .req-grid{grid-template-columns:repeat(2,1fr);}
+  .ptab{max-width:60px;}
+  .ptab-icon{display:none;}
+}
+@media(max-width:380px){
+  .phase-cards{grid-template-columns:1fr;}
+  #landing{padding:20px 14px;}
+  .step-card-body{padding:16px;}
+}
+@media(hover:none) and (pointer:coarse){
+  .btn-begin{min-height:48px;}
+  .action-link{min-height:44px;display:inline-flex;align-items:center;}
+  .ps-phase{min-height:44px;}
+  .ptab{min-height:44px;}
+  .step-item{min-height:44px;}
+}
+@media(max-width:840px) and (orientation:landscape){
+  #landing{min-height:auto;padding:24px 20px;}
+  .phase-cards{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- SKIP TO CONTENT -->
+<a href="#setup-main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999;background:#fb923c;color:#fff;padding:.5rem 1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;" onfocus="this.style.left='0';this.style.width='auto';this.style.height='auto';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';">Skip to main content</a>
+
+<!-- ANIMATED BACKGROUND -->
+<div id="animBg" aria-hidden="true">
+  <div class="base"></div>
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+  <div class="orb3"></div>
+  <div class="grid"></div>
+</div>
+
+<main id="setup-main" role="main">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- LANDING SCREEN -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="landing" class="screen show" style="flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center">
+  <div class="land-badge"><span class="pulse-dot" aria-hidden="true"></span>OPTIONLAB SETUP GUIDE</div>
+  <h1 itemprop="name">From Zero to<br>Live Trading Data</h1>
+  <p class="sub" itemprop="description">Complete walkthrough to open your broker account, setup SmartAPI, and connect OptionLab — all in about 30 minutes.</p>
+
+  <div class="phase-cards" id="landingPhaseCards"></div>
+
+  <div style="margin-bottom:32px;display:flex;flex-direction:column;align-items:center;gap:0">
+    <button class="req-toggle" onclick="toggleReqs()">▼ What you'll need before starting</button>
+    <div class="req-grid" id="reqGrid" style="display:none"></div>
+  </div>
+
+  <button class="btn-begin" onclick="startGuide()">Begin Setup →</button>
+  <div class="begin-hint">~30 min · Free · No credit card</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- GUIDE SCREEN -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="guide" class="screen">
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div id="topbar-inner">
+      <button class="btn-back-top" onclick="backToLanding()">← Back</button>
+      <div class="phase-tabs" id="phaseTabs"></div>
+      <div class="prog-wrap">
+        <span class="prog-txt" id="progTxt">0/15</span>
+        <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+        <span class="prog-pct" id="progPct">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div id="guide-layout" style="display:flex;gap:24px">
+    <div id="sidebar">
+      <div id="stepList"></div>
+      <div id="phase-switcher">
+        <div class="ps-label">ALL PHASES</div>
+        <div id="phaseSwitcher"></div>
+      </div>
+    </div>
+    <div id="content">
+      <div id="completion">
+        <div class="comp-emoji">🎉</div>
+        <div class="comp-title">All Set!</div>
+        <p class="comp-sub">Your broker account is fully connected to OptionLab. Live options data, analytics, and signals are now available.</p>
+        <div class="comp-features">
+          <div class="comp-feat">📈 Live Data</div>
+          <div class="comp-feat">⚡ Options Chain</div>
+          <div class="comp-feat">📊 Analytics</div>
+        </div>
+        <a href="index.html" class="btn-dashboard">🚀 Open OptionLab Dashboard</a>
+      </div>
+      <div id="stepContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const PHASES = [
+  {
+    id:"account", num:"01", title:"Open Broker Account", subtitle:"Your trading foundation",
+    time:"15 min", icon:"🏦", color:"#818cf8", dark:"#3730a3",
+    steps:[
+      { id:"visit",  title:"Visit Broker Portal", time:"1 min", icon:"🌐",
+        content:"Head to your broker's website and click Open Free Account. Use a SEBI-registered broker that supports SmartAPI (e.g. Angel One — India's largest retail broker, serving 2 crore+ clients).",
+        action:{ label:"angelone.in", url:"https://www.angelone.in" },
+        tip:"Use Chrome or Edge for best compatibility." },
+      { id:"mobile", title:"Verify Mobile Number", time:"1 min", icon:"📱",
+        content:"Enter your Aadhaar-linked mobile number. An OTP will be sent for verification. This must be the same number registered with your Aadhaar card.",
+        warn:"Use the same number you'll register on OptionLab — this links your identity across both platforms." },
+      { id:"pan",    title:"PAN Card Verification", time:"2 min", icon:"🪪",
+        content:"Enter your PAN number. The broker instantly verifies it with NSDL and auto-fills your name and date of birth.",
+        tip:"PAN must be active and KYC-compliant. Verify status at the Income Tax portal if unsure." },
+      { id:"kyc",    title:"Aadhaar e-KYC", time:"3 min", icon:"✅",
+        content:"Enter Aadhaar number — an OTP is sent to your linked mobile for instant address + identity verification. No physical documents needed.",
+        warn:"If Aadhaar OTP fails, document-based KYC is needed — adds 2–3 working days to activation." },
+      { id:"bank",   title:"Link Bank Account", time:"2 min", icon:"🏦",
+        content:"Add your savings account number and IFSC code. The broker does a penny-drop to confirm ownership — a small amount is credited then debited.",
+        tip:"Use your primary account. Avoid joint accounts as they can slow down verification." },
+      { id:"ipv",    title:"Video Verification (IPV)", time:"2 min", icon:"📷",
+        content:"A quick live video where you show your PAN card to camera and say a few words. Fully online, under 2 minutes.",
+        tip:"Good lighting + plain background = instant pass. Low light = retry." },
+      { id:"wait",   title:"Account Activation", time:"Up to 24 hrs", icon:"⏳",
+        content:"Submitted! Most accounts activate within 1–4 hours on working days. Watch for your Client Code via SMS — it looks like: SBHS331.",
+        warn:"Activations on weekends or holidays carry over to the next working day.", isWait:true },
+    ]
+  },
+  {
+    id:"mpin", num:"02", title:"Set Trading MPIN", subtitle:"Your secure trading PIN",
+    time:"3 min", icon:"🔐", color:"#fbbf24", dark:"#92400e",
+    steps:[
+      { id:"app",     title:"Download Broker App", time:"2 min", icon:"📲",
+        content:"Get your broker's app from Play Store or App Store. Log in using your Client Code and the mobile number used during registration.",
+        action:{ label:"Play Store", url:"https://play.google.com/store/apps/details?id=com.angel.one" },
+        tip:"Prefer desktop? Use trade.angelone.in instead." },
+      { id:"setmpin", title:"Create Your MPIN", time:"1 min", icon:"🔑",
+        content:"First login prompts you to create a 4-digit MPIN — your trading PIN used to authorize every API connection and trade.",
+        warn:"⚠️ Critical: Do NOT use the same MPIN as your OptionLab login password. Keep these completely separate.",
+        tip:"Avoid obvious PINs like 1234, 0000, or your birth year." },
+    ]
+  },
+  {
+    id:"smartapi", num:"03", title:"SmartAPI Setup", subtitle:"Unlock API access",
+    time:"5 min", icon:"⚙️", color:"#34d399", dark:"#065f46",
+    steps:[
+      { id:"register", title:"Register SmartAPI Account", time:"2 min", icon:"🔒",
+        content:"Visit smartapi.angelone.in and register with your email. This is a developer portal — entirely separate from your trading account.",
+        action:{ label:"smartapi.angelone.in", url:"https://smartapi.angelone.in" },
+        warn:"Use a completely different password here — never reuse your trading credentials." },
+      { id:"totp",     title:"Enable TOTP Authentication", time:"2 min", icon:"🔐",
+        content:"Navigate to the Enable TOTP page. Enter your Client Code and MPIN, then scan the QR code with Google Authenticator.",
+        action:{ label:"Enable TOTP", url:"https://smartapi.angelbroking.com/enable-totp" },
+        warn:"🚨 The 32-character Secret Key shown after QR scan is displayed ONLY ONCE. Copy and store it securely right now.",
+        tip:"Install Google Authenticator on your phone before this step." },
+      { id:"ipdetect", title:"Detect IP & Create App", time:"2 min", icon:"🌐",
+        content:"Use the live IP detector below to find your exact public IP, then create your OptionLab app in the SmartAPI portal.",
+        tip:"Your API Key generates instantly after creating the app — click the eye icon to reveal it.", isIPDetect:true },
+    ]
+  },
+  {
+    id:"connect", num:"04", title:"Connect to OptionLab", subtitle:"Go live in 2 minutes",
+    time:"2 min", icon:"🚀", color:"#fb923c", dark:"#9a3412",
+    steps:[
+      { id:"open",  title:"Open OptionLab Setup", time:"30 sec", icon:"💻",
+        content:"In the OptionLab desktop app, navigate to Settings → Broker Setup. Your IP is auto-detected — compare it with what you registered.",
+        tip:"This is a one-time setup per device — future logins are fully automatic." },
+      { id:"creds", title:"Enter Credentials", time:"1 min", icon:"🗝️",
+        content:"Input your Broker Client Code, MPIN, TOTP 32-char Secret Key, and API Key. Every field stays on your local device — OptionLab servers never see this data.",
+        warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP." },
+      { id:"test",  title:"Test & Go Live", time:"30 sec", icon:"⚡",
+        content:"Hit Test Connection. OptionLab authenticates with the broker API and confirms live data access. Nifty 50 data will stream within seconds.",
+        tip:"If test fails, revisit IP registration or TOTP secret. Contact support@optionlab.in for help." },
+    ]
+  },
+];
+
+const REQUIREMENTS = [
+  { icon:"📋", label:"PAN Card",     desc:"Active & KYC-verified",  color:"#818cf8" },
+  { icon:"🪪", label:"Aadhaar",      desc:"Mobile number linked",   color:"#34d399" },
+  { icon:"🏦", label:"Bank Account", desc:"Savings + IFSC ready",   color:"#fbbf24" },
+  { icon:"📱", label:"Mobile",       desc:"Aadhaar-linked SIM",     color:"#f472b6" },
+  { icon:"💻", label:"Windows/Mac",  desc:"For OptionLab app",      color:"#60a5fa" },
+  { icon:"📷", label:"Webcam",       desc:"For video KYC",          color:"#fb923c" },
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let activePhase = 0;
+let activeStep  = 0;
+let done        = {};
+let detectedIP  = "";
+
+const TOTAL_STEPS = PHASES.reduce((a, p) => a + p.steps.length, 0);
+function stepKey(pi, si){ return `${pi}-${si}`; }
+function isDone(k){ return !!done[k]; }
+function doneCount(){ return Object.keys(done).length; }
+
+// ═══════════════════════════════════════════════════════
+// LANDING INIT
+// ═══════════════════════════════════════════════════════
+function initLanding(){
+  // Phase cards
+  const pc = document.getElementById('landingPhaseCards');
+  pc.innerHTML = PHASES.map(p=>`
+    <div class="pc" style="border:1px solid ${p.color}25">
+      <div class="pc-icon">${p.icon}</div>
+      <div class="pc-num" style="color:${p.color}">${p.num}</div>
+      <div class="pc-title">${p.title}</div>
+      <div class="pc-time">${p.time}</div>
+    </div>`).join('');
+
+  // Requirements
+  const rg = document.getElementById('reqGrid');
+  rg.innerHTML = REQUIREMENTS.map(r=>`
+    <div class="req-card" style="background:${r.color}08;border:1px solid ${r.color}20">
+      <div class="req-icon">${r.icon}</div>
+      <div class="req-label">${r.label}</div>
+      <div class="req-desc">${r.desc}</div>
+    </div>`).join('');
+}
+
+function toggleReqs(){
+  const g = document.getElementById('reqGrid');
+  const btn = document.querySelector('.req-toggle');
+  const open = g.style.display !== 'none';
+  g.style.display = open ? 'none' : 'grid';
+  btn.textContent = (open ? '▼' : '▲') + ' What you\'ll need before starting';
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function startGuide(){
+  document.getElementById('landing').classList.remove('show');
+  document.getElementById('guide').classList.add('show');
+  document.getElementById('guide').style.minHeight = '100vh';
+  renderAll();
+}
+
+function backToLanding(){
+  document.getElementById('guide').classList.remove('show');
+  document.getElementById('landing').classList.add('show');
+}
+
+function goPhase(pi){
+  activePhase = pi;
+  activeStep  = 0;
+  renderAll();
+}
+
+function goStep(si){
+  activeStep = si;
+  renderAll();
+  scrollToContent();
+}
+
+function markDone(){
+  done[stepKey(activePhase, activeStep)] = true;
+  const phase = PHASES[activePhase];
+  if(activeStep < phase.steps.length - 1){
+    activeStep++;
+  } else if(activePhase < PHASES.length - 1){
+    activePhase++;
+    activeStep = 0;
+  }
+  renderAll();
+  scrollToContent();
+}
+
+function goBack(){
+  if(activeStep > 0){
+    activeStep--;
+  } else if(activePhase > 0){
+    activePhase--;
+    activeStep = PHASES[activePhase].steps.length - 1;
+  }
+  renderAll();
+  scrollToContent();
+}
+
+function scrollToContent(){
+  document.getElementById('content').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function renderAll(){
+  renderTopBar();
+  renderSidebar();
+  renderStepContent();
+  renderCompletion();
+}
+
+function renderTopBar(){
+  const dc = doneCount();
+  const pct = Math.round((dc / TOTAL_STEPS) * 100);
+  document.getElementById('progTxt').textContent = `${dc}/${TOTAL_STEPS}`;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+
+  const tabs = document.getElementById('phaseTabs');
+  tabs.innerHTML = PHASES.map((p, pi)=>{
+    const allDone = p.steps.every((_,si)=>isDone(stepKey(pi,si)));
+    const isAct = pi === activePhase;
+    const barBg = allDone ? p.color : isAct ? `linear-gradient(90deg,${p.color},${p.color}40)` : 'rgba(255,255,255,0.06)';
+    const borderR = pi===0?'2px 0 0 2px':pi===PHASES.length-1?'0 2px 2px 0':'0';
+    return `<div class="ptab" onclick="goPhase(${pi})">
+      <div class="ptab-bar" style="background:${barBg};border-radius:${borderR}"></div>
+      <div class="ptab-info">
+        <span class="ptab-icon">${p.icon}</span>
+        <div>
+          <div class="ptab-num" style="color:${isAct?p.color:'#475569'}">${p.num}</div>
+          <div class="ptab-title" style="color:${isAct?'#e2e8f0':'#64748b'};font-weight:${isAct?700:400}">${p.title}</div>
+        </div>
+        ${allDone?`<span class="ptab-check" style="color:${p.color}">✓</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSidebar(){
+  const phase = PHASES[activePhase];
+
+  // Step list
+  document.getElementById('stepList').innerHTML = phase.steps.map((s,si)=>{
+    const d = isDone(stepKey(activePhase, si));
+    const act = si === activeStep;
+    const color = phase.color;
+    return `<div class="step-item" onclick="goStep(${si})" style="
+      background:${act?color+'12':d?'rgba(255,255,255,0.02)':'transparent'};
+      border:1px solid ${act?color+'35':d?'rgba(255,255,255,0.06)':'transparent'};
+      border-left:3px solid ${d||act?color:'rgba(255,255,255,0.06)'};
+      opacity:${d&&!act?'0.7':'1'}">
+      <div class="step-icon-wrap" style="
+        background:${d?color:act?color+'20':'rgba(255,255,255,0.05)'};
+        color:${d?'#fff':act?color:'#475569'};
+        border-color:${d||act?color:'rgba(255,255,255,0.08)'};
+        font-size:${d?'11px':'13px'}">
+        ${d?'✓':s.icon}
+      </div>
+      <div style="min-width:0">
+        <div class="step-label" style="color:${act?'#e2e8f0':d?'#94a3b8':'#64748b'};font-weight:${act?700:400}">${s.title}</div>
+        <div class="step-time">${s.time}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Phase switcher
+  document.getElementById('phaseSwitcher').innerHTML = PHASES.map((p,pi)=>{
+    const cnt = p.steps.filter((_,si)=>isDone(stepKey(pi,si))).length;
+    const isAct = pi === activePhase;
+    const fillW = Math.round(cnt/p.steps.length*100);
+    return `<div class="ps-phase" onclick="goPhase(${pi})" style="background:${isAct?p.color+'10':'transparent'}">
+      <span class="ps-picon">${p.icon}</span>
+      <div class="ps-info">
+        <div class="ps-title" style="color:${isAct?'#e2e8f0':'#64748b'};font-weight:${isAct?700:400}">${p.title}</div>
+        <div class="ps-mini-bar"><div class="ps-mini-fill" style="width:${fillW}%;background:${p.color}"></div></div>
+      </div>
+      <span class="ps-cnt" style="color:${cnt===p.steps.length?p.color:'#334155'}">${cnt}/${p.steps.length}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderStepContent(){
+  const dc = doneCount();
+  const allDone = dc === TOTAL_STEPS;
+  const comp = document.getElementById('completion');
+  const cont = document.getElementById('stepContent');
+
+  if(allDone){
+    comp.style.display = 'block';
+    cont.style.display = 'none';
+    return;
+  }
+  comp.style.display = 'none';
+  cont.style.display = 'block';
+
+  const phase = PHASES[activePhase];
+  const step  = phase.steps[activeStep];
+  const key   = stepKey(activePhase, activeStep);
+  const done_ = isDone(key);
+  const c = phase.color;
+  const dark = phase.dark || c;
+
+  const isFirst = activePhase===0 && activeStep===0;
+  const isLast  = activePhase===PHASES.length-1 && activeStep===phase.steps.length-1;
+  const nextStepInPhase = activeStep < phase.steps.length-1;
+  let nextLabel = '';
+  if(!isLast){
+    if(nextStepInPhase) nextLabel = `${phase.steps[activeStep+1].icon} ${phase.steps[activeStep+1].title}`;
+    else nextLabel = `${PHASES[activePhase+1].icon} ${PHASES[activePhase+1].title} — ${PHASES[activePhase+1].steps[0].title}`;
+  }
+
+  const btnLabel = isLast
+    ? '🎉 Complete Setup!'
+    : !nextStepInPhase
+      ? `✓ Done — ${PHASES[activePhase+1].title} →`
+      : '✓ Mark Done & Continue →';
+
+  const btnBg = done_
+    ? 'linear-gradient(135deg,#22c55e,#16a34a)'
+    : `linear-gradient(135deg,${c},${dark}cc)`;
+
+  cont.innerHTML = `
+    <div class="phase-header">
+      <div class="ph-ico" style="background:${c}15;border:1px solid ${c}35">${phase.icon}</div>
+      <div>
+        <div class="ph-num" style="color:${c}">${phase.num} · ${phase.subtitle.toUpperCase()}</div>
+        <div class="ph-title">${phase.title}</div>
+      </div>
+      <div class="ph-step-ctr">Step ${activeStep+1} of ${phase.steps.length}</div>
+    </div>
+
+    <div class="step-card" style="background:rgba(255,255,255,0.02);border:1px solid ${done_?c+'35':'rgba(255,255,255,0.07)'};box-shadow:0 0 60px ${c}10">
+      <div class="step-card-topbar" style="background:${done_?c:`linear-gradient(90deg,${c},${c}40)`}"></div>
+
+      <div class="step-card-head">
+        <div class="sch-left">
+          <div class="sch-icon" style="background:${c}15;border:1px solid ${c}30">${step.icon}</div>
+          <div>
+            <h2 class="sch-title">${step.title}</h2>
+            <div class="sch-tags">
+              <span class="tag" style="background:${c}12;border:1px solid ${c}28;color:${c}">⏱ ${step.time}</span>
+              ${step.isWait?`<span class="tag" style="background:#f59e0b12;border:1px solid #f59e0b28;color:#f59e0b">⌛ Waiting</span>`:''}
+              ${step.isIPDetect?`<span class="tag" style="background:#34d39912;border:1px solid #34d39928;color:#34d399">🌐 IP Detect</span>`:''}
+            </div>
+          </div>
+        </div>
+        ${done_?`<div class="done-badge" style="background:linear-gradient(135deg,${c},${c}cc);box-shadow:0 0 16px ${c}50">✓</div>`:''}
+      </div>
+
+      <div class="step-card-body">
+        <p class="step-content">${step.content}</p>
+
+        ${step.action?`<a href="${step.action.url}" target="_blank" rel="noreferrer" class="action-link" style="background:${c}12;border:1px solid ${c}35;color:${c}">🌐 Open ${step.action.label} ↗</a>`:''}
+
+        ${step.warn?`<div class="warn-box"><span style="flex-shrink:0">⚠️</span><span><strong>Important:</strong> ${step.warn}</span></div>`:''}
+        ${step.tip?`<div class="tip-box"><span style="flex-shrink:0">💡</span><span><strong>Pro tip:</strong> ${step.tip}</span></div>`:''}
+
+        ${step.isIPDetect ? renderIPDetector() : ''}
+
+        ${step.isWait?`<div class="wait-box">
+          <div class="wait-title">⌛ While you wait — do these now:</div>
+          ${['Install Google Authenticator on your phone (Play Store / App Store)',
+             'Download the broker app',
+             'Watch for Client Code SMS — save it immediately',
+             'Prepare your API portal email & password idea']
+            .map(i=>`<div class="wait-item"><span class="wait-arrow">→</span>${i}</div>`).join('')}
+        </div>`:''}
+
+        <div class="step-actions">
+          ${!isFirst?`<button class="btn-prev-step" onclick="goBack()">← Back</button>`:''}
+          <button class="btn-mark-done" onclick="markDone()" style="background:${btnBg};box-shadow:0 4px 24px ${c}40">${btnLabel}</button>
+        </div>
+      </div>
+    </div>
+
+    ${!isLast?`<div class="next-preview"><span class="np-label">NEXT</span><span class="np-text">${nextLabel}</span></div>`:''}
+  `;
+
+  // Re-init IP detector if needed
+  if(step.isIPDetect) initIPDetector();
+}
+
+function renderCompletion(){
+  const dc = doneCount();
+  const allDone = dc === TOTAL_STEPS;
+  if(allDone){
+    document.getElementById('completion').style.display = 'block';
+    document.getElementById('stepContent').style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// IP DETECTOR
+// ═══════════════════════════════════════════════════════
+function renderIPDetector(){
+  return `<div class="ip-widget" id="ipWidget">
+    <div class="ip-head">
+      <div class="ip-head-left">
+        <div class="ip-head-icon">🌐</div>
+        <div>
+          <div class="ip-head-title">Live IP Detection Engine</div>
+          <div class="ip-head-sub">5 sources · Consensus · Auto-verified</div>
+        </div>
+      </div>
+      <div class="ip-head-right">
+        <div class="ip-current" id="ipCurrentDisplay"></div>
+        <button class="btn-detect idle" id="btnDetect" onclick="runDetect()">🔍 Detect My IP</button>
+      </div>
+    </div>
+    <div class="ip-body" id="ipBody">
+      <div id="ipIdle">
+        <div class="ip-sources-list">
+          <span style="font-size:12px;color:#64748b">Sources queried simultaneously:</span>
+          ${IP_SOURCES.map(s=>`<span class="ip-src-chip" style="background:${s.color}15;border:1px solid ${s.color}30;color:${s.color}">${s.name}</span>`).join('')}
+        </div>
+      </div>
+      <div id="ipRunning" style="display:none">
+        <div class="ip-running">
+          <div class="prog-row"><span class="prog-msg" id="ipPhaseMsg">Starting…</span><span class="prog-pct2" id="ipPct">0%</span></div>
+          <div class="ip-bar-wrap"><div class="ip-bar-fill" id="ipBar" style="width:0%"></div></div>
+        </div>
+        <div class="ip-src-grid" id="ipSrcGrid">
+          ${IP_SOURCES.map(s=>`<div class="ip-src-card" id="ipSrc_${s.name}" style="background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.06)">
+            <div class="ip-src-name">${s.name}</div>
+            <div class="ip-src-val" style="color:#334155">…</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div id="ipResult" style="display:none">
+        <div class="ip-result-main">
+          <div class="ip-result-addr" id="ipAddr"></div>
+          <div class="ip-result-tags" id="ipTags"></div>
+        </div>
+        <div class="ip-result-meta" id="ipMeta"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-copy" onclick="copyIP()" id="btnCopy">📋 Copy IP</button>
+          <button class="expand-btn" onclick="toggleBreakdown()" id="expandBtn"></button>
+        </div>
+        <div class="dynamic-warn" id="dynamicWarn">⚡ <strong>Dynamic IP detected.</strong> Your ISP may change this after router restart. Re-run detector if API stops working. Ask ISP for static IP (₹200–500/month) for a permanent fix.</div>
+        <div class="src-breakdown" id="srcBreakdown"></div>
+        <div class="ip-next-note">📋 <strong>Next:</strong> Copy IP → SmartAPI portal → <em>+ADD APP</em> → App name: OptionLab → Paste IP in "Primary Static IP" → Save → Copy the API Key shown</div>
+      </div>
+      <div id="ipError" style="display:none">
+        <div class="ip-error" id="ipErrMsg"></div>
+        <div class="ip-fallback">Manual fallback: Open browser → <a href="https://api.ipify.org" target="_blank" style="color:#fb923c">api.ipify.org</a> → Copy the number → Paste in SmartAPI portal</div>
+      </div>
+    </div>
+  </div>
+  <div class="ip-confirmed" id="ipConfirmedBox"></div>`;
+}
+
+const IP_SOURCES = [
+  { name:"ipify",  url:"https://api.ipify.org?format=json",  parse:d=>d.ip,  color:"#6366f1" },
+  { name:"ipapi",  url:"https://ipapi.co/json/",             parse:d=>d.ip,  color:"#8b5cf6" },
+  { name:"ipinfo", url:"https://ipinfo.io/json",             parse:d=>d.ip,  color:"#f59e0b" },
+  { name:"myip",   url:"https://api.myip.com",               parse:d=>d.ip,  color:"#10b981" },
+  { name:"seeip",  url:"https://api.seeip.org/jsonip",       parse:d=>d.ip,  color:"#f97316" },
+];
+
+const PRIVATE = [/^10\./,/^192\.168\./,/^172\.(1[6-9]|2\d|3[01])\./,/^127\./,/^169\.254\./];
+function isPublicIP(ip){
+  if(!ip||typeof ip!=='string')return false;
+  const p=ip.trim().split('.');
+  return p.length===4&&p.every(x=>/^\d+$/.test(x)&&+x>=0&&+x<=255)&&!PRIVATE.some(r=>r.test(ip));
+}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+let ipDetectRunning=false;
+let ipBreakdownOpen=false;
+let ipBreakdownData={results:[],errors:[]};
+
+function initIPDetector(){
+  ipDetectRunning=false;
+  ipBreakdownOpen=false;
+}
+
+async function runDetect(){
+  if(ipDetectRunning)return;
+  ipDetectRunning=true;
+
+  const btn=document.getElementById('btnDetect');
+  if(!btn)return;
+  btn.disabled=true;
+
+  // Show running
+  document.getElementById('ipIdle').style.display='none';
+  document.getElementById('ipResult').style.display='none';
+  document.getElementById('ipError').style.display='none';
+  document.getElementById('ipRunning').style.display='block';
+
+  const setProgress=(pct,msg)=>{
+    const b=document.getElementById('ipBar');
+    const p=document.getElementById('ipPct');
+    const m=document.getElementById('ipPhaseMsg');
+    if(b)b.style.width=pct+'%';
+    if(p)p.textContent=pct+'%';
+    if(m)m.textContent=msg;
+  };
+
+  const updateSrc=(name,ok,val)=>{
+    const el=document.getElementById('ipSrc_'+name);
+    if(!el)return;
+    const s=IP_SOURCES.find(x=>x.name===name);
+    const c=ok?'rgba(34,197,94,0.1)':'rgba(239,68,68,0.07)';
+    const bc=ok?'rgba(34,197,94,0.25)':'rgba(239,68,68,0.18)';
+    el.style.background=c;el.style.borderColor=bc;
+    el.querySelector('.ip-src-val').style.color=ok?'#22c55e':'#ef4444';
+    el.querySelector('.ip-src-val').textContent=ok?val.slice(0,13):'failed';
+  };
+
+  setProgress(5,'Initializing multi-source query…');
+  const results=[],errors=[];
+
+  const settled=await Promise.allSettled(IP_SOURCES.map(async (src,i)=>{
+    const t0=Date.now();
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),5000);
+    try{
+      const r=await fetch(src.url,{signal:ctrl.signal});
+      clearTimeout(t);
+      const d=await r.json();
+      const ip=src.parse(d);
+      return {src,ip,ms:Date.now()-t0};
+    }catch(e){clearTimeout(t);throw e;}
+  }));
+
+  settled.forEach((s,i)=>{
+    const src=IP_SOURCES[i];
+    const pct=15+i*12;
+    setProgress(pct,`Querying ${src.name}…`);
+    if(s.status==='fulfilled'){
+      const {ip,ms}=s.value;
+      if(isPublicIP(ip)){results.push({...src,ip,ms,ok:true});updateSrc(src.name,true,ip);}
+      else{errors.push({...src,error:`Bad IP: ${ip}`});updateSrc(src.name,false,'bad');}
+    }else{
+      const msg=s.reason?.name==='AbortError'?'timeout':(s.reason?.message||'failed');
+      errors.push({...src,error:msg});updateSrc(src.name,false,msg);
+    }
+  });
+
+  if(!results.length){
+    document.getElementById('ipRunning').style.display='none';
+    const err=document.getElementById('ipErrMsg');
+    const fb=document.querySelector('.ip-fallback');
+    if(err){err.textContent='❌ All sources failed. Check internet connection.';err.style.display='block';}
+    if(fb)fb.style.display='block';
+    document.getElementById('ipError').style.display='block';
+    if(btn){btn.disabled=false;btn.textContent='🔄 Retry';}
+    ipDetectRunning=false;
+    return;
+  }
+
+  setProgress(78,'Running consensus algorithm…');await sleep(400);
+  const freq={};results.forEach(r=>(freq[r.ip]=(freq[r.ip]||0)+1));
+  const [bestIP,bestCount]=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
+  const confidence=Math.round(bestCount/IP_SOURCES.length*100);
+
+  setProgress(88,'Double-verifying result…');await sleep(300);
+  let verified=false;
+  try{
+    const fastest=[...results].sort((a,b)=>a.ms-b.ms)[0];
+    const r2=await fetch(fastest.url,{signal:AbortSignal.timeout(4000)});
+    verified=fastest.parse(await r2.json())===bestIP;
+  }catch{verified=bestCount>=3;}
+
+  setProgress(94,'Fetching ISP metadata…');
+  let geo=null;
+  try{
+    const gr=await fetch(`https://ipapi.co/${bestIP}/json/`,{signal:AbortSignal.timeout(5000)});
+    const gd=await gr.json();
+    geo={isp:gd.org||'',city:gd.city||'',region:gd.region||'',isDynamic:!(gd.org||'').toLowerCase().includes('static')};
+  }catch{}
+
+  setProgress(100,'Complete!');
+  await sleep(200);
+
+  // Store for breakdown
+  ipBreakdownData={results,errors,bestIP};
+  detectedIP=bestIP;
+
+  // Update display badge
+  const cd=document.getElementById('ipCurrentDisplay');
+  if(cd){cd.textContent=bestIP;cd.style.display='block';}
+
+  // Show result
+  document.getElementById('ipRunning').style.display='none';
+  document.getElementById('ipResult').style.display='block';
+  document.getElementById('ipAddr').textContent=bestIP;
+
+  const tags=document.getElementById('ipTags');
+  if(tags){
+    const chips=[
+      {c:'#34d399',t:`✓ Verified`},
+      {c:'#818cf8',t:`${confidence}% confidence`},
+      {c:'#34d399',t:`🔄 ${bestCount}/${IP_SOURCES.length}`},
+    ];
+    if(geo?.isDynamic)chips.push({c:'#f59e0b',t:'⚡ Dynamic'});
+    tags.innerHTML=chips.map(x=>`<span class="tag" style="background:${x.c}12;border:1px solid ${x.c}28;color:${x.c}">${x.t}</span>`).join('');
+  }
+
+  const meta=document.getElementById('ipMeta');
+  if(meta&&geo)meta.textContent=`${geo.isp}${geo.city?' · '+geo.city:''}${geo.region?' · '+geo.region:''}`;
+
+  if(geo?.isDynamic){
+    const dw=document.getElementById('dynamicWarn');
+    if(dw)dw.style.display='block';
+  }
+
+  // Breakdown toggle label
+  const eb=document.getElementById('expandBtn');
+  if(eb)eb.textContent=`▼ Show source breakdown (${results.length} ok, ${errors.length} failed)`;
+
+  // IP confirmed box
+  const cb=document.getElementById('ipConfirmedBox');
+  if(cb){
+    cb.innerHTML=`✅ IP confirmed: <strong style="font-family:monospace;color:#fb923c;font-size:15px">${bestIP}</strong> — paste this as "Primary Static IP" when creating your SmartAPI app.`;
+    cb.style.display='block';
+  }
+
+  if(btn){btn.className='btn-detect done';btn.disabled=false;btn.textContent='🔄 Re-detect';}
+  ipDetectRunning=false;
+}
+
+function copyIP(){
+  if(!detectedIP)return;
+  navigator.clipboard.writeText(detectedIP).then(()=>{
+    const b=document.getElementById('btnCopy');
+    if(b){b.textContent='✅ Copied!';setTimeout(()=>{if(b)b.textContent='📋 Copy IP';},2500);}
+  }).catch(()=>{
+    // fallback
+    const ta=document.createElement('textarea');ta.value=detectedIP;
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    const b=document.getElementById('btnCopy');
+    if(b){b.textContent='✅ Copied!';setTimeout(()=>{if(b)b.textContent='📋 Copy IP';},2500);}
+  });
+}
+
+function toggleBreakdown(){
+  const bd=document.getElementById('srcBreakdown');
+  const eb=document.getElementById('expandBtn');
+  if(!bd||!eb)return;
+  ipBreakdownOpen=!ipBreakdownOpen;
+  if(ipBreakdownOpen){
+    const {results,errors,bestIP}=ipBreakdownData;
+    bd.innerHTML=[
+      ...results.map(r=>`<div class="src-row">
+        <span style="color:#22c55e;width:12px">✓</span>
+        <span style="width:60px;color:${r.color};font-weight:600">${r.name}</span>
+        <span style="font-family:'JetBrains Mono',monospace;color:${r.ip===bestIP?'#fb923c':'#94a3b8'};font-weight:${r.ip===bestIP?700:400}">${r.ip}</span>
+        ${r.ip===bestIP?'<span style="font-size:10px;color:#fb923c;background:rgba(249,115,22,0.1);padding:1px 7px;border-radius:50px">consensus</span>':''}
+        <span style="margin-left:auto;color:#334155;font-size:10px">${r.ms}ms</span>
+      </div>`),
+      ...errors.map(e=>`<div class="src-row">
+        <span style="color:#ef4444;width:12px">✗</span>
+        <span style="width:60px;color:#475569">${e.name}</span>
+        <span style="color:#334155">${e.error}</span>
+      </div>`)
+    ].join('');
+    bd.style.display='flex';
+    eb.textContent='▲ Hide source breakdown';
+  }else{
+    bd.style.display='none';
+    eb.textContent=`▼ Show source breakdown (${ipBreakdownData.results.length} ok, ${ipBreakdownData.errors.length} failed)`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+initLanding();
+</script>
+
+</main><!-- /main role=main -->
+
+<!-- ═══ SEO: CRAWLABLE INTERNAL LINKS ═══ -->
+<nav aria-label="Site navigation" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">
+  <a href="https://optionlab.in" title="OptionLab — NSE Options Analytics Platform Home">OptionLab Home</a>
+  <a href="https://optionlab.in/register.html" title="Login or Register to OptionLab">Login / Register</a>
+  <a href="https://optionlab.in/setup.html" title="Angel One SmartAPI Broker Setup Guide">Broker Setup Guide</a>
+</nav>
+<link rel="prefetch" href="index.html" as="document">
+<link rel="prefetch" href="register.html" as="document">
+</body>
+</html>
