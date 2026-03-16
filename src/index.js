@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 const express  = require('express');
 const cors     = require('cors');
@@ -78,7 +78,6 @@ try {
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // BLOG ROUTES START
-const path = require('path');
 app.use('/api/blog', require('./blog/routes'));
 const { sitemapHandler, rssHandler } = require('./blog/seo');
 app.get('/sitemap.xml', sitemapHandler);
