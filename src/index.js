@@ -78,7 +78,7 @@ try {
 // Jobber Pro heartbeat routes
 try {
   const jobberRoutes = require('./routes/jobber.routes');
-  app.use('/api/jobber', jobberRoutes);
+
 } catch (_) { /* optional */ }
 // ─── Static files (admin.html etc) ───────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '..', 'public')));
