@@ -1,5 +1,5 @@
 /**
- * routes/otp.routes.js  [v1.0]
+ * routes/otp.routes.js  [v1.1]
  *
  * Endpoints:
  *   POST /api/otp/send    — send OTP to mobile via Fast2SMS
@@ -45,13 +45,13 @@ function generateOtp() {
 // ─── Send SMS via Fast2SMS Quick SMS route ────────────────────────────────────
 function sendFast2SMS(mobile, otp) {
   return new Promise((resolve, reject) => {
-    const apiKey  = process.env.FAST2SMS_API_KEY;
+    const apiKey = process.env.FAST2SMS_API_KEY;
     if (!apiKey) return reject(new Error('FAST2SMS_API_KEY not configured'));
 
     const message = `Your OptionLab verification code is ${otp}. Valid for ${OTP_EXPIRY_MINUTES} minutes. Do not share with anyone.`;
 
     const params = new URLSearchParams({
-      route:   'q',           // Quick SMS route — no DLT required
+      route:   'q',
       numbers: mobile,
       message: message,
     });
@@ -72,13 +72,19 @@ function sendFast2SMS(mobile, otp) {
       res.on('end', () => {
         try {
           const parsed = JSON.parse(data);
+          // ── Log the full raw Fast2SMS response for debugging ──────────────
+          console.log('[Fast2SMS] raw response:', JSON.stringify(parsed));
           if (parsed.return === true) {
             resolve(parsed);
           } else {
-            reject(new Error(parsed.message?.[0] || 'Fast2SMS send failed'));
+            // message can be a string or an array — handle both
+            const msg = Array.isArray(parsed.message)
+              ? parsed.message.join(', ')
+              : (parsed.message || 'Fast2SMS send failed');
+            reject(new Error(msg));
           }
         } catch (e) {
-          reject(new Error('Fast2SMS invalid response'));
+          reject(new Error('Fast2SMS invalid response: ' + data));
         }
       });
     });
@@ -137,7 +143,7 @@ router.post('/send', async (req, res) => {
 
     // ── Generate + hash OTP ─────────────────────────────────────────────────
     const otp     = generateOtp();
-    const otpHash = await bcrypt.hash(otp, 10); // cost 10 — fast enough for OTP
+    const otpHash = await bcrypt.hash(otp, 10);
 
     // ── Store in DB ─────────────────────────────────────────────────────────
     await pool.query(
@@ -155,12 +161,11 @@ router.post('/send', async (req, res) => {
     return res.json({
       success: true,
       message: `OTP sent to +91${mobile}`,
-      expires_in: OTP_EXPIRY_MINUTES * 60, // seconds
+      expires_in: OTP_EXPIRY_MINUTES * 60,
     });
 
   } catch (e) {
-    console.error('[otp/send]', e.message);
-    // Don't expose Fast2SMS errors to client
+    console.error('[otp/send] ERROR:', e.message);
     return res.status(500).json({
       error: 'Failed to send OTP. Check your number and try again.',
     });
@@ -200,7 +205,6 @@ router.post('/verify', async (req, res) => {
 
     // ── Check attempt limit ─────────────────────────────────────────────────
     if (record.attempts >= OTP_MAX_ATTEMPTS) {
-      // Mark as used so user must request fresh OTP
       await pool.query(
         `UPDATE otp_verifications SET used = true WHERE id = $1`,
         [record.id]
@@ -234,7 +238,6 @@ router.post('/verify', async (req, res) => {
     );
 
     // ── Issue short-lived otp_token (10 min) ────────────────────────────────
-    // auth.routes.js /register will validate this token before creating account
     const otpToken = jwt.sign(
       { mobile, purpose: 'registration', verified: true },
       process.env.JWT_SECRET,
@@ -250,7 +253,7 @@ router.post('/verify', async (req, res) => {
     });
 
   } catch (e) {
-    console.error('[otp/verify]', e.message);
+    console.error('[otp/verify] ERROR:', e.message);
     return res.status(500).json({ error: 'Verification failed. Try again.' });
   }
 });
