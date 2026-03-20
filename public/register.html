@@ -27,368 +27,682 @@
 <link rel="prefetch" href="index.html" as="document">
 
 <style>
-:root{
-  --or:#f97316;--or2:#ea580c;--or3:#fb923c;
-  --og:rgba(249,115,22,0.18);--og2:rgba(249,115,22,0.08);--og3:rgba(249,115,22,0.04);
-  --bg:#06080d;--bg2:#090c12;--bg3:#0d1018;--bg4:#111827;
-  --bd:rgba(255,255,255,0.07);--bda:rgba(255,255,255,0.12);
-  --bdo:rgba(249,115,22,0.5);--bds:rgba(249,115,22,0.2);
-  --tx:#e8eef8;--tx2:#7b8fa8;--tx3:#303d50;
-  --gn:#10b981;--gn2:rgba(16,185,129,0.15);
-  --rd:#ef4444;
-  --r:10px;--r2:14px;--r3:18px;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{height:100%}
-body{
-  font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);
-  min-height:100vh;min-height:100dvh;
-  display:flex;align-items:center;justify-content:center;padding:20px;
-  overflow-x:hidden;
-}
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --or: #f97316; --or2: #ea580c; --or3: #fb923c;
+  --og: rgba(249,115,22,.18); --og2: rgba(249,115,22,.08); --og3: rgba(249,115,22,.04);
+  --bg: #06080d; --bd: rgba(255,255,255,.07); --bdo: rgba(249,115,22,.5); --bds: rgba(249,115,22,.2);
+  --tx: #e8eef8; --tx2: #7b8fa8; --gn: #10b981; --rd: #ef4444;
+  --r: 10px; --r2: 14px;
 
-/* ── BACKGROUND ── */
-.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(249,115,22,.018) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(249,115,22,.018) 1px,transparent 1px);
-  background-size:60px 60px;}
-.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(100px);animation:drift 14s ease-in-out infinite;}
-.o1{width:700px;height:700px;top:-250px;left:-250px;background:radial-gradient(circle,rgba(249,115,22,.07),transparent 65%);}
-.o2{width:500px;height:500px;bottom:-150px;right:-150px;background:radial-gradient(circle,rgba(6,182,212,.04),transparent 65%);animation-delay:-6s;animation-direction:reverse;}
-.o3{width:300px;height:300px;top:40%;left:50%;background:radial-gradient(circle,rgba(16,185,129,.03),transparent 65%);animation-delay:-3s;}
-@keyframes drift{0%,100%{transform:translate(0,0)}33%{transform:translate(15px,-20px)}66%{transform:translate(-10px,10px)}}
+  /* Fluid spacing scale */
+  --space-xs: clamp(4px, 1vw, 8px);
+  --space-sm: clamp(8px, 1.5vw, 14px);
+  --space-md: clamp(12px, 2vw, 20px);
+  --space-lg: clamp(16px, 3vw, 32px);
+  --space-xl: clamp(24px, 4vw, 48px);
 
-.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.particle{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--or);opacity:0;animation:float-up linear infinite;}
-@keyframes float-up{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:.5}90%{opacity:.15}100%{transform:translateY(-100vh) scale(0);opacity:0}}
-
-/* ── SHELL ── */
-.shell{
-  position:relative;z-index:1;
-  display:grid;grid-template-columns:420px 1fr;
-  width:100%;max-width:960px;min-height:600px;
-  border-radius:24px;overflow:hidden;
-  border:1px solid var(--bd);
-  box-shadow:0 0 0 1px rgba(249,115,22,.04),0 50px 130px rgba(0,0,0,.8);
+  /* Fluid type scale */
+  --text-xs: clamp(10px, 1.1vw, 12px);
+  --text-sm: clamp(11px, 1.3vw, 13px);
+  --text-base: clamp(13px, 1.5vw, 15px);
+  --text-lg: clamp(15px, 1.8vw, 17px);
+  --text-xl: clamp(20px, 3vw, 28px);
+  --text-2xl: clamp(24px, 4vw, 34px);
 }
 
-/* ══ LEFT ══ */
-.left{
-  background:linear-gradient(155deg,#090d15 0%,#0d1320 100%);
-  padding:44px 38px;display:flex;flex-direction:column;
-  border-right:1px solid var(--bd);position:relative;overflow:hidden;
-}
-.left::after{content:'';position:absolute;top:-100px;right:-100px;width:320px;height:320px;
-  background:radial-gradient(circle,rgba(249,115,22,.08),transparent 65%);pointer-events:none;}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
-.brand{display:flex;align-items:center;gap:11px;margin-bottom:40px;text-decoration:none;}
-.brand-mark{width:40px;height:40px;background:linear-gradient(135deg,#f97316,#c2410c);
-  border-radius:11px;display:flex;align-items:center;justify-content:center;
-  font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;
-  box-shadow:0 0 24px rgba(249,115,22,.45);flex-shrink:0;}
-.brand-name{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;color:#e8eef8;letter-spacing:-.01em;}
-.brand-name b{color:var(--or);}
-
-.left-headline{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;
-  line-height:1.06;letter-spacing:-.04em;margin-bottom:14px;}
-.left-headline em{font-style:normal;background:linear-gradient(135deg,#f97316 0%,#fb923c 50%,#fbbf24 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.left-sub{font-size:14px;color:#5a6e8a;line-height:1.7;margin-bottom:32px;font-weight:400;}
-
-.feats{display:flex;flex-direction:column;gap:16px;flex:1;}
-.feat{display:flex;align-items:flex-start;gap:12px;}
-.feat-ico{width:34px;height:34px;flex-shrink:0;background:var(--og3);border:1px solid var(--bds);
-  border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s;}
-.feat:hover .feat-ico{background:var(--og2);border-color:var(--bdo);}
-.feat-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#e2e8f4;margin-bottom:3px;letter-spacing:-.01em;}
-.feat-desc{font-size:12.5px;color:#4e6278;line-height:1.55;}
-
-.live-strip{margin-top:28px;padding:12px 15px;background:rgba(16,185,129,.05);
-  border:1px solid rgba(16,185,129,.15);border-radius:11px;display:flex;align-items:center;gap:10px;}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--gn);
-  box-shadow:0 0 10px rgba(16,185,129,.6);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;}
-@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
-.live-text{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#6b7fa0;}
-.live-text strong{color:var(--gn);}
-.ticker-strip{margin-top:16px;display:flex;gap:6px;flex-wrap:wrap;}
-.tick-item{padding:5px 10px;background:rgba(255,255,255,.03);border:1px solid var(--bd);
-  border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2);
-  display:flex;align-items:center;gap:5px;}
-.tick-item .tv.up{color:var(--gn);font-weight:600;}
-.tick-item .tv.dn{color:var(--rd);font-weight:600;}
-
-/* ══ RIGHT ══ */
-.right{
-  background:#0a0e17;
-  padding:40px 38px;
-  display:flex;flex-direction:column;
-  position:relative;
-}
-.right::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(249,115,22,.25),transparent);}
-
-/* ── TAB SWITCHER ── */
-.tabs{
-  display:flex;margin-bottom:32px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;padding:4px;gap:4px;
-}
-.tab{
-  flex:1;padding:11px 16px;border-radius:9px;
-  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
-  cursor:pointer;border:none;background:transparent;
-  color:rgba(255,255,255,.3);transition:all .2s;letter-spacing:.01em;
-}
-.tab.on{
-  background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
-  box-shadow:0 2px 16px rgba(249,115,22,.35);
-}
-.tab:not(.on):hover{color:rgba(255,255,255,.6);}
-
-/* ── FORMS ── */
-.form-pane{display:none;flex-direction:column;flex:1;}
-.form-pane.on{display:flex;}
-
-.form-head{margin-bottom:28px;}
-.form-eyebrow{
-  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:var(--or);margin-bottom:10px;
-  display:flex;align-items:center;gap:7px;
-}
-.form-eyebrow::before{content:'';display:block;width:20px;height:2px;
-  background:linear-gradient(90deg,var(--or),var(--or3));border-radius:1px;}
-.form-title{
-  font-family:'Syne',sans-serif;font-weight:800;font-size:32px;
-  letter-spacing:-.04em;line-height:1.05;
-  background:linear-gradient(135deg,#ffffff 0%,#c8d5e8 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:8px;
-}
-.form-sub{font-size:14px;color:#586880;line-height:1.6;font-weight:400;}
-
-/* ── STEP INDICATOR ── */
-.stepbar{display:flex;align-items:center;margin-bottom:28px;}
-.si{display:flex;align-items:center;flex:1;}
-.si:last-child{flex:0;}
-.sc{
-  width:32px;height:32px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
-  border:2px solid rgba(255,255,255,.1);
-  color:rgba(255,255,255,.2);background:rgba(255,255,255,.04);
-  transition:all .3s;
-}
-.sc.on{border-color:var(--or);color:var(--or);background:rgba(249,115,22,.12);
-  box-shadow:0 0 12px rgba(249,115,22,.2);}
-.sc.dn{border-color:var(--gn);background:var(--gn);color:#fff;}
-.sl{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
-  color:rgba(255,255,255,.2);margin-left:8px;white-space:nowrap;letter-spacing:.04em;transition:color .3s;}
-.sl.on{color:var(--or);}
-.sl.dn{color:var(--gn);}
-.sline{flex:1;height:1px;background:rgba(255,255,255,.08);margin:0 10px;transition:background .3s;}
-.sline.dn{background:var(--gn);}
-
-/* ── FIELD GROUP ── */
-.ig{margin-bottom:18px;}
-.il{
-  display:block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(255,255,255,.4);margin-bottom:8px;
-}
-.req{color:var(--or);margin-left:3px;font-size:13px;line-height:1;}
-.iw{position:relative;}
-.ipfx{
-  position:absolute;left:15px;top:50%;transform:translateY(-50%);
-  font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;
-  color:rgba(255,255,255,.3);pointer-events:none;
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0px, 2vw, 20px);
+  overflow-x: hidden;
 }
 
-/* ── INPUTS ── */
-input[type=text],input[type=tel],input[type=password]{
-  width:100%;
-  padding:14px 16px;
-  background:#050811;
-  border:1.5px solid rgba(255,255,255,.1);
-  border-radius:var(--r2);
-  color:#f0f5ff;
-  font-size:16px;font-family:'Outfit',sans-serif;font-weight:400;
-  outline:none;
-  transition:border-color .2s,box-shadow .2s;
-  -webkit-appearance:none;
+/* ═══════════════════════════════════════
+   BACKGROUND
+═══════════════════════════════════════ */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(249,115,22,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249,115,22,.018) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
-input[type=text]::placeholder,
-input[type=tel]::placeholder,
-input[type=password]::placeholder{color:rgba(255,255,255,.18);}
-input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{
-  border-color:var(--or);
-  box-shadow:0 0 0 3px rgba(249,115,22,.12),inset 0 1px 3px rgba(0,0,0,.3);
-  background:#070c15;
+.bg-orb {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+  filter: blur(100px); animation: drift 14s ease-in-out infinite;
 }
-input.pfx{padding-left:46px;}
-input.field-locked{
-  border-color:rgba(16,185,129,.4) !important;
-  color:var(--gn) !important;
-  background:#050f0a !important;
-  cursor:default;
-}
-input.field-error{
-  border-color:rgba(239,68,68,.5) !important;
-  box-shadow:0 0 0 3px rgba(239,68,68,.08) !important;
+.o1 { width: clamp(300px,60vw,700px); height: clamp(300px,60vw,700px); top: -20%; left: -15%; background: radial-gradient(circle, rgba(249,115,22,.07), transparent 65%); }
+.o2 { width: clamp(200px,40vw,500px); height: clamp(200px,40vw,500px); bottom: -15%; right: -10%; background: radial-gradient(circle, rgba(6,182,212,.04), transparent 65%); animation-delay: -6s; animation-direction: reverse; }
+.o3 { width: clamp(150px,25vw,300px); height: clamp(150px,25vw,300px); top: 40%; left: 50%; background: radial-gradient(circle, rgba(16,185,129,.03), transparent 65%); animation-delay: -3s; }
+@keyframes drift { 0%,100% { transform: translate(0,0); } 33% { transform: translate(15px,-20px); } 66% { transform: translate(-10px,10px); } }
+
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: var(--or); opacity: 0; animation: float-up linear infinite; }
+@keyframes float-up { 0% { transform: translateY(0) scale(1); opacity: 0; } 10% { opacity: .5; } 90% { opacity: .15; } 100% { transform: translateY(-100vh) scale(0); opacity: 0; } }
+
+/* ═══════════════════════════════════════
+   SHELL — DESKTOP TWO-COLUMN
+═══════════════════════════════════════ */
+.shell {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: clamp(220px, 38%, 440px) 1fr;
+  width: 100%;
+  max-width: 980px;
+  border-radius: clamp(12px, 2vw, 24px);
+  overflow: hidden;
+  border: 1px solid var(--bd);
+  box-shadow: 0 0 0 1px rgba(249,115,22,.04), 0 50px 130px rgba(0,0,0,.8);
+  /* KEY FIX: no fixed min-height — let content drive height */
 }
 
-/* Angel One ID notice */
-.angel-notice{
-  margin-top:8px;padding:10px 13px;
-  background:rgba(249,115,22,.06);
-  border:1px solid rgba(249,115,22,.18);
-  border-radius:9px;
-  font-size:12.5px;color:#c87941;line-height:1.5;
-  display:flex;align-items:flex-start;gap:8px;
+/* ═══════════════════════════════════════
+   LEFT PANEL
+═══════════════════════════════════════ */
+.left {
+  background: linear-gradient(155deg, #090d15 0%, #0d1320 100%);
+  padding: var(--space-xl) clamp(18px, 3vw, 40px);
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--bd);
+  position: relative; overflow: hidden;
 }
-.angel-notice-icon{flex-shrink:0;font-size:14px;margin-top:1px;}
-
-/* Mobile verified badge */
-.mob-verified{
-  display:flex;align-items:center;gap:8px;
-  padding:11px 14px;
-  background:rgba(16,185,129,.07);
-  border:1px solid rgba(16,185,129,.2);
-  border-radius:10px;
-  font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gn);
-  margin-bottom:16px;
+.left::after {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(249,115,22,.08), transparent 65%);
+  pointer-events: none;
 }
 
-/* ── MPIN / OTP BOXES ── */
-.mprow{display:flex;gap:9px;justify-content:center;margin:8px 0 5px;}
-.mpb{
-  width:48px;height:60px;
-  background:#050811;
-  border:1.5px solid rgba(255,255,255,.1);
-  border-radius:12px;text-align:center;
-  font-size:26px;font-weight:700;
-  color:#f0f5ff;outline:none;
-  font-family:'JetBrains Mono',monospace;
-  transition:border-color .2s,box-shadow .2s;
-  -webkit-appearance:none;cursor:text;
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: var(--space-lg); text-decoration: none; }
+.brand-mark {
+  width: clamp(32px, 4vw, 42px); height: clamp(32px, 4vw, 42px);
+  background: linear-gradient(135deg, #f97316, #c2410c);
+  border-radius: clamp(8px, 1vw, 12px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(11px, 1.4vw, 15px); color: #fff;
+  box-shadow: 0 0 24px rgba(249,115,22,.45); flex-shrink: 0;
 }
-.mpb:focus{
-  border-color:var(--or);
-  box-shadow:0 0 0 3px rgba(249,115,22,.12);
-  background:#070c15;
+.brand-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(14px, 1.8vw, 19px); color: #e8eef8; letter-spacing: -.01em; }
+.brand-name b { color: var(--or); }
+
+.left-headline {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(18px, 2.8vw, 32px);
+  line-height: 1.06; letter-spacing: -.04em;
+  margin-bottom: var(--space-sm);
 }
-.mpb.fl{border-color:rgba(249,115,22,.6);color:var(--or);}
-.mp-hint{font-size:12.5px;color:#4e6278;text-align:center;margin-top:8px;font-family:'JetBrains Mono',monospace;}
-.mp-warn{font-size:12.5px;color:#f59e0b;text-align:center;margin-top:14px;padding:10px 14px;
-  background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:9px;line-height:1.5;}
-
-/* OTP resend */
-.otp-resend{text-align:center;margin-top:14px;font-size:13px;color:#4e6278;font-family:'JetBrains Mono',monospace;}
-.resend-btn{color:var(--or);cursor:pointer;font-weight:700;background:none;border:none;font-family:inherit;font-size:inherit;}
-.resend-btn:disabled{color:#4e6278;cursor:default;}
-
-/* ── SUMMARY CARD ── */
-.sumcard{background:#050811;border:1.5px solid rgba(255,255,255,.08);
-  border-radius:var(--r2);padding:16px 18px;margin-bottom:18px;}
-.sumrow{display:flex;align-items:center;justify-content:space-between;
-  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);}
-.sumrow:last-child{border-bottom:none;}
-.sumlbl{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);}
-.sumval{font-size:15px;font-weight:700;color:#f0f5ff;}
-.sumval-angel{
-  font-size:14px;font-weight:700;
-  color:var(--gn);font-family:'JetBrains Mono',monospace;
-  display:flex;align-items:center;gap:6px;
+.left-headline em {
+  font-style: normal;
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fbbf24 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.sumval-angel::after{
-  content:'LOCKED';font-size:9px;letter-spacing:.1em;
-  background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);
-  color:var(--gn);padding:2px 6px;border-radius:4px;
+.left-sub { font-size: clamp(11px, 1.2vw, 13px); color: #5a6e8a; line-height: 1.65; margin-bottom: var(--space-lg); font-weight: 400; }
+
+.feats { display: flex; flex-direction: column; gap: clamp(10px, 1.5vw, 16px); flex: 1; }
+.feat { display: flex; align-items: flex-start; gap: clamp(8px, 1vw, 12px); }
+.feat-ico {
+  width: clamp(28px, 3.2vw, 36px); height: clamp(28px, 3.2vw, 36px); flex-shrink: 0;
+  background: var(--og3); border: 1px solid var(--bds); border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(12px, 1.4vw, 16px); transition: all .2s;
+}
+.feat:hover .feat-ico { background: var(--og2); border-color: var(--bdo); }
+.feat-title { font-family: 'Syne', sans-serif; font-size: clamp(11px, 1.3vw, 14px); font-weight: 700; color: #e2e8f4; margin-bottom: 2px; letter-spacing: -.01em; }
+.feat-desc { font-size: clamp(10px, 1.1vw, 12px); color: #4e6278; line-height: 1.5; }
+
+.live-strip {
+  margin-top: var(--space-md);
+  padding: clamp(8px, 1.2vw, 12px) clamp(10px, 1.5vw, 15px);
+  background: rgba(16,185,129,.05); border: 1px solid rgba(16,185,129,.15); border-radius: 11px;
+  display: flex; align-items: center; gap: 9px;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--gn);
+  box-shadow: 0 0 10px rgba(16,185,129,.6); flex-shrink: 0; animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(.8); } }
+.live-text { font-family: 'JetBrains Mono', monospace; font-size: clamp(10px, 1.2vw, 12px); color: #6b7fa0; }
+.live-text strong { color: var(--gn); }
+
+.ticker-strip { margin-top: var(--space-sm); display: flex; gap: 5px; flex-wrap: wrap; }
+.tick-item {
+  padding: clamp(3px,.6vw,5px) clamp(6px,1vw,9px);
+  background: rgba(255,255,255,.03); border: 1px solid var(--bd); border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(9px,1vw,11px); color: var(--tx2);
+  display: flex; align-items: center; gap: 4px;
+}
+.tick-item .tv.up { color: var(--gn); font-weight: 600; }
+.tick-item .tv.dn { color: var(--rd); font-weight: 600; }
+
+/* ═══════════════════════════════════════
+   RIGHT PANEL
+═══════════════════════════════════════ */
+.right {
+  background: #0a0e17;
+  padding: var(--space-xl) clamp(16px, 4vw, 44px);
+  display: flex; flex-direction: column;
+  position: relative;
+  /* KEY FIX: allow vertical scroll within right panel */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.right::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(249,115,22,.25), transparent);
 }
 
-/* ── ERROR MSG ── */
-.msg{padding:12px 14px;border-radius:10px;font-size:13px;
-  margin-bottom:16px;display:none;align-items:flex-start;gap:8px;line-height:1.5;}
-.msg.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;}
-.msg.err.show{display:flex;}
-
-/* ── MAIN BUTTON ── */
-.btn-main{
-  width:100%;padding:15px;
-  background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
-  border:none;border-radius:var(--r2);
-  font-family:'Syne',sans-serif;font-size:17px;font-weight:800;letter-spacing:.02em;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:all .25s;
-  box-shadow:0 4px 24px rgba(249,115,22,.35),0 1px 3px rgba(249,115,22,.2);
-  position:relative;overflow:hidden;
+/* ═══════════════════════════════════════
+   MOBILE TOP BAR (≤660px only)
+═══════════════════════════════════════ */
+.mobile-topbar {
+  display: none;
+  align-items: center; gap: 10px;
+  padding-bottom: var(--space-md);
+  flex-shrink: 0;
 }
-.btn-main::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);pointer-events:none;}
-.btn-main:hover:not(:disabled){transform:translateY(-2px);
-  box-shadow:0 8px 32px rgba(249,115,22,.45),0 2px 6px rgba(249,115,22,.3);}
-.btn-main:active:not(:disabled){transform:translateY(0);}
-.btn-main:disabled{opacity:.55;cursor:not-allowed;}
-
-.btn-back{width:100%;padding:12px;background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.09);border-radius:var(--r);
-  font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;
-  color:rgba(255,255,255,.45);cursor:pointer;margin-top:10px;transition:all .2s;}
-.btn-back:hover{border-color:rgba(249,115,22,.4);color:var(--or);}
-
-.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
-  border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;flex-shrink:0;}
-@keyframes sp{to{transform:rotate(360deg)}}
-.spacer{flex:1;min-height:10px;}
-.ffoot{font-size:13.5px;color:#485968;text-align:center;margin-top:16px;font-family:'Outfit',sans-serif;}
-.flink{color:var(--or);text-decoration:none;font-weight:700;cursor:pointer;}
-.flink:hover{opacity:.8;}
-
-/* ── SUCCESS ── */
-.success-screen{display:none;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;padding:24px 0;flex:1;}
-.success-screen.show{display:flex;}
-.success-ring{width:80px;height:80px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05));
-  border:2px solid rgba(16,185,129,.4);
-  display:flex;align-items:center;justify-content:center;font-size:34px;
-  margin-bottom:22px;animation:pop-in .5s cubic-bezier(.175,.885,.32,1.275) both;}
-@keyframes pop-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.success-title{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;
-  letter-spacing:-.03em;margin-bottom:10px;
-  background:linear-gradient(135deg,#fff 0%,#c8d5e8 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.success-sub{font-size:14px;color:#586880;max-width:240px;line-height:1.65;}
-.redirect-bar{margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:10px;}
-.redirect-track{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
-.redirect-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--or3));
-  border-radius:2px;width:0%;transition:width linear;}
-.redirect-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:#4e6278;}
-
-/* ── RESPONSIVE ── */
-@media(max-width:840px){.shell{max-width:100%;}.left{padding:34px 26px;}.right{padding:32px 26px;}
-  .left-headline{font-size:26px;}}
-@media(max-width:660px){
-  body{padding:0;align-items:flex-start;}
-  .shell{grid-template-columns:1fr;border-radius:0;border:none;box-shadow:none;min-height:100vh;min-height:100dvh;}
-  .left{display:none;}
-  .right{padding:max(env(safe-area-inset-top),28px) 22px max(env(safe-area-inset-bottom),24px);
-    min-height:100vh;min-height:100dvh;}
-  .form-title{font-size:26px;}.tabs{margin-bottom:20px;}.tab{font-size:13px;padding:10px;}
-  .mprow{gap:7px;}.mpb{width:42px;height:52px;font-size:22px;}
+.mobile-topbar .m-mark {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #f97316, #c2410c);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; color: #fff;
+  box-shadow: 0 0 20px rgba(249,115,22,.4); flex-shrink: 0;
 }
-@media(max-width:360px){.mpb{width:36px;height:48px;font-size:19px;}.mprow{gap:5px;}
-  .right{padding-left:14px;padding-right:14px;}}
-@media(hover:none) and (pointer:coarse){
-  .btn-main,.btn-back,.tab{min-height:48px;}
-  input[type=text],input[type=tel],input[type=password]{font-size:16px!important;min-height:48px;}
-  .mpb{min-height:52px;}
+.mobile-topbar .m-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: #e8eef8; letter-spacing: -.01em; }
+.mobile-topbar .m-name b { color: var(--or); }
+
+/* Mobile feature pills — shown below brand on mobile */
+.mobile-pills {
+  display: none;
+  gap: 6px; flex-wrap: wrap;
+  padding-bottom: var(--space-md);
 }
-@media(max-width:840px) and (orientation:landscape){body{align-items:flex-start;}
-  .shell{min-height:auto;}.right{padding-top:20px;padding-bottom:20px;}}
+.mpill {
+  padding: 5px 10px;
+  background: var(--og3); border: 1px solid var(--bds); border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--or);
+  display: flex; align-items: center; gap: 5px; white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════
+   TABS
+═══════════════════════════════════════ */
+.tabs {
+  display: flex; margin-bottom: var(--space-lg);
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px; padding: 4px; gap: 4px; flex-shrink: 0;
+}
+.tab {
+  flex: 1; padding: clamp(9px,1.2vw,12px) clamp(10px,1.5vw,16px); border-radius: 9px;
+  font-family: 'Syne', sans-serif; font-size: clamp(12px,1.4vw,14px); font-weight: 700;
+  cursor: pointer; border: none; background: transparent;
+  color: rgba(255,255,255,.3); transition: all .2s; letter-spacing: .01em;
+  min-height: 44px; /* touch target */
+}
+.tab.on { background: linear-gradient(135deg, #f97316, #c2410c); color: #fff; box-shadow: 0 2px 16px rgba(249,115,22,.35); }
+.tab:not(.on):hover { color: rgba(255,255,255,.6); }
+
+/* ═══════════════════════════════════════
+   FORM PANES
+═══════════════════════════════════════ */
+.form-pane { display: none; flex-direction: column; flex: 1; }
+.form-pane.on { display: flex; }
+
+.form-head { margin-bottom: var(--space-md); }
+.form-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: var(--text-xs);
+  font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--or); margin-bottom: var(--space-xs);
+  display: flex; align-items: center; gap: 7px;
+}
+.form-eyebrow::before { content: ''; display: block; width: 20px; height: 2px; background: linear-gradient(90deg, var(--or), var(--or3)); border-radius: 1px; }
+.form-title {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: var(--text-2xl); letter-spacing: -.04em; line-height: 1.05;
+  background: linear-gradient(135deg, #ffffff 0%, #c8d5e8 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: clamp(4px,.8vw,8px);
+}
+.form-sub { font-size: var(--text-sm); color: #586880; line-height: 1.6; font-weight: 400; }
+
+/* ═══════════════════════════════════════
+   STEP BAR — scales perfectly at all sizes
+═══════════════════════════════════════ */
+.stepbar {
+  display: flex; align-items: center;
+  margin-bottom: var(--space-md);
+  flex-shrink: 0;
+  /* KEY FIX: never overflow */
+  overflow: hidden;
+}
+.si { display: flex; align-items: center; flex: 1; min-width: 0; }
+.si:last-child { flex: 0; flex-shrink: 0; }
+
+.sc {
+  /* KEY FIX: fluid size, never wraps */
+  width: clamp(22px, 3.5vw, 32px); height: clamp(22px, 3.5vw, 32px);
+  border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 1.1vw, 12px); font-weight: 700;
+  border: 2px solid rgba(255,255,255,.1);
+  color: rgba(255,255,255,.2); background: rgba(255,255,255,.04);
+  transition: all .3s;
+}
+.sc.on { border-color: var(--or); color: var(--or); background: rgba(249,115,22,.12); box-shadow: 0 0 12px rgba(249,115,22,.2); }
+.sc.dn { border-color: var(--gn); background: var(--gn); color: #fff; }
+
+/* KEY FIX: labels hidden on very small screens to prevent overflow */
+.sl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7px, 1vw, 11px); font-weight: 700;
+  color: rgba(255,255,255,.2); margin-left: clamp(3px,.5vw,7px);
+  white-space: nowrap; letter-spacing: .04em; transition: color .3s;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.sl.on { color: var(--or); }
+.sl.dn { color: var(--gn); }
+
+.sline { flex: 1; height: 1px; background: rgba(255,255,255,.08); margin: 0 clamp(3px,.6vw,9px); transition: background .3s; min-width: 4px; }
+.sline.dn { background: var(--gn); }
+
+/* ═══════════════════════════════════════
+   FIELDS
+═══════════════════════════════════════ */
+.ig { margin-bottom: var(--space-md); }
+.il {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--text-xs); font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-bottom: clamp(5px,.8vw,9px);
+}
+.req { color: var(--or); margin-left: 3px; font-size: 13px; line-height: 1; }
+.iw { position: relative; }
+.ipfx {
+  position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+  font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600;
+  color: rgba(255,255,255,.3); pointer-events: none;
+}
+
+/* ═══════════════════════════════════════
+   INPUTS — 16px font prevents iOS zoom
+═══════════════════════════════════════ */
+input[type=text], input[type=tel], input[type=password] {
+  width: 100%;
+  padding: clamp(11px,1.5vw,15px) clamp(12px,1.5vw,17px);
+  background: #050811;
+  border: 1.5px solid rgba(255,255,255,.1);
+  border-radius: var(--r2);
+  color: #f0f5ff;
+  font-size: 16px; /* NEVER below 16px — prevents iOS zoom */
+  font-family: 'Outfit', sans-serif; font-weight: 400;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  -webkit-appearance: none;
+  min-height: 48px; /* touch target */
+}
+input::placeholder { color: rgba(255,255,255,.18); }
+input:focus {
+  border-color: var(--or);
+  box-shadow: 0 0 0 3px rgba(249,115,22,.12), inset 0 1px 3px rgba(0,0,0,.3);
+  background: #070c15;
+}
+input.pfx { padding-left: 46px; }
+input.field-locked {
+  border-color: rgba(16,185,129,.4) !important;
+  color: var(--gn) !important;
+  background: #050f0a !important;
+  cursor: default;
+}
+input.field-error {
+  border-color: rgba(239,68,68,.5) !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.08) !important;
+}
+
+.angel-notice {
+  margin-top: 8px; padding: clamp(8px,1vw,11px) clamp(10px,1.2vw,13px);
+  background: rgba(249,115,22,.06); border: 1px solid rgba(249,115,22,.18); border-radius: 9px;
+  font-size: clamp(10px,1.1vw,12px); color: #c87941; line-height: 1.5;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.angel-notice-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+
+.mob-verified {
+  display: flex; align-items: center; gap: 8px;
+  padding: clamp(8px,1.2vw,12px) clamp(10px,1.4vw,15px);
+  background: rgba(16,185,129,.07); border: 1px solid rgba(16,185,129,.2); border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(11px,1.3vw,13px); color: var(--gn);
+  margin-bottom: var(--space-md); flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════
+   MPIN / OTP BOXES — KEY FIX
+   Uses calc() to always fit 6 boxes in available width
+═══════════════════════════════════════ */
+.mprow {
+  display: flex;
+  /* KEY FIX: gap scales with viewport so boxes never overflow */
+  gap: clamp(4px, 1.5vw, 10px);
+  justify-content: center;
+  margin: var(--space-xs) 0 4px;
+  /* KEY FIX: never allow overflow */
+  overflow: hidden;
+}
+.mpb {
+  /* KEY FIX: width fills available space equally, capped at 58px */
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 58px;
+  /* KEY FIX: height aspect ratio maintained via padding-bottom trick isn't needed;
+     just clamp height directly */
+  height: clamp(48px, 10vw, 66px);
+  background: #050811;
+  border: 1.5px solid rgba(255,255,255,.1); border-radius: clamp(8px,1.5vw,13px);
+  text-align: center;
+  font-size: clamp(18px, 4vw, 28px); font-weight: 700; color: #f0f5ff;
+  outline: none; font-family: 'JetBrains Mono', monospace;
+  transition: border-color .2s, box-shadow .2s;
+  -webkit-appearance: none; cursor: text;
+  /* iOS prevents zoom on inputs with font-size < 16px — boxes display as •/digit so 16px here too */
+  font-size: clamp(18px, 4vw, 26px);
+}
+.mpb:focus { border-color: var(--or); box-shadow: 0 0 0 3px rgba(249,115,22,.12); background: #070c15; }
+.mpb.fl { border-color: rgba(249,115,22,.6); color: var(--or); }
+
+.mp-hint { font-size: var(--text-xs); color: #4e6278; text-align: center; margin-top: 7px; font-family: 'JetBrains Mono', monospace; }
+.mp-warn {
+  font-size: var(--text-xs); color: #f59e0b; text-align: center;
+  margin-top: var(--space-sm); padding: clamp(8px,1.2vw,11px) clamp(10px,1.5vw,14px);
+  background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.2); border-radius: 9px; line-height: 1.5;
+}
+
+.otp-resend {
+  text-align: center; margin-top: var(--space-sm);
+  font-size: var(--text-xs); color: #4e6278; font-family: 'JetBrains Mono', monospace;
+}
+.resend-btn { color: var(--or); cursor: pointer; font-weight: 700; background: none; border: none; font-family: inherit; font-size: inherit; min-height: 44px; padding: 0 4px; }
+.resend-btn:disabled { color: #4e6278; cursor: default; }
+
+/* ═══════════════════════════════════════
+   SUMMARY CARD
+═══════════════════════════════════════ */
+.sumcard {
+  background: #050811; border: 1.5px solid rgba(255,255,255,.08);
+  border-radius: var(--r2); padding: clamp(10px,1.8vw,18px) clamp(12px,2vw,20px);
+  margin-bottom: var(--space-md); flex-shrink: 0;
+}
+.sumrow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: clamp(5px,.8vw,9px) 0; border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.sumrow:last-child { border-bottom: none; }
+.sumlbl { font-family: 'JetBrains Mono', monospace; font-size: var(--text-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.3); }
+.sumval { font-size: clamp(12px,1.5vw,15px); font-weight: 700; color: #f0f5ff; }
+.sumval-angel {
+  font-size: clamp(11px,1.4vw,14px); font-weight: 700; color: var(--gn);
+  font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 6px;
+}
+.sumval-angel::after {
+  content: 'LOCKED'; font-size: 9px; letter-spacing: .1em;
+  background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.25);
+  color: var(--gn); padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════
+   ERROR
+═══════════════════════════════════════ */
+.msg {
+  padding: clamp(9px,1.2vw,13px) clamp(11px,1.4vw,15px); border-radius: 10px;
+  font-size: var(--text-sm); margin-bottom: var(--space-md);
+  display: none; align-items: flex-start; gap: 8px; line-height: 1.5;
+}
+.msg.err { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); color: #fca5a5; }
+.msg.err.show { display: flex; }
+
+/* ═══════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════ */
+.btn-main {
+  width: 100%; padding: clamp(12px,1.8vw,16px);
+  background: linear-gradient(135deg, #f97316, #c2410c); color: #fff;
+  border: none; border-radius: var(--r2);
+  font-family: 'Syne', sans-serif; font-size: clamp(14px,1.8vw,17px); font-weight: 800; letter-spacing: .02em;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all .25s;
+  box-shadow: 0 4px 24px rgba(249,115,22,.35), 0 1px 3px rgba(249,115,22,.2);
+  position: relative; overflow: hidden;
+  min-height: 52px; /* larger touch target on mobile */
+  flex-shrink: 0;
+}
+.btn-main::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.15), transparent); pointer-events: none; }
+.btn-main:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(249,115,22,.45), 0 2px 6px rgba(249,115,22,.3); }
+.btn-main:active:not(:disabled) { transform: translateY(0); }
+.btn-main:disabled { opacity: .55; cursor: not-allowed; }
+
+.btn-back {
+  width: 100%; padding: clamp(10px,1.5vw,13px);
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09); border-radius: var(--r);
+  font-family: 'Outfit', sans-serif; font-size: clamp(12px,1.4vw,14px); font-weight: 500;
+  color: rgba(255,255,255,.45); cursor: pointer; margin-top: 8px; transition: all .2s;
+  min-height: 44px; flex-shrink: 0;
+}
+.btn-back:hover { border-color: rgba(249,115,22,.4); color: var(--or); }
+
+.spin { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: sp .65s linear infinite; flex-shrink: 0; }
+@keyframes sp { to { transform: rotate(360deg); } }
+
+.spacer { flex: 1; min-height: 8px; }
+.ffoot { font-size: clamp(11px,1.3vw,13px); color: #485968; text-align: center; margin-top: var(--space-md); font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+.flink { color: var(--or); text-decoration: none; font-weight: 700; cursor: pointer; }
+.flink:hover { opacity: .8; }
+
+/* ═══════════════════════════════════════
+   SUCCESS SCREEN
+═══════════════════════════════════════ */
+.success-screen { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 0; flex: 1; }
+.success-screen.show { display: flex; }
+.success-ring {
+  width: clamp(60px,10vw,84px); height: clamp(60px,10vw,84px); border-radius: 50%;
+  background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(16,185,129,.05));
+  border: 2px solid rgba(16,185,129,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(24px,5vw,34px); margin-bottom: var(--space-lg);
+  animation: pop-in .5s cubic-bezier(.175,.885,.32,1.275) both;
+}
+@keyframes pop-in { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-title {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: var(--text-xl);
+  letter-spacing: -.03em; margin-bottom: 10px;
+  background: linear-gradient(135deg, #fff 0%, #c8d5e8 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.success-sub { font-size: var(--text-sm); color: #586880; max-width: 260px; line-height: 1.65; }
+.redirect-bar { margin-top: 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.redirect-track { width: 180px; height: 3px; background: rgba(255,255,255,.08); border-radius: 2px; overflow: hidden; }
+.redirect-fill { height: 100%; background: linear-gradient(90deg, var(--or), var(--or3)); border-radius: 2px; width: 0%; transition: width linear; }
+.redirect-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4e6278; }
+
+/* ═══════════════════════════════════════
+   SERVER HINT
+═══════════════════════════════════════ */
+#server-hint {
+  display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999;
+  background: #0d1119; border: 1px solid rgba(249,115,22,.35); border-radius: 10px;
+  padding: 11px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: rgba(249,115,22,.9); align-items: center; gap: 9px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.5); white-space: nowrap;
+  max-width: calc(100vw - 40px);
+}
+#server-hint .sh-dot { width: 8px; height: 8px; border-radius: 50%; background: #f97316; animation: pulse-dot 1s ease-in-out infinite; flex-shrink: 0; display: inline-block; }
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   Strategy:
+   - 1024px+  : full two-column, comfortable spacing
+   - 841-1023 : narrower left panel, same layout
+   - 661-840  : tablet portrait — compress left, hide feat-desc
+   - 481-660  : small tablet / large phone landscape — single col
+   - ≤480px   : mobile — single column, mobile-topbar shown
+   - ≤380px   : small phone
+   - ≤320px   : tiny phone (SE 1st gen, Galaxy A02)
+   - landscape : separate override for short viewports
+═══════════════════════════════════════════════════════════ */
+
+/* Large desktop */
+@media (min-width: 1200px) {
+  .shell { max-width: 1060px; }
+}
+
+/* Tablet landscape */
+@media (max-width: 1024px) and (min-width: 841px) {
+  .shell { grid-template-columns: 260px 1fr; }
+  .left { padding: 32px 22px; }
+  .right { padding: 32px 28px; }
+}
+
+/* Tablet portrait — compress left, hide descriptions */
+@media (max-width: 840px) and (min-width: 661px) {
+  body { padding: 10px; }
+  .shell { grid-template-columns: 220px 1fr; }
+  .left { padding: 24px 16px; }
+  .right { padding: 24px 20px; }
+  .feat-desc { display: none; }
+  .feats { gap: 10px; }
+  .left-sub { display: none; }
+  .ticker-strip { display: none; }
+}
+
+/* ── MOBILE: single column ≤660px ── */
+@media (max-width: 660px) {
+  body {
+    padding: 0;
+    align-items: flex-start;
+  }
+  .shell {
+    grid-template-columns: 1fr;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    /* KEY FIX: let content drive height, no min-height constraint */
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+  }
+  .left { display: none; }
+
+  /* Show mobile top bar + pills */
+  .mobile-topbar { display: flex; }
+  .mobile-pills { display: flex; }
+
+  .right {
+    padding-top: 0;
+    padding-left: clamp(16px, 5vw, 28px);
+    padding-right: clamp(16px, 5vw, 28px);
+    padding-bottom: clamp(20px, 5vw, 32px);
+    /* KEY FIX: safe area insets for notch phones */
+    padding-left: max(clamp(16px, 5vw, 28px), env(safe-area-inset-left));
+    padding-right: max(clamp(16px, 5vw, 28px), env(safe-area-inset-right));
+    padding-bottom: max(clamp(20px, 5vw, 32px), env(safe-area-inset-bottom));
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Right panel top accent line hidden — mobile-topbar replaces it */
+  .right::before { display: none; }
+
+  .tabs { margin-bottom: 16px; }
+  .tab { font-size: 13px; padding: 10px 12px; }
+  .form-title { font-size: clamp(22px, 7vw, 28px); }
+
+  /* KEY FIX: MPIN/OTP boxes use flex:1 so they always fill width */
+  .mprow { gap: clamp(5px, 2vw, 9px); }
+  .mpb { max-width: none; height: clamp(48px, 13vw, 62px); font-size: clamp(18px, 5vw, 24px); }
+
+  .stepbar { margin-bottom: 14px; }
+}
+
+/* Small phones ≤380px */
+@media (max-width: 380px) {
+  .right { padding-left: 14px; padding-right: 14px; }
+  .mpb { height: clamp(44px, 13vw, 54px); font-size: 18px; border-radius: 8px; }
+  .mprow { gap: 5px; }
+  .tabs { padding: 3px; gap: 3px; }
+  .tab { font-size: 12px; padding: 9px 8px; }
+  .form-title { font-size: clamp(20px, 6vw, 24px); }
+  .sc { width: 22px; height: 22px; font-size: 9px; }
+  /* KEY FIX: hide step labels on tiny screens to prevent overflow */
+  .sl { display: none; }
+  .sline { margin: 0 4px; }
+}
+
+/* Very tiny ≤320px (iPhone SE 1st gen) */
+@media (max-width: 320px) {
+  .right { padding-left: 10px; padding-right: 10px; }
+  .mpb { height: 42px; font-size: 16px; }
+  .mprow { gap: 4px; }
+  .form-title { font-size: 19px; }
+  .tab { font-size: 11px; padding: 8px 5px; }
+  .sc { width: 20px; height: 20px; font-size: 8px; }
+}
+
+/* ── LANDSCAPE OVERRIDES ── */
+/* Mobile landscape — short viewport, content should scroll not squish */
+@media (max-width: 660px) and (orientation: landscape) {
+  body { align-items: flex-start; }
+  .shell { min-height: auto; }
+  .right {
+    min-height: auto;
+    /* KEY FIX: remove min-height so content scrolls naturally */
+  }
+  .mobile-topbar { padding-top: 8px; padding-bottom: 8px; }
+  .mobile-pills { padding-bottom: 8px; }
+  .tabs { margin-bottom: 10px; }
+  .form-head { margin-bottom: 10px; }
+  .form-title { font-size: 20px; }
+  .ig { margin-bottom: 10px; }
+  .mpb { height: 40px; font-size: 18px; }
+  .spacer { display: none; } /* kill spacer, let scroll handle it */
+  .stepbar { margin-bottom: 10px; }
+}
+
+/* Tablet landscape — short but wider viewport */
+@media (max-width: 840px) and (orientation: landscape) and (min-width: 661px) {
+  body { align-items: flex-start; }
+  .shell { min-height: auto; }
+  .right { padding-top: 20px; padding-bottom: 20px; }
+}
+
+/* ── TOUCH DEVICE OVERRIDES ── */
+/* Ensures all interactive elements meet 44px minimum on touch screens */
+@media (hover: none) and (pointer: coarse) {
+  .tab, .btn-main, .btn-back, .resend-btn { min-height: 44px; }
+  input[type=text], input[type=tel], input[type=password] { min-height: 48px; }
+  .mpb { min-height: 44px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -399,10 +713,10 @@ input.field-error{
 <div class="bg-orb o3" aria-hidden="true"></div>
 <div class="particles" id="particles" aria-hidden="true"></div>
 
-<main id="reg-main" role="main">
+<main id="reg-main" role="main" style="width:100%;display:flex;justify-content:center;align-items:center;min-height:100vh;min-height:100dvh;">
 <div class="shell">
 
-  <!-- ══ LEFT ══ -->
+  <!-- ══ LEFT PANEL (desktop/tablet) ══ -->
   <div class="left" aria-hidden="true">
     <a href="index.html" class="brand">
       <div class="brand-mark">OL</div>
@@ -427,32 +741,48 @@ input.field-error{
     </div>
   </div>
 
-  <!-- ══ RIGHT ══ -->
+  <!-- ══ RIGHT PANEL ══ -->
   <div class="right">
-    <div class="tabs" role="tablist">
-      <button class="tab on" role="tab" onclick="switchTab('login')">Login</button>
-      <button class="tab" role="tab" onclick="switchTab('register')">Register Free</button>
+
+    <!-- Mobile brand bar (shown only ≤660px) -->
+    <div class="mobile-topbar" aria-hidden="true">
+      <div class="m-mark">OL</div>
+      <span class="m-name">Option<b>Lab</b></span>
     </div>
 
-    <!-- ═══ LOGIN FORM ═══ -->
+    <!-- Mobile feature pills (shown only ≤660px) -->
+    <div class="mobile-pills" aria-hidden="true">
+      <div class="mpill">⚡ Live Signals</div>
+      <div class="mpill">𝛅 Greeks Suite</div>
+      <div class="mpill">🎯 Smart Money</div>
+      <div class="mpill">🔗 Angel One</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="tab on" role="tab" aria-selected="true" onclick="switchTab('login')">Login</button>
+      <button class="tab" role="tab" aria-selected="false" onclick="switchTab('register')">Register Free</button>
+    </div>
+
+    <!-- ═══ LOGIN ═══ -->
     <div class="form-pane on" id="loginForm" role="tabpanel">
       <div class="form-head">
         <div class="form-eyebrow">Secure Login</div>
         <div class="form-title">Welcome back</div>
         <div class="form-sub">Enter your mobile and 6-digit MPIN to continue.</div>
       </div>
-      <div class="msg err" id="loginErr"></div>
+      <div class="msg err" id="loginErr" role="alert"></div>
       <div class="ig">
         <label class="il" for="lMob">Mobile Number</label>
         <div class="iw">
           <span class="ipfx" aria-hidden="true">+91</span>
           <input type="tel" id="lMob" class="pfx" maxlength="10" placeholder="9999999999"
-            inputmode="numeric" autocomplete="tel" aria-label="Mobile number">
+            inputmode="numeric" autocomplete="tel" aria-label="10-digit mobile number">
         </div>
       </div>
       <div class="ig">
         <label class="il">6-Digit MPIN</label>
-        <div class="mprow" id="lMpinRow" role="group" aria-label="MPIN entry">
+        <div class="mprow" id="lMpinRow" role="group" aria-label="Enter MPIN">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 1">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 2">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 3">
@@ -464,16 +794,12 @@ input.field-error{
       </div>
       <div class="spacer"></div>
       <button class="btn-main" onclick="doLogin()" id="loginBtn">Login to OptionLab →</button>
-      <div class="ffoot">
-        Demo: <span class="flink" onclick="demoFill()">9999999999 / 123456</span>
-        &nbsp;·&nbsp;
-        <span class="flink" onclick="switchTab('register')">Create account</span>
-      </div>
+      <div class="ffoot">Demo: <span class="flink" onclick="demoFill()">9999999999 / 123456</span> &nbsp;·&nbsp; <span class="flink" onclick="switchTab('register')">Create account</span></div>
     </div>
 
     <!-- LOGIN SUCCESS -->
-    <div class="success-screen" id="loginOk">
-      <div class="success-ring">✓</div>
+    <div class="success-screen" id="loginOk" role="status">
+      <div class="success-ring" aria-hidden="true">✓</div>
       <div class="success-title">Welcome back!</div>
       <div class="success-sub">Login successful. Taking you to your dashboard…</div>
       <div class="redirect-bar">
@@ -482,35 +808,19 @@ input.field-error{
       </div>
     </div>
 
-    <!-- ═══ REGISTER FORM — 4 STEPS ═══ -->
+    <!-- ═══ REGISTER — 4 STEPS ═══ -->
     <div class="form-pane" id="regForm" role="tabpanel">
 
-      <!-- Step indicator: 4 steps -->
-      <div class="stepbar" id="stepbar" role="list">
-        <div class="si" role="listitem">
-          <div class="sc on" id="sc1">1</div>
-          <div class="sl on" id="sl1">Mobile</div>
-          <div class="sline" id="ln1"></div>
-        </div>
-        <div class="si" role="listitem">
-          <div class="sc" id="sc2">2</div>
-          <div class="sl" id="sl2">OTP</div>
-          <div class="sline" id="ln2"></div>
-        </div>
-        <div class="si" role="listitem">
-          <div class="sc" id="sc3">3</div>
-          <div class="sl" id="sl3">Profile</div>
-          <div class="sline" id="ln3"></div>
-        </div>
-        <div class="si" role="listitem" style="flex:0">
-          <div class="sc" id="sc4">4</div>
-          <div class="sl" id="sl4">MPIN</div>
-        </div>
+      <div class="stepbar" id="stepbar" role="list" aria-label="Registration progress">
+        <div class="si" role="listitem"><div class="sc on" id="sc1">1</div><div class="sl on" id="sl1">Mobile</div><div class="sline" id="ln1"></div></div>
+        <div class="si" role="listitem"><div class="sc" id="sc2">2</div><div class="sl" id="sl2">OTP</div><div class="sline" id="ln2"></div></div>
+        <div class="si" role="listitem"><div class="sc" id="sc3">3</div><div class="sl" id="sl3">Profile</div><div class="sline" id="ln3"></div></div>
+        <div class="si" role="listitem" style="flex:0"><div class="sc" id="sc4">4</div><div class="sl" id="sl4">MPIN</div></div>
       </div>
 
-      <div class="msg err" id="regErr"></div>
+      <div class="msg err" id="regErr" role="alert"></div>
 
-      <!-- STEP 1 — Mobile -->
+      <!-- STEP 1 -->
       <div id="rStep1">
         <div class="form-head">
           <div class="form-eyebrow">Step 1 of 4</div>
@@ -522,7 +832,7 @@ input.field-error{
           <div class="iw">
             <span class="ipfx" aria-hidden="true">+91</span>
             <input type="tel" id="rMob" class="pfx" maxlength="10" placeholder="9999999999"
-              inputmode="numeric" autocomplete="tel" aria-label="Mobile number">
+              inputmode="numeric" autocomplete="tel" aria-label="10-digit mobile number">
           </div>
         </div>
         <div class="spacer"></div>
@@ -530,7 +840,7 @@ input.field-error{
         <div class="ffoot">Already have an account? <span class="flink" onclick="switchTab('login')">Login</span></div>
       </div>
 
-      <!-- STEP 2 — OTP -->
+      <!-- STEP 2 -->
       <div id="rStep2" style="display:none">
         <div class="form-head">
           <div class="form-eyebrow">Step 2 of 4</div>
@@ -538,13 +848,13 @@ input.field-error{
           <div class="form-sub" id="otpSubText">OTP sent to your mobile. Valid for 10 minutes.</div>
         </div>
         <label class="il">6-Digit OTP <span class="req">*</span></label>
-        <div class="mprow" id="rOtpRow" role="group" aria-label="OTP entry">
-          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
+        <div class="mprow" id="rOtpRow" role="group" aria-label="Enter OTP">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric" autocomplete="one-time-code" aria-label="OTP digit 1">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric" aria-label="OTP digit 2">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric" aria-label="OTP digit 3">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric" aria-label="OTP digit 4">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric" aria-label="OTP digit 5">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric" aria-label="OTP digit 6">
         </div>
         <div class="mp-hint">Check your SMS for the OTP</div>
         <div class="otp-resend" id="otpResendArea">
@@ -557,15 +867,15 @@ input.field-error{
         <button class="btn-back" onclick="toStep1()">← Change Number</button>
       </div>
 
-      <!-- STEP 3 — Profile + Angel One ID -->
+      <!-- STEP 3 -->
       <div id="rStep3" style="display:none">
         <div class="form-head">
           <div class="form-eyebrow">Step 3 of 4</div>
           <div class="form-title">Your details</div>
           <div class="form-sub">Mobile verified ✓ — now complete your profile.</div>
         </div>
-        <div class="mob-verified" id="verifiedMobBadge">
-          <span>✓</span>
+        <div class="mob-verified" id="verifiedMobBadge" role="status">
+          <span aria-hidden="true">✓</span>
           <span id="verifiedMobText">Mobile verified</span>
         </div>
         <div class="ig">
@@ -574,17 +884,12 @@ input.field-error{
         </div>
         <div class="ig">
           <label class="il" for="rClientId">Angel One Client ID <span class="req">*</span></label>
-          <input type="text" id="rClientId"
-            placeholder="e.g. SBH3321"
-            maxlength="10"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="characters"
-            spellcheck="false"
-            aria-label="Angel One Client ID"
+          <input type="text" id="rClientId" placeholder="e.g. SBH3321" maxlength="10"
+            autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+            aria-label="Angel One Client ID — permanent"
             oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
-          <div class="angel-notice">
-            <span class="angel-notice-icon">🔒</span>
+          <div class="angel-notice" role="note">
+            <span class="angel-notice-icon" aria-hidden="true">🔒</span>
             <span>This ID is <strong>permanent</strong> — cannot be changed after registration. Find it in Angel One app → Profile → Client ID.</span>
           </div>
         </div>
@@ -592,7 +897,7 @@ input.field-error{
         <button class="btn-main" onclick="toStep4()">Continue →</button>
       </div>
 
-      <!-- STEP 4 — MPIN + Summary -->
+      <!-- STEP 4 -->
       <div id="rStep4" style="display:none">
         <div class="form-head">
           <div class="form-eyebrow">Step 4 of 4</div>
@@ -601,25 +906,25 @@ input.field-error{
         </div>
         <label class="il">Create MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinRow" role="group" aria-label="Create MPIN">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 1">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 2">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 3">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 4">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 5">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 6">
         </div>
         <div class="mp-hint">Enter any 6 digits</div>
-        <label class="il" style="margin-top:18px">Confirm MPIN <span class="req">*</span></label>
+        <label class="il" style="margin-top:clamp(12px,2vw,20px)">Confirm MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinCRow" role="group" aria-label="Confirm MPIN">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
-          <input type="password" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 1">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 2">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 3">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 4">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 5">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 6">
         </div>
         <div class="mp-warn">⚠ Keep this MPIN different from your broker trading PIN</div>
-        <div class="sumcard" style="margin-top:16px">
+        <div class="sumcard" style="margin-top:clamp(10px,2vw,16px)">
           <div class="sumrow"><span class="sumlbl">Mobile</span><span class="sumval" id="sumMob">—</span></div>
           <div class="sumrow"><span class="sumlbl">Name</span><span class="sumval" id="sumName">—</span></div>
           <div class="sumrow"><span class="sumlbl">Angel One ID</span><span class="sumval-angel" id="sumAngel">—</span></div>
@@ -631,8 +936,8 @@ input.field-error{
     </div>
 
     <!-- REGISTER SUCCESS -->
-    <div class="success-screen" id="regOk">
-      <div class="success-ring">✓</div>
+    <div class="success-screen" id="regOk" role="status">
+      <div class="success-ring" aria-hidden="true">✓</div>
       <div class="success-title" id="regOkTitle">Account created!</div>
       <div class="success-sub" id="regOkMsg">Welcome to OptionLab. Setting up your dashboard…</div>
       <div class="redirect-bar">
@@ -645,524 +950,244 @@ input.field-error{
 </div><!-- /shell -->
 </main>
 
-<!-- Server cold-start hint -->
-<div id="server-hint" style="display:none;position:fixed;bottom:20px;left:50%;
-  transform:translateX(-50%);z-index:999;
-  background:#0d1119;border:1px solid rgba(249,115,22,.35);
-  border-radius:10px;padding:11px 18px;
-  font-family:'JetBrains Mono',monospace;font-size:12px;
-  color:rgba(249,115,22,.9);align-items:center;gap:9px;
-  box-shadow:0 4px 24px rgba(0,0,0,.5)">
-  <span style="width:8px;height:8px;border-radius:50%;background:#f97316;
-    animation:pulse-dot 1s ease-in-out infinite;flex-shrink:0;display:inline-block"></span>
+<div id="server-hint">
+  <span class="sh-dot"></span>
   Waking up server… Railway may take 10–12s on first request
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════
-// BACKEND
-// ════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════
+   BACKEND — NOT TOUCHED
+════════════════════════════════════════════════════════ */
 const API = 'https://web-production-8a8e1.up.railway.app';
 
 async function apiFetch(url, opts = {}) {
   const controller = new AbortController();
   const timeoutId  = setTimeout(() => controller.abort(), 15000);
-  const hintTimer  = setTimeout(() => {
-    const h = document.getElementById('server-hint');
-    if (h) h.style.display = 'flex';
-  }, 4000);
+  const hintTimer  = setTimeout(() => { const h = document.getElementById('server-hint'); if (h) h.style.display = 'flex'; }, 4000);
   try {
     const res = await fetch(url, { ...opts, signal: controller.signal });
     clearTimeout(timeoutId); clearTimeout(hintTimer);
-    const h = document.getElementById('server-hint');
-    if (h) h.style.display = 'none';
+    const h = document.getElementById('server-hint'); if (h) h.style.display = 'none';
     return res;
   } catch (err) {
     clearTimeout(timeoutId); clearTimeout(hintTimer);
-    const h = document.getElementById('server-hint');
-    if (h) h.style.display = 'none';
-    if (!opts._retry) {
-      await new Promise(r => setTimeout(r, 1500));
-      return apiFetch(url, { ...opts, _retry: true });
-    }
+    const h = document.getElementById('server-hint'); if (h) h.style.display = 'none';
+    if (!opts._retry) { await new Promise(r => setTimeout(r, 1500)); return apiFetch(url, { ...opts, _retry: true }); }
     throw err;
   }
 }
 
-// ════════════════════════════════════════════════════════
-// SESSION
-// ════════════════════════════════════════════════════════
 const TOKEN_KEY = 'optionlab_token';
 const USER_KEY  = 'optionlab_user';
+function saveSession(token, user) { try { sessionStorage.setItem(TOKEN_KEY, token); sessionStorage.setItem(USER_KEY, JSON.stringify(user)); } catch(e) {} }
+(function checkExistingSession() { try { if (sessionStorage.getItem(TOKEN_KEY)) window.location.replace('index.html'); } catch(e) {} })();
 
-function saveSession(token, user) {
-  try {
-    sessionStorage.setItem(TOKEN_KEY, token);
-    sessionStorage.setItem(USER_KEY, JSON.stringify(user));
-  } catch(e) {}
-}
+/* Ticker */
+let _n=22513,_v=14.23,_p=1.08;
+setInterval(()=>{
+  _n=Math.max(22100,Math.min(22900,_n+(Math.random()-.48)*4));
+  _v=Math.max(12,Math.min(20,_v+(Math.random()-.5)*.08));
+  _p=Math.max(.7,Math.min(1.5,_p+(Math.random()-.5)*.015));
+  const ne=document.getElementById('l-nifty'),ve=document.getElementById('l-vix'),pe=document.getElementById('l-pcr');
+  if(ne)ne.textContent=_n.toLocaleString('en-IN',{maximumFractionDigits:0});
+  if(ve)ve.textContent=_v.toFixed(2);if(pe)pe.textContent=_p.toFixed(2);
+},2500);
 
-(function checkExistingSession() {
-  try {
-    if (sessionStorage.getItem(TOKEN_KEY)) window.location.replace('index.html');
-  } catch(e) {}
+/* Particles */
+(function(){
+  const c=document.getElementById('particles');if(!c)return;
+  const count=window.innerWidth<660?6:18;
+  for(let i=0;i<count;i++){const p=document.createElement('div');p.className='particle';
+    p.style.cssText=[`left:${Math.random()*100}%`,`bottom:${-10+Math.random()*10}%`,
+      `animation-duration:${8+Math.random()*16}s`,`animation-delay:${Math.random()*12}s`,
+      `opacity:0`,`width:${1+Math.random()*2}px`,`height:${1+Math.random()*2}px`].join(';');
+    c.appendChild(p);}
 })();
 
-// ════════════════════════════════════════════════════════
-// LIVE TICKER
-// ════════════════════════════════════════════════════════
-let _n = 22513, _v = 14.23, _p = 1.08;
-setInterval(() => {
-  _n = Math.max(22100, Math.min(22900, _n + (Math.random() - .48) * 4));
-  _v = Math.max(12,    Math.min(20,    _v + (Math.random() - .5)  * .08));
-  _p = Math.max(.7,    Math.min(1.5,   _p + (Math.random() - .5)  * .015));
-  const ne = document.getElementById('l-nifty');
-  const ve = document.getElementById('l-vix');
-  const pe = document.getElementById('l-pcr');
-  if (ne) ne.textContent = _n.toLocaleString('en-IN', {maximumFractionDigits:0});
-  if (ve) ve.textContent = _v.toFixed(2);
-  if (pe) pe.textContent = _p.toFixed(2);
-}, 2500);
-
-// ════════════════════════════════════════════════════════
-// PARTICLES
-// ════════════════════════════════════════════════════════
-(function initParticles() {
-  const container = document.getElementById('particles');
-  if (!container) return;
-  const count = window.innerWidth < 660 ? 8 : 18;
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.cssText = [
-      `left:${Math.random()*100}%`,
-      `bottom:${-10 + Math.random()*10}%`,
-      `animation-duration:${8 + Math.random()*16}s`,
-      `animation-delay:${Math.random()*12}s`,
-      `opacity:0`,
-      `width:${1 + Math.random()*2}px`,
-      `height:${1 + Math.random()*2}px`,
-    ].join(';');
-    container.appendChild(p);
-  }
-})();
-
-// ════════════════════════════════════════════════════════
-// TAB SWITCHER
-// ════════════════════════════════════════════════════════
-function switchTab(t) {
-  const isLogin = t === 'login';
-  document.querySelectorAll('.tab').forEach((b, i) =>
-    b.classList.toggle('on', isLogin ? i === 0 : i === 1)
-  );
-  document.getElementById('loginForm').classList.toggle('on', isLogin);
+/* Tab switch */
+function switchTab(t){
+  const il=t==='login';
+  document.querySelectorAll('.tab').forEach((b,i)=>{b.classList.toggle('on',il?i===0:i===1);b.setAttribute('aria-selected',String(il?i===0:i===1));});
+  document.getElementById('loginForm').classList.toggle('on',il);
   document.getElementById('loginOk').classList.remove('show');
-  document.getElementById('regForm').classList.toggle('on', !isLogin);
+  document.getElementById('regForm').classList.toggle('on',!il);
   document.getElementById('regOk').classList.remove('show');
-  if (!isLogin) toStep1();
+  if(!il)toStep1();
 }
 
-// ════════════════════════════════════════════════════════
-// BOX WIRING (MPIN + OTP)
-// ════════════════════════════════════════════════════════
-function wireBoxes(id) {
-  const boxes = Array.from(document.querySelectorAll(`#${id} .mpb`));
-  boxes.forEach((box, i) => {
-    box.addEventListener('input', e => {
-      const v = e.target.value.replace(/\D/g, '');
-      e.target.value = v ? v[v.length - 1] : '';
-      e.target.classList.toggle('fl', !!e.target.value);
-      if (e.target.value && i < boxes.length - 1) boxes[i + 1].focus();
-    });
-    box.addEventListener('keydown', e => {
-      if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
-    });
-    box.addEventListener('paste', e => {
-      e.preventDefault();
-      const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-      boxes.forEach((b, j) => { b.value = text[j] || ''; b.classList.toggle('fl', !!b.value); });
-      const last = Math.min(text.length, boxes.length) - 1;
-      if (last >= 0) boxes[last].focus();
-    });
+/* Box wiring */
+function wireBoxes(id){
+  const boxes=Array.from(document.querySelectorAll(`#${id} .mpb`));
+  boxes.forEach((box,i)=>{
+    box.addEventListener('input',e=>{const v=e.target.value.replace(/\D/g,'');e.target.value=v?v[v.length-1]:'';e.target.classList.toggle('fl',!!e.target.value);if(e.target.value&&i<boxes.length-1)boxes[i+1].focus();});
+    box.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!box.value&&i>0)boxes[i-1].focus();});
+    box.addEventListener('paste',e=>{e.preventDefault();const text=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');boxes.forEach((b,j)=>{b.value=text[j]||'';b.classList.toggle('fl',!!b.value);});const last=Math.min(text.length,boxes.length)-1;if(last>=0)boxes[last].focus();});
   });
 }
+wireBoxes('lMpinRow');wireBoxes('rOtpRow');wireBoxes('rMpinRow');wireBoxes('rMpinCRow');
+function getBoxVal(id){return Array.from(document.querySelectorAll(`#${id} .mpb`)).map(b=>b.value).join('');}
+function clearBoxes(id){document.querySelectorAll(`#${id} .mpb`).forEach(b=>{b.value='';b.classList.remove('fl');});}
 
-wireBoxes('lMpinRow');
-wireBoxes('rOtpRow');
-wireBoxes('rMpinRow');
-wireBoxes('rMpinCRow');
-
-function getBoxVal(id) {
-  return Array.from(document.querySelectorAll(`#${id} .mpb`)).map(b => b.value).join('');
-}
-function clearBoxes(id) {
-  document.querySelectorAll(`#${id} .mpb`).forEach(b => { b.value = ''; b.classList.remove('fl'); });
-}
-
-// ════════════════════════════════════════════════════════
-// ANGEL ONE ID VALIDATION
-// ════════════════════════════════════════════════════════
-function validateAngelId(raw) {
-  if (!raw || !raw.trim()) return { ok: false, error: 'Angel One Client ID is required' };
-  const v = raw.trim().toUpperCase();
-  if (!/^[A-Z0-9]{6,10}$/.test(v))
-    return { ok: false, error: 'Client ID must be 6–10 letters/numbers only (e.g. SBH3321)' };
-  return { ok: true, value: v };
+/* Angel ID validation */
+function validateAngelId(raw){
+  if(!raw||!raw.trim())return{ok:false,error:'Angel One Client ID is required'};
+  const v=raw.trim().toUpperCase();
+  if(!/^[A-Z0-9]{6,10}$/.test(v))return{ok:false,error:'Client ID must be 6–10 letters/numbers only (e.g. SBH3321)'};
+  return{ok:true,value:v};
 }
 
-// ════════════════════════════════════════════════════════
-// ERROR HELPERS
-// ════════════════════════════════════════════════════════
-function showErr(id, msg) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = '⚠ ' + msg;
-  el.classList.add('show');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 6000);
-}
-function hideErr(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.remove('show');
+/* Error helpers */
+function showErr(id,msg){const el=document.getElementById(id);if(!el)return;el.innerHTML='⚠ '+msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),6000);}
+function hideErr(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
+
+/* Redirect */
+function startRedirect(fillId,cdId,duration,destination){
+  const fill=document.getElementById(fillId),cd=document.getElementById(cdId);
+  let remaining=Math.round(duration/1000);
+  if(fill){fill.style.transition='none';fill.style.width='0%';requestAnimationFrame(()=>{fill.style.transition=`width ${duration}ms linear`;fill.style.width='100%';});}
+  const interval=setInterval(()=>{remaining--;if(cd)cd.textContent=remaining;if(remaining<=0)clearInterval(interval);},1000);
+  setTimeout(()=>{window.location.href=destination;},duration);
 }
 
-// ════════════════════════════════════════════════════════
-// REDIRECT
-// ════════════════════════════════════════════════════════
-function startRedirect(fillId, cdId, duration, destination) {
-  const fill = document.getElementById(fillId);
-  const cd   = document.getElementById(cdId);
-  let remaining = Math.round(duration / 1000);
-  if (fill) {
-    fill.style.transition = 'none';
-    fill.style.width = '0%';
-    requestAnimationFrame(() => {
-      fill.style.transition = `width ${duration}ms linear`;
-      fill.style.width = '100%';
-    });
-  }
-  const interval = setInterval(() => {
-    remaining--;
-    if (cd) cd.textContent = remaining;
-    if (remaining <= 0) clearInterval(interval);
-  }, 1000);
-  setTimeout(() => { window.location.href = destination; }, duration);
-}
-
-// ════════════════════════════════════════════════════════
-// LOGIN
-// ════════════════════════════════════════════════════════
-async function doLogin() {
+/* Login */
+async function doLogin(){
   hideErr('loginErr');
-  const mob  = document.getElementById('lMob').value.trim();
-  const mpin = getBoxVal('lMpinRow');
-  if (!/^\d{10}$/.test(mob))  return showErr('loginErr', 'Enter a valid 10-digit mobile number');
-  if (mpin.length !== 6)      return showErr('loginErr', 'Enter your complete 6-digit MPIN');
-
-  const btn = document.getElementById('loginBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin"></div> Logging in…';
-  try {
-    const res  = await apiFetch(`${API}/api/auth/login-mpin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobile: mob, mpin }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
-    saveSession(data.token, data.user);
-    document.getElementById('loginForm').style.display = 'none';
+  const mob=document.getElementById('lMob').value.trim();
+  const mpin=getBoxVal('lMpinRow');
+  if(!/^\d{10}$/.test(mob))return showErr('loginErr','Enter a valid 10-digit mobile number');
+  if(mpin.length!==6)return showErr('loginErr','Enter your complete 6-digit MPIN');
+  const btn=document.getElementById('loginBtn');btn.disabled=true;btn.innerHTML='<div class="spin"></div> Logging in…';
+  try{
+    const res=await apiFetch(`${API}/api/auth/login-mpin`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,mpin})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Login failed');
+    saveSession(data.token,data.user);
+    document.getElementById('loginForm').style.display='none';
     document.getElementById('loginOk').classList.add('show');
-    startRedirect('loginFill', 'loginCd', 1800, 'index.html');
-  } catch (e) {
-    let msg = e.message || 'Connection failed';
-    if (msg === 'Failed to fetch' || msg.includes('fetch'))
-      msg = 'Cannot reach OptionLab server. Check your internet and try again.';
-    showErr('loginErr', msg);
-    btn.disabled = false;
-    btn.innerHTML = 'Login to OptionLab →';
-    clearBoxes('lMpinRow');
-    document.querySelector('#lMpinRow .mpb')?.focus();
+    startRedirect('loginFill','loginCd',1800,'index.html');
+  }catch(e){
+    let msg=e.message||'Connection failed';
+    if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach OptionLab server. Check your internet and try again.';
+    showErr('loginErr',msg);btn.disabled=false;btn.innerHTML='Login to OptionLab →';
+    clearBoxes('lMpinRow');document.querySelector('#lMpinRow .mpb')?.focus();
   }
 }
+function demoFill(){document.getElementById('lMob').value='9999999999';const boxes=document.querySelectorAll('#lMpinRow .mpb');'123456'.split('').forEach((d,i)=>{boxes[i].value=d;boxes[i].classList.add('fl');});}
 
-function demoFill() {
-  document.getElementById('lMob').value = '9999999999';
-  const boxes = document.querySelectorAll('#lMpinRow .mpb');
-  '123456'.split('').forEach((d, i) => { boxes[i].value = d; boxes[i].classList.add('fl'); });
-}
-
-// ════════════════════════════════════════════════════════
-// REGISTER STEP LOGIC
-// ════════════════════════════════════════════════════════
-let _rd = {};
-let _resendTimer = null;
-
-function setStep(n) {
-  [1, 2, 3, 4].forEach(i => {
-    const sc = document.getElementById('sc' + i);
-    const sl = document.getElementById('sl' + i);
-    if (!sc || !sl) return;
-    sc.className = 'sc' + (i < n ? ' dn' : i === n ? ' on' : '');
-    sl.className = 'sl' + (i < n ? ' dn' : i === n ? ' on' : '');
-    sc.textContent = i < n ? '✓' : i;
-    if (i < 4) {
-      const ln = document.getElementById('ln' + i);
-      if (ln) ln.className = 'sline' + (i < n ? ' dn' : '');
-    }
+/* Register steps */
+let _rd={},_resendTimer=null;
+function setStep(n){
+  [1,2,3,4].forEach(i=>{
+    const sc=document.getElementById('sc'+i),sl=document.getElementById('sl'+i);
+    if(!sc||!sl)return;
+    sc.className='sc'+(i<n?' dn':i===n?' on':'');
+    sl.className='sl'+(i<n?' dn':i===n?' on':'');
+    sc.textContent=i<n?'✓':i;
+    if(i<4){const ln=document.getElementById('ln'+i);if(ln)ln.className='sline'+(i<n?' dn':'');}
   });
 }
-
-function toStep1() {
-  ['rStep1','rStep2','rStep3','rStep4'].forEach((id, i) => {
-    document.getElementById(id).style.display = i === 0 ? '' : 'none';
-  });
-  setStep(1);
-  const mob = document.getElementById('rMob');
-  if (mob) { mob.readOnly = false; mob.classList.remove('field-locked'); }
+function toStep1(){
+  ['rStep1','rStep2','rStep3','rStep4'].forEach((id,i)=>{document.getElementById(id).style.display=i===0?'':'none';});
+  setStep(1);const mob=document.getElementById('rMob');
+  if(mob){mob.readOnly=false;mob.classList.remove('field-locked');}clearResendTimer();
+}
+async function sendOtp(){
+  hideErr('regErr');const mob=document.getElementById('rMob').value.trim();
+  if(!/^\d{10}$/.test(mob))return showErr('regErr','Enter a valid 10-digit mobile number');
+  const btn=document.getElementById('sendOtpBtn');btn.disabled=true;btn.innerHTML='<div class="spin"></div> Sending OTP…';
+  try{
+    const res=await apiFetch(`${API}/api/otp/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed to send OTP');
+    _rd.mobile=mob;const mobEl=document.getElementById('rMob');mobEl.readOnly=true;mobEl.classList.add('field-locked');
+    document.getElementById('otpSubText').textContent=`OTP sent to +91 ${mob}. Valid for 10 minutes.`;
+    document.getElementById('rStep1').style.display='none';document.getElementById('rStep2').style.display='';
+    setStep(2);clearBoxes('rOtpRow');document.querySelector('#rOtpRow .mpb')?.focus();startResendTimer(60);
+  }catch(e){
+    let msg=e.message||'Connection failed';
+    if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach server. Check your internet.';
+    showErr('regErr',msg);
+  }finally{btn.disabled=false;btn.innerHTML='Send OTP →';}
+}
+function startResendTimer(s){
   clearResendTimer();
+  const btn=document.getElementById('resendBtn'),count=document.getElementById('resendCount'),ts=document.getElementById('resendTimer');
+  btn.disabled=true;if(ts)ts.style.display='';let rem=s;if(count)count.textContent=rem;
+  _resendTimer=setInterval(()=>{rem--;if(count)count.textContent=rem;if(rem<=0){clearResendTimer();btn.disabled=false;if(ts)ts.style.display='none';}},1000);
 }
-
-// ── STEP 1 → send OTP ──
-async function sendOtp() {
+function clearResendTimer(){
+  if(_resendTimer){clearInterval(_resendTimer);_resendTimer=null;}
+  const btn=document.getElementById('resendBtn'),ts=document.getElementById('resendTimer');
+  if(btn)btn.disabled=false;if(ts)ts.style.display='none';
+}
+async function resendOtp(){
+  hideErr('regErr');const btn=document.getElementById('resendBtn');btn.disabled=true;
+  try{
+    const res=await apiFetch(`${API}/api/otp/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:_rd.mobile})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed to resend OTP');
+    clearBoxes('rOtpRow');document.querySelector('#rOtpRow .mpb')?.focus();startResendTimer(60);
+  }catch(e){showErr('regErr',e.message||'Failed to resend. Try again.');btn.disabled=false;}
+}
+async function verifyOtp(){
+  hideErr('regErr');const otp=getBoxVal('rOtpRow');
+  if(otp.length!==6)return showErr('regErr','Enter the complete 6-digit OTP');
+  const btn=document.getElementById('verifyOtpBtn');btn.disabled=true;btn.innerHTML='<div class="spin"></div> Verifying…';
+  try{
+    const res=await apiFetch(`${API}/api/otp/verify`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:_rd.mobile,otp})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'OTP verification failed');
+    _rd.otp_token=data.otp_token;clearResendTimer();
+    document.getElementById('verifiedMobText').textContent=`+91 ${_rd.mobile} verified`;
+    document.getElementById('rStep2').style.display='none';document.getElementById('rStep3').style.display='';
+    setStep(3);document.getElementById('rName')?.focus();
+  }catch(e){showErr('regErr',e.message||'Verification failed');clearBoxes('rOtpRow');document.querySelector('#rOtpRow .mpb')?.focus();}
+  finally{btn.disabled=false;btn.innerHTML='Verify OTP →';}
+}
+function toStep4(){
   hideErr('regErr');
-  const mob = document.getElementById('rMob').value.trim();
-  if (!/^\d{10}$/.test(mob)) return showErr('regErr', 'Enter a valid 10-digit mobile number');
-
-  const btn = document.getElementById('sendOtpBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin"></div> Sending OTP…';
-  try {
-    const res  = await apiFetch(`${API}/api/otp/send`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobile: mob }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
-
-    _rd.mobile = mob;
-    const mobEl = document.getElementById('rMob');
-    mobEl.readOnly = true;
-    mobEl.classList.add('field-locked');
-    document.getElementById('otpSubText').textContent = `OTP sent to +91 ${mob}. Valid for 10 minutes.`;
-    document.getElementById('rStep1').style.display = 'none';
-    document.getElementById('rStep2').style.display = '';
-    setStep(2);
-    clearBoxes('rOtpRow');
-    document.querySelector('#rOtpRow .mpb')?.focus();
-    startResendTimer(60);
-  } catch (e) {
-    let msg = e.message || 'Connection failed';
-    if (msg === 'Failed to fetch' || msg.includes('fetch'))
-      msg = 'Cannot reach server. Check your internet.';
-    showErr('regErr', msg);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = 'Send OTP →';
-  }
-}
-
-// ── Resend timer ──
-function startResendTimer(s) {
-  clearResendTimer();
-  const btn   = document.getElementById('resendBtn');
-  const count = document.getElementById('resendCount');
-  const ts    = document.getElementById('resendTimer');
-  btn.disabled = true;
-  if (ts) ts.style.display = '';
-  let rem = s;
-  if (count) count.textContent = rem;
-  _resendTimer = setInterval(() => {
-    rem--;
-    if (count) count.textContent = rem;
-    if (rem <= 0) {
-      clearResendTimer();
-      btn.disabled = false;
-      if (ts) ts.style.display = 'none';
-    }
-  }, 1000);
-}
-
-function clearResendTimer() {
-  if (_resendTimer) { clearInterval(_resendTimer); _resendTimer = null; }
-  const btn = document.getElementById('resendBtn');
-  const ts  = document.getElementById('resendTimer');
-  if (btn) btn.disabled = false;
-  if (ts)  ts.style.display = 'none';
-}
-
-async function resendOtp() {
-  hideErr('regErr');
-  const btn = document.getElementById('resendBtn');
-  btn.disabled = true;
-  try {
-    const res  = await apiFetch(`${API}/api/otp/send`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobile: _rd.mobile }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to resend OTP');
-    clearBoxes('rOtpRow');
-    document.querySelector('#rOtpRow .mpb')?.focus();
-    startResendTimer(60);
-  } catch (e) {
-    showErr('regErr', e.message || 'Failed to resend. Try again.');
-    btn.disabled = false;
-  }
-}
-
-// ── STEP 2 → verify OTP ──
-async function verifyOtp() {
-  hideErr('regErr');
-  const otp = getBoxVal('rOtpRow');
-  if (otp.length !== 6) return showErr('regErr', 'Enter the complete 6-digit OTP');
-
-  const btn = document.getElementById('verifyOtpBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin"></div> Verifying…';
-  try {
-    const res  = await apiFetch(`${API}/api/otp/verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mobile: _rd.mobile, otp }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'OTP verification failed');
-
-    _rd.otp_token = data.otp_token;
-    clearResendTimer();
-    document.getElementById('verifiedMobText').textContent = `+91 ${_rd.mobile} verified`;
-    document.getElementById('rStep2').style.display = 'none';
-    document.getElementById('rStep3').style.display = '';
-    setStep(3);
-    document.getElementById('rName')?.focus();
-  } catch (e) {
-    showErr('regErr', e.message || 'Verification failed');
-    clearBoxes('rOtpRow');
-    document.querySelector('#rOtpRow .mpb')?.focus();
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = 'Verify OTP →';
-  }
-}
-
-// ── STEP 3 → validate profile then go to step 4 ──
-function toStep4() {
-  hideErr('regErr');
-  const name = document.getElementById('rName').value.trim();
-  const ar   = validateAngelId(document.getElementById('rClientId').value.trim());
-
-  if (!name) return showErr('regErr', 'Please enter your full name');
-  if (!ar.ok) {
-    document.getElementById('rClientId').classList.add('field-error');
-    return showErr('regErr', ar.error);
-  }
-
+  const name=document.getElementById('rName').value.trim();
+  const ar=validateAngelId(document.getElementById('rClientId').value.trim());
+  if(!name)return showErr('regErr','Please enter your full name');
+  if(!ar.ok){document.getElementById('rClientId').classList.add('field-error');return showErr('regErr',ar.error);}
   document.getElementById('rClientId').classList.remove('field-error');
-  document.getElementById('rClientId').classList.add('field-locked');
-  document.getElementById('rClientId').readOnly = true;
-
-  _rd.name    = name;
-  _rd.angelId = ar.value;
-
-  // Populate summary card
-  const sm = document.getElementById('sumMob');
-  const sn = document.getElementById('sumName');
-  const sa = document.getElementById('sumAngel');
-  if (sm) sm.textContent = '+91 ' + _rd.mobile;
-  if (sn) sn.textContent = _rd.name;
-  if (sa) sa.textContent = _rd.angelId;
-
-  document.getElementById('rStep3').style.display = 'none';
-  document.getElementById('rStep4').style.display = '';
-  setStep(4);
-  document.querySelector('#rMpinRow .mpb')?.focus();
+  document.getElementById('rClientId').classList.add('field-locked');document.getElementById('rClientId').readOnly=true;
+  _rd.name=name;_rd.angelId=ar.value;
+  const sm=document.getElementById('sumMob'),sn=document.getElementById('sumName'),sa=document.getElementById('sumAngel');
+  if(sm)sm.textContent='+91 '+_rd.mobile;if(sn)sn.textContent=_rd.name;if(sa)sa.textContent=_rd.angelId;
+  document.getElementById('rStep3').style.display='none';document.getElementById('rStep4').style.display='';
+  setStep(4);document.querySelector('#rMpinRow .mpb')?.focus();
 }
-
-// ── Back from step 4 to step 3 ──
-function toStep3() {
-  hideErr('regErr');
-  document.getElementById('rStep4').style.display = 'none';
-  document.getElementById('rStep3').style.display = '';
-  setStep(3);
-  const ci = document.getElementById('rClientId');
-  ci.readOnly = false;
-  ci.classList.remove('field-locked');
+function toStep3(){
+  hideErr('regErr');document.getElementById('rStep4').style.display='none';document.getElementById('rStep3').style.display='';setStep(3);
+  const ci=document.getElementById('rClientId');ci.readOnly=false;ci.classList.remove('field-locked');
 }
-
-// ════════════════════════════════════════════════════════
-// REGISTER — POST /api/auth/register
-// otp_token + broker_client_id both mandatory
-// ════════════════════════════════════════════════════════
-async function doRegister() {
+async function doRegister(){
   hideErr('regErr');
-  const mpin = getBoxVal('rMpinRow');
-  const conf = getBoxVal('rMpinCRow');
-
-  if (mpin.length !== 6)  return showErr('regErr', 'Enter a complete 6-digit MPIN');
-  if (mpin !== conf)       return showErr('regErr', 'MPINs do not match — please re-enter');
-  if (!_rd.otp_token)      return showErr('regErr', 'Session expired — please start registration again');
-  if (!_rd.angelId)        return showErr('regErr', 'Angel One Client ID is missing — please go back');
-
-  _rd.mpin = mpin;
-  const btn = document.getElementById('regBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin"></div> Creating account…';
-
-  try {
-    const res  = await apiFetch(`${API}/api/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        otp_token:        _rd.otp_token,
-        name:             _rd.name,
-        mobile:           _rd.mobile,
-        mpin:             _rd.mpin,
-        broker_client_id: _rd.angelId,
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Registration failed');
-
-    saveSession(data.token, data.user);
-    const firstName = (_rd.name || 'Trader').split(' ')[0];
-    const title = document.getElementById('regOkTitle');
-    const msg   = document.getElementById('regOkMsg');
-    if (title) title.textContent = `Welcome, ${firstName}!`;
-    if (msg)   msg.textContent   = 'Account created. Taking you to your dashboard…';
-
-    document.getElementById('regForm').style.display = 'none';
-    document.getElementById('regOk').classList.add('show');
-    startRedirect('regFill', 'regCd', 2500, 'index.html');
-
-  } catch (e) {
-    let errMsg = e.message || 'Connection failed';
-    if (errMsg === 'Failed to fetch' || errMsg.includes('fetch'))
-      errMsg = 'Cannot reach server. Check your internet and try again.';
-    showErr('regErr', errMsg);
-    btn.disabled = false;
-    btn.innerHTML = '✓ Create Account';
+  const mpin=getBoxVal('rMpinRow'),conf=getBoxVal('rMpinCRow');
+  if(mpin.length!==6)return showErr('regErr','Enter a complete 6-digit MPIN');
+  if(mpin!==conf)return showErr('regErr','MPINs do not match — please re-enter');
+  if(!_rd.otp_token)return showErr('regErr','Session expired — please start registration again');
+  if(!_rd.angelId)return showErr('regErr','Angel One Client ID is missing — please go back');
+  _rd.mpin=mpin;const btn=document.getElementById('regBtn');btn.disabled=true;btn.innerHTML='<div class="spin"></div> Creating account…';
+  try{
+    const res=await apiFetch(`${API}/api/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({otp_token:_rd.otp_token,name:_rd.name,mobile:_rd.mobile,mpin:_rd.mpin,broker_client_id:_rd.angelId})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Registration failed');
+    saveSession(data.token,data.user);
+    const firstName=(_rd.name||'Trader').split(' ')[0];
+    const title=document.getElementById('regOkTitle'),msg=document.getElementById('regOkMsg');
+    if(title)title.textContent=`Welcome, ${firstName}!`;if(msg)msg.textContent='Account created. Taking you to your dashboard…';
+    document.getElementById('regForm').style.display='none';document.getElementById('regOk').classList.add('show');
+    startRedirect('regFill','regCd',2500,'index.html');
+  }catch(e){
+    let errMsg=e.message||'Connection failed';
+    if(errMsg==='Failed to fetch'||errMsg.includes('fetch'))errMsg='Cannot reach server. Check your internet and try again.';
+    showErr('regErr',errMsg);btn.disabled=false;btn.innerHTML='✓ Create Account';
   }
 }
 
-// ════════════════════════════════════════════════════════
-// KEYBOARD + URL PARAM
-// ════════════════════════════════════════════════════════
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('loginForm').classList.contains('on')) {
-    doLogin();
-  }
-});
-
-(function checkUrlParam() {
-  const p = new URLSearchParams(window.location.search);
-  if (p.get('tab') === 'register') switchTab('register');
-})();
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginForm').classList.contains('on'))doLogin();});
+(function(){const p=new URLSearchParams(window.location.search);if(p.get('tab')==='register')switchTab('register');})();
 </script>
 
-<!-- Crawlable internal links for SEO -->
 <nav aria-label="Site navigation" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">
   <a href="https://optionlab.in">OptionLab Home</a>
   <a href="https://optionlab.in/register.html">Login / Register</a>
