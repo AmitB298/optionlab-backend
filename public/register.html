@@ -150,7 +150,6 @@ body{
 .form-pane{display:none;flex-direction:column;flex:1;}
 .form-pane.on{display:flex;}
 
-/* Title block */
 .form-head{margin-bottom:28px;}
 .form-eyebrow{
   font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
@@ -199,7 +198,6 @@ body{
   font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:rgba(255,255,255,.4);margin-bottom:8px;
 }
-/* Required asterisk */
 .req{color:var(--or);margin-left:3px;font-size:13px;line-height:1;}
 .iw{position:relative;}
 .ipfx{
@@ -230,8 +228,6 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{
   background:#070c15;
 }
 input.pfx{padding-left:46px;}
-
-/* Angel One ID field — locked state after validation passes */
 input.field-locked{
   border-color:rgba(16,185,129,.4) !important;
   color:var(--gn) !important;
@@ -242,9 +238,6 @@ input.field-error{
   border-color:rgba(239,68,68,.5) !important;
   box-shadow:0 0 0 3px rgba(239,68,68,.08) !important;
 }
-
-.ihelp{font-size:12.5px;color:#4e6278;margin-top:7px;line-height:1.45;}
-.ihelp a{color:var(--or);text-decoration:none;font-weight:600;}
 
 /* Angel One ID notice */
 .angel-notice{
@@ -257,7 +250,18 @@ input.field-error{
 }
 .angel-notice-icon{flex-shrink:0;font-size:14px;margin-top:1px;}
 
-/* ── MPIN ── */
+/* Mobile verified badge */
+.mob-verified{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 14px;
+  background:rgba(16,185,129,.07);
+  border:1px solid rgba(16,185,129,.2);
+  border-radius:10px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gn);
+  margin-bottom:16px;
+}
+
+/* ── MPIN / OTP BOXES ── */
 .mprow{display:flex;gap:9px;justify-content:center;margin:8px 0 5px;}
 .mpb{
   width:48px;height:60px;
@@ -280,6 +284,11 @@ input.field-error{
 .mp-warn{font-size:12.5px;color:#f59e0b;text-align:center;margin-top:14px;padding:10px 14px;
   background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:9px;line-height:1.5;}
 
+/* OTP resend */
+.otp-resend{text-align:center;margin-top:14px;font-size:13px;color:#4e6278;font-family:'JetBrains Mono',monospace;}
+.resend-btn{color:var(--or);cursor:pointer;font-weight:700;background:none;border:none;font-family:inherit;font-size:inherit;}
+.resend-btn:disabled{color:#4e6278;cursor:default;}
+
 /* ── SUMMARY CARD ── */
 .sumcard{background:#050811;border:1.5px solid rgba(255,255,255,.08);
   border-radius:var(--r2);padding:16px 18px;margin-bottom:18px;}
@@ -289,16 +298,13 @@ input.field-error{
 .sumlbl{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);}
 .sumval{font-size:15px;font-weight:700;color:#f0f5ff;}
-/* Angel One ID in summary — locked badge */
 .sumval-angel{
   font-size:14px;font-weight:700;
-  color:var(--gn);
-  font-family:'JetBrains Mono',monospace;
+  color:var(--gn);font-family:'JetBrains Mono',monospace;
   display:flex;align-items:center;gap:6px;
 }
 .sumval-angel::after{
-  content:'LOCKED';
-  font-size:9px;letter-spacing:.1em;
+  content:'LOCKED';font-size:9px;letter-spacing:.1em;
   background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);
   color:var(--gn);padding:2px 6px;border-radius:4px;
 }
@@ -321,8 +327,7 @@ input.field-error{
   position:relative;overflow:hidden;
 }
 .btn-main::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
-  pointer-events:none;}
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);pointer-events:none;}
 .btn-main:hover:not(:disabled){transform:translateY(-2px);
   box-shadow:0 8px 32px rgba(249,115,22,.45),0 2px 6px rgba(249,115,22,.3);}
 .btn-main:active:not(:disabled){transform:translateY(0);}
@@ -388,7 +393,6 @@ input.field-error{
 </head>
 <body>
 
-<!-- BACKGROUND -->
 <div class="bg-grid" aria-hidden="true"></div>
 <div class="bg-orb o1" aria-hidden="true"></div>
 <div class="bg-orb o2" aria-hidden="true"></div>
@@ -404,50 +408,18 @@ input.field-error{
       <div class="brand-mark">OL</div>
       <span class="brand-name">Option<b>Lab</b></span>
     </a>
-
-    <div class="left-headline">
-      Trade with<br><em>Institutional</em><br>Intelligence
-    </div>
-    <div class="left-sub">
-      India's most advanced NSE options platform — real-time Greeks, Smart Money signals, live OI analytics, and FII footprint detection.
-    </div>
-
+    <div class="left-headline">Trade with<br><em>Institutional</em><br>Intelligence</div>
+    <div class="left-sub">India's most advanced NSE options platform — real-time Greeks, Smart Money signals, live OI analytics, and FII footprint detection.</div>
     <div class="feats">
-      <div class="feat">
-        <div class="feat-ico">⚡</div>
-        <div class="feat-body">
-          <div class="feat-title">Live Signal Engine</div>
-          <div class="feat-desc">VPIN, FII flow, OI velocity — updated every 2 seconds during market hours</div>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-ico">𝛅</div>
-        <div class="feat-body">
-          <div class="feat-title">Full Greeks Suite</div>
-          <div class="feat-desc">Delta, Gamma, Vega, Theta + GEX dealer positioning maps across all strikes</div>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-ico">🎯</div>
-        <div class="feat-body">
-          <div class="feat-title">Smart Money Footprint</div>
-          <div class="feat-desc">FII vs retail divergence, operator phase detection, kill zone timing</div>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-ico">🔗</div>
-        <div class="feat-body">
-          <div class="feat-title">Angel One Integration</div>
-          <div class="feat-desc">SmartAPI WebSocket for live option chain feed direct to your dashboard</div>
-        </div>
-      </div>
+      <div class="feat"><div class="feat-ico">⚡</div><div class="feat-body"><div class="feat-title">Live Signal Engine</div><div class="feat-desc">VPIN, FII flow, OI velocity — updated every 2 seconds during market hours</div></div></div>
+      <div class="feat"><div class="feat-ico">𝛅</div><div class="feat-body"><div class="feat-title">Full Greeks Suite</div><div class="feat-desc">Delta, Gamma, Vega, Theta + GEX dealer positioning maps across all strikes</div></div></div>
+      <div class="feat"><div class="feat-ico">🎯</div><div class="feat-body"><div class="feat-title">Smart Money Footprint</div><div class="feat-desc">FII vs retail divergence, operator phase detection, kill zone timing</div></div></div>
+      <div class="feat"><div class="feat-ico">🔗</div><div class="feat-body"><div class="feat-title">Angel One Integration</div><div class="feat-desc">SmartAPI WebSocket for live option chain feed direct to your dashboard</div></div></div>
     </div>
-
     <div class="live-strip">
       <div class="live-dot"></div>
       <div class="live-text"><strong>1,000+ traders</strong> connected to OptionLab live</div>
     </div>
-
     <div class="ticker-strip">
       <div class="tick-item">NIFTY <span class="tv up" id="l-nifty">22,513</span></div>
       <div class="tick-item">VIX <span class="tv dn" id="l-vix">14.23</span></div>
@@ -469,20 +441,15 @@ input.field-error{
         <div class="form-title">Welcome back</div>
         <div class="form-sub">Enter your mobile and 6-digit MPIN to continue.</div>
       </div>
-
       <div class="msg err" id="loginErr"></div>
-
       <div class="ig">
         <label class="il" for="lMob">Mobile Number</label>
         <div class="iw">
           <span class="ipfx" aria-hidden="true">+91</span>
-          <input type="tel" id="lMob" class="pfx"
-            maxlength="10" placeholder="9999999999"
-            inputmode="numeric" autocomplete="tel"
-            aria-label="Mobile number">
+          <input type="tel" id="lMob" class="pfx" maxlength="10" placeholder="9999999999"
+            inputmode="numeric" autocomplete="tel" aria-label="Mobile number">
         </div>
       </div>
-
       <div class="ig">
         <label class="il">6-Digit MPIN</label>
         <div class="mprow" id="lMpinRow" role="group" aria-label="MPIN entry">
@@ -495,11 +462,8 @@ input.field-error{
         </div>
         <div class="mp-hint">Tap the first box and type your MPIN</div>
       </div>
-
       <div class="spacer"></div>
-      <button class="btn-main" onclick="doLogin()" id="loginBtn">
-        Login to OptionLab →
-      </button>
+      <button class="btn-main" onclick="doLogin()" id="loginBtn">Login to OptionLab →</button>
       <div class="ffoot">
         Demo: <span class="flink" onclick="demoFill()">9999999999 / 123456</span>
         &nbsp;·&nbsp;
@@ -518,58 +482,98 @@ input.field-error{
       </div>
     </div>
 
-    <!-- ═══ REGISTER FORM ═══ -->
+    <!-- ═══ REGISTER FORM — 4 STEPS ═══ -->
     <div class="form-pane" id="regForm" role="tabpanel">
 
-      <!-- Step indicator -->
+      <!-- Step indicator: 4 steps -->
       <div class="stepbar" id="stepbar" role="list">
         <div class="si" role="listitem">
           <div class="sc on" id="sc1">1</div>
-          <div class="sl on" id="sl1">Profile</div>
+          <div class="sl on" id="sl1">Mobile</div>
           <div class="sline" id="ln1"></div>
         </div>
         <div class="si" role="listitem">
           <div class="sc" id="sc2">2</div>
-          <div class="sl" id="sl2">MPIN</div>
+          <div class="sl" id="sl2">OTP</div>
           <div class="sline" id="ln2"></div>
         </div>
-        <div class="si" role="listitem" style="flex:0">
+        <div class="si" role="listitem">
           <div class="sc" id="sc3">3</div>
-          <div class="sl" id="sl3">Confirm</div>
+          <div class="sl" id="sl3">Profile</div>
+          <div class="sline" id="ln3"></div>
+        </div>
+        <div class="si" role="listitem" style="flex:0">
+          <div class="sc" id="sc4">4</div>
+          <div class="sl" id="sl4">MPIN</div>
         </div>
       </div>
 
       <div class="msg err" id="regErr"></div>
 
-      <!-- STEP 1: Profile + Angel One ID (MANDATORY) -->
+      <!-- STEP 1 — Mobile -->
       <div id="rStep1">
         <div class="form-head">
-          <div class="form-eyebrow">Join OptionLab</div>
-          <div class="form-title">Create account</div>
-          <div class="form-sub">Your details to get started. Free forever.</div>
+          <div class="form-eyebrow">Step 1 of 4</div>
+          <div class="form-title">Verify mobile</div>
+          <div class="form-sub">Enter your mobile number. We'll send a 6-digit OTP to verify.</div>
         </div>
-
-        <div class="ig">
-          <label class="il" for="rName">Full Name <span class="req">*</span></label>
-          <input type="text" id="rName" placeholder="Rahul Sharma" autocomplete="name">
-        </div>
-
         <div class="ig">
           <label class="il" for="rMob">Mobile Number <span class="req">*</span></label>
           <div class="iw">
             <span class="ipfx" aria-hidden="true">+91</span>
-            <input type="tel" id="rMob" class="pfx"
-              maxlength="10" placeholder="9999999999"
-              inputmode="numeric" autocomplete="tel"
-              aria-label="Mobile number">
+            <input type="tel" id="rMob" class="pfx" maxlength="10" placeholder="9999999999"
+              inputmode="numeric" autocomplete="tel" aria-label="Mobile number">
           </div>
         </div>
+        <div class="spacer"></div>
+        <button class="btn-main" onclick="sendOtp()" id="sendOtpBtn">Send OTP →</button>
+        <div class="ffoot">Already have an account? <span class="flink" onclick="switchTab('login')">Login</span></div>
+      </div>
 
-        <!-- ANGEL ONE CLIENT ID — MANDATORY, IMMUTABLE -->
+      <!-- STEP 2 — OTP -->
+      <div id="rStep2" style="display:none">
+        <div class="form-head">
+          <div class="form-eyebrow">Step 2 of 4</div>
+          <div class="form-title">Enter OTP</div>
+          <div class="form-sub" id="otpSubText">OTP sent to your mobile. Valid for 10 minutes.</div>
+        </div>
+        <label class="il">6-Digit OTP <span class="req">*</span></label>
+        <div class="mprow" id="rOtpRow" role="group" aria-label="OTP entry">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
+          <input type="text" class="mpb" maxlength="1" inputmode="numeric">
+        </div>
+        <div class="mp-hint">Check your SMS for the OTP</div>
+        <div class="otp-resend" id="otpResendArea">
+          Didn't receive?
+          <button class="resend-btn" id="resendBtn" onclick="resendOtp()" disabled>Resend OTP</button>
+          <span id="resendTimer"> in <span id="resendCount">60</span>s</span>
+        </div>
+        <div class="spacer"></div>
+        <button class="btn-main" onclick="verifyOtp()" id="verifyOtpBtn">Verify OTP →</button>
+        <button class="btn-back" onclick="toStep1()">← Change Number</button>
+      </div>
+
+      <!-- STEP 3 — Profile + Angel One ID -->
+      <div id="rStep3" style="display:none">
+        <div class="form-head">
+          <div class="form-eyebrow">Step 3 of 4</div>
+          <div class="form-title">Your details</div>
+          <div class="form-sub">Mobile verified ✓ — now complete your profile.</div>
+        </div>
+        <div class="mob-verified" id="verifiedMobBadge">
+          <span>✓</span>
+          <span id="verifiedMobText">Mobile verified</span>
+        </div>
         <div class="ig">
-          <label class="il" for="rClientId">
-            Angel One Client ID <span class="req">*</span>
-          </label>
+          <label class="il" for="rName">Full Name <span class="req">*</span></label>
+          <input type="text" id="rName" placeholder="Rahul Sharma" autocomplete="name">
+        </div>
+        <div class="ig">
+          <label class="il" for="rClientId">Angel One Client ID <span class="req">*</span></label>
           <input type="text" id="rClientId"
             placeholder="e.g. SBH3321"
             maxlength="10"
@@ -581,23 +585,20 @@ input.field-error{
             oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
           <div class="angel-notice">
             <span class="angel-notice-icon">🔒</span>
-            <span>This ID is <strong>permanent</strong> — it cannot be changed after registration. Find it in your Angel One app under Profile → Client ID.</span>
+            <span>This ID is <strong>permanent</strong> — cannot be changed after registration. Find it in Angel One app → Profile → Client ID.</span>
           </div>
         </div>
-
         <div class="spacer"></div>
-        <button class="btn-main" onclick="toStep2()">Continue →</button>
-        <div class="ffoot">Already have an account? <span class="flink" onclick="switchTab('login')">Login</span></div>
+        <button class="btn-main" onclick="toStep4()">Continue →</button>
       </div>
 
-      <!-- STEP 2: MPIN -->
-      <div id="rStep2" style="display:none">
+      <!-- STEP 4 — MPIN + Summary -->
+      <div id="rStep4" style="display:none">
         <div class="form-head">
-          <div class="form-eyebrow">Security Setup</div>
+          <div class="form-eyebrow">Step 4 of 4</div>
           <div class="form-title">Set your MPIN</div>
           <div class="form-sub">Your 6-digit login PIN — keep it private.</div>
         </div>
-
         <label class="il">Create MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinRow" role="group" aria-label="Create MPIN">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
@@ -608,8 +609,7 @@ input.field-error{
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
         </div>
         <div class="mp-hint">Enter any 6 digits</div>
-
-        <label class="il" style="margin-top:20px">Confirm MPIN <span class="req">*</span></label>
+        <label class="il" style="margin-top:18px">Confirm MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinCRow" role="group" aria-label="Confirm MPIN">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
@@ -619,46 +619,14 @@ input.field-error{
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
         </div>
         <div class="mp-warn">⚠ Keep this MPIN different from your broker trading PIN</div>
-
-        <div class="spacer"></div>
-        <button class="btn-main" onclick="toStep3()">Continue →</button>
-        <button class="btn-back" onclick="toStep1()">← Back</button>
-      </div>
-
-      <!-- STEP 3: Summary + Confirm -->
-      <div id="rStep3" style="display:none">
-        <div class="form-head">
-          <div class="form-eyebrow">Final Step</div>
-          <div class="form-title">Almost there</div>
-          <div class="form-sub">Review your details — tap Create Account to confirm.</div>
+        <div class="sumcard" style="margin-top:16px">
+          <div class="sumrow"><span class="sumlbl">Mobile</span><span class="sumval" id="sumMob">—</span></div>
+          <div class="sumrow"><span class="sumlbl">Name</span><span class="sumval" id="sumName">—</span></div>
+          <div class="sumrow"><span class="sumlbl">Angel One ID</span><span class="sumval-angel" id="sumAngel">—</span></div>
+          <div class="sumrow"><span class="sumlbl">Plan</span><span class="sumval" style="color:var(--gn)">Free</span></div>
         </div>
-
-        <div class="sumcard">
-          <div class="sumrow">
-            <span class="sumlbl">Name</span>
-            <span class="sumval" id="sumName">—</span>
-          </div>
-          <div class="sumrow">
-            <span class="sumlbl">Mobile</span>
-            <span class="sumval" id="sumMob">—</span>
-          </div>
-          <div class="sumrow">
-            <span class="sumlbl">Angel One ID</span>
-            <!-- shown in green with LOCKED badge to signal immutability -->
-            <span class="sumval-angel" id="sumAngel">—</span>
-          </div>
-          <div class="sumrow">
-            <span class="sumlbl">MPIN</span>
-            <span class="sumval" style="letter-spacing:.15em">••••••</span>
-          </div>
-          <div class="sumrow">
-            <span class="sumlbl">Plan</span>
-            <span class="sumval" style="color:var(--gn)">Free — Registered</span>
-          </div>
-        </div>
-
         <button class="btn-main" onclick="doRegister()" id="regBtn">✓ Create Account</button>
-        <button class="btn-back" onclick="toStep2()">← Back</button>
+        <button class="btn-back" onclick="toStep3()">← Back</button>
       </div>
     </div>
 
@@ -669,7 +637,7 @@ input.field-error{
       <div class="success-sub" id="regOkMsg">Welcome to OptionLab. Setting up your dashboard…</div>
       <div class="redirect-bar">
         <div class="redirect-track"><div class="redirect-fill" id="regFill"></div></div>
-        <div class="redirect-label" id="regCdLabel">Redirecting in <span id="regCd">3</span>s</div>
+        <div class="redirect-label">Redirecting in <span id="regCd">3</span>s</div>
       </div>
     </div>
 
@@ -683,8 +651,7 @@ input.field-error{
   background:#0d1119;border:1px solid rgba(249,115,22,.35);
   border-radius:10px;padding:11px 18px;
   font-family:'JetBrains Mono',monospace;font-size:12px;
-  color:rgba(249,115,22,.9);
-  align-items:center;gap:9px;
+  color:rgba(249,115,22,.9);align-items:center;gap:9px;
   box-shadow:0 4px 24px rgba(0,0,0,.5)">
   <span style="width:8px;height:8px;border-radius:50%;background:#f97316;
     animation:pulse-dot 1s ease-in-out infinite;flex-shrink:0;display:inline-block"></span>
@@ -693,33 +660,27 @@ input.field-error{
 
 <script>
 // ════════════════════════════════════════════════════════
-// BACKEND — DO NOT CHANGE THIS URL
+// BACKEND
 // ════════════════════════════════════════════════════════
 const API = 'https://web-production-8a8e1.up.railway.app';
 
-// Robust fetch wrapper — 15s timeout, cold-start hint, single retry
 async function apiFetch(url, opts = {}) {
-  const TIMEOUT_MS = 15000;
-  const controller  = new AbortController();
-  const timeoutId   = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  const hintTimer = setTimeout(() => {
-    const hint = document.getElementById('server-hint');
-    if (hint) hint.style.display = 'flex';
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), 15000);
+  const hintTimer  = setTimeout(() => {
+    const h = document.getElementById('server-hint');
+    if (h) h.style.display = 'flex';
   }, 4000);
-
   try {
     const res = await fetch(url, { ...opts, signal: controller.signal });
-    clearTimeout(timeoutId);
-    clearTimeout(hintTimer);
-    const hint = document.getElementById('server-hint');
-    if (hint) hint.style.display = 'none';
+    clearTimeout(timeoutId); clearTimeout(hintTimer);
+    const h = document.getElementById('server-hint');
+    if (h) h.style.display = 'none';
     return res;
   } catch (err) {
-    clearTimeout(timeoutId);
-    clearTimeout(hintTimer);
-    const hint = document.getElementById('server-hint');
-    if (hint) hint.style.display = 'none';
+    clearTimeout(timeoutId); clearTimeout(hintTimer);
+    const h = document.getElementById('server-hint');
+    if (h) h.style.display = 'none';
     if (!opts._retry) {
       await new Promise(r => setTimeout(r, 1500));
       return apiFetch(url, { ...opts, _retry: true });
@@ -729,7 +690,7 @@ async function apiFetch(url, opts = {}) {
 }
 
 // ════════════════════════════════════════════════════════
-// TOKEN STORAGE
+// SESSION
 // ════════════════════════════════════════════════════════
 const TOKEN_KEY = 'optionlab_token';
 const USER_KEY  = 'optionlab_user';
@@ -741,7 +702,6 @@ function saveSession(token, user) {
   } catch(e) {}
 }
 
-// Skip to dashboard if already logged in
 (function checkExistingSession() {
   try {
     if (sessionStorage.getItem(TOKEN_KEY)) window.location.replace('index.html');
@@ -749,7 +709,7 @@ function saveSession(token, user) {
 })();
 
 // ════════════════════════════════════════════════════════
-// LIVE TICKER SIMULATION (left panel)
+// LIVE TICKER
 // ════════════════════════════════════════════════════════
 let _n = 22513, _v = 14.23, _p = 1.08;
 setInterval(() => {
@@ -765,7 +725,7 @@ setInterval(() => {
 }, 2500);
 
 // ════════════════════════════════════════════════════════
-// FLOATING PARTICLES
+// PARTICLES
 // ════════════════════════════════════════════════════════
 (function initParticles() {
   const container = document.getElementById('particles');
@@ -803,9 +763,9 @@ function switchTab(t) {
 }
 
 // ════════════════════════════════════════════════════════
-// MPIN BOX WIRING
+// BOX WIRING (MPIN + OTP)
 // ════════════════════════════════════════════════════════
-function wireMpin(id) {
+function wireBoxes(id) {
   const boxes = Array.from(document.querySelectorAll(`#${id} .mpb`));
   boxes.forEach((box, i) => {
     box.addEventListener('input', e => {
@@ -827,20 +787,20 @@ function wireMpin(id) {
   });
 }
 
-wireMpin('lMpinRow');
-wireMpin('rMpinRow');
-wireMpin('rMpinCRow');
+wireBoxes('lMpinRow');
+wireBoxes('rOtpRow');
+wireBoxes('rMpinRow');
+wireBoxes('rMpinCRow');
 
-function getMpin(id) {
+function getBoxVal(id) {
   return Array.from(document.querySelectorAll(`#${id} .mpb`)).map(b => b.value).join('');
 }
-function clearMpin(id) {
+function clearBoxes(id) {
   document.querySelectorAll(`#${id} .mpb`).forEach(b => { b.value = ''; b.classList.remove('fl'); });
 }
 
 // ════════════════════════════════════════════════════════
-// ANGEL ONE ID — client-side validation helper
-// Mirrors V.angelOneId() logic from validate.js
+// ANGEL ONE ID VALIDATION
 // ════════════════════════════════════════════════════════
 function validateAngelId(raw) {
   if (!raw || !raw.trim()) return { ok: false, error: 'Angel One Client ID is required' };
@@ -851,7 +811,7 @@ function validateAngelId(raw) {
 }
 
 // ════════════════════════════════════════════════════════
-// ERROR DISPLAY
+// ERROR HELPERS
 // ════════════════════════════════════════════════════════
 function showErr(id, msg) {
   const el = document.getElementById(id);
@@ -867,7 +827,7 @@ function hideErr(id) {
 }
 
 // ════════════════════════════════════════════════════════
-// REDIRECT WITH PROGRESS BAR
+// REDIRECT
 // ════════════════════════════════════════════════════════
 function startRedirect(fillId, cdId, duration, destination) {
   const fill = document.getElementById(fillId);
@@ -890,20 +850,18 @@ function startRedirect(fillId, cdId, duration, destination) {
 }
 
 // ════════════════════════════════════════════════════════
-// LOGIN — POST /api/auth/login-mpin
+// LOGIN
 // ════════════════════════════════════════════════════════
 async function doLogin() {
   hideErr('loginErr');
   const mob  = document.getElementById('lMob').value.trim();
-  const mpin = getMpin('lMpinRow');
-
+  const mpin = getBoxVal('lMpinRow');
   if (!/^\d{10}$/.test(mob))  return showErr('loginErr', 'Enter a valid 10-digit mobile number');
   if (mpin.length !== 6)      return showErr('loginErr', 'Enter your complete 6-digit MPIN');
 
   const btn = document.getElementById('loginBtn');
   btn.disabled = true;
   btn.innerHTML = '<div class="spin"></div> Logging in…';
-
   try {
     const res  = await apiFetch(`${API}/api/auth/login-mpin`, {
       method: 'POST',
@@ -912,12 +870,10 @@ async function doLogin() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Login failed');
-
     saveSession(data.token, data.user);
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('loginOk').classList.add('show');
     startRedirect('loginFill', 'loginCd', 1800, 'index.html');
-
   } catch (e) {
     let msg = e.message || 'Connection failed';
     if (msg === 'Failed to fetch' || msg.includes('fetch'))
@@ -925,7 +881,7 @@ async function doLogin() {
     showErr('loginErr', msg);
     btn.disabled = false;
     btn.innerHTML = 'Login to OptionLab →';
-    clearMpin('lMpinRow');
+    clearBoxes('lMpinRow');
     document.querySelector('#lMpinRow .mpb')?.focus();
   }
 }
@@ -939,17 +895,18 @@ function demoFill() {
 // ════════════════════════════════════════════════════════
 // REGISTER STEP LOGIC
 // ════════════════════════════════════════════════════════
-let _rd = {}; // registration data carried across steps
+let _rd = {};
+let _resendTimer = null;
 
 function setStep(n) {
-  [1, 2, 3].forEach(i => {
+  [1, 2, 3, 4].forEach(i => {
     const sc = document.getElementById('sc' + i);
     const sl = document.getElementById('sl' + i);
     if (!sc || !sl) return;
     sc.className = 'sc' + (i < n ? ' dn' : i === n ? ' on' : '');
     sl.className = 'sl' + (i < n ? ' dn' : i === n ? ' on' : '');
     sc.textContent = i < n ? '✓' : i;
-    if (i < 3) {
+    if (i < 4) {
       const ln = document.getElementById('ln' + i);
       if (ln) ln.className = 'sline' + (i < n ? ' dn' : '');
     }
@@ -957,99 +914,219 @@ function setStep(n) {
 }
 
 function toStep1() {
-  document.getElementById('rStep1').style.display = '';
-  document.getElementById('rStep2').style.display = 'none';
-  document.getElementById('rStep3').style.display = 'none';
+  ['rStep1','rStep2','rStep3','rStep4'].forEach((id, i) => {
+    document.getElementById(id).style.display = i === 0 ? '' : 'none';
+  });
   setStep(1);
+  const mob = document.getElementById('rMob');
+  if (mob) { mob.readOnly = false; mob.classList.remove('field-locked'); }
+  clearResendTimer();
 }
 
-function toStep2() {
+// ── STEP 1 → send OTP ──
+async function sendOtp() {
   hideErr('regErr');
-  const name     = document.getElementById('rName').value.trim();
-  const mob      = document.getElementById('rMob').value.trim();
-  const angelRaw = document.getElementById('rClientId').value.trim();
+  const mob = document.getElementById('rMob').value.trim();
+  if (!/^\d{10}$/.test(mob)) return showErr('regErr', 'Enter a valid 10-digit mobile number');
 
-  // Validate all Step 1 fields before advancing
-  if (!name)
-    return showErr('regErr', 'Please enter your full name');
-  if (!/^\d{10}$/.test(mob))
-    return showErr('regErr', 'Enter a valid 10-digit mobile number');
+  const btn = document.getElementById('sendOtpBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin"></div> Sending OTP…';
+  try {
+    const res  = await apiFetch(`${API}/api/otp/send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mobile: mob }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
 
-  const angelResult = validateAngelId(angelRaw);
-  if (!angelResult.ok) {
+    _rd.mobile = mob;
+    const mobEl = document.getElementById('rMob');
+    mobEl.readOnly = true;
+    mobEl.classList.add('field-locked');
+    document.getElementById('otpSubText').textContent = `OTP sent to +91 ${mob}. Valid for 10 minutes.`;
+    document.getElementById('rStep1').style.display = 'none';
+    document.getElementById('rStep2').style.display = '';
+    setStep(2);
+    clearBoxes('rOtpRow');
+    document.querySelector('#rOtpRow .mpb')?.focus();
+    startResendTimer(60);
+  } catch (e) {
+    let msg = e.message || 'Connection failed';
+    if (msg === 'Failed to fetch' || msg.includes('fetch'))
+      msg = 'Cannot reach server. Check your internet.';
+    showErr('regErr', msg);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Send OTP →';
+  }
+}
+
+// ── Resend timer ──
+function startResendTimer(s) {
+  clearResendTimer();
+  const btn   = document.getElementById('resendBtn');
+  const count = document.getElementById('resendCount');
+  const ts    = document.getElementById('resendTimer');
+  btn.disabled = true;
+  if (ts) ts.style.display = '';
+  let rem = s;
+  if (count) count.textContent = rem;
+  _resendTimer = setInterval(() => {
+    rem--;
+    if (count) count.textContent = rem;
+    if (rem <= 0) {
+      clearResendTimer();
+      btn.disabled = false;
+      if (ts) ts.style.display = 'none';
+    }
+  }, 1000);
+}
+
+function clearResendTimer() {
+  if (_resendTimer) { clearInterval(_resendTimer); _resendTimer = null; }
+  const btn = document.getElementById('resendBtn');
+  const ts  = document.getElementById('resendTimer');
+  if (btn) btn.disabled = false;
+  if (ts)  ts.style.display = 'none';
+}
+
+async function resendOtp() {
+  hideErr('regErr');
+  const btn = document.getElementById('resendBtn');
+  btn.disabled = true;
+  try {
+    const res  = await apiFetch(`${API}/api/otp/send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mobile: _rd.mobile }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to resend OTP');
+    clearBoxes('rOtpRow');
+    document.querySelector('#rOtpRow .mpb')?.focus();
+    startResendTimer(60);
+  } catch (e) {
+    showErr('regErr', e.message || 'Failed to resend. Try again.');
+    btn.disabled = false;
+  }
+}
+
+// ── STEP 2 → verify OTP ──
+async function verifyOtp() {
+  hideErr('regErr');
+  const otp = getBoxVal('rOtpRow');
+  if (otp.length !== 6) return showErr('regErr', 'Enter the complete 6-digit OTP');
+
+  const btn = document.getElementById('verifyOtpBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin"></div> Verifying…';
+  try {
+    const res  = await apiFetch(`${API}/api/otp/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mobile: _rd.mobile, otp }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'OTP verification failed');
+
+    _rd.otp_token = data.otp_token;
+    clearResendTimer();
+    document.getElementById('verifiedMobText').textContent = `+91 ${_rd.mobile} verified`;
+    document.getElementById('rStep2').style.display = 'none';
+    document.getElementById('rStep3').style.display = '';
+    setStep(3);
+    document.getElementById('rName')?.focus();
+  } catch (e) {
+    showErr('regErr', e.message || 'Verification failed');
+    clearBoxes('rOtpRow');
+    document.querySelector('#rOtpRow .mpb')?.focus();
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Verify OTP →';
+  }
+}
+
+// ── STEP 3 → validate profile then go to step 4 ──
+function toStep4() {
+  hideErr('regErr');
+  const name = document.getElementById('rName').value.trim();
+  const ar   = validateAngelId(document.getElementById('rClientId').value.trim());
+
+  if (!name) return showErr('regErr', 'Please enter your full name');
+  if (!ar.ok) {
     document.getElementById('rClientId').classList.add('field-error');
-    return showErr('regErr', angelResult.error);
+    return showErr('regErr', ar.error);
   }
 
   document.getElementById('rClientId').classList.remove('field-error');
   document.getElementById('rClientId').classList.add('field-locked');
-  document.getElementById('rClientId').readOnly = true; // prevent edits after step 1
+  document.getElementById('rClientId').readOnly = true;
 
-  _rd.name     = name;
-  _rd.mobile   = mob;
-  _rd.angelId  = angelResult.value; // always uppercase
+  _rd.name    = name;
+  _rd.angelId = ar.value;
 
-  document.getElementById('rStep1').style.display = 'none';
-  document.getElementById('rStep2').style.display = '';
+  // Populate summary card
+  const sm = document.getElementById('sumMob');
+  const sn = document.getElementById('sumName');
+  const sa = document.getElementById('sumAngel');
+  if (sm) sm.textContent = '+91 ' + _rd.mobile;
+  if (sn) sn.textContent = _rd.name;
+  if (sa) sa.textContent = _rd.angelId;
+
   document.getElementById('rStep3').style.display = 'none';
-  setStep(2);
+  document.getElementById('rStep4').style.display = '';
+  setStep(4);
   document.querySelector('#rMpinRow .mpb')?.focus();
 }
 
+// ── Back from step 4 to step 3 ──
 function toStep3() {
   hideErr('regErr');
-  const mpin = getMpin('rMpinRow');
-  const conf = getMpin('rMpinCRow');
-  if (mpin.length !== 6) return showErr('regErr', 'Enter a complete 6-digit MPIN');
-  if (mpin !== conf)     return showErr('regErr', 'MPINs do not match — please re-enter');
-  _rd.mpin = mpin;
-
-  // Populate summary
-  const sn = document.getElementById('sumName');
-  const sm = document.getElementById('sumMob');
-  const sa = document.getElementById('sumAngel');
-  if (sn) sn.textContent  = _rd.name;
-  if (sm) sm.textContent  = '+91 ' + _rd.mobile;
-  if (sa) sa.textContent  = _rd.angelId; // green + LOCKED badge via CSS
-
-  document.getElementById('rStep1').style.display = 'none';
-  document.getElementById('rStep2').style.display = 'none';
+  document.getElementById('rStep4').style.display = 'none';
   document.getElementById('rStep3').style.display = '';
   setStep(3);
+  const ci = document.getElementById('rClientId');
+  ci.readOnly = false;
+  ci.classList.remove('field-locked');
 }
 
 // ════════════════════════════════════════════════════════
 // REGISTER — POST /api/auth/register
-// broker_client_id is always sent — it is mandatory
+// otp_token + broker_client_id both mandatory
 // ════════════════════════════════════════════════════════
 async function doRegister() {
   hideErr('regErr');
+  const mpin = getBoxVal('rMpinRow');
+  const conf = getBoxVal('rMpinCRow');
 
-  // Final client-side guard — should never fail here but belt-and-braces
-  if (!_rd.angelId) return showErr('regErr', 'Angel One Client ID is missing — please go back to Step 1');
+  if (mpin.length !== 6)  return showErr('regErr', 'Enter a complete 6-digit MPIN');
+  if (mpin !== conf)       return showErr('regErr', 'MPINs do not match — please re-enter');
+  if (!_rd.otp_token)      return showErr('regErr', 'Session expired — please start registration again');
+  if (!_rd.angelId)        return showErr('regErr', 'Angel One Client ID is missing — please go back');
 
+  _rd.mpin = mpin;
   const btn = document.getElementById('regBtn');
   btn.disabled = true;
   btn.innerHTML = '<div class="spin"></div> Creating account…';
 
   try {
-    const body = {
-      name:             _rd.name,
-      mobile:           _rd.mobile,
-      mpin:             _rd.mpin,
-      broker_client_id: _rd.angelId,  // always present — mandatory
-    };
-
     const res  = await apiFetch(`${API}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        otp_token:        _rd.otp_token,
+        name:             _rd.name,
+        mobile:           _rd.mobile,
+        mpin:             _rd.mpin,
+        broker_client_id: _rd.angelId,
+      }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Registration failed');
 
     saveSession(data.token, data.user);
-
     const firstName = (_rd.name || 'Trader').split(' ')[0];
     const title = document.getElementById('regOkTitle');
     const msg   = document.getElementById('regOkMsg');
@@ -1063,7 +1140,7 @@ async function doRegister() {
   } catch (e) {
     let errMsg = e.message || 'Connection failed';
     if (errMsg === 'Failed to fetch' || errMsg.includes('fetch'))
-      errMsg = 'Cannot reach OptionLab server. Check your internet and try again.';
+      errMsg = 'Cannot reach server. Check your internet and try again.';
     showErr('regErr', errMsg);
     btn.disabled = false;
     btn.innerHTML = '✓ Create Account';
@@ -1071,7 +1148,7 @@ async function doRegister() {
 }
 
 // ════════════════════════════════════════════════════════
-// KEYBOARD: Enter on login triggers login
+// KEYBOARD + URL PARAM
 // ════════════════════════════════════════════════════════
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('loginForm').classList.contains('on')) {
@@ -1079,9 +1156,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ════════════════════════════════════════════════════════
-// CHECK URL PARAM: ?tab=register
-// ════════════════════════════════════════════════════════
 (function checkUrlParam() {
   const p = new URLSearchParams(window.location.search);
   if (p.get('tab') === 'register') switchTab('register');
