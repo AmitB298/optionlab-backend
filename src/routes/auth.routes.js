@@ -1,13 +1,11 @@
 /**
- * routes/auth.routes.js  [v4.0 — Angel One ID mandatory + immutable]
+ * routes/auth.routes.js  [v5.0 — OTP verification required before registration]
  *
- * CHANGES FROM v3:
- *  1. broker_client_id is now MANDATORY at registration — no optional path
- *  2. broker_client_id validated via V.angelOneId() — 6-10 alphanumeric, auto-uppercase
- *  3. broker_client_id stored in BOTH users.broker_client_id AND angel_credentials.client_code
- *  4. broker_client_id is NEVER updated in any route — immutability enforced here + DB trigger
- *  5. mpin validator updated to 4-6 digits (web=6, Electron=4)
- *  6. Duplicate broker_client_id check added — one Angel One ID per account
+ * CHANGES FROM v4:
+ *  1. POST /register now requires otp_token in body
+ *  2. otp_token is a JWT issued by /api/otp/verify — proves mobile was verified
+ *  3. otp_token mobile must match registration mobile — prevents token reuse
+ *  4. All other logic unchanged
  */
 
 'use strict';
@@ -22,7 +20,6 @@ const pool                 = require('../db/pool');
 const V                    = require('../lib/validate');
 const { userLoginLimiter } = require('../lib/rateLimit');
 
-// Constant-time dummy hash — prevents user enumeration via timing
 const DUMMY_HASH = '$2a$12$invalidhashXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 
 function issueJWT(user) {
@@ -48,12 +45,10 @@ async function handleLogin(req, res) {
       [mobileResult.value]
     );
 
-    // Always run bcrypt — constant time whether user exists or not
     const hash   = rows.length ? rows[0].mpin_hash : DUMMY_HASH;
     const mpinOk = await bcrypt.compare(mpinResult.value, hash);
 
     if (!rows.length || !mpinOk || !rows[0].is_active) {
-      // Track failed attempts for existing users
       if (rows.length) {
         pool.query(`
           INSERT INTO user_activity (user_id, failed_logins, last_failed_at)
@@ -69,7 +64,6 @@ async function handleLogin(req, res) {
     const user  = rows[0];
     const token = issueJWT(user);
 
-    // Track successful login
     pool.query(`
       INSERT INTO user_activity (user_id, total_logins, last_login_at, last_login_ip)
       VALUES ($1, 1, NOW(), $2)
@@ -94,25 +88,47 @@ async function handleLogin(req, res) {
 // ─── POST /api/auth/login ─────────────────────────────────────────────────────
 router.post('/login', userLoginLimiter, handleLogin);
 
-// ─── POST /api/auth/login-mpin (frontend calls this) ─────────────────────────
+// ─── POST /api/auth/login-mpin ────────────────────────────────────────────────
 router.post('/login-mpin', userLoginLimiter, handleLogin);
 
 // ─── POST /api/auth/register ──────────────────────────────────────────────────
 router.post('/register', userLoginLimiter, async (req, res) => {
 
-  // ── Validate all fields ──────────────────────────────────────────────────
-  const nameResult     = V.text(req.body?.name, { maxLen: 100, required: true });
-  const mobileResult   = V.mobile(req.body?.mobile);
-  const mpinResult     = V.mpin(req.body?.mpin);
-  const angelIdResult  = V.angelOneId(req.body?.broker_client_id);  // MANDATORY
+  // ── Step 1: Validate otp_token — proves mobile was OTP-verified ───────────
+  const rawOtpToken = req.body?.otp_token;
+  if (!rawOtpToken) {
+    return res.status(400).json({ error: 'Mobile verification required. Please verify your mobile first.' });
+  }
+
+  let otpPayload;
+  try {
+    otpPayload = jwt.verify(rawOtpToken, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+  } catch (e) {
+    return res.status(400).json({ error: 'Mobile verification expired. Please verify your mobile again.' });
+  }
+
+  if (otpPayload.purpose !== 'registration' || !otpPayload.verified) {
+    return res.status(400).json({ error: 'Invalid verification token.' });
+  }
+
+  // ── Step 2: Validate all registration fields ──────────────────────────────
+  const nameResult    = V.text(req.body?.name, { maxLen: 100, required: true });
+  const mobileResult  = V.mobile(req.body?.mobile);
+  const mpinResult    = V.mpin(req.body?.mpin);
+  const angelIdResult = V.angelOneId(req.body?.broker_client_id);
 
   if (!nameResult.ok)    return res.status(400).json({ error: nameResult.error || 'Invalid name' });
   if (!mobileResult.ok)  return res.status(400).json({ error: 'Invalid mobile number' });
   if (!mpinResult.ok)    return res.status(400).json({ error: mpinResult.error });
   if (!angelIdResult.ok) return res.status(400).json({ error: angelIdResult.error });
 
+  // ── Step 3: otp_token mobile must match registration mobile ───────────────
+  if (otpPayload.mobile !== mobileResult.value) {
+    return res.status(400).json({ error: 'Mobile number does not match verified number. Please verify again.' });
+  }
+
   try {
-    // ── Check mobile already registered ────────────────────────────────────
+    // ── Check mobile already registered ──────────────────────────────────────
     const { rows: existingMobile } = await pool.query(
       `SELECT id FROM users WHERE mobile = $1`,
       [mobileResult.value]
@@ -121,7 +137,7 @@ router.post('/register', userLoginLimiter, async (req, res) => {
       return res.status(409).json({ error: 'Mobile number already registered' });
     }
 
-    // ── Check Angel One ID already registered (one ID per account) ─────────
+    // ── Check Angel One ID already registered ─────────────────────────────────
     const { rows: existingAngel } = await pool.query(
       `SELECT id FROM users WHERE broker_client_id = $1`,
       [angelIdResult.value]
@@ -130,13 +146,10 @@ router.post('/register', userLoginLimiter, async (req, res) => {
       return res.status(409).json({ error: 'This Angel One Client ID is already linked to an account' });
     }
 
-    // ── Hash MPIN ───────────────────────────────────────────────────────────
+    // ── Hash MPIN ─────────────────────────────────────────────────────────────
     const mpinHash = await bcrypt.hash(mpinResult.value, 12);
 
-    // ── Insert user — broker_client_id stored permanently ──────────────────
-    // NOTE: broker_client_id column must be NOT NULL in schema.
-    // A DB trigger (trg_lock_broker_client_id) prevents any future UPDATE
-    // from changing this column. See migration below.
+    // ── Insert user ───────────────────────────────────────────────────────────
     const { rows } = await pool.query(
       `INSERT INTO users (name, mobile, mpin_hash, broker_client_id, plan, is_active, role, created_at)
        VALUES ($1, $2, $3, $4, 'FREE', true, 'user', NOW())
@@ -145,14 +158,14 @@ router.post('/register', userLoginLimiter, async (req, res) => {
         nameResult.value.trim(),
         mobileResult.value,
         mpinHash,
-        angelIdResult.value,   // always uppercase, always present
+        angelIdResult.value,
       ]
     );
 
     const user  = rows[0];
     const token = issueJWT(user);
 
-    // ── Seed user_activity row ──────────────────────────────────────────────
+    // ── Seed user_activity ────────────────────────────────────────────────────
     pool.query(
       `INSERT INTO user_activity (user_id, total_logins, last_login_at, last_login_ip)
        VALUES ($1, 1, NOW(), $2)
@@ -160,23 +173,18 @@ router.post('/register', userLoginLimiter, async (req, res) => {
       [user.id, req.ip]
     ).catch(() => {});
 
-    // ── Mirror into angel_credentials for SmartAPI use ──────────────────────
-    // api_key and totp_secret are optional at registration — user adds them in Setup.
-    // client_code is always written here since we just validated it.
-    const apiKey     = typeof req.body?.api_key === 'string'
-      ? req.body.api_key.trim() : null;
-    const totpSecret = typeof req.body?.totp_secret === 'string'
-      ? req.body.totp_secret.trim() : null;
+    // ── Mirror into angel_credentials ─────────────────────────────────────────
+    const apiKey     = typeof req.body?.api_key     === 'string' ? req.body.api_key.trim()     : null;
+    const totpSecret = typeof req.body?.totp_secret === 'string' ? req.body.totp_secret.trim() : null;
 
     pool.query(
-      `INSERT INTO angel_credentials
-         (user_id, client_code, api_key, totp_secret)
+      `INSERT INTO angel_credentials (user_id, client_code, api_key, totp_secret)
        VALUES ($1, $2, $3, $4)
        ON CONFLICT (user_id) DO UPDATE
-         SET client_code  = EXCLUDED.client_code,
-             api_key      = COALESCE(EXCLUDED.api_key, angel_credentials.api_key),
-             totp_secret  = COALESCE(EXCLUDED.totp_secret, angel_credentials.totp_secret),
-             updated_at   = NOW()`,
+         SET client_code = EXCLUDED.client_code,
+             api_key     = COALESCE(EXCLUDED.api_key,     angel_credentials.api_key),
+             totp_secret = COALESCE(EXCLUDED.totp_secret, angel_credentials.totp_secret),
+             updated_at  = NOW()`,
       [user.id, angelIdResult.value, apiKey, totpSecret]
     ).catch(() => {});
 
@@ -199,7 +207,6 @@ router.post('/register', userLoginLimiter, async (req, res) => {
 });
 
 // ─── GET /api/auth/validate ───────────────────────────────────────────────────
-// Validate a stored JWT — used by Electron on launch
 router.get('/validate', async (req, res) => {
   const header = req.headers['authorization'];
   if (!header || !header.startsWith('Bearer ')) {
@@ -225,35 +232,5 @@ router.get('/validate', async (req, res) => {
 router.post('/logout', (req, res) => {
   return res.json({ success: true });
 });
-
-// ─────────────────────────────────────────────────────────────────────────────
-// REQUIRED DATABASE MIGRATION
-// Run this once against your Railway PostgreSQL before deploying this file.
-//
-// -- 1. Add broker_client_id column to users (if not already present)
-// ALTER TABLE users ADD COLUMN IF NOT EXISTS broker_client_id VARCHAR(10);
-//
-// -- 2. Make it NOT NULL (after backfilling any existing rows if needed)
-// ALTER TABLE users ALTER COLUMN broker_client_id SET NOT NULL;
-//
-// -- 3. Unique constraint — one Angel One ID per account
-// CREATE UNIQUE INDEX IF NOT EXISTS uq_users_broker_client_id
-//   ON users (broker_client_id);
-//
-// -- 4. Immutability trigger — prevents any UPDATE from changing the column
-// CREATE OR REPLACE FUNCTION lock_broker_client_id()
-// RETURNS TRIGGER AS $$
-// BEGIN
-//   IF OLD.broker_client_id IS DISTINCT FROM NEW.broker_client_id THEN
-//     RAISE EXCEPTION 'broker_client_id cannot be changed after registration';
-//   END IF;
-//   RETURN NEW;
-// END;
-// $$ LANGUAGE plpgsql;
-//
-// CREATE TRIGGER trg_lock_broker_client_id
-// BEFORE UPDATE ON users
-// FOR EACH ROW EXECUTE FUNCTION lock_broker_client_id();
-// ─────────────────────────────────────────────────────────────────────────────
 
 module.exports = router;
