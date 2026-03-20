@@ -1,25 +1,20 @@
 /**
- * middleware/admin.middleware.js  [FIXED v2.1]
+ * middleware/admin.middleware.js  [FIXED v2.2]
  *
  * FIXES:
- *  1. Shared pool from config/db.js — no more standalone new Pool()
- *     (was adding surplus connections, undoing the v2.1 pool consolidation)
- *  2. JWT_SECRET fallback 'optionlab-secret-2024' removed — now throws on startup
- *     if JWT_SECRET env var is not set in Railway
- *  3. req.admin now exposes adminId (not id) — matches what admin.routes.js reads
- *     everywhere: req.admin.adminId. Previously req.admin.adminId was undefined
- *     on every single request, silently breaking self-deactivation guard,
- *     subscription history audit, bulk deactivate self-guard, announcement created_by.
+ *  1. require('../db') — correct path (no config/ folder exists in repo)
+ *  2. JWT_SECRET throws on startup if env var not set
+ *  3. req.admin exposes adminId (not id) — matches admin.routes.js everywhere
  */
 'use strict';
 
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// FIX #1 — shared pool, not a new one just for this file
-const pool = require('../config/db');
+// FIXED PATH — src/db/ exists, src/config/db does NOT
+const pool = require('../db');
 
-// FIX #2 — fail hard at startup if JWT_SECRET is missing
+// Fail hard at startup if JWT_SECRET is missing
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
   throw new Error('[admin.middleware] JWT_SECRET environment variable is not set.');
@@ -42,7 +37,6 @@ async function requireAdmin(req, res, next) {
   const token = header.slice(7).trim();
   let decoded;
   try {
-    // FIX #2 — JWT_SECRET variable (validated above), no fallback string
     decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
   } catch (err) {
     return res.status(401).json({ success: false, message: 'Invalid or expired session' });
@@ -61,10 +55,8 @@ async function requireAdmin(req, res, next) {
       return res.status(403).json({ success: false, message: 'Admin account inactive or not found' });
     }
 
-    // FIX #3 — expose adminId (not id) so admin.routes.js req.admin.adminId works
-    // Previously: { id: rows[0].id, ... } — req.admin.adminId was undefined everywhere
     req.admin = Object.freeze({
-      adminId: rows[0].id,      // ← FIX: was `id: rows[0].id`
+      adminId: rows[0].id,
       name:    rows[0].name,
       mobile:  rows[0].mobile,
       role:    'admin',
@@ -86,11 +78,11 @@ function sanitiseBody(body) {
   if (!body || typeof body !== 'object') return {};
   const safe = {};
   for (const [k, v] of Object.entries(body)) {
-    if (SENSITIVE_FIELDS.has(k.toLowerCase())) safe[k] = '[REDACTED]';
-    else if (typeof v === 'string')                safe[k] = v.slice(0, 500);
+    if (SENSITIVE_FIELDS.has(k.toLowerCase()))        safe[k] = '[REDACTED]';
+    else if (typeof v === 'string')                   safe[k] = v.slice(0, 500);
     else if (typeof v === 'number' || typeof v === 'boolean') safe[k] = v;
-    else if (Array.isArray(v))                     safe[k] = '[Array(' + v.length + ')]';
-    else                                           safe[k] = '[Object]';
+    else if (Array.isArray(v))                        safe[k] = '[Array(' + v.length + ')]';
+    else                                              safe[k] = '[Object]';
   }
   return safe;
 }
@@ -111,7 +103,7 @@ function auditLog(action) {
            (admin_id, action, target_user_id, payload, success, ip_address, user_agent)
          VALUES ($1,$2,$3,$4,$5,$6,$7)`,
         [
-          req.admin?.adminId || null,   // FIX #3 — was req.admin?.id (always null)
+          req.admin?.adminId || null,
           action,
           targetId,
           JSON.stringify({
