@@ -1,21 +1,10 @@
 /**
- * routes/admin.routes.js  [HARDENED v2]
+ * routes/admin.routes.js  [HARDENED v2.1]
  *
- * All bugs fixed:
- *  1. Every req.body field validated through validate.js before touching DB
- *  2. userId params cast to integer — no string injection possible
- *  3. sort/dir columns whitelisted — ORDER BY injection fixed
- *  4. plan validated against whitelist on bulk set_plan
- *  5. is_active coerced to boolean — was truthy-checked only before
- *  6. mpin reset: type guard + digit-only check
- *  7. Announcement fields validated — type/target whitelisted
- *  8. Internal DB errors never leak to client
- *  9. DB re-verification of admin on every request (in middleware)
- * 10. All userId params treated as integers, never raw strings in queries
- * 11. flag_reason length-limited and sanitised
- * 12. notes length-limited
- * 13. auditLog sanitises sensitive fields before writing
- * 14. Stale /auth/login stub removed
+ * FIXED:
+ *  - Removed standalone `new Pool()` — now uses shared pool from ../db/pool
+ *    (was opening surplus connections on every require)
+ *  - All other hardening from v2 kept intact
  */
 
 'use strict';
@@ -23,13 +12,11 @@
 const express  = require('express');
 const router   = express.Router();
 const bcrypt   = require('bcryptjs');
-const { Pool } = require('pg');
 require('dotenv').config();
 
 const { requireAdmin, auditLog, adminSecurityHeaders } = require('../middleware/admin.middleware');
-const V = require('../lib/validate');
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const V    = require('../lib/validate');
+const pool = require('../db/pool');   // FIXED: shared pool, not new Pool()
 
 // ─── Security headers + auth on every route ──────────────────────────────────
 router.use(adminSecurityHeaders);
@@ -38,7 +25,7 @@ router.use(requireAdmin);
 // ─── Shared error handler ────────────────────────────────────────────────────
 function dbError(res, err) {
   console.error('[AdminRoutes] DB error:', err.message);
-  return res.status(500).json({ error: 'Database operation failed' }); // never leak err.message
+  return res.status(500).json({ error: 'Database operation failed' });
 }
 
 // ─── Helper: validate userId param ───────────────────────────────────────────
@@ -102,7 +89,6 @@ router.get('/stats', async (req, res) => {
 
 router.get('/users', async (req, res) => {
   try {
-    // All query params validated and sanitised
     const pg       = V.page(req.query.page);
     const lim      = V.limit(req.query.limit, 100);
     const offset   = (pg.value - 1) * lim.value;
@@ -110,11 +96,9 @@ router.get('/users', async (req, res) => {
     const planVal  = V.plan(req.query.plan);
     const flagged  = req.query.flagged === 'true';
 
-    // STATUS: only allow explicit whitelisted values
     const statusRaw = req.query.status;
     const status = ['active', 'inactive'].includes(statusRaw) ? statusRaw : '';
 
-    // SORT: whitelist prevents ORDER BY injection
     const SORT_COLS = { created_at: 'u', last_login_at: 'ua', name: 'u', mobile: 'u' };
     const sortKey   = V.sortColumn(req.query.sort, Object.keys(SORT_COLS), 'created_at');
     const sortDir   = V.sortDir(req.query.dir);
@@ -156,7 +140,6 @@ router.get('/users', async (req, res) => {
       LIMIT $${params.length - 1} OFFSET $${params.length}
     `, params);
 
-    // Count query with same filters
     const countParams = params.slice(0, -2);
     const { rows: countRows } = await pool.query(
       `SELECT COUNT(*) FROM users u
@@ -223,11 +206,8 @@ router.get('/users/:userId', async (req, res) => {
 
     if (!userRes.rows.length) return res.status(404).json({ error: 'User not found' });
 
-    // BUG FIX: mpin_hash must never leave server — explicitly removed
     const user = { ...userRes.rows[0] };
     delete user.mpin_hash;
-
-    // Also remove any other fields that must stay server-side
     delete user.password;
 
     res.json({
@@ -243,26 +223,22 @@ router.get('/users/:userId', async (req, res) => {
 // USER ACTIONS
 // ════════════════════════════════════════════════════════════════════════════
 
-// PATCH /admin/api/users/:userId/status
 router.patch('/users/:userId/status', auditLog('TOGGLE_USER_STATUS'), async (req, res) => {
   const uid = parseUserId(req, res);
   if (!uid) return;
 
-  // BUG FIX: is_active was truthy-checked — now strictly coerced to boolean
   const activeResult = V.bool(req.body?.is_active);
   if (!activeResult.ok) return res.status(400).json({ error: 'is_active must be true or false' });
   const isActive = activeResult.value;
 
   try {
-    // Prevent deactivating self
-    if (!isActive && uid === req.admin.id) {
+    if (!isActive && uid === req.admin.adminId) {
       return res.status(400).json({ error: 'You cannot deactivate your own admin account' });
     }
 
     await pool.query(`UPDATE users SET is_active = $1 WHERE id = $2`, [isActive, uid]);
 
     if (!isActive) {
-      // Force logout all sessions immediately
       await pool.query(`DELETE FROM remember_tokens WHERE user_id = $1`, [uid]);
     }
 
@@ -270,7 +246,6 @@ router.patch('/users/:userId/status', auditLog('TOGGLE_USER_STATUS'), async (req
   } catch (err) { return dbError(res, err); }
 });
 
-// PATCH /admin/api/users/:userId/plan
 router.patch('/users/:userId/plan', auditLog('CHANGE_USER_PLAN'), async (req, res) => {
   const uid = parseUserId(req, res);
   if (!uid) return;
@@ -295,7 +270,7 @@ router.patch('/users/:userId/plan', auditLog('CHANGE_USER_PLAN'), async (req, re
       `INSERT INTO subscription_history
          (user_id, plan_from, plan_to, changed_by, reason, amount, payment_ref)
        VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-      [uid, oldPlan, planResult.value, req.admin.id,
+      [uid, oldPlan, planResult.value, req.admin.adminId,
        reasonResult.value, amtResult.value, refResult.value]
     );
 
@@ -303,22 +278,18 @@ router.patch('/users/:userId/plan', auditLog('CHANGE_USER_PLAN'), async (req, re
   } catch (err) { return dbError(res, err); }
 });
 
-// POST /admin/api/users/:userId/reset-mpin
 router.post('/users/:userId/reset-mpin', auditLog('RESET_USER_MPIN'), async (req, res) => {
   const uid = parseUserId(req, res);
   if (!uid) return;
 
-  // BUG FIX: String(1234) === '1234' passed old check — now type-guarded
   const mpinResult = V.mpin(req.body?.new_mpin);
   if (!mpinResult.ok) {
     return res.status(400).json({ error: 'new_mpin must be a 4-digit string' });
   }
 
   try {
-    // Cost 12 — deliberate slowness deters offline brute force
     const hash = await bcrypt.hash(mpinResult.value, 12);
     await pool.query(`UPDATE users SET mpin_hash = $1 WHERE id = $2`, [hash, uid]);
-    // Force re-login everywhere
     await pool.query(`DELETE FROM remember_tokens WHERE user_id = $1`, [uid]);
     await pool.query(`UPDATE trusted_devices SET is_trusted = false WHERE user_id = $1`, [uid]);
 
@@ -326,7 +297,6 @@ router.post('/users/:userId/reset-mpin', auditLog('RESET_USER_MPIN'), async (req
   } catch (err) { return dbError(res, err); }
 });
 
-// POST /admin/api/users/:userId/force-logout
 router.post('/users/:userId/force-logout', auditLog('FORCE_LOGOUT'), async (req, res) => {
   const uid = parseUserId(req, res);
   if (!uid) return;
@@ -338,12 +308,10 @@ router.post('/users/:userId/force-logout', auditLog('FORCE_LOGOUT'), async (req,
   } catch (err) { return dbError(res, err); }
 });
 
-// DELETE /admin/api/users/:userId/devices/:deviceId
 router.delete('/users/:userId/devices/:deviceId', auditLog('REVOKE_DEVICE'), async (req, res) => {
   const uid = parseUserId(req, res);
   if (!uid) return;
 
-  // BUG FIX: deviceId also needs to be a valid integer
   const devResult = V.userId(req.params.deviceId);
   if (!devResult.ok) return res.status(400).json({ error: 'Invalid device ID' });
 
@@ -357,7 +325,6 @@ router.delete('/users/:userId/devices/:deviceId', auditLog('REVOKE_DEVICE'), asy
   } catch (err) { return dbError(res, err); }
 });
 
-// PATCH /admin/api/users/:userId/flag
 router.patch('/users/:userId/flag', auditLog('FLAG_USER'), async (req, res) => {
   const uid = parseUserId(req, res);
   if (!uid) return;
@@ -365,7 +332,6 @@ router.patch('/users/:userId/flag', auditLog('FLAG_USER'), async (req, res) => {
   const flaggedResult = V.bool(req.body?.flagged);
   if (!flaggedResult.ok) return res.status(400).json({ error: 'flagged must be true or false' });
 
-  // BUG FIX: flag_reason length-limited and sanitised — was raw string before
   const reasonResult = V.text(req.body?.flag_reason, { maxLen: 300 });
   if (!reasonResult.ok) return res.status(400).json({ error: reasonResult.error });
 
@@ -378,12 +344,10 @@ router.patch('/users/:userId/flag', auditLog('FLAG_USER'), async (req, res) => {
   } catch (err) { return dbError(res, err); }
 });
 
-// PATCH /admin/api/users/:userId/notes
 router.patch('/users/:userId/notes', auditLog('UPDATE_NOTES'), async (req, res) => {
   const uid = parseUserId(req, res);
   if (!uid) return;
 
-  // BUG FIX: notes length-limited — was uncapped before (DoS via huge payload)
   const notesResult = V.text(req.body?.notes, { maxLen: 2000 });
   if (!notesResult.ok) return res.status(400).json({ error: notesResult.error });
 
@@ -404,7 +368,7 @@ router.post('/users/bulk-action', auditLog('BULK_ACTION'), async (req, res) => {
   if (!idsResult.ok)    return res.status(400).json({ error: idsResult.error });
   if (!actionResult.ok) return res.status(400).json({ error: actionResult.error });
 
-  const ids    = idsResult.value;   // already cast to integer[]
+  const ids    = idsResult.value;
   const action = actionResult.value;
 
   try {
@@ -415,15 +379,13 @@ router.post('/users/bulk-action', auditLog('BULK_ACTION'), async (req, res) => {
       message = `${ids.length} user(s) activated`;
 
     } else if (action === 'deactivate') {
-      // Prevent self-deactivation in bulk
-      const safeIds = ids.filter(id => id !== req.admin.id);
+      const safeIds = ids.filter(id => id !== req.admin.adminId);
       if (!safeIds.length) return res.status(400).json({ error: 'Cannot deactivate yourself' });
       await pool.query(`UPDATE users SET is_active = false WHERE id = ANY($1::int[])`, [safeIds]);
       await pool.query(`DELETE FROM remember_tokens WHERE user_id = ANY($1::int[])`, [safeIds]);
       message = `${safeIds.length} user(s) deactivated`;
 
     } else if (action === 'set_plan') {
-      // BUG FIX: plan from payload.plan was unvalidated before
       const planResult = V.plan(req.body?.payload?.plan);
       if (!planResult.ok) return res.status(400).json({ error: planResult.error });
       await pool.query(`UPDATE users SET plan = $1 WHERE id = ANY($2::int[])`,
@@ -446,14 +408,14 @@ router.post('/users/bulk-action', auditLog('BULK_ACTION'), async (req, res) => {
 
 router.get('/audit', async (req, res) => {
   try {
-    const pg    = V.page(req.query.page);
-    const lim   = V.limit(req.query.limit, 50);
+    const pg     = V.page(req.query.page);
+    const lim    = V.limit(req.query.limit, 50);
     const offset = (pg.value - 1) * lim.value;
 
     const { rows } = await pool.query(`
       SELECT al.id, al.action, al.success, al.ip_address, al.created_at,
-             u.name  AS admin_name,
-             t.name  AS target_name,
+             u.name   AS admin_name,
+             t.name   AS target_name,
              t.mobile AS target_mobile
       FROM admin_audit_log al
       LEFT JOIN admins u ON u.id = al.admin_id
@@ -462,7 +424,6 @@ router.get('/audit', async (req, res) => {
       LIMIT $1 OFFSET $2
     `, [lim.value, offset]);
 
-    // BUG FIX: payload column removed from response — can contain sensitive debug info
     return res.json({ logs: rows });
   } catch (err) { return dbError(res, err); }
 });
@@ -482,11 +443,10 @@ router.get('/announcements', async (req, res) => {
 });
 
 router.post('/announcements', auditLog('CREATE_ANNOUNCEMENT'), async (req, res) => {
-  // BUG FIX: type and target were unvalidated — now whitelisted
-  const titleResult  = V.text(req.body?.title,  { maxLen: 255, required: true });
-  const bodyResult   = V.text(req.body?.body,   { maxLen: 5000, required: true });
-  const typeResult   = V.announcementType(req.body?.type);
-  const targetResult = V.announcementTarget(req.body?.target);
+  const titleResult   = V.text(req.body?.title,  { maxLen: 255, required: true });
+  const bodyResult    = V.text(req.body?.body,   { maxLen: 5000, required: true });
+  const typeResult    = V.announcementType(req.body?.type);
+  const targetResult  = V.announcementTarget(req.body?.target);
   const expiresResult = V.isoDatetime(req.body?.expires_at);
 
   if (!titleResult.ok)   return res.status(400).json({ error: titleResult.error });
@@ -498,14 +458,13 @@ router.post('/announcements', auditLog('CREATE_ANNOUNCEMENT'), async (req, res) 
       `INSERT INTO admin_announcements (title, body, type, target, created_by, expires_at)
        VALUES ($1,$2,$3,$4,$5,$6) RETURNING id, title, type, target, is_active, created_at`,
       [titleResult.value, bodyResult.value, typeResult.value,
-       targetResult.value, req.admin.id, expiresResult.value]
+       targetResult.value, req.admin.adminId, expiresResult.value]
     );
     return res.json({ success: true, announcement: rows[0] });
   } catch (err) { return dbError(res, err); }
 });
 
 router.patch('/announcements/:id', auditLog('TOGGLE_ANNOUNCEMENT'), async (req, res) => {
-  // BUG FIX: id was unvalidated
   const idResult = V.userId(req.params.id);
   if (!idResult.ok) return res.status(400).json({ error: 'Invalid announcement ID' });
 
