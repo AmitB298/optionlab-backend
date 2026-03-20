@@ -11,17 +11,17 @@ const PORT = process.env.PORT || 3000;
 
 // ─── Security headers ────────────────────────────────────────────────────────
 app.use(helmet({
-  contentSecurityPolicy: false,  // allow inline scripts in admin.html
+  contentSecurityPolicy: false,
 }));
 
-// ─── CORS: open to all origins (Railway + any custom domain) ────────────────
+// ─── CORS ────────────────────────────────────────────────────────────────────
 app.use(cors({ origin: true, credentials: true }));
 
 // ─── Body parsing ────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ─── Trust Railway's proxy (needed for real IPs in rate limiters) ────────────
+// ─── Trust Railway's proxy ───────────────────────────────────────────────────
 app.set('trust proxy', 1);
 
 // ─── Health check ────────────────────────────────────────────────────────────
@@ -40,69 +40,73 @@ const { adminLogin, adminLogout, adminLoginLimiter } = require('./routes/admin.a
 const adminRoutes  = require('./routes/admin.routes');
 const exportRoutes = require('./routes/export.routes');
 
-// Admin auth (public — no requireAdmin)
+// Admin auth (public)
 app.post('/api/admin/login',  adminLoginLimiter, adminLogin);
 app.post('/api/admin/logout', adminLogout);
 
 // Admin protected routes
 app.use('/api/admin', adminRoutes);
 
-// Export routes (also protected — admin.routes.js applies requireAdmin internally)
+// Export routes
 app.use('/api/admin/export', exportRoutes);
 
-// Angel One routes (if they exist)
+// ─── Optional routes — log errors instead of swallowing them ─────────────────
+
 try {
   const angelRoutes = require('./routes/angel.routes');
   app.use('/api/angel', angelRoutes);
-} catch (_) { /* optional — skip if not present */ }
+  console.log('[Routes] angel.routes loaded');
+} catch (err) { console.error('[Routes] angel.routes FAILED:', err.message); }
 
-// Auth routes for users
 try {
   const authRoutes = require('./routes/auth.routes');
   app.use('/api/auth', authRoutes);
-} catch (_) { /* optional */ }
+  console.log('[Routes] auth.routes loaded');
+} catch (err) { console.error('[Routes] auth.routes FAILED:', err.message); }
 
-// User routes
 try {
   const userRoutes = require('./routes/user.routes');
   app.use('/api/user', userRoutes);
-} catch (_) { /* optional */ }
+  console.log('[Routes] user.routes loaded');
+} catch (err) { console.error('[Routes] user.routes FAILED:', err.message); }
 
-// Device routes
 try {
   const deviceRoutes = require('./routes/device.routes');
   app.use('/api/device', deviceRoutes);
-} catch (_) { /* optional */ }
+  console.log('[Routes] device.routes loaded');
+} catch (err) { console.error('[Routes] device.routes FAILED:', err.message); }
 
-
-// Jobber Pro heartbeat routes
 try {
   const jobberRoutes = require('./routes/jobber.routes');
+  app.use('/api/jobber', jobberRoutes);
+  console.log('[Routes] jobber.routes loaded');
+} catch (err) { console.error('[Routes] jobber.routes FAILED:', err.message); }
 
-} catch (_) { /* optional */ }
-// ─── Static files (admin.html etc) ───────────────────────────────────────────
+// ─── Static files ─────────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// BLOG ROUTES START
-app.use('/api/blog', require('./blog/routes'));
-const { sitemapHandler, rssHandler } = require('./blog/seo');
-app.get('/sitemap.xml', sitemapHandler);
-app.get('/rss.xml',     rssHandler);
-app.get('/blog',       (req, res) => res.sendFile('blog/index.html', { root: path.join(__dirname, '../public') }));
-app.get('/blog/:slug', (req, res) => res.sendFile('blog/post.html',  { root: path.join(__dirname, '../public') }));
-// BLOG ROUTES END
+// ─── Blog routes ──────────────────────────────────────────────────────────────
+try {
+  app.use('/api/blog', require('./blog/routes'));
+  const { sitemapHandler, rssHandler } = require('./blog/seo');
+  app.get('/sitemap.xml', sitemapHandler);
+  app.get('/rss.xml',     rssHandler);
+  app.get('/blog',       (req, res) => res.sendFile('blog/index.html', { root: path.join(__dirname, '../public') }));
+  app.get('/blog/:slug', (req, res) => res.sendFile('blog/post.html',  { root: path.join(__dirname, '../public') }));
+  console.log('[Routes] blog routes loaded');
+} catch (err) { console.error('[Routes] blog routes FAILED:', err.message); }
 
-// Serve admin.html for /admin
+// ─── Admin HTML ───────────────────────────────────────────────────────────────
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
 });
 
-// ─── 404 for unknown API routes ──────────────────────────────────────────────
+// ─── 404 for unknown API routes ───────────────────────────────────────────────
 app.use('/api/*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-// ─── Global error handler ────────────────────────────────────────────────────
+// ─── Global error handler ─────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error('[Error]', err.message);
   res.status(err.status || 500).json({ success: false, message: 'Internal server error' });
@@ -110,7 +114,6 @@ app.use((err, req, res, next) => {
 
 // ─── Start + run migrations ───────────────────────────────────────────────────
 async function start() {
-  // Run DB migrations automatically on every deploy
   try {
     const { Pool } = require('pg');
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -276,7 +279,6 @@ async function start() {
         } catch (err) {
           await client.query('ROLLBACK');
           console.error(`  ✗  ${m.id} — FAILED: ${err.message}`);
-          // Don't crash startup for migration errors (table might already exist)
         }
       }
       console.log(`Migrations: ${ran} new migration(s) ran.`);
@@ -286,7 +288,6 @@ async function start() {
     }
   } catch (err) {
     console.error('[Startup] Migration error:', err.message);
-    // Don't exit — let the server start even if migrations fail
   }
 
   app.listen(PORT, () => {
