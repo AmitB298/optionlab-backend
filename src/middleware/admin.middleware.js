@@ -1,8 +1,8 @@
 /**
- * middleware/admin.middleware.js  [FIXED v2.2]
+ * middleware/admin.middleware.js  [FIXED v2.3]
  *
  * FIXES:
- *  1. require('../db') — correct path (no config/ folder exists in repo)
+ *  1. require('../db/pool') — correct path (src/db/pool.js exists)
  *  2. JWT_SECRET throws on startup if env var not set
  *  3. req.admin exposes adminId (not id) — matches admin.routes.js everywhere
  */
@@ -11,8 +11,8 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// FIXED PATH — src/db/ exists, src/config/db does NOT
-const pool = require('../db');
+// CORRECT PATH: src/db/pool.js
+const pool = require('../db/pool');
 
 // Fail hard at startup if JWT_SECRET is missing
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -78,11 +78,11 @@ function sanitiseBody(body) {
   if (!body || typeof body !== 'object') return {};
   const safe = {};
   for (const [k, v] of Object.entries(body)) {
-    if (SENSITIVE_FIELDS.has(k.toLowerCase()))        safe[k] = '[REDACTED]';
-    else if (typeof v === 'string')                   safe[k] = v.slice(0, 500);
+    if (SENSITIVE_FIELDS.has(k.toLowerCase()))                safe[k] = '[REDACTED]';
+    else if (typeof v === 'string')                           safe[k] = v.slice(0, 500);
     else if (typeof v === 'number' || typeof v === 'boolean') safe[k] = v;
-    else if (Array.isArray(v))                        safe[k] = '[Array(' + v.length + ')]';
-    else                                              safe[k] = '[Object]';
+    else if (Array.isArray(v))                                safe[k] = '[Array(' + v.length + ')]';
+    else                                                      safe[k] = '[Object]';
   }
   return safe;
 }
