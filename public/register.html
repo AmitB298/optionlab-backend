@@ -124,7 +124,6 @@ body{
   display:flex;flex-direction:column;
   position:relative;
 }
-/* Subtle top-edge highlight */
 .right::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(249,115,22,.25),transparent);}
 
@@ -184,7 +183,7 @@ body{
 }
 .sc.on{border-color:var(--or);color:var(--or);background:rgba(249,115,22,.12);
   box-shadow:0 0 12px rgba(249,115,22,.2);}
-.sc.dn{border-color:var(--gn);background:var(--gn);color:#fff;border-color:var(--gn);}
+.sc.dn{border-color:var(--gn);background:var(--gn);color:#fff;}
 .sl{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
   color:rgba(255,255,255,.2);margin-left:8px;white-space:nowrap;letter-spacing:.04em;transition:color .3s;}
 .sl.on{color:var(--or);}
@@ -200,6 +199,8 @@ body{
   font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:rgba(255,255,255,.4);margin-bottom:8px;
 }
+/* Required asterisk */
+.req{color:var(--or);margin-left:3px;font-size:13px;line-height:1;}
 .iw{position:relative;}
 .ipfx{
   position:absolute;left:15px;top:50%;transform:translateY(-50%);
@@ -207,11 +208,10 @@ body{
   color:rgba(255,255,255,.3);pointer-events:none;
 }
 
-/* ── INPUTS — the key to making forms look premium ── */
+/* ── INPUTS ── */
 input[type=text],input[type=tel],input[type=password]{
   width:100%;
   padding:14px 16px;
-  /* Much darker bg so it reads as a true input well */
   background:#050811;
   border:1.5px solid rgba(255,255,255,.1);
   border-radius:var(--r2);
@@ -230,10 +230,32 @@ input[type=text]:focus,input[type=tel]:focus,input[type=password]:focus{
   background:#070c15;
 }
 input.pfx{padding-left:46px;}
-input[style*="uppercase"]{text-transform:uppercase;}
+
+/* Angel One ID field — locked state after validation passes */
+input.field-locked{
+  border-color:rgba(16,185,129,.4) !important;
+  color:var(--gn) !important;
+  background:#050f0a !important;
+  cursor:default;
+}
+input.field-error{
+  border-color:rgba(239,68,68,.5) !important;
+  box-shadow:0 0 0 3px rgba(239,68,68,.08) !important;
+}
 
 .ihelp{font-size:12.5px;color:#4e6278;margin-top:7px;line-height:1.45;}
 .ihelp a{color:var(--or);text-decoration:none;font-weight:600;}
+
+/* Angel One ID notice */
+.angel-notice{
+  margin-top:8px;padding:10px 13px;
+  background:rgba(249,115,22,.06);
+  border:1px solid rgba(249,115,22,.18);
+  border-radius:9px;
+  font-size:12.5px;color:#c87941;line-height:1.5;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.angel-notice-icon{flex-shrink:0;font-size:14px;margin-top:1px;}
 
 /* ── MPIN ── */
 .mprow{display:flex;gap:9px;justify-content:center;margin:8px 0 5px;}
@@ -267,6 +289,19 @@ input[style*="uppercase"]{text-transform:uppercase;}
 .sumlbl{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);}
 .sumval{font-size:15px;font-weight:700;color:#f0f5ff;}
+/* Angel One ID in summary — locked badge */
+.sumval-angel{
+  font-size:14px;font-weight:700;
+  color:var(--gn);
+  font-family:'JetBrains Mono',monospace;
+  display:flex;align-items:center;gap:6px;
+}
+.sumval-angel::after{
+  content:'LOCKED';
+  font-size:9px;letter-spacing:.1em;
+  background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);
+  color:var(--gn);padding:2px 6px;border-radius:4px;
+}
 
 /* ── ERROR MSG ── */
 .msg{padding:12px 14px;border-radius:10px;font-size:13px;
@@ -506,19 +541,21 @@ input[style*="uppercase"]{text-transform:uppercase;}
 
       <div class="msg err" id="regErr"></div>
 
-      <!-- STEP 1: Profile -->
+      <!-- STEP 1: Profile + Angel One ID (MANDATORY) -->
       <div id="rStep1">
         <div class="form-head">
           <div class="form-eyebrow">Join OptionLab</div>
           <div class="form-title">Create account</div>
           <div class="form-sub">Your details to get started. Free forever.</div>
         </div>
+
         <div class="ig">
-          <label class="il" for="rName">Full Name</label>
+          <label class="il" for="rName">Full Name <span class="req">*</span></label>
           <input type="text" id="rName" placeholder="Rahul Sharma" autocomplete="name">
         </div>
+
         <div class="ig">
-          <label class="il" for="rMob">Mobile Number</label>
+          <label class="il" for="rMob">Mobile Number <span class="req">*</span></label>
           <div class="iw">
             <span class="ipfx" aria-hidden="true">+91</span>
             <input type="tel" id="rMob" class="pfx"
@@ -527,6 +564,27 @@ input[style*="uppercase"]{text-transform:uppercase;}
               aria-label="Mobile number">
           </div>
         </div>
+
+        <!-- ANGEL ONE CLIENT ID — MANDATORY, IMMUTABLE -->
+        <div class="ig">
+          <label class="il" for="rClientId">
+            Angel One Client ID <span class="req">*</span>
+          </label>
+          <input type="text" id="rClientId"
+            placeholder="e.g. SBH3321"
+            maxlength="10"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            aria-label="Angel One Client ID"
+            oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
+          <div class="angel-notice">
+            <span class="angel-notice-icon">🔒</span>
+            <span>This ID is <strong>permanent</strong> — it cannot be changed after registration. Find it in your Angel One app under Profile → Client ID.</span>
+          </div>
+        </div>
+
         <div class="spacer"></div>
         <button class="btn-main" onclick="toStep2()">Continue →</button>
         <div class="ffoot">Already have an account? <span class="flink" onclick="switchTab('login')">Login</span></div>
@@ -540,7 +598,7 @@ input[style*="uppercase"]{text-transform:uppercase;}
           <div class="form-sub">Your 6-digit login PIN — keep it private.</div>
         </div>
 
-        <label class="il">Create MPIN</label>
+        <label class="il">Create MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinRow" role="group" aria-label="Create MPIN">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
@@ -551,7 +609,7 @@ input[style*="uppercase"]{text-transform:uppercase;}
         </div>
         <div class="mp-hint">Enter any 6 digits</div>
 
-        <label class="il" style="margin-top:20px">Confirm MPIN</label>
+        <label class="il" style="margin-top:20px">Confirm MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinCRow" role="group" aria-label="Confirm MPIN">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric">
@@ -567,21 +625,12 @@ input[style*="uppercase"]{text-transform:uppercase;}
         <button class="btn-back" onclick="toStep1()">← Back</button>
       </div>
 
-      <!-- STEP 3: Broker ID + Confirm -->
+      <!-- STEP 3: Summary + Confirm -->
       <div id="rStep3" style="display:none">
         <div class="form-head">
           <div class="form-eyebrow">Final Step</div>
           <div class="form-title">Almost there</div>
-          <div class="form-sub">Add broker ID and confirm — you're done.</div>
-        </div>
-
-        <div class="ig">
-          <label class="il" for="rClientId">
-            Angel One Client ID
-            <span style="color:var(--tx2);font-weight:400;font-size:10px;text-transform:none;letter-spacing:0"> (optional)</span>
-          </label>
-          <input type="text" id="rClientId" placeholder="e.g. SBHS331" style="text-transform:uppercase" autocomplete="off">
-          <div class="ihelp">You can add this later in Profile → Setup. Needed for live data.</div>
+          <div class="form-sub">Review your details — tap Create Account to confirm.</div>
         </div>
 
         <div class="sumcard">
@@ -594,12 +643,17 @@ input[style*="uppercase"]{text-transform:uppercase;}
             <span class="sumval" id="sumMob">—</span>
           </div>
           <div class="sumrow">
+            <span class="sumlbl">Angel One ID</span>
+            <!-- shown in green with LOCKED badge to signal immutability -->
+            <span class="sumval-angel" id="sumAngel">—</span>
+          </div>
+          <div class="sumrow">
             <span class="sumlbl">MPIN</span>
             <span class="sumval" style="letter-spacing:.15em">••••••</span>
           </div>
           <div class="sumrow">
             <span class="sumlbl">Plan</span>
-            <span class="sumval" style="color:var(--gn)">Jobber Pro — Registered</span>
+            <span class="sumval" style="color:var(--gn)">Free — Registered</span>
           </div>
         </div>
 
@@ -623,17 +677,17 @@ input[style*="uppercase"]{text-transform:uppercase;}
 </div><!-- /shell -->
 </main>
 
-<!-- Server cold-start hint — shows after 4s of waiting -->
+<!-- Server cold-start hint -->
 <div id="server-hint" style="display:none;position:fixed;bottom:20px;left:50%;
   transform:translateX(-50%);z-index:999;
   background:#0d1119;border:1px solid rgba(249,115,22,.35);
   border-radius:10px;padding:11px 18px;
   font-family:'JetBrains Mono',monospace;font-size:12px;
-  color:rgba(249,115,22,.9);display:none;
+  color:rgba(249,115,22,.9);
   align-items:center;gap:9px;
   box-shadow:0 4px 24px rgba(0,0,0,.5)">
   <span style="width:8px;height:8px;border-radius:50%;background:#f97316;
-    animation:pulse-dot 1s ease-in-out infinite;flex-shrink:0"></span>
+    animation:pulse-dot 1s ease-in-out infinite;flex-shrink:0;display:inline-block"></span>
   Waking up server… Railway may take 10–12s on first request
 </div>
 
@@ -643,23 +697,15 @@ input[style*="uppercase"]{text-transform:uppercase;}
 // ════════════════════════════════════════════════════════
 const API = 'https://web-production-8a8e1.up.railway.app';
 
-// Robust fetch wrapper:
-// - 15s timeout (Railway cold starts can take 8-12s on free tier)
-// - Shows "Waking up server..." hint after 4s
-// - Single automatic retry on network failure
+// Robust fetch wrapper — 15s timeout, cold-start hint, single retry
 async function apiFetch(url, opts = {}) {
   const TIMEOUT_MS = 15000;
   const controller  = new AbortController();
   const timeoutId   = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-  // Show hint if server is taking >4s (Railway cold start)
-  let hintTimer = null;
-  const hintEl = document.querySelector('.msg.err.show') ||
-                 document.getElementById('regErr') ||
-                 document.getElementById('loginErr');
-  hintTimer = setTimeout(() => {
+  const hintTimer = setTimeout(() => {
     const hint = document.getElementById('server-hint');
-    if (hint) { hint.style.display = 'flex'; }
+    if (hint) hint.style.display = 'flex';
   }, 4000);
 
   try {
@@ -674,7 +720,6 @@ async function apiFetch(url, opts = {}) {
     clearTimeout(hintTimer);
     const hint = document.getElementById('server-hint');
     if (hint) hint.style.display = 'none';
-    // Single retry after 1.5s
     if (!opts._retry) {
       await new Promise(r => setTimeout(r, 1500));
       return apiFetch(url, { ...opts, _retry: true });
@@ -684,9 +729,7 @@ async function apiFetch(url, opts = {}) {
 }
 
 // ════════════════════════════════════════════════════════
-// TOKEN STORAGE — sessionStorage so token survives tab
-// session but not browser restart (more secure than local)
-// Keys match what index.html reads on load
+// TOKEN STORAGE
 // ════════════════════════════════════════════════════════
 const TOKEN_KEY = 'optionlab_token';
 const USER_KEY  = 'optionlab_user';
@@ -695,18 +738,13 @@ function saveSession(token, user) {
   try {
     sessionStorage.setItem(TOKEN_KEY, token);
     sessionStorage.setItem(USER_KEY, JSON.stringify(user));
-  } catch(e) { /* storage blocked */ }
+  } catch(e) {}
 }
 
-// ════════════════════════════════════════════════════════
-// If already logged in, skip straight to dashboard
-// ════════════════════════════════════════════════════════
+// Skip to dashboard if already logged in
 (function checkExistingSession() {
   try {
-    const tok = sessionStorage.getItem(TOKEN_KEY);
-    if (tok) {
-      window.location.replace('index.html');
-    }
+    if (sessionStorage.getItem(TOKEN_KEY)) window.location.replace('index.html');
   } catch(e) {}
 })();
 
@@ -716,13 +754,13 @@ function saveSession(token, user) {
 let _n = 22513, _v = 14.23, _p = 1.08;
 setInterval(() => {
   _n = Math.max(22100, Math.min(22900, _n + (Math.random() - .48) * 4));
-  _v = Math.max(12, Math.min(20, _v + (Math.random() - .5) * .08));
-  _p = Math.max(.7, Math.min(1.5, _p + (Math.random() - .5) * .015));
-  const el = document.getElementById('l-nifty');
-  if (el) el.textContent = _n.toLocaleString('en-IN', {minimumFractionDigits:0, maximumFractionDigits:0});
+  _v = Math.max(12,    Math.min(20,    _v + (Math.random() - .5)  * .08));
+  _p = Math.max(.7,    Math.min(1.5,   _p + (Math.random() - .5)  * .015));
+  const ne = document.getElementById('l-nifty');
   const ve = document.getElementById('l-vix');
-  if (ve) ve.textContent = _v.toFixed(2);
   const pe = document.getElementById('l-pcr');
+  if (ne) ne.textContent = _n.toLocaleString('en-IN', {maximumFractionDigits:0});
+  if (ve) ve.textContent = _v.toFixed(2);
   if (pe) pe.textContent = _p.toFixed(2);
 }, 2500);
 
@@ -765,7 +803,7 @@ function switchTab(t) {
 }
 
 // ════════════════════════════════════════════════════════
-// MPIN BOX WIRING — paste support, auto-advance, backspace
+// MPIN BOX WIRING
 // ════════════════════════════════════════════════════════
 function wireMpin(id) {
   const boxes = Array.from(document.querySelectorAll(`#${id} .mpb`));
@@ -777,18 +815,12 @@ function wireMpin(id) {
       if (e.target.value && i < boxes.length - 1) boxes[i + 1].focus();
     });
     box.addEventListener('keydown', e => {
-      if (e.key === 'Backspace' && !box.value && i > 0) {
-        boxes[i - 1].focus();
-      }
+      if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
     });
     box.addEventListener('paste', e => {
       e.preventDefault();
-      const text = (e.clipboardData || window.clipboardData)
-        .getData('text').replace(/\D/g, '');
-      boxes.forEach((b, j) => {
-        b.value = text[j] || '';
-        b.classList.toggle('fl', !!b.value);
-      });
+      const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      boxes.forEach((b, j) => { b.value = text[j] || ''; b.classList.toggle('fl', !!b.value); });
       const last = Math.min(text.length, boxes.length) - 1;
       if (last >= 0) boxes[last].focus();
     });
@@ -800,14 +832,22 @@ wireMpin('rMpinRow');
 wireMpin('rMpinCRow');
 
 function getMpin(id) {
-  return Array.from(document.querySelectorAll(`#${id} .mpb`))
-    .map(b => b.value).join('');
+  return Array.from(document.querySelectorAll(`#${id} .mpb`)).map(b => b.value).join('');
 }
 function clearMpin(id) {
-  document.querySelectorAll(`#${id} .mpb`).forEach(b => {
-    b.value = '';
-    b.classList.remove('fl');
-  });
+  document.querySelectorAll(`#${id} .mpb`).forEach(b => { b.value = ''; b.classList.remove('fl'); });
+}
+
+// ════════════════════════════════════════════════════════
+// ANGEL ONE ID — client-side validation helper
+// Mirrors V.angelOneId() logic from validate.js
+// ════════════════════════════════════════════════════════
+function validateAngelId(raw) {
+  if (!raw || !raw.trim()) return { ok: false, error: 'Angel One Client ID is required' };
+  const v = raw.trim().toUpperCase();
+  if (!/^[A-Z0-9]{6,10}$/.test(v))
+    return { ok: false, error: 'Client ID must be 6–10 letters/numbers only (e.g. SBH3321)' };
+  return { ok: true, value: v };
 }
 
 // ════════════════════════════════════════════════════════
@@ -818,9 +858,8 @@ function showErr(id, msg) {
   if (!el) return;
   el.innerHTML = '⚠ ' + msg;
   el.classList.add('show');
-  // Auto-hide after 5s
   clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 5000);
+  el._t = setTimeout(() => el.classList.remove('show'), 6000);
 }
 function hideErr(id) {
   const el = document.getElementById(id);
@@ -833,11 +872,8 @@ function hideErr(id) {
 function startRedirect(fillId, cdId, duration, destination) {
   const fill = document.getElementById(fillId);
   const cd   = document.getElementById(cdId);
-  const secs = Math.round(duration / 1000);
-  let remaining = secs;
-
+  let remaining = Math.round(duration / 1000);
   if (fill) {
-    // Trigger reflow then animate
     fill.style.transition = 'none';
     fill.style.width = '0%';
     requestAnimationFrame(() => {
@@ -845,35 +881,31 @@ function startRedirect(fillId, cdId, duration, destination) {
       fill.style.width = '100%';
     });
   }
-
   const interval = setInterval(() => {
     remaining--;
     if (cd) cd.textContent = remaining;
     if (remaining <= 0) clearInterval(interval);
   }, 1000);
-
   setTimeout(() => { window.location.href = destination; }, duration);
 }
 
 // ════════════════════════════════════════════════════════
-// LOGIN  — exact endpoint: POST /api/auth/login-mpin
+// LOGIN — POST /api/auth/login-mpin
 // ════════════════════════════════════════════════════════
 async function doLogin() {
   hideErr('loginErr');
   const mob  = document.getElementById('lMob').value.trim();
   const mpin = getMpin('lMpinRow');
 
-  if (!/^\d{10}$/.test(mob))
-    return showErr('loginErr', 'Enter a valid 10-digit mobile number');
-  if (mpin.length !== 6)
-    return showErr('loginErr', 'Enter your complete 6-digit MPIN');
+  if (!/^\d{10}$/.test(mob))  return showErr('loginErr', 'Enter a valid 10-digit mobile number');
+  if (mpin.length !== 6)      return showErr('loginErr', 'Enter your complete 6-digit MPIN');
 
   const btn = document.getElementById('loginBtn');
   btn.disabled = true;
   btn.innerHTML = '<div class="spin"></div> Logging in…';
 
   try {
-    const res = await apiFetch(`${API}/api/auth/login-mpin`, {
+    const res  = await apiFetch(`${API}/api/auth/login-mpin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mobile: mob, mpin }),
@@ -881,34 +913,27 @@ async function doLogin() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Login failed');
 
-    // Save session — index.html reads these keys on load
     saveSession(data.token, data.user);
-
-    // Show success screen
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('loginOk').classList.add('show');
     startRedirect('loginFill', 'loginCd', 1800, 'index.html');
 
   } catch (e) {
-    let loginErr = e.message || 'Connection failed';
-    if (loginErr === 'Failed to fetch' || loginErr.includes('fetch')) {
-      loginErr = 'Cannot reach OptionLab server. Check your internet and try again.';
-    }
-    showErr('loginErr', loginErr);
+    let msg = e.message || 'Connection failed';
+    if (msg === 'Failed to fetch' || msg.includes('fetch'))
+      msg = 'Cannot reach OptionLab server. Check your internet and try again.';
+    showErr('loginErr', msg);
     btn.disabled = false;
     btn.innerHTML = 'Login to OptionLab →';
     clearMpin('lMpinRow');
-    document.querySelector('#lMpinRow .mpb').focus();
+    document.querySelector('#lMpinRow .mpb')?.focus();
   }
 }
 
 function demoFill() {
   document.getElementById('lMob').value = '9999999999';
   const boxes = document.querySelectorAll('#lMpinRow .mpb');
-  '123456'.split('').forEach((d, i) => {
-    boxes[i].value = d;
-    boxes[i].classList.add('fl');
-  });
+  '123456'.split('').forEach((d, i) => { boxes[i].value = d; boxes[i].classList.add('fl'); });
 }
 
 // ════════════════════════════════════════════════════════
@@ -940,33 +965,53 @@ function toStep1() {
 
 function toStep2() {
   hideErr('regErr');
-  const name = document.getElementById('rName').value.trim();
-  const mob  = document.getElementById('rMob').value.trim();
-  if (!name)                      return showErr('regErr', 'Please enter your full name');
-  if (!/^\d{10}$/.test(mob))      return showErr('regErr', 'Enter a valid 10-digit mobile number');
-  _rd.name   = name;
-  _rd.mobile = mob;
+  const name     = document.getElementById('rName').value.trim();
+  const mob      = document.getElementById('rMob').value.trim();
+  const angelRaw = document.getElementById('rClientId').value.trim();
+
+  // Validate all Step 1 fields before advancing
+  if (!name)
+    return showErr('regErr', 'Please enter your full name');
+  if (!/^\d{10}$/.test(mob))
+    return showErr('regErr', 'Enter a valid 10-digit mobile number');
+
+  const angelResult = validateAngelId(angelRaw);
+  if (!angelResult.ok) {
+    document.getElementById('rClientId').classList.add('field-error');
+    return showErr('regErr', angelResult.error);
+  }
+
+  document.getElementById('rClientId').classList.remove('field-error');
+  document.getElementById('rClientId').classList.add('field-locked');
+  document.getElementById('rClientId').readOnly = true; // prevent edits after step 1
+
+  _rd.name     = name;
+  _rd.mobile   = mob;
+  _rd.angelId  = angelResult.value; // always uppercase
+
   document.getElementById('rStep1').style.display = 'none';
   document.getElementById('rStep2').style.display = '';
   document.getElementById('rStep3').style.display = 'none';
   setStep(2);
-  // Focus first MPIN box
-  const firstBox = document.querySelector('#rMpinRow .mpb');
-  if (firstBox) firstBox.focus();
+  document.querySelector('#rMpinRow .mpb')?.focus();
 }
 
 function toStep3() {
   hideErr('regErr');
   const mpin = getMpin('rMpinRow');
   const conf = getMpin('rMpinCRow');
-  if (mpin.length !== 6)   return showErr('regErr', 'Enter a complete 6-digit MPIN');
-  if (mpin !== conf)       return showErr('regErr', 'MPINs do not match — please re-enter');
+  if (mpin.length !== 6) return showErr('regErr', 'Enter a complete 6-digit MPIN');
+  if (mpin !== conf)     return showErr('regErr', 'MPINs do not match — please re-enter');
   _rd.mpin = mpin;
+
   // Populate summary
   const sn = document.getElementById('sumName');
   const sm = document.getElementById('sumMob');
-  if (sn) sn.textContent = _rd.name;
-  if (sm) sm.textContent = '+91 ' + _rd.mobile;
+  const sa = document.getElementById('sumAngel');
+  if (sn) sn.textContent  = _rd.name;
+  if (sm) sm.textContent  = '+91 ' + _rd.mobile;
+  if (sa) sa.textContent  = _rd.angelId; // green + LOCKED badge via CSS
+
   document.getElementById('rStep1').style.display = 'none';
   document.getElementById('rStep2').style.display = 'none';
   document.getElementById('rStep3').style.display = '';
@@ -974,25 +1019,28 @@ function toStep3() {
 }
 
 // ════════════════════════════════════════════════════════
-// REGISTER — exact endpoint: POST /api/auth/register
+// REGISTER — POST /api/auth/register
+// broker_client_id is always sent — it is mandatory
 // ════════════════════════════════════════════════════════
 async function doRegister() {
   hideErr('regErr');
-  const clientId = (document.getElementById('rClientId').value || '').trim().toUpperCase();
+
+  // Final client-side guard — should never fail here but belt-and-braces
+  if (!_rd.angelId) return showErr('regErr', 'Angel One Client ID is missing — please go back to Step 1');
+
   const btn = document.getElementById('regBtn');
   btn.disabled = true;
   btn.innerHTML = '<div class="spin"></div> Creating account…';
 
   try {
-    // Build payload — broker_client_id only if provided
     const body = {
-      name:   _rd.name,
-      mobile: _rd.mobile,
-      mpin:   _rd.mpin,
+      name:             _rd.name,
+      mobile:           _rd.mobile,
+      mpin:             _rd.mpin,
+      broker_client_id: _rd.angelId,  // always present — mandatory
     };
-    if (clientId) body.broker_client_id = clientId;
 
-    const res = await apiFetch(`${API}/api/auth/register`, {
+    const res  = await apiFetch(`${API}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -1000,32 +1048,22 @@ async function doRegister() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Registration failed');
 
-    // Save session — index.html reads these keys on load
     saveSession(data.token, data.user);
 
-    // Personalise success screen with user's first name
     const firstName = (_rd.name || 'Trader').split(' ')[0];
     const title = document.getElementById('regOkTitle');
     const msg   = document.getElementById('regOkMsg');
     if (title) title.textContent = `Welcome, ${firstName}!`;
-    if (msg)   msg.textContent   = clientId
-      ? 'Account created. Taking you to your dashboard…'
-      : 'Account created. Taking you to the broker setup guide…';
+    if (msg)   msg.textContent   = 'Account created. Taking you to your dashboard…';
 
-    // Hide form, show success
     document.getElementById('regForm').style.display = 'none';
     document.getElementById('regOk').classList.add('show');
-
-    // Redirect: with clientId → index.html, without → setup.html
-    const dest = clientId ? 'index.html' : 'setup.html';
-    startRedirect('regFill', 'regCd', 2500, dest);
+    startRedirect('regFill', 'regCd', 2500, 'index.html');
 
   } catch (e) {
     let errMsg = e.message || 'Connection failed';
-    // Network errors give generic "Failed to fetch" — make it actionable
-    if (errMsg === 'Failed to fetch' || errMsg.includes('fetch')) {
+    if (errMsg === 'Failed to fetch' || errMsg.includes('fetch'))
       errMsg = 'Cannot reach OptionLab server. Check your internet and try again.';
-    }
     showErr('regErr', errMsg);
     btn.disabled = false;
     btn.innerHTML = '✓ Create Account';
@@ -1033,18 +1071,16 @@ async function doRegister() {
 }
 
 // ════════════════════════════════════════════════════════
-// KEYBOARD: Enter on login form triggers login
+// KEYBOARD: Enter on login triggers login
 // ════════════════════════════════════════════════════════
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (document.getElementById('loginForm').classList.contains('on')) {
-      doLogin();
-    }
+  if (e.key === 'Enter' && document.getElementById('loginForm').classList.contains('on')) {
+    doLogin();
   }
 });
 
 // ════════════════════════════════════════════════════════
-// CHECK URL PARAM: ?tab=register to open register tab
+// CHECK URL PARAM: ?tab=register
 // ════════════════════════════════════════════════════════
 (function checkUrlParam() {
   const p = new URLSearchParams(window.location.search);
