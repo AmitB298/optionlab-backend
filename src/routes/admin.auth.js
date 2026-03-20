@@ -1,11 +1,10 @@
 /**
- * routes/admin.auth.js
+ * routes/admin.auth.js  [FIXED v2.1]
  *
- * Adapted for live Railway DB which has a dedicated `admins` table
- * (separate from `users`). The admins table has:
- *   id, name, mobile, mpin_hash, is_active, created_at
- *
- * Also writes to admin_audit_log for login/logout events.
+ * FIXES:
+ *  1. Shared pool from ../db/pool — no more standalone new Pool()
+ *  2. JWT_SECRET fallback 'optionlab-secret-2024' removed — throws on startup
+ *     if env var not set (matches admin.middleware.js behaviour)
  */
 
 'use strict';
@@ -13,12 +12,16 @@
 const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 const crypto = require('crypto');
-const { Pool } = require('pg');
 require('dotenv').config();
 
+const pool                  = require('../db/pool');
 const { adminLoginLimiter } = require('../lib/rateLimit');
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// Fail hard at startup if JWT_SECRET is missing
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('[admin.auth] JWT_SECRET environment variable is not set.');
+}
 
 const DUMMY_HASH = '$2a$12$invalidhashpaddingtomatchbcryptlengthXXXXXXXXXXXXXXXXXXX';
 
@@ -32,7 +35,6 @@ async function adminLogin(req, res) {
   }
 
   try {
-    // Query the admins table (not users)
     const { rows } = await pool.query(
       `SELECT id, name, mobile, mpin_hash, is_active FROM admins WHERE mobile = $1`,
       [mobile]
@@ -42,7 +44,6 @@ async function adminLogin(req, res) {
     const mpinValid     = await bcrypt.compare(mpin, hashToCompare);
 
     if (!rows.length || !mpinValid || !rows[0].is_active) {
-      // Log failed attempt if account exists
       if (rows.length) {
         pool.query(
           `INSERT INTO admin_audit_log (admin_id, action, ip_address, user_agent, success)
@@ -57,11 +58,10 @@ async function adminLogin(req, res) {
     const jti   = crypto.randomUUID();
     const token = jwt.sign(
       { adminId: admin.id, mobile: admin.mobile, name: admin.name, role: 'admin', jti },
-      process.env.JWT_SECRET || 'optionlab-secret-2024',
+      JWT_SECRET,
       { expiresIn: '12h', algorithm: 'HS256' }
     );
 
-    // Log successful login (best-effort — don't fail if table missing yet)
     pool.query(
       `INSERT INTO admin_audit_log (admin_id, action, ip_address, user_agent, success)
        VALUES ($1, 'ADMIN_LOGIN', $2, $3, true)`,
@@ -73,7 +73,6 @@ async function adminLogin(req, res) {
       token,
       admin: { id: admin.id, name: admin.name, mobile: admin.mobile },
     });
-
   } catch (err) {
     console.error('[AdminAuth] Login error:', err.message);
     return res.status(500).json({ success: false, message: 'Login service unavailable' });
@@ -86,7 +85,7 @@ async function adminLogout(req, res) {
   if (typeof header === 'string' && header.startsWith('Bearer ')) {
     const token = header.slice(7).trim();
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'optionlab-secret-2024');
+      const decoded = jwt.verify(token, JWT_SECRET);
       pool.query(
         `INSERT INTO admin_audit_log (admin_id, action, ip_address, success)
          VALUES ($1, 'ADMIN_LOGOUT', $2, true)`,
