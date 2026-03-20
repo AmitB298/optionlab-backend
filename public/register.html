@@ -561,28 +561,60 @@ input.field-error {
    - landscape : separate override for short viewports
 ═══════════════════════════════════════════════════════════ */
 
-/* Large desktop */
+/* ── Large desktop 1200px+ ── */
 @media (min-width: 1200px) {
   .shell { max-width: 1060px; }
 }
 
-/* Tablet landscape */
-@media (max-width: 1024px) and (min-width: 841px) {
-  .shell { grid-template-columns: 260px 1fr; }
-  .left { padding: 32px 22px; }
-  .right { padding: 32px 28px; }
+/* ── Desktop 1025–1199px — comfortable two column ── */
+@media (max-width: 1199px) and (min-width: 1025px) {
+  .shell { grid-template-columns: 380px 1fr; }
 }
 
-/* Tablet portrait — compress left, hide descriptions */
-@media (max-width: 840px) and (min-width: 661px) {
-  body { padding: 10px; }
-  .shell { grid-template-columns: 220px 1fr; }
-  .left { padding: 24px 16px; }
-  .right { padding: 24px 20px; }
+/* ── Tablet landscape 841–1024px — narrower left ── */
+@media (max-width: 1024px) and (min-width: 841px) {
+  .shell { grid-template-columns: 260px 1fr; }
+  .left { padding: 28px 20px; }
+  .right { padding: 28px 24px; }
+  /* Hide descriptions to save space */
   .feat-desc { display: none; }
-  .feats { gap: 10px; }
+  .feats { gap: 11px; }
+  .left-sub { font-size: 12px; margin-bottom: 20px; }
+}
+
+/* ── Tablet portrait 741–840px — compact left ── */
+@media (max-width: 840px) and (min-width: 741px) {
+  body { padding: 10px; }
+  .shell { grid-template-columns: 210px 1fr; }
+  .left { padding: 22px 14px; }
+  .right { padding: 22px 20px; }
+  /* Hide everything except brand + headline + live strip */
+  .feat-desc { display: none; }
   .left-sub { display: none; }
   .ticker-strip { display: none; }
+  .feats { gap: 9px; }
+  .feat-title { font-size: 11px; }
+  .feat-ico { width: 28px; height: 28px; font-size: 12px; }
+  .live-text { font-size: 10px; }
+  .left-headline { font-size: clamp(16px, 2.2vw, 22px); }
+}
+
+/* ── Small tablet 661–740px — left panel becomes brand-only strip ── */
+@media (max-width: 740px) and (min-width: 661px) {
+  body { padding: 8px; }
+  .shell { grid-template-columns: 160px 1fr; }
+  .left { padding: 20px 12px; justify-content: flex-start; }
+  /* Show ONLY brand + headline + live dot */
+  .left-sub { display: none; }
+  .feat-desc { display: none; }
+  .feats { display: none; }
+  .ticker-strip { display: none; }
+  .live-text { font-size: 10px; }
+  .live-strip { padding: 8px 10px; }
+  .left-headline { font-size: 15px; margin-bottom: 10px; }
+  .brand { margin-bottom: 16px; }
+  .brand-name { font-size: 14px; }
+  .brand-mark { width: 30px; height: 30px; font-size: 11px; border-radius: 8px; }
 }
 
 /* ── MOBILE: single column ≤660px ── */
