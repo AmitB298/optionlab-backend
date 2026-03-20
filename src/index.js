@@ -65,6 +65,12 @@ try {
 } catch (err) { console.error('[Routes] auth.routes FAILED:', err.message); }
 
 try {
+  const otpRoutes = require('./routes/otp.routes');
+  app.use('/api/otp', otpRoutes);
+  console.log('[Routes] otp.routes loaded');
+} catch (err) { console.error('[Routes] otp.routes FAILED:', err.message); }
+
+try {
   const userRoutes = require('./routes/user.routes');
   app.use('/api/user', userRoutes);
   console.log('[Routes] user.routes loaded');
