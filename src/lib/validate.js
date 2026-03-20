@@ -6,6 +6,10 @@
  *  - All validators return { ok: boolean, error?: string, value?: any }
  *  - value is always the cleaned/cast version — never the raw input
  *  - Nothing here talks to DB — pure logic only
+ *
+ * CHANGES:
+ *  v2 — mpin now accepts 4-6 digits (web uses 6, Electron/Jobber uses 4)
+ *  v2 — angelOneId added: mandatory, uppercase, 6-10 alphanumeric chars
  */
 
 'use strict';
@@ -24,12 +28,13 @@ function mobile(raw) {
 }
 
 /**
- * MPIN: exactly 4 digits, string type required.
+ * MPIN: 4 to 6 digits, string type required.
+ * Web register.html sends 6 digits. Electron/Jobber Pro sends 4 digits. Both accepted.
  * BUG FIX: String(1234) passes /^\d{4}$/ — we reject non-string types first.
  */
 function mpin(raw) {
   if (typeof raw !== 'string') return { ok: false, error: 'mpin must be a string' };
-  if (!/^\d{4}$/.test(raw))    return { ok: false, error: 'mpin must be exactly 4 digits' };
+  if (!/^\d{4,6}$/.test(raw)) return { ok: false, error: 'mpin must be 4 to 6 digits' };
   return { ok: true, value: raw };
 }
 
@@ -40,6 +45,25 @@ function otp(raw) {
   if (typeof raw !== 'string') return { ok: false, error: 'otp must be a string' };
   if (!/^\d{6}$/.test(raw))    return { ok: false, error: 'otp must be exactly 6 digits' };
   return { ok: true, value: raw };
+}
+
+/**
+ * Angel One Client ID — MANDATORY at registration, IMMUTABLE after.
+ * Format: 6–10 uppercase alphanumeric characters (e.g. SBH3321, A1234567).
+ * Auto-uppercases input so frontend does not have to.
+ * Never accepted in any UPDATE route — DB trigger enforces immutability.
+ */
+function angelOneId(raw) {
+  if (raw === undefined || raw === null || raw === '')
+    return { ok: false, error: 'Angel One Client ID is required' };
+  if (typeof raw !== 'string')
+    return { ok: false, error: 'broker_client_id must be a string' };
+  const v = raw.trim().toUpperCase();
+  if (v.length === 0)
+    return { ok: false, error: 'Angel One Client ID is required' };
+  if (!/^[A-Z0-9]{6,10}$/.test(v))
+    return { ok: false, error: 'Angel One Client ID must be 6–10 letters/numbers only (e.g. SBH3321)' };
+  return { ok: true, value: v };
 }
 
 /**
@@ -221,6 +245,7 @@ module.exports = {
   userIdArray, bulkAction,
   announcementType, announcementTarget,
   isoDatetime, paymentRef,
+  angelOneId,
   VALID_PLANS, VALID_BULK_ACTIONS,
   fail,
 };
