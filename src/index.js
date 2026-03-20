@@ -247,10 +247,10 @@ async function start() {
             payment_ref VARCHAR(255),
             created_at  TIMESTAMPTZ   DEFAULT NOW()
           );
-          CREATE INDEX IF NOT EXISTS idx_audit_log_admin   ON admin_audit_log(admin_id);
-          CREATE INDEX IF NOT EXISTS idx_audit_log_target  ON admin_audit_log(target_user_id);
-          CREATE INDEX IF NOT EXISTS idx_audit_log_created ON admin_audit_log(created_at DESC);
-          CREATE INDEX IF NOT EXISTS idx_sub_history_user  ON subscription_history(user_id);
+          CREATE INDEX IF NOT EXISTS idx_audit_log_admin    ON admin_audit_log(admin_id);
+          CREATE INDEX IF NOT EXISTS idx_audit_log_target   ON admin_audit_log(target_user_id);
+          CREATE INDEX IF NOT EXISTS idx_audit_log_created  ON admin_audit_log(created_at DESC);
+          CREATE INDEX IF NOT EXISTS idx_sub_history_user   ON subscription_history(user_id);
           CREATE INDEX IF NOT EXISTS idx_user_activity_last ON user_activity(last_login_at DESC);
         `,
       },
@@ -265,6 +265,23 @@ async function start() {
             totp_secret TEXT,
             updated_at  TIMESTAMPTZ DEFAULT NOW()
           );
+        `,
+      },
+      {
+        id: '006_otp_verifications',
+        sql: `
+          DROP TABLE IF EXISTS otp_verifications;
+          CREATE TABLE otp_verifications (
+            id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+            mobile      VARCHAR(10) NOT NULL,
+            otp_hash    TEXT        NOT NULL,
+            attempts    INTEGER     DEFAULT 0,
+            expires_at  TIMESTAMPTZ NOT NULL,
+            used        BOOLEAN     DEFAULT FALSE,
+            created_at  TIMESTAMPTZ DEFAULT NOW()
+          );
+          CREATE INDEX IF NOT EXISTS idx_otp_verifications_mobile
+            ON otp_verifications(mobile);
         `,
       },
     ];
