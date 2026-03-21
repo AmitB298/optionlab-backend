@@ -88,7 +88,7 @@ export default function LearnPage() {
       })
 
       const data = await response.json()
-      const reply = data.content?.[0]?.text || 'Sorry, I could not generate a response. Please try again.'
+      const reply = data.response || 'Sorry, I could not generate a response. Please try again.'
       setMessages(prev => [...prev, { role: 'assistant', content: reply }])
     } catch {
       setError('Could not connect. Please try again.')
@@ -226,6 +226,7 @@ export default function LearnPage() {
     </div>
   )
 }
+
 
 
 
