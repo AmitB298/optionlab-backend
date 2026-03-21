@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Verifying Email | OptionLab</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f97316">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#f97316;--or2:#ea580c;--or3:#fb923c;
+  --og3:rgba(249,115,22,.04);--bds:rgba(249,115,22,.2);
+  --bg:#06080d;--bd:rgba(255,255,255,.07);
+  --tx:#e8eef8;--tx2:#7b8fa8;--gn:#10b981;--rd:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);
+  min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow:hidden;}
+
+/* BG */
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(249,115,22,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.018) 1px,transparent 1px);
+  background-size:60px 60px;}
+.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(120px);}
+.o1{width:600px;height:600px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(249,115,22,.07),transparent 65%);}
+.o2{width:400px;height:400px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(16,185,129,.05),transparent 65%);}
+
+/* CARD */
+.card{position:relative;z-index:1;
+  background:linear-gradient(155deg,#090d15 0%,#0c1019 100%);
+  border:1px solid var(--bd);border-radius:24px;
+  padding:clamp(32px,6vw,56px) clamp(24px,5vw,48px);
+  max-width:440px;width:100%;text-align:center;
+  box-shadow:0 0 0 1px rgba(249,115,22,.04),0 40px 100px rgba(0,0,0,.8);}
+
+/* BRAND */
+.brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px;text-decoration:none;}
+.brand-mark{width:40px;height:40px;background:linear-gradient(135deg,#f97316,#c2410c);
+  border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;
+  box-shadow:0 0 24px rgba(249,115,22,.45);}
+.brand-name{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#e8eef8;letter-spacing:-.01em;}
+.brand-name b{color:var(--or);}
+
+/* STATES */
+.state{display:none;flex-direction:column;align-items:center;}
+.state.show{display:flex;}
+
+/* VERIFYING state */
+.spinner-ring{width:72px;height:72px;border-radius:50%;border:3px solid rgba(249,115,22,.15);
+  border-top-color:var(--or);animation:spin 1s linear infinite;margin-bottom:24px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SUCCESS state */
+.check-ring{width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05));
+  border:2px solid rgba(16,185,129,.4);
+  display:flex;align-items:center;justify-content:center;font-size:34px;
+  margin-bottom:24px;animation:pop-in .5s cubic-bezier(.175,.885,.32,1.275) both;}
+@keyframes pop-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ERROR state */
+.err-ring{width:80px;height:80px;border-radius:50%;
+  background:rgba(239,68,68,.08);border:2px solid rgba(239,68,68,.3);
+  display:flex;align-items:center;justify-content:center;font-size:34px;
+  margin-bottom:24px;animation:pop-in .5s cubic-bezier(.175,.885,.32,1.275) both;}
+
+.state-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(20px,4vw,26px);
+  letter-spacing:-.03em;margin-bottom:10px;
+  background:linear-gradient(135deg,#fff 0%,#c8d5e8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.state-sub{font-size:14px;color:#586880;line-height:1.65;max-width:280px;}
+.state-sub strong{color:var(--or);}
+
+/* REDIRECT BAR */
+.redirect-bar{margin-top:24px;display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;}
+.redirect-track{width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+.redirect-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--or3));border-radius:2px;width:0%;transition:width linear;}
+.redirect-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:#4e6278;}
+
+/* EMAIL DISPLAY */
+.email-chip{display:inline-flex;align-items:center;gap:6px;margin:12px 0;
+  padding:6px 12px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);
+  border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gn);}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:20px;padding:13px 28px;
+  background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
+  border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;
+  cursor:pointer;transition:all .25s;text-decoration:none;
+  box-shadow:0 4px 20px rgba(249,115,22,.35);}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(249,115,22,.45);}
+
+/* Verifying dots */
+.dots{display:inline-flex;gap:5px;margin-top:6px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--or);opacity:.3;animation:blink 1.4s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:.2s;}
+.dot:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-orb o1" aria-hidden="true"></div>
+<div class="bg-orb o2" aria-hidden="true"></div>
+
+<main>
+<div class="card">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">OL</div>
+    <span class="brand-name">Option<b>Lab</b></span>
+  </a>
+
+  <!-- VERIFYING -->
+  <div class="state show" id="stateVerifying">
+    <div class="spinner-ring" aria-hidden="true"></div>
+    <div class="state-title">Verifying your email</div>
+    <div class="state-sub">Just a moment&hellip;</div>
+    <div class="dots" aria-hidden="true"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="state" id="stateSuccess">
+    <div class="check-ring" aria-hidden="true">&#10003;</div>
+    <div class="state-title">Email verified!</div>
+    <div class="email-chip" id="successEmail"></div>
+    <div class="state-sub">Taking you back to complete your registration&hellip;</div>
+    <div class="redirect-bar">
+      <div class="redirect-track"><div class="redirect-fill" id="successFill"></div></div>
+      <div class="redirect-label">Redirecting in <span id="successCd">3</span>s</div>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state" id="stateError">
+    <div class="err-ring" aria-hidden="true">&#10007;</div>
+    <div class="state-title">Link expired</div>
+    <div class="state-sub" id="errMsg">This magic link has expired or already been used. Please request a new one.</div>
+    <a href="register.html?tab=register" class="btn">&#8592; Back to Register</a>
+  </div>
+</div>
+</main>
+
+<script>
+const API = 'https://web-production-8a8e1.up.railway.app';
+
+function show(id) {
+  ['stateVerifying','stateSuccess','stateError'].forEach(s => {
+    document.getElementById(s).classList.toggle('show', s === id);
+  });
+}
+
+function startRedirect(duration, destination) {
+  const fill = document.getElementById('successFill');
+  const cd   = document.getElementById('successCd');
+  let remaining = Math.round(duration / 1000);
+  if (fill) {
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+    requestAnimationFrame(() => {
+      fill.style.transition = 'width ' + duration + 'ms linear';
+      fill.style.width = '100%';
+    });
+  }
+  const interval = setInterval(() => {
+    remaining--;
+    if (cd) cd.textContent = remaining;
+    if (remaining <= 0) clearInterval(interval);
+  }, 1000);
+  setTimeout(() => { window.location.href = destination; }, duration);
+}
+
+(async function verifyToken() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('token');
+  const email  = params.get('email');
+
+  if (!token || !email) {
+    document.getElementById('errMsg').textContent = 'Invalid verification link. Please request a new one.';
+    show('stateError');
+    return;
+  }
+
+  try {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 12000);
+    const res  = await fetch(API + '/api/email/verify-token', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ token, email }),
+      signal:  controller.signal,
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.email_token) {
+      document.getElementById('errMsg').textContent = data.error || 'Verification failed. The link may have expired.';
+      show('stateError');
+      return;
+    }
+
+    // SUCCESS — show confirmed email then redirect
+    const chip = document.getElementById('successEmail');
+    if (chip) { chip.innerHTML = '&#10003; ' + email; }
+    show('stateSuccess');
+
+    // Build redirect URL back to register.html with tokens
+    const redirectUrl = 'register.html?tab=register&email_token=' + encodeURIComponent(data.email_token) + '&email=' + encodeURIComponent(email);
+    startRedirect(2800, redirectUrl);
+
+  } catch (err) {
+    const msg = err.name === 'AbortError'
+      ? 'Request timed out. Please check your connection and try again.'
+      : 'Could not reach OptionLab server. Please try again.';
+    document.getElementById('errMsg').textContent = msg;
+    show('stateError');
+  }
+})();
+</script>
+</body>
+</html>
