@@ -290,6 +290,63 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
+/* ══════════════════════════════════════════════════════════════
+   POST /api/auth/login-email
+   Body: { email_token }
+   Called by verify.html — signs in existing user via magic link.
+   Returns 404 if user does not exist yet (new user → registration).
+══════════════════════════════════════════════════════════════ */
+router.post('/login-email', async (req, res) => {
+  try {
+    const emailToken = (req.body.email_token || '').trim();
+    if (!emailToken) return res.status(400).json({ error: 'email_token required' });
+
+    let emailPayload;
+    try { emailPayload = jwt.verify(emailToken, JWT_SECRET); }
+    catch { return res.status(400).json({ error: 'Invalid or expired token' }); }
+
+    if (emailPayload.purpose !== 'email_verification') {
+      return res.status(400).json({ error: 'Invalid token purpose' });
+    }
+
+    const verifiedEmail = emailPayload.email;
+    const result = await pool.query(
+      'SELECT id, name, mobile, email, broker_client_id, plan, is_active FROM users WHERE email = /* ── GET /api/auth/validate',
+      [verifiedEmail]
+    );
+
+    if (result.rows.length === 0) return res.status(404).json({ exists: false });
+
+    const user = result.rows[0];
+    if (!user.is_active) return res.status(403).json({ error: 'Account inactive. Contact support.' });
+
+    pool.query(`
+      INSERT INTO user_activity (user_id, total_logins, last_login_at, last_login_ip)
+      VALUES (/* ── GET /api/auth/validate, 1, NOW(), $2)
+      ON CONFLICT (user_id) DO UPDATE
+        SET total_logins  = user_activity.total_logins + 1,
+            last_login_at = NOW(),
+            last_login_ip = EXCLUDED.last_login_ip,
+            failed_logins = 0
+    `, [user.id, req.ip]).catch(() => {});
+
+    const token = jwt.sign(
+      { id: user.id, mobile: user.mobile, email: user.email, plan: user.plan },
+      JWT_SECRET, { expiresIn: SESSION_EXPIRES }
+    );
+
+    console.log(`[Auth] Email login: ${verifiedEmail}`);
+    return res.json({
+      success: true, exists: true, token,
+      user: { id: user.id, name: user.name, mobile: user.mobile,
+              email: user.email, plan: user.plan, broker_client_id: user.broker_client_id },
+    });
+  } catch (err) {
+    console.error('[Auth] login-email error:', err.message);
+    return res.status(500).json({ error: 'Login failed. Please try again.' });
+  }
+});
 /* ── GET /api/auth/validate ── */
 router.get('/validate', async (req, res) => {
   const header = req.headers['authorization'];
@@ -316,3 +373,4 @@ router.get('/validate', async (req, res) => {
 router.post('/logout', (req, res) => res.json({ success: true }));
 
 module.exports = router;
+
