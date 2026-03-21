@@ -22,7 +22,7 @@ const bcrypt   = require('bcryptjs');
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const { verifyToken } = require('../middleware/auth.middleware');
+const { verifyToken } = require('../middleware/auth');
 const V = require('../lib/validate');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
