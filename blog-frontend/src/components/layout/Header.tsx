@@ -1,249 +1,199 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Search, PenSquare, LogOut, User, Sun, Moon } from 'lucide-react'
+import { Search, PenSquare, LogOut, User, Sun, Moon, X, BookOpen } from 'lucide-react'
 import { useAuthStore } from '../../store/authStore'
 import { articlesApi } from '../../utils/api'
 
-const TICKER_DATA = [
-  { sym: 'NIFTY 50',    val: '22,347', chg: '-68.4',  pct: '-0.31', dir: 'dn' as const },
-  { sym: 'BANKNIFTY',   val: '47,984', chg: '+124.8', pct: '+0.26', dir: 'up' as const },
-  { sym: 'FINNIFTY',    val: '23,108', chg: '-42.2',  pct: '-0.18', dir: 'dn' as const },
-  { sym: 'INDIA VIX',   val: '14.32',  chg: '+0.84',  pct: '+6.23', dir: 'up' as const },
-  { sym: 'USDINR',      val: '83.42',  chg: '+0.08',  pct: '+0.10', dir: 'up' as const },
-  { sym: 'GOLD (MCX)',  val: '71,840', chg: '+220',   pct: '+0.31', dir: 'up' as const },
-  { sym: 'SENSEX',      val: '73,428', chg: '-194',   pct: '-0.26', dir: 'dn' as const },
-  { sym: 'CRUDE (MCX)', val: '6,842',  chg: '+62',    pct: '+0.92', dir: 'up' as const },
-]
-
-const MARKET_STRIP = TICKER_DATA.slice(0, 5)
-
 const NAV_LINKS = [
-  { to: '/',          label: 'TERMINAL' },
-  { to: '/analysis',  label: 'OPTIONSLAB BOT' },
-  { to: '/tools',     label: 'TOOLS' },
-  { to: '/authors',   label: 'AUTHORS' },
+  { to: '/',           label: 'TERMINAL' },
+  { to: '/analysis',   label: 'ANALYSIS' },
+  { to: '/tools',      label: 'TOOLS' },
+  { to: '/learn',      label: 'LEARN' },
+  { to: '/glossary',   label: 'GLOSSARY' },
+  { to: '/authors',    label: 'AUTHORS' },
 ]
 
 export default function Header() {
-  const { isAuthenticated, user, logout } = useAuthStore()
+  const { user, logout } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [dark, setDark] = useState(true)
+  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'))
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<any[]>([])
+  const [searching, setSearching] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
 
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(true) }
-      if (e.key === 'Escape') setSearchOpen(false)
-    }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [])
+    document.documentElement.classList.toggle('dark', dark)
+  }, [dark])
+
+  useEffect(() => {
+    if (!query.trim()) { setResults([]); return }
+    const t = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const resp = await articlesApi.list({ search: query, limit: 6 })
+        setResults(resp.data?.articles || [])
+      } catch { setResults([]) }
+      finally { setSearching(false) }
+    }, 300)
+    return () => clearTimeout(t)
+  }, [query])
+
+  function handleLogout() {
+    logout()
+    navigate('/')
+  }
+
+  function closeSearch() {
+    setShowSearch(false)
+    setQuery('')
+    setResults([])
+  }
+
+  const isActive = (to: string) =>
+    to === '/' ? location.pathname === '/' : location.pathname.startsWith(to)
 
   return (
     <>
-      {/* LIVE TICKER */}
-      <div className="bg-ink-1 border-b border-line h-7 overflow-hidden flex items-center">
-        <div className="bg-amber text-black font-mono font-bold text-[9px] tracking-widest px-3 h-full flex items-center shrink-0 uppercase">
-          LIVE
-        </div>
-        <div className="overflow-hidden flex-1">
-          <div className="flex animate-ticker w-max gap-0">
-            {[...TICKER_DATA, ...TICKER_DATA].map((item, i) => (
-              <div key={i} className="flex items-center gap-2 px-5 border-r border-line h-7 font-mono text-[11px] whitespace-nowrap">
-                <span className="text-amber font-semibold">{item.sym}</span>
-                <span className="text-t-1">{item.val}</span>
-                <span className={item.dir === 'up' ? 'text-green' : 'text-red'}>
-                  {item.dir === 'up' ? '▲' : '▼'} {item.chg} ({item.pct}%)
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <header className="sticky top-0 z-40 bg-ink/97 backdrop-blur-sm border-b border-line">
-        {/* ROW 1: Logo + Market Strip + Actions */}
-        <div className="flex items-center h-[52px] border-b border-line">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-0 px-4 border-r border-line h-full shrink-0">
-            <div className="w-8 h-8 border border-amber flex items-center justify-center font-mono font-bold text-[11px] text-amber relative mr-2.5">
-              <span className="absolute inset-[3px] border border-amber/20" />
+      <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/95 backdrop-blur-sm">
+        {/* Brand + Nav row */}
+        <div className="flex items-center gap-6 px-4 h-14">
+          {/* Brand */}
+          <Link to="/" className="flex items-center gap-2 shrink-0 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-content font-black text-white text-xs font-mono flex items-center justify-center">
               OL
             </div>
-            <div>
-              <div className="font-sans font-bold text-[15px] text-t-1 leading-none">
-                Options<span className="text-amber">Lab</span>
-              </div>
-              <div className="font-mono text-[8px] text-t-3 tracking-widest mt-0.5 uppercase">
-                Market Intelligence
-              </div>
-            </div>
+            <span className="font-black text-white tracking-tight text-base hidden sm:block">
+              Options<span className="text-amber-400">Lab</span>
+            </span>
           </Link>
 
-          {/* Market Strip */}
-          <div className="flex flex-1 overflow-hidden">
-            {MARKET_STRIP.map((item) => (
-              <div key={item.sym} className="flex items-center gap-2 px-4 border-r border-line h-[52px] min-w-[130px] flex-1">
-                <div>
-                  <div className="font-mono text-[9px] text-t-3 uppercase tracking-wider leading-none">{item.sym}</div>
-                  <div className="font-mono font-semibold text-[15px] text-t-1 leading-tight mt-0.5">{item.val}</div>
-                  <div className={`font-mono text-[11px] ${item.dir === 'up' ? 'text-green' : 'text-red'}`}>
-                    {item.dir === 'up' ? '▲' : '▼'} {item.chg} ({item.pct}%)
-                  </div>
-                </div>
-              </div>
+          {/* Nav */}
+          <nav className="hidden md:flex items-center gap-1 flex-1">
+            {NAV_LINKS.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`px-3 py-1.5 rounded text-xs font-mono font-semibold tracking-widest transition-all ${
+                  isActive(to)
+                    ? 'text-amber-400 bg-amber-400/10'
+                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800'
+                }`}
+              >
+                {label}
+              </Link>
             ))}
-          </div>
+          </nav>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2 px-4 border-l border-line h-full shrink-0">
+          {/* Right actions */}
+          <div className="flex items-center gap-2 ml-auto">
             <button
-              onClick={() => setSearchOpen(true)}
-              className="w-8 h-8 border border-line-2 flex items-center justify-center text-t-2 hover:border-amber hover:text-amber transition-colors"
-              title="Search [Ctrl+K]"
+              onClick={() => setShowSearch(s => !s)}
+              className="p-2 rounded text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-all"
+              aria-label="Search"
             >
-              <Search size={14} />
+              <Search size={16} />
             </button>
+
             <button
-              onClick={() => setDark(!dark)}
-              className="w-8 h-8 border border-line-2 flex items-center justify-center text-t-2 hover:border-amber hover:text-amber transition-colors font-mono text-[9px]"
+              onClick={() => setDark(d => !d)}
+              className="p-2 rounded text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-all"
+              aria-label="Toggle theme"
             >
-              {dark ? <Moon size={13} /> : <Sun size={13} />}
+              {dark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            {isAuthenticated ? (
+
+            {user ? (
               <>
-                <button
-                  onClick={() => navigate('/admin')}
-                  className="flex items-center gap-1.5 px-3 h-8 border border-t-3 text-t-3 hover:border-amber hover:text-amber font-mono text-[10px] uppercase tracking-wider transition-colors"
+                {user.is_admin && (
+                  <Link
+                    to="/admin"
+                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono font-semibold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all"
+                  >
+                    <User size={13} /> ADMIN
+                  </Link>
+                )}
+                <Link
+                  to="/write"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-amber-500 hover:bg-amber-400 text-black text-xs font-mono font-bold transition-all"
                 >
-                  <User size={11} /> {user?.initials}
-                </button>
+                  <PenSquare size={13} /> WRITE
+                </Link>
                 <button
-                  onClick={logout}
-                  className="flex items-center gap-1.5 px-3 h-8 border border-line text-t-3 hover:border-red hover:text-red font-mono text-[10px] transition-colors"
+                  onClick={handleLogout}
+                  className="p-2 rounded text-zinc-600 hover:text-red-400 hover:bg-red-400/10 transition-all"
+                  aria-label="Logout"
                 >
-                  <LogOut size={11} />
+                  <LogOut size={15} />
                 </button>
               </>
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-1.5 px-3 h-8 border border-t-4 text-t-3 hover:border-amber hover:text-amber font-mono text-[10px] uppercase tracking-wider transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-zinc-700 text-zinc-400 hover:border-amber-500/50 hover:text-amber-400 text-xs font-mono font-semibold transition-all"
               >
                 SIGN IN
               </Link>
             )}
-            <Link
-              to="/admin/editor"
-              className="flex items-center gap-1.5 px-4 h-8 border border-amber text-amber hover:bg-amber hover:text-black font-mono text-[10px] uppercase tracking-wider transition-colors"
-            >
-              <PenSquare size={11} /> WRITE
-            </Link>
           </div>
         </div>
 
-        {/* ROW 2: Navigation */}
-        <div className="flex items-center h-9 overflow-x-auto scrollbar-hide">
-          {NAV_LINKS.map((link) => {
-            const active = location.pathname === link.to
-            return (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`flex items-center gap-1.5 px-5 h-9 font-mono text-[11px] uppercase tracking-[0.8px] border-r border-line border-b-2 whitespace-nowrap transition-all
-                  ${active
-                    ? 'text-amber border-b-amber bg-amber/5'
-                    : 'text-t-3 border-b-transparent hover:text-t-2 hover:bg-ink-2'
-                  }`}
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-amber shadow-[0_0_6px_#ff9f0a]' : 'bg-current opacity-40'}`} />
-                {link.label}
-                {link.to === '/analysis' && (
-                  <span className="bg-red text-white font-mono font-bold text-[8px] px-1.5 py-0.5 tracking-wider animate-blink">AI</span>
-                )}
-              </Link>
-            )
-          })}
-          {isAuthenticated && (
-            <Link
-              to="/admin"
-              className={`flex items-center gap-1.5 px-5 h-9 font-mono text-[11px] uppercase tracking-[0.8px] border-r border-line border-b-2 whitespace-nowrap transition-all
-                ${location.pathname.startsWith('/admin')
-                  ? 'text-amber border-b-amber bg-amber/5'
-                  : 'text-t-3 border-b-transparent hover:text-t-2 hover:bg-ink-2'
-                }`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-40" />
-              ADMIN
-            </Link>
-          )}
+        {/* SEBI Disclaimer bar */}
+        <div className="px-4 py-1.5 bg-zinc-900/80 border-t border-zinc-800/60">
+          <p className="text-[10px] text-zinc-600 font-mono text-center leading-tight">
+            <span className="text-amber-600/70 font-semibold">DISCLAIMER:</span>{' '}
+            OptionsLab is a financial education platform. Content is for informational purposes only and does not constitute investment advice or recommendations.
+            Not SEBI registered. Do not make investment decisions based on this content. Trading involves substantial risk of loss.
+          </p>
         </div>
       </header>
 
-      {/* SEARCH OVERLAY */}
-      {searchOpen && (
-        <div className="fixed inset-0 bg-ink/90 z-50 flex items-start justify-center pt-28" onClick={() => setSearchOpen(false)}>
-          <SearchBox onClose={() => setSearchOpen(false)} />
+      {/* Search overlay */}
+      {showSearch && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/60 backdrop-blur-sm" onClick={closeSearch}>
+          <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-800">
+              <Search size={16} className="text-zinc-500 shrink-0" />
+              <input
+                autoFocus
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search articles, concepts, strategies..."
+                className="flex-1 bg-transparent text-sm text-zinc-100 placeholder-zinc-600 outline-none font-mono"
+              />
+              <button onClick={closeSearch} className="text-zinc-600 hover:text-zinc-300 transition-colors">
+                <X size={16} />
+              </button>
+            </div>
+            {results.length > 0 && (
+              <ul className="max-h-80 overflow-y-auto">
+                {results.map((a: any) => (
+                  <li key={a.id}>
+                    <Link
+                      to={`/article/${a.slug}`}
+                      onClick={closeSearch}
+                      className="flex items-start gap-3 px-4 py-3 hover:bg-zinc-800 transition-colors group"
+                    >
+                      <BookOpen size={14} className="text-zinc-600 mt-0.5 shrink-0 group-hover:text-amber-400 transition-colors" />
+                      <div>
+                        <p className="text-sm text-zinc-200 font-medium group-hover:text-amber-400 transition-colors line-clamp-1">{a.title}</p>
+                        {a.excerpt && <p className="text-xs text-zinc-600 mt-0.5 line-clamp-1">{a.excerpt}</p>}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {query && !searching && results.length === 0 && (
+              <p className="px-4 py-6 text-sm text-zinc-600 font-mono text-center">No articles found for "{query}"</p>
+            )}
+            {searching && (
+              <p className="px-4 py-6 text-sm text-zinc-600 font-mono text-center animate-pulse">Searching...</p>
+            )}
+          </div>
         </div>
       )}
     </>
   )
 }
-
-function SearchBox({ onClose }: { onClose: () => void }) {
-  const [q, setQ] = useState('')
-  const navigate = useNavigate()
-  const [results, setResults] = useState<{ title: string; slug: string; emoji: string; author_name: string }[]>([])
-
-  useEffect(() => {
-    if (!q.trim()) { setResults([]); return }
-    const timer = setTimeout(async () => {
-      try {
-        const resp = await articlesApi.list({ search: q, limit: 6 })
-        setResults(resp.data.articles || [])
-      } catch { setResults([]) }
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [q])
-
-  return (
-    <div className="bg-ink-1 border border-line-2 w-[580px] max-w-[90vw] animate-fade-up" onClick={e => e.stopPropagation()}>
-      <div className="flex items-center gap-3 px-4 border-b border-line h-12">
-        <Search size={16} className="text-amber shrink-0" />
-        <input
-          autoFocus
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          placeholder="Search articles, symbols, strategies..."
-          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-t-1 placeholder:text-t-4"
-        />
-        <button onClick={onClose} className="text-t-3 hover:text-t-1 font-mono text-lg leading-none">×</button>
-      </div>
-      <div className="max-h-80 overflow-y-auto">
-        {results.length === 0 && q && (
-          <div className="px-4 py-6 text-center font-mono text-[11px] text-t-4">No results for "{q}"</div>
-        )}
-        {results.map((r) => (
-          <button
-            key={r.slug}
-            onClick={() => { navigate(`/article/${r.slug}`); onClose() }}
-            className="w-full flex items-center gap-3 px-4 py-3 border-b border-line hover:bg-ink-2 text-left transition-colors"
-          >
-            <span className="text-xl">{r.emoji || '📊'}</span>
-            <div>
-              <div className="font-sans font-semibold text-sm text-t-2">{r.title}</div>
-              <div className="font-mono text-[9px] text-t-4 mt-1">{r.author_name}</div>
-            </div>
-          </button>
-        ))}
-      </div>
-      <div className="flex gap-4 px-4 py-2 border-t border-line font-mono text-[9px] text-t-4">
-        <span>↑↓ NAVIGATE</span><span>↵ SELECT</span><span>ESC CLOSE</span>
-      </div>
-    </div>
-  )
-}
-
-
-

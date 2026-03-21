@@ -1,48 +1,92 @@
 import { Link } from 'react-router-dom'
+import { AlertTriangle } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-ink-1 border-t border-line mt-px">
-      <div className="grid grid-cols-5 border-b border-line">
-        {/* Brand */}
-        <div className="col-span-2 p-7 border-r border-line">
-          <div className="font-sans font-bold text-base text-t-1 mb-1">
-            Options<span className="text-amber">Lab</span>
+    <footer className="border-t border-zinc-800 bg-zinc-950 mt-16">
+      {/* SEBI Compliance Banner */}
+      <div className="border-b border-amber-500/20 bg-amber-500/5 px-4 py-4">
+        <div className="max-w-5xl mx-auto flex gap-3 items-start">
+          <AlertTriangle size={16} className="text-amber-500/60 shrink-0 mt-0.5" />
+          <div className="text-xs text-zinc-500 font-mono leading-relaxed">
+            <strong className="text-amber-500/80 font-semibold">IMPORTANT DISCLAIMER: </strong>
+            OptionsLab is a financial education and information platform only. We are NOT registered with SEBI as a Research Analyst or Investment Adviser.
+            Nothing on this website constitutes investment advice, a recommendation to buy or sell securities, or a solicitation of any kind.
+            All educational content, tools, and articles are for informational purposes only and should not be relied upon for trading or investment decisions.
+            Options and derivatives trading involves a substantial risk of loss and is not suitable for all investors.
+            Past educational examples do not guarantee future results. Always consult a SEBI-registered Research Analyst or Investment Adviser before making investment decisions.
+            Please read the <a href="/risk-disclosure" className="text-amber-500/70 hover:text-amber-400 underline underline-offset-2">Risk Disclosure Document</a> before using this platform.
           </div>
-          <div className="font-mono text-[8px] text-t-4 tracking-widest uppercase mb-3">Market Intelligence Platform</div>
-          <p className="font-sans font-light text-xs text-t-3 leading-relaxed max-w-xs">
-            India's most advanced AI-powered options analytics and market intelligence platform. Built for serious derivatives traders who demand more than price data.
+        </div>
+      </div>
+
+      {/* Main footer */}
+      <div className="max-w-5xl mx-auto px-4 py-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
+          {/* Brand */}
+          <div className="col-span-2 sm:col-span-1">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-black text-white text-xs font-mono">OL</div>
+              <span className="font-black text-white text-sm tracking-tight">Options<span className="text-amber-400">Lab</span></span>
+            </div>
+            <p className="text-xs text-zinc-600 leading-relaxed">
+              India's financial education platform for derivatives learners.
+            </p>
+            <p className="text-[10px] text-zinc-700 font-mono mt-2">Educational platform only · Not SEBI registered</p>
+          </div>
+
+          {/* Learn */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold text-zinc-400 tracking-widest mb-3">LEARN</h4>
+            <ul className="space-y-2">
+              {[
+                ['Learn', '/learn'],
+                ['Glossary', '/glossary'],
+                ['Analysis', '/analysis'],
+                ['Tools', '/tools'],
+              ].map(([label, to]) => (
+                <li key={to}><Link to={to} className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors font-mono">{label}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Platform */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold text-zinc-400 tracking-widest mb-3">PLATFORM</h4>
+            <ul className="space-y-2">
+              {[
+                ['Terminal', '/'],
+                ['Authors', '/authors'],
+                ['Write', '/write'],
+              ].map(([label, to]) => (
+                <li key={to}><Link to={to} className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors font-mono">{label}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold text-zinc-400 tracking-widest mb-3">LEGAL</h4>
+            <ul className="space-y-2">
+              {[
+                ['Disclaimer', '/disclaimer'],
+                ['Risk Disclosure', '/risk-disclosure'],
+                ['Privacy Policy', '/privacy'],
+                ['Terms of Use', '/terms'],
+              ].map(([label, to]) => (
+                <li key={to}><Link to={to} className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors font-mono">{label}</Link></li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-zinc-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[10px] text-zinc-700 font-mono">© {new Date().getFullYear()} OptionsLab · Financial Education Platform · India</p>
+          <p className="text-[10px] text-zinc-700 font-mono text-center">
+            Not SEBI registered · For education only · Not investment advice
           </p>
         </div>
-        {/* Links */}
-        {[
-          { title: 'ANALYSIS', links: ['NIFTY Analysis','BANKNIFTY Reports','FII/DII Tracker','OI Analysis','IV Reports'] },
-          { title: 'TOOLS',    links: ['Options Chain','PCR Calculator','IV Percentile','Max Pain','Payoff Graph'] },
-          { title: 'AUTHORS',  links: ['Rahul Verma','Priya Sharma','Aditya Kumar','Meera Nair'] },
-          { title: 'LEGAL',    links: ['Privacy Policy','Terms of Use','Risk Disclosure','Cookie Policy'] },
-        ].map((col) => (
-          <div key={col.title} className="p-7 border-r border-line last:border-r-0">
-            <div className="font-mono text-[9px] text-t-4 tracking-[2px] uppercase mb-3">{col.title}</div>
-            {col.links.map((l) => (
-              <a key={l} className="block font-sans font-light text-xs text-t-3 mb-2 hover:text-amber transition-colors cursor-pointer">{l}</a>
-            ))}
-          </div>
-        ))}
-      </div>
-
-      {/* SEBI Disclaimer */}
-      <div className="px-6 py-3 bg-amber/5 border-b border-amber/10">
-        <p className="font-mono text-[10px] text-t-4 leading-relaxed">
-          ⚠ SEBI DISCLAIMER: All content published on OptionsLab is strictly for educational and informational purposes only. This platform does not provide investment advice, SEBI-registered advisory services, or recommendations to buy/sell any financial instrument. Options trading involves substantial risk of loss. Past performance is not indicative of future results. Consult a SEBI-registered investment advisor before making any investment decisions.
-        </p>
-      </div>
-
-      <div className="flex justify-between items-center px-6 py-3">
-        <span className="font-mono text-[10px] text-t-4">© 2026 OptionsLab INTELLIGENCE. ALL RIGHTS RESERVED. | optionslab.in</span>
-        <span className="font-mono text-[10px] text-t-4">DATA DELAYED 15 MIN. NOT SEBI REGISTERED.</span>
       </div>
     </footer>
   )
 }
-
-
