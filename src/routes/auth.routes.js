@@ -12,7 +12,7 @@
 const express  = require('express');
 const bcrypt   = require('bcryptjs');                          // bcryptjs — pure JS, no native compile needed
 const jwt      = require('jsonwebtoken');
-const { pool } = require('../db');                             // src/db/index.js adapter
+const pool = require('../db/pool');
 const { validateMobile, validateMpin, validateName, validateAngelId } = require('../validate');
 
 const router = express.Router();
