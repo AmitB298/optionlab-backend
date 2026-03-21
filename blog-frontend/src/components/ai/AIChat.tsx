@@ -16,7 +16,7 @@ const QUICK_PROMPTS = [
 export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
-    content: "Good morning. I'm your OptionLab AI Market Analyst with full context on today's market — NIFTY at 22,347, BANKNIFTY at 47,984, VIX at 14.32, and the 22,500 CE OI wall at 45.2 lakh contracts.\n\nAsk me about OI analysis, PCR signals, IV interpretation, expiry strategies, or FII data. What would you like to analyze?"
+    content: "Good morning. I'm your OptionsLab AI Market Analyst with full context on today's market — NIFTY at 22,347, BANKNIFTY at 47,984, VIX at 14.32, and the 22,500 CE OI wall at 45.2 lakh contracts.\n\nAsk me about OI analysis, PCR signals, IV interpretation, expiry strategies, or FII data. What would you like to analyze?"
   }])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -131,3 +131,4 @@ export default function AIChat() {
     </div>
   )
 }
+

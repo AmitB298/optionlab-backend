@@ -33,14 +33,15 @@ export default function Footer() {
       {/* SEBI Disclaimer */}
       <div className="px-6 py-3 bg-amber/5 border-b border-amber/10">
         <p className="font-mono text-[10px] text-t-4 leading-relaxed">
-          ⚠ SEBI DISCLAIMER: All content published on OptionLab is strictly for educational and informational purposes only. This platform does not provide investment advice, SEBI-registered advisory services, or recommendations to buy/sell any financial instrument. Options trading involves substantial risk of loss. Past performance is not indicative of future results. Consult a SEBI-registered investment advisor before making any investment decisions.
+          ⚠ SEBI DISCLAIMER: All content published on OptionsLab is strictly for educational and informational purposes only. This platform does not provide investment advice, SEBI-registered advisory services, or recommendations to buy/sell any financial instrument. Options trading involves substantial risk of loss. Past performance is not indicative of future results. Consult a SEBI-registered investment advisor before making any investment decisions.
         </p>
       </div>
 
       <div className="flex justify-between items-center px-6 py-3">
-        <span className="font-mono text-[10px] text-t-4">© 2026 OPTIONLAB INTELLIGENCE. ALL RIGHTS RESERVED. | OPTIONSLAB.IN</span>
+        <span className="font-mono text-[10px] text-t-4">© 2026 OptionsLab INTELLIGENCE. ALL RIGHTS RESERVED. | OPTIONSLAB.IN</span>
         <span className="font-mono text-[10px] text-t-4">DATA DELAYED 15 MIN. NOT SEBI REGISTERED.</span>
       </div>
     </footer>
   )
 }
+

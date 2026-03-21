@@ -244,3 +244,4 @@ function SearchBox({ onClose }: { onClose: () => void }) {
     </div>
   )
 }
+

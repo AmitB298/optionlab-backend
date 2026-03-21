@@ -101,3 +101,4 @@ body::after {
   50% { opacity: 0.3; }
 }
 .animate-blink { animation: blink 2s step-end infinite; }
+

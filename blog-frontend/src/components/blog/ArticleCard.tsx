@@ -152,3 +152,4 @@ export default function ArticleCard({ article, variant = 'default' }: Props) {
     </div>
   )
 }
+
