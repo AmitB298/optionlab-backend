@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Login / Register | OptionLab — NSE Options Analytics</title>
-<meta name="description" content="Login or register to OptionLab — India's most advanced NSE options analytics platform.">
+<title>Login / Register | OptionsLab — NSE Options Analytics</title>
+<meta name="description" content="Login or register to OptionsLab — India's most advanced NSE options analytics platform.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://optionlab.in/register.html">
+<link rel="canonical" href="https://OptionsLab.in/register.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Join OptionLab — India's NSE Options Analytics Platform">
-<meta property="og:url" content="https://optionlab.in/register.html">
-<meta property="og:image" content="https://optionlab.in/og-image.png">
+<meta property="og:title" content="Join OptionsLab — India's NSE Options Analytics Platform">
+<meta property="og:url" content="https://OptionsLab.in/register.html">
+<meta property="og:image" content="https://OptionsLab.in/og-image.png">
 <meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f97316">
@@ -389,7 +389,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
       <div class="feat"><div class="feat-ico">🎯</div><div class="feat-body"><div class="feat-title">Smart Money Footprint</div><div class="feat-desc">FII vs retail divergence, operator phase detection</div></div></div>
       <div class="feat"><div class="feat-ico">🔗</div><div class="feat-body"><div class="feat-title">Angel One Integration</div><div class="feat-desc">SmartAPI WebSocket for live option chain feed</div></div></div>
     </div>
-    <div class="live-strip"><div class="live-dot"></div><div class="live-text"><strong>1,000+ traders</strong> connected to OptionLab live</div></div>
+    <div class="live-strip"><div class="live-dot"></div><div class="live-text"><strong>1,000+ traders</strong> connected to OptionsLab live</div></div>
     <div class="ticker-strip">
       <div class="tick-item">NIFTY <span class="tv up" id="l-nifty">22,513</span></div>
       <div class="tick-item">VIX <span class="tv dn" id="l-vix">14.23</span></div>
@@ -436,7 +436,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
         <div class="mp-hint">Tap the first box and type your MPIN</div>
       </div>
       <div class="spacer"></div>
-      <button class="btn-main" onclick="doLogin()" id="loginBtn">Login to OptionLab &rarr;</button>
+      <button class="btn-main" onclick="doLogin()" id="loginBtn">Login to OptionsLab &rarr;</button>
       <div class="ffoot">Demo: <span class="flink" onclick="demoFill()">9999999999 / 123456</span> &nbsp;&middot;&nbsp; <span class="flink" onclick="switchTab('register')">Create account</span></div>
     </div>
 
@@ -485,7 +485,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
         <div class="mail-title">Check your inbox</div>
         <div class="mail-sub">Magic link sent to<br><strong id="sentEmailDisplay">&mdash;</strong></div>
         <div class="mail-steps">
-          <div class="mail-step"><div class="mail-step-num">1</div><div class="mail-step-text">Open the email from OptionLab</div></div>
+          <div class="mail-step"><div class="mail-step-num">1</div><div class="mail-step-text">Open the email from OptionsLab</div></div>
           <div class="mail-step"><div class="mail-step-num">2</div><div class="mail-step-text">Click the "Verify my email" button</div></div>
           <div class="mail-step"><div class="mail-step-num">3</div><div class="mail-step-text">You'll return here automatically</div></div>
         </div>
@@ -654,7 +654,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
     <div class="success-screen" id="regOk" role="status">
       <div class="success-ring" aria-hidden="true">&#10003;</div>
       <div class="success-title" id="regOkTitle">Account created!</div>
-      <div class="success-sub" id="regOkMsg">Welcome to OptionLab. Setting up your dashboard&hellip;</div>
+      <div class="success-sub" id="regOkMsg">Welcome to OptionsLab. Setting up your dashboard&hellip;</div>
       <div class="redirect-bar"><div class="redirect-track"><div class="redirect-fill" id="regFill"></div></div>
         <div class="redirect-label">Redirecting in <span id="regCd">3</span>s</div></div>
     </div>
@@ -683,7 +683,7 @@ async function apiFetch(url,opts={}){
     throw err;
   }
 }
-const TOKEN_KEY='optionlab_token',USER_KEY='optionlab_user';
+const TOKEN_KEY='OptionsLab_token',USER_KEY='OptionsLab_user';
 function saveSession(token,user){try{sessionStorage.setItem(TOKEN_KEY,token);sessionStorage.setItem(USER_KEY,JSON.stringify(user));}catch(e){}}
 (function checkExistingSession(){try{if(sessionStorage.getItem(TOKEN_KEY))window.location.replace('index.html');}catch(e){}})();
 
@@ -781,8 +781,8 @@ async function doLogin(){
     startRedirect('loginFill','loginCd',1800,'index.html');
   }catch(e){
     let msg=e.message||'Connection failed';
-    if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach OptionLab server. Check your internet and try again.';
-    showErr('loginErr',msg);btn.disabled=false;btn.innerHTML='Login to OptionLab &rarr;';
+    if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach OptionsLab server. Check your internet and try again.';
+    showErr('loginErr',msg);btn.disabled=false;btn.innerHTML='Login to OptionsLab &rarr;';
     clearBoxes('lMpinRow');document.querySelector('#lMpinRow .mpb')?.focus();
   }
 }
@@ -1005,9 +1005,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 (function(){const p=new URLSearchParams(window.location.search);if(p.get('tab')==='register')switchTab('register');})();
 </script>
 <nav aria-label="Site navigation" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">
-  <a href="https://optionlab.in">OptionLab Home</a>
-  <a href="https://optionlab.in/register.html">Login / Register</a>
-  <a href="https://optionlab.in/verify.html">Email Verify</a>
+  <a href="https://OptionsLab.in">OptionsLab Home</a>
+  <a href="https://OptionsLab.in/register.html">Login / Register</a>
+  <a href="https://OptionsLab.in/verify.html">Email Verify</a>
 </nav>
 </body>
 </html>
