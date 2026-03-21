@@ -3,251 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Verifying Email | OptionLab</title>
+<title>Verifying Email | OptionsLab</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#f97316">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --or:#f97316;--or2:#ea580c;--or3:#fb923c;
-  --og3:rgba(249,115,22,.04);--bds:rgba(249,115,22,.2);
-  --bg:#06080d;--bd:rgba(255,255,255,.07);
-  --tx:#e8eef8;--tx2:#7b8fa8;--gn:#10b981;--rd:#ef4444;
-}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{height:100%}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);
-  min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
-  padding:20px;overflow:hidden;}
-.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(249,115,22,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.018) 1px,transparent 1px);
-  background-size:60px 60px;}
-.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(120px);}
-.o1{width:600px;height:600px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(249,115,22,.07),transparent 65%);}
-.o2{width:400px;height:400px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(16,185,129,.05),transparent 65%);}
-.card{position:relative;z-index:1;
-  background:linear-gradient(155deg,#090d15 0%,#0c1019 100%);
-  border:1px solid var(--bd);border-radius:24px;
-  padding:clamp(32px,6vw,56px) clamp(24px,5vw,48px);
-  max-width:440px;width:100%;text-align:center;
-  box-shadow:0 0 0 1px rgba(249,115,22,.04),0 40px 100px rgba(0,0,0,.8);}
-.brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px;text-decoration:none;}
-.brand-mark{width:40px;height:40px;background:linear-gradient(135deg,#f97316,#c2410c);
-  border-radius:11px;display:flex;align-items:center;justify-content:center;
-  font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;
-  box-shadow:0 0 24px rgba(249,115,22,.45);}
-.brand-name{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#e8eef8;letter-spacing:-.01em;}
-.brand-name b{color:var(--or);}
+html,body{height:100%;}
+body{font-family:'Outfit',sans-serif;background:#050709;color:#e8eef8;display:flex;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;overflow-x:hidden;}
+#bgCanvas{position:fixed;inset:0;z-index:0;}
+.scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);}
+.grid{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(249,115,22,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.022) 1px,transparent 1px);background-size:48px 48px;}
+.corner{position:fixed;z-index:2;width:18px;height:18px;pointer-events:none;}
+.corner.tl{top:16px;left:16px;border-top:1px solid rgba(249,115,22,.35);border-left:1px solid rgba(249,115,22,.35);}
+.corner.tr{top:16px;right:16px;border-top:1px solid rgba(249,115,22,.35);border-right:1px solid rgba(249,115,22,.35);}
+.corner.bl{bottom:16px;left:16px;border-bottom:1px solid rgba(249,115,22,.35);border-left:1px solid rgba(249,115,22,.35);}
+.corner.br{bottom:16px;right:16px;border-bottom:1px solid rgba(249,115,22,.35);border-right:1px solid rgba(249,115,22,.35);}
+.ticker{position:fixed;top:0;left:0;right:0;z-index:10;background:rgba(5,7,9,.96);border-bottom:1px solid #111420;padding:7px 20px;display:flex;align-items:center;justify-content:space-between;}
+.ticker-brand{font-family:'Syne',sans-serif;font-weight:900;font-size:14px;color:#f0f5ff;letter-spacing:-.3px;}
+.ticker-brand span{color:#f97316;}
+.ticker-data{display:flex;gap:18px;align-items:center;}
+.tick{font-family:'JetBrains Mono',monospace;font-size:11px;color:#374151;}
+.tick-label{color:#4b5563;}
+.tick-up{color:#10b981;font-weight:700;}
+.tick-dn{color:#ef4444;font-weight:700;}
+.live-dot{display:inline-block;width:5px;height:5px;background:#10b981;border-radius:50%;margin-right:5px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+main{position:relative;z-index:5;width:100%;max-width:500px;padding:70px 20px 20px;}
 .state{display:none;flex-direction:column;align-items:center;}
 .state.show{display:flex;}
-.spinner-ring{width:72px;height:72px;border-radius:50%;border:3px solid rgba(249,115,22,.15);
-  border-top-color:var(--or);animation:spin 1s linear infinite;margin-bottom:24px;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.check-ring{width:80px;height:80px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05));
-  border:2px solid rgba(16,185,129,.4);
-  display:flex;align-items:center;justify-content:center;font-size:34px;
-  margin-bottom:24px;animation:pop-in .5s cubic-bezier(.175,.885,.32,1.275) both;}
+
+/* VERIFYING */
+.ring-wrap{position:relative;width:96px;height:96px;margin-bottom:28px;}
+.ring1{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(249,115,22,.2);animation:spin1 3s linear infinite;}
+.ring1::after{content:'';position:absolute;top:-3px;left:calc(50% - 4px);width:8px;height:8px;background:#f97316;border-radius:50%;box-shadow:0 0 10px #f97316,0 0 20px rgba(249,115,22,.4);}
+.ring2{position:absolute;inset:14px;border-radius:50%;border:1px solid rgba(249,115,22,.08);animation:spin1 2s linear infinite reverse;}
+.ring2::after{content:'';position:absolute;top:-2px;left:calc(50% - 3px);width:6px;height:6px;background:#fb923c;border-radius:50%;opacity:.5;box-shadow:0 0 6px #fb923c;}
+.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.18);display:flex;align-items:center;justify-content:center;font-size:16px;}
+@keyframes spin1{to{transform:rotate(360deg)}}
+.v-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#f97316;letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
+.v-title{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(22px,5vw,32px);letter-spacing:-.04em;line-height:1.05;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,#fff 0%,#94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.v-sub{font-size:13px;color:#4b5563;line-height:1.7;text-align:center;max-width:280px;}
+.dots{display:flex;gap:5px;margin-top:14px;}
+.dot{width:4px;height:4px;border-radius:50%;background:#f97316;opacity:.2;animation:blink 1.4s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:.2s;}.dot:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* CARDS */
+.card{width:100%;background:linear-gradient(160deg,#080c14,#0a0f1a);border:1px solid #1a1d27;border-radius:20px;overflow:hidden;}
+.card-accent{height:2px;}
+.accent-or{background:linear-gradient(90deg,transparent,#f97316,#fb923c,transparent);}
+.accent-gn{background:linear-gradient(90deg,transparent,#10b981,#34d399,transparent);}
+.card-accent-rd{height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent);}
+.card-head{padding:18px 24px;border-bottom:1px solid #111420;display:flex;align-items:center;justify-content:space-between;}
+.card-brand{font-family:'Syne',sans-serif;font-weight:900;font-size:15px;color:#f0f5ff;letter-spacing:-.3px;}
+.card-brand span{color:#f97316;}
+.card-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:5px;}
+.badge-gn{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:#10b981;}
+.badge-or{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);color:#f97316;}
+.card-body{padding:32px 24px 24px;text-align:center;}
+
+/* CHECK ANIMATION */
+.chk-wrap{width:80px;height:80px;border-radius:50%;margin:0 auto 20px;position:relative;background:radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);}
+.chk-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(16,185,129,.25);animation:pop-in .5s cubic-bezier(.175,.885,.32,1.275) both;}
+.chk-inner{position:absolute;inset:8px;border-radius:50%;background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(16,185,129,.04));border:1px solid rgba(16,185,129,.2);display:flex;align-items:center;justify-content:center;font-size:26px;animation:pop-in .4s .1s cubic-bezier(.175,.885,.32,1.275) both;}
 @keyframes pop-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.err-ring{width:80px;height:80px;border-radius:50%;
-  background:rgba(239,68,68,.08);border:2px solid rgba(239,68,68,.3);
-  display:flex;align-items:center;justify-content:center;font-size:34px;
-  margin-bottom:24px;animation:pop-in .5s cubic-bezier(.175,.885,.32,1.275) both;}
-.state-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(20px,4vw,26px);
-  letter-spacing:-.03em;margin-bottom:10px;
-  background:linear-gradient(135deg,#fff 0%,#c8d5e8 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.state-sub{font-size:14px;color:#586880;line-height:1.65;max-width:300px;}
-.state-sub strong{color:var(--or);}
-.redirect-bar{margin-top:24px;display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;}
-.redirect-track{width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
-.redirect-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--or3));border-radius:2px;width:0%;transition:width linear;}
-.redirect-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:#4e6278;}
-.email-chip{display:inline-flex;align-items:center;gap:6px;margin:12px 0;
-  padding:6px 12px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);
-  border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gn);}
-.route-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;
-  padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;}
-.route-new{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);color:var(--or);}
-.route-returning{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--gn);}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  margin-top:20px;padding:13px 28px;
-  background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
-  border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;
-  cursor:pointer;transition:all .25s;text-decoration:none;
-  box-shadow:0 4px 20px rgba(249,115,22,.35);}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(249,115,22,.45);}
-.dots{display:inline-flex;gap:5px;margin-top:6px;}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--or);opacity:.3;animation:blink 1.4s ease-in-out infinite;}
-.dot:nth-child(2){animation-delay:.2s;}
-.dot:nth-child(3){animation-delay:.4s;}
-@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+.chk-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+.chk-label.gn{color:#10b981;}
+.chk-label.or{color:#f97316;}
+.card-headline{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(20px,4vw,26px);letter-spacing:-.04em;line-height:1.05;margin-bottom:10px;background:linear-gradient(135deg,#fff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.email-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;margin:10px 0 16px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#10b981;}
+.card-desc{font-size:13px;color:#4b5563;line-height:1.7;margin-bottom:20px;}
+
+/* STEP LIST */
+.step-list{background:#060810;border:1px solid #111420;border-radius:10px;padding:14px 16px;margin-bottom:20px;text-align:left;}
+.step-list-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:#2d3748;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+.step-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.step-row:last-child{border-bottom:none;padding-bottom:0;}
+.sn{width:22px;height:22px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;}
+.sn-done{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:#10b981;}
+.sn-next{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25);color:#f97316;}
+.sn-pend{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);color:#2d3748;}
+.st{font-size:12px;color:#4b5563;flex:1;}
+.st.active{color:#e2e8f4;font-weight:600;}
+.sb{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.sb-done{background:rgba(16,185,129,.1);color:#10b981;}
+.sb-next{background:rgba(249,115,22,.1);color:#f97316;}
+
+/* CTA */
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 20px;border:none;border-radius:11px;font-family:'Syne',sans-serif;font-size:15px;font-weight:900;letter-spacing:.01em;cursor:pointer;text-decoration:none;transition:all .25s;position:relative;overflow:hidden;}
+.cta::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);pointer-events:none;}
+.cta-or{background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;box-shadow:0 6px 24px rgba(249,115,22,.35);}
+.cta-gn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 6px 24px rgba(16,185,129,.3);}
+.cta:hover{transform:translateY(-2px);}
+.cta-arr{font-size:18px;transition:transform .25s;}
+.cta:hover .cta-arr{transform:translateX(3px);}
+
+/* PROGRESS */
+.prog{margin-top:14px;padding:0 2px;}
+.prog-lbl{display:flex;justify-content:space-between;margin-bottom:5px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#374151;}
+.prog-track{height:2px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:1px;animation:prog-anim .8s .2s ease-out both;}
+.prog-fill-or{background:linear-gradient(90deg,#f97316,#fb923c);width:20%;}
+.prog-fill-gn{background:linear-gradient(90deg,#10b981,#34d399);width:0%;}
+@keyframes prog-anim{from{width:0%}to{}}
+
+/* ERROR */
+.err-card{width:100%;background:linear-gradient(160deg,#0d0809,#110a09);border:1px solid #2a1515;border-radius:20px;overflow:hidden;padding:36px 24px;text-align:center;}
+.err-icon{font-size:36px;margin-bottom:16px;}
+.err-title{font-family:'Syne',sans-serif;font-weight:900;font-size:22px;letter-spacing:-.03em;margin-bottom:8px;color:#fca5a5;}
+.err-msg{font-size:13px;color:#6b7fa0;line-height:1.7;margin-bottom:24px;max-width:280px;margin-left:auto;margin-right:auto;}
+.err-btn{display:inline-flex;align-items:center;gap:7px;padding:12px 24px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;border-radius:9px;text-decoration:none;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;transition:all .2s;}
+.err-btn:hover{background:rgba(239,68,68,.15);}
+.err-code{margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#2d3748;padding:6px 14px;background:rgba(255,255,255,.02);border:1px solid #1a1d27;border-radius:5px;display:inline-block;}
+
+@media(max-width:480px){.ticker-data .tick:last-child{display:none;}}
 </style>
 </head>
 <body>
-<div class="bg-grid" aria-hidden="true"></div>
-<div class="bg-orb o1" aria-hidden="true"></div>
-<div class="bg-orb o2" aria-hidden="true"></div>
+
+<canvas id="bgCanvas"></canvas>
+<div class="scanlines"></div>
+<div class="grid"></div>
+<div class="corner tl"></div><div class="corner tr"></div>
+<div class="corner bl"></div><div class="corner br"></div>
+
+<div class="ticker">
+  <div class="ticker-brand">Options<span>Lab</span></div>
+  <div class="ticker-data">
+    <div class="tick"><span class="tick-label">NIFTY </span><span class="tick-up" id="tN">22,513</span></div>
+    <div class="tick"><span class="tick-label">VIX </span><span class="tick-dn" id="tV">14.23</span></div>
+    <div class="tick"><span class="tick-label">PCR </span><span class="tick-up" id="tP">1.08</span></div>
+    <div class="tick"><span class="live-dot"></span><span class="tick-up">LIVE</span></div>
+  </div>
+</div>
 
 <main>
-<div class="card">
-  <a href="index.html" class="brand">
-    <div class="brand-mark">OL</div>
-    <span class="brand-name">Option<b>Lab</b></span>
-  </a>
 
   <!-- VERIFYING -->
-  <div class="state show" id="stateVerifying">
-    <div class="spinner-ring" aria-hidden="true"></div>
-    <div class="state-title">Verifying your email</div>
-    <div class="state-sub">Just a moment&hellip;</div>
-    <div class="dots" aria-hidden="true"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  <div class="state show" id="stVerifying">
+    <div class="ring-wrap">
+      <div class="ring1"></div>
+      <div class="ring2"></div>
+      <div class="ring-center">🔐</div>
+    </div>
+    <div class="v-label">◈ Authenticating</div>
+    <div class="v-title">Verifying your<br>email address</div>
+    <div class="v-sub">Validating cryptographic token<br>and checking account status…</div>
+    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
   </div>
 
-  <!-- SUCCESS NEW USER -->
-  <div class="state" id="stateSuccessNew">
-    <div class="check-ring" aria-hidden="true">&#10003;</div>
-    <div class="state-title">Email verified!</div>
-    <div class="email-chip" id="successEmailNew"></div>
-    <div class="route-badge route-new">✦ New account — completing setup</div>
-    <div class="state-sub" style="margin-top:12px">Taking you to finish setting up your account&hellip;</div>
-    <div class="redirect-bar">
-      <div class="redirect-track"><div class="redirect-fill" id="fillNew"></div></div>
-      <div class="redirect-label">Redirecting in <span id="cdNew">3</span>s</div>
+  <!-- NEW USER SUCCESS -->
+  <div class="state" id="stNew">
+    <div class="card">
+      <div class="card-accent accent-or"></div>
+      <div class="card-head">
+        <div class="card-brand">Options<span>Lab</span></div>
+        <div class="card-badge badge-or">◈ Email Verified</div>
+      </div>
+      <div class="card-body">
+        <div class="chk-wrap">
+          <div class="chk-ring"></div>
+          <div class="chk-inner">✓</div>
+        </div>
+        <div class="chk-label or">◈ &nbsp;Verification complete</div>
+        <div class="card-headline">Your email is<br>confirmed.</div>
+        <div class="email-chip">✓ &nbsp;<span id="newEmail">—</span></div>
+        <div class="card-desc">Complete your account setup to access institutional-grade NSE options analytics.</div>
+
+        <div class="step-list">
+          <div class="step-list-label">Registration Progress</div>
+          <div class="step-row"><div class="sn sn-done">✓</div><div class="st">Email verification</div><div class="sb sb-done">Done</div></div>
+          <div class="step-row"><div class="sn sn-next">2</div><div class="st active">Profile — name &amp; mobile</div><div class="sb sb-next">Next →</div></div>
+          <div class="step-row"><div class="sn sn-pend">3</div><div class="st">Broker — Angel One ID</div></div>
+          <div class="step-row"><div class="sn sn-pend">4</div><div class="st">Trader profile &amp; preferences</div></div>
+          <div class="step-row"><div class="sn sn-pend">5</div><div class="st">Set your secure MPIN</div></div>
+        </div>
+
+        <a href="#" class="cta cta-or" id="continueBtn">
+          Continue Setup &nbsp;<span class="cta-arr">→</span>
+        </a>
+
+        <div class="prog">
+          <div class="prog-lbl"><span>Progress</span><span>Step 1 of 5 complete</span></div>
+          <div class="prog-track"><div class="prog-fill prog-fill-or"></div></div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- SUCCESS RETURNING USER -->
-  <div class="state" id="stateSuccessReturn">
-    <div class="check-ring" aria-hidden="true">&#10003;</div>
-    <div class="state-title">Welcome back!</div>
-    <div class="email-chip" id="successEmailReturn"></div>
-    <div class="route-badge route-returning">✓ Account found — taking you to your profile</div>
-    <div class="state-sub" style="margin-top:12px">Signing you in&hellip;</div>
-    <div class="redirect-bar">
-      <div class="redirect-track"><div class="redirect-fill" id="fillReturn"></div></div>
-      <div class="redirect-label">Redirecting in <span id="cdReturn">3</span>s</div>
+  <!-- RETURNING USER SUCCESS -->
+  <div class="state" id="stReturn">
+    <div class="card" style="border-color:#1a2a1a;">
+      <div class="card-accent accent-gn"></div>
+      <div class="card-head">
+        <div class="card-brand">Options<span>Lab</span></div>
+        <div class="card-badge badge-gn">✓ Authenticated</div>
+      </div>
+      <div class="card-body">
+        <div class="chk-wrap" style="background:radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);">
+          <div class="chk-ring" style="border-color:rgba(16,185,129,.25);"></div>
+          <div class="chk-inner" style="color:#10b981;">✓</div>
+        </div>
+        <div class="chk-label gn">✓ &nbsp;Account found</div>
+        <div class="card-headline">Welcome back<br>to OptionsLab.</div>
+        <div class="email-chip">✓ &nbsp;<span id="retEmail">—</span></div>
+        <div class="card-desc">Your session has been created. Redirecting you to your trading dashboard now.</div>
+
+        <div class="step-list" style="border-color:rgba(16,185,129,.12);">
+          <div class="step-list-label">Session Status</div>
+          <div class="step-row"><div class="sn sn-done">✓</div><div class="st">Identity verified via magic link</div><div class="sb sb-done">Secure</div></div>
+          <div class="step-row"><div class="sn sn-done">✓</div><div class="st">Session token issued — 7 days</div><div class="sb sb-done">Active</div></div>
+        </div>
+
+        <a href="profile.html" class="cta cta-gn" id="profileBtn">
+          Go to My Profile &nbsp;<span class="cta-arr">→</span>
+        </a>
+
+        <div class="prog" style="margin-top:12px;">
+          <div class="prog-lbl" style="justify-content:center;color:#10b981;">
+            <span>Redirecting in <span id="retCd">3</span>s</span>
+          </div>
+          <div class="prog-track"><div class="prog-fill prog-fill-gn" id="retFill" style="width:0%;background:linear-gradient(90deg,#10b981,#34d399);"></div></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- ERROR -->
-  <div class="state" id="stateError">
-    <div class="err-ring" aria-hidden="true">&#10007;</div>
-    <div class="state-title">Link expired</div>
-    <div class="state-sub" id="errMsg">This magic link has expired or already been used. Please request a new one.</div>
-    <a href="register.html?tab=register" class="btn">&#8592; Back to Register</a>
+  <div class="state" id="stError">
+    <div class="err-card">
+      <div class="card-accent-rd" style="margin-bottom:32px;"></div>
+      <div class="err-icon">⚠</div>
+      <div class="err-title">Verification Failed</div>
+      <div class="err-msg" id="errMsg">This magic link has expired or has already been used. Each link is single-use and valid for 15 minutes.</div>
+      <a href="register.html?tab=register" class="err-btn">← Request a new link</a>
+      <div class="err-code" id="errCode"></div>
+    </div>
   </div>
-</div>
+
 </main>
 
 <script>
 const API = 'https://web-production-8a8e1.up.railway.app';
 
 function show(id) {
-  ['stateVerifying','stateSuccessNew','stateSuccessReturn','stateError'].forEach(s => {
-    document.getElementById(s).classList.toggle('show', s === id);
-  });
+  ['stVerifying','stNew','stReturn','stError'].forEach(s =>
+    document.getElementById(s).classList.toggle('show', s === id));
 }
 
-function startRedirect(fillId, cdId, duration, destination) {
-  const fill = document.getElementById(fillId);
-  const cd   = document.getElementById(cdId);
-  let remaining = Math.round(duration / 1000);
-  if (fill) {
-    fill.style.transition = 'none';
-    fill.style.width = '0%';
-    requestAnimationFrame(() => {
-      fill.style.transition = 'width ' + duration + 'ms linear';
-      fill.style.width = '100%';
-    });
+// Ticker
+let _n=22513,_v=14.23,_p=1.08;
+setInterval(() => {
+  _n=Math.max(22100,Math.min(22900,_n+(Math.random()-.48)*3));
+  _v=Math.max(12,Math.min(20,_v+(Math.random()-.5)*.06));
+  _p=Math.max(.7,Math.min(1.5,_p+(Math.random()-.5)*.012));
+  const ne=document.getElementById('tN'),ve=document.getElementById('tV'),pe=document.getElementById('tP');
+  if(ne)ne.textContent=_n.toLocaleString('en-IN',{maximumFractionDigits:0});
+  if(ve)ve.textContent=_v.toFixed(2);
+  if(pe)pe.textContent=_p.toFixed(2);
+},2500);
+
+// Canvas
+(function(){
+  const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  for(let i=0;i<50;i++) pts.push({x:Math.random()*1000,y:Math.random()*1000,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.3,a:Math.random()*.3+.05,c:Math.random()>.75?'#f97316':'#1e2433'});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const g1=ctx.createRadialGradient(W*.15,H*.2,0,W*.15,H*.2,380);
+    g1.addColorStop(0,'rgba(249,115,22,0.055)');g1.addColorStop(1,'transparent');
+    ctx.fillStyle=g1;ctx.fillRect(0,0,W,H);
+    const g2=ctx.createRadialGradient(W*.85,H*.8,0,W*.85,H*.8,280);
+    g2.addColorStop(0,'rgba(16,185,129,0.035)');g2.addColorStop(1,'transparent');
+    ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c;ctx.globalAlpha=p.a;ctx.fill();});
+    ctx.globalAlpha=1;requestAnimationFrame(draw);
   }
-  const interval = setInterval(() => {
-    remaining--;
-    if (cd) cd.textContent = remaining;
-    if (remaining <= 0) clearInterval(interval);
-  }, 1000);
-  setTimeout(() => { window.location.href = destination; }, duration);
+  draw();
+})();
+
+// Redirect
+function startRedirect(fillId,cdId,dur,dest){
+  const fill=document.getElementById(fillId),cd=document.getElementById(cdId);
+  let rem=Math.ceil(dur/1000);
+  if(fill){fill.style.transition='none';fill.style.width='0%';requestAnimationFrame(()=>{fill.style.transition=`width ${dur}ms linear`;fill.style.width='100%';});}
+  const iv=setInterval(()=>{rem--;if(cd)cd.textContent=rem;if(rem<=0)clearInterval(iv);},1000);
+  setTimeout(()=>{window.location.href=dest;},dur);
 }
 
-(async function verifyToken() {
-  const params = new URLSearchParams(window.location.search);
-  const token  = params.get('token');
-  const email  = params.get('email');
-
-  if (!token || !email) {
-    document.getElementById('errMsg').textContent = 'Invalid verification link. Please request a new one.';
-    show('stateError');
-    return;
+// Main flow
+(async function(){
+  const p=new URLSearchParams(window.location.search);
+  const token=p.get('token'),email=p.get('email');
+  if(!token||!email){
+    document.getElementById('errMsg').textContent='Invalid verification link — missing token or email.';
+    document.getElementById('errCode').textContent='ERR_MISSING_PARAMS';
+    show('stError');return;
   }
-
-  try {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 12000);
-
-    const res  = await fetch(API + '/api/email/verify-token', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ token, email }),
-      signal:  controller.signal,
-    });
-    const data = await res.json();
-
-    if (!res.ok || !data.email_token) {
-      document.getElementById('errMsg').textContent = data.error || 'Verification failed. The link may have expired.';
-      show('stateError');
-      return;
+  try{
+    const ctrl=new AbortController();
+    setTimeout(()=>ctrl.abort(),15000);
+    const res=await fetch(API+'/api/email/verify-token',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token,email}),signal:ctrl.signal});
+    const data=await res.json();
+    if(!res.ok||!data.email_token){
+      document.getElementById('errMsg').textContent=data.error||'Verification failed. The link may have expired.';
+      document.getElementById('errCode').textContent='ERR_'+res.status;
+      show('stError');return;
     }
+    // Check existing user
+    let isExisting=false,sessionToken=null;
+    try{
+      const lr=await fetch(API+'/api/auth/login-email',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email_token:data.email_token})});
+      if(lr.ok){const ld=await lr.json();if(ld.token){isExisting=true;sessionToken=ld.token;}}
+    }catch{}
 
-    // Check if user already exists
-    let isExistingUser = false;
-    let sessionToken = null;
-
-    try {
-      const loginRes = await fetch(API + '/api/auth/login-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email_token: data.email_token }),
-      });
-      if (loginRes.ok) {
-        const loginData = await loginRes.json();
-        if (loginData.token) {
-          isExistingUser = true;
-          sessionToken = loginData.token;
-        }
-      }
-    } catch {}
-
-    if (isExistingUser && sessionToken) {
-      // Existing user — save token and go to profile
-      localStorage.setItem('ol_token', sessionToken);
-
-      const chip = document.getElementById('successEmailReturn');
-      if (chip) chip.innerHTML = '✓ ' + email;
-      show('stateSuccessReturn');
-      startRedirect('fillReturn', 'cdReturn', 2800, 'profile.html');
-
+    if(isExisting&&sessionToken){
+      localStorage.setItem('ol_token',sessionToken);
+      document.getElementById('retEmail').textContent=email;
+      show('stReturn');
+      startRedirect('retFill','retCd',3000,'profile.html');
     } else {
-      // New user — go to registration to complete profile
-      const chip = document.getElementById('successEmailNew');
-      if (chip) chip.innerHTML = '✓ ' + email;
-      show('stateSuccessNew');
-
-      const redirectUrl = 'register.html?tab=register&email_token='
-        + encodeURIComponent(data.email_token)
-        + '&email=' + encodeURIComponent(email);
-      startRedirect('fillNew', 'cdNew', 2800, redirectUrl);
+      const url='register.html?tab=register&email_token='+encodeURIComponent(data.email_token)+'&email='+encodeURIComponent(email);
+      document.getElementById('newEmail').textContent=email;
+      document.getElementById('continueBtn').href=url;
+      show('stNew');
     }
-
-  } catch (err) {
-    const msg = err.name === 'AbortError'
-      ? 'Request timed out. Please check your connection and try again.'
-      : 'Could not reach OptionLab server. Please try again.';
-    document.getElementById('errMsg').textContent = msg;
-    show('stateError');
+  }catch(err){
+    document.getElementById('errMsg').textContent=err.name==='AbortError'?'Request timed out. Please try again.':'Could not reach OptionsLab server.';
+    document.getElementById('errCode').textContent=err.name==='AbortError'?'ERR_TIMEOUT':'ERR_NETWORK';
+    show('stError');
   }
 })();
 </script>
