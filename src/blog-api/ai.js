@@ -1,3 +1,4 @@
+'use strict';
 const router = require('express').Router();
 const { auth } = require('../middleware/auth');
 const pool = require('../db/pool');
@@ -5,34 +6,20 @@ const Anthropic = require('@anthropic-ai/sdk');
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const MARKET_ANALYST_SYSTEM = `You are a senior derivatives market analyst for OptionLab (optionslab.in), India's premier options intelligence platform. You specialize in NIFTY 50, BANKNIFTY, and FINNIFTY options and futures analysis.
+// SEBI-compliant education system prompt — no live data, no specific recommendations
+const EDUCATION_SYSTEM = `You are a senior derivatives educator for OptionsLab (optionslab.in), India's financial education platform.
 
-Your deep expertise covers:
-- Open Interest (OI) analysis and interpretation
-- Put-Call Ratio (PCR) signals and divergence
-- Implied Volatility (IV) surface analysis and skew
-- Max pain theory and expiry pinning dynamics
-- India VIX interpretation and volatility regimes
-- FII/DII participant-wise positioning data from NSE
-- Options Greeks and their market implications
-- Expiry-day dynamics and gamma risk
-- Sector rotation signals from options flow
+Your expertise covers options and derivatives concepts for Indian markets (NIFTY, BANKNIFTY, FINNIFTY).
 
-Current market context (as of today):
-- NIFTY 50: 22,347 (-0.31%), BANKNIFTY: 47,984 (+0.26%), FINNIFTY: 23,108 (-0.18%)
-- India VIX: 14.32 (+6.23%) — moderate volatility regime
-- NIFTY 22,500 CE: 45.2 lakh OI (largest call concentration), PCR at 0.73
-- FIIs net long in index futures with 18,400 long additions, 6,200 short reductions
-- Max pain NIFTY: 22,300, BANKNIFTY: 47,900
+Guidelines:
+- Use hypothetical examples only (e.g. "suppose NIFTY is at 22,000...")
+- Never reference current live market prices, OI data, or real-time figures
+- Frame all content as education, not trading advice
+- No buy/sell recommendations on any specific security or level
+- Always remind users that options trading involves substantial risk
+- SEBI-compliant: this is an educational platform only — not a registered Research Analyst or Investment Adviser`;
 
-Response guidelines:
-- Be precise, data-driven, and structured. Use specific numbers and strike levels.
-- Frame analysis as educational insights (SEBI-compliant — no direct buy/sell advice)
-- Structure: Key Observation → Supporting Data → Implication → Watch Level
-- Keep responses under 200 words unless a detailed article is requested
-- For article generation, use proper markdown with H2 headings, tables, and callout boxes using > notation`;
-
-// POST /api/ai/chat — conversational AI market analysis
+// POST /api/blog/ai/chat — general educational AI chat
 router.post('/chat', async (req, res) => {
   const { messages, question } = req.body;
   if (!question && (!messages || !messages.length))
@@ -46,7 +33,7 @@ router.post('/chat', async (req, res) => {
     const response = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1024,
-      system: MARKET_ANALYST_SYSTEM,
+      system: EDUCATION_SYSTEM,
       messages: msgs,
     });
 
@@ -57,50 +44,7 @@ router.post('/chat', async (req, res) => {
   }
 });
 
-// POST /api/ai/briefing — generate daily market briefing
-router.post('/briefing', async (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-
-  try {
-    // Check if briefing already exists for today
-    const existing = await pool.query(`SELECT * FROM blog_ai_briefings WHERE date=$1`, [today]);
-    if (existing.rows[0]) return res.json(existing.rows[0]);
-
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      system: MARKET_ANALYST_SYSTEM,
-      messages: [{
-        role: 'user',
-        content: `Generate a concise pre-market intelligence briefing for Indian derivatives traders for today. 
-
-Format as 3 paragraphs:
-1. Market overview — NIFTY/BANKNIFTY direction, overnight cues, key levels
-2. Options market intelligence — notable OI buildup, PCR signals, VIX regime
-3. Today's watch levels — specific strikes to monitor, potential triggers
-
-Keep under 150 words total. Be specific with numbers. End with one "Key Level to Watch" line.`
-      }],
-    });
-
-    const body = response.content[0].text;
-
-    const { rows } = await pool.query(`
-      INSERT INTO blog_ai_briefings (date, title, body, sentiment, nifty_level, vix_level)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      ON CONFLICT (date) DO UPDATE SET body=EXCLUDED.body, generated_at=NOW()
-      RETURNING *
-    `, [today, `Pre-Market Intelligence Brief — ${new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' })}`,
-        body, 'bearish', 22347, 14.32]);
-
-    res.json(rows[0]);
-  } catch (err) {
-    console.error('[AI] Briefing error:', err.message);
-    res.status(500).json({ error: 'AI service unavailable', details: err.message });
-  }
-});
-
-// POST /api/ai/assist-write — generate article draft from title
+// POST /api/blog/ai/assist-write — generate educational article draft from title (admin only)
 router.post('/assist-write', auth, async (req, res) => {
   const { title, category, outline_points } = req.body;
   if (!title) return res.status(400).json({ error: 'Title required' });
@@ -109,27 +53,27 @@ router.post('/assist-write', auth, async (req, res) => {
     const response = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 2048,
-      system: MARKET_ANALYST_SYSTEM,
+      system: EDUCATION_SYSTEM,
       messages: [{
         role: 'user',
-        content: `Write a complete, publication-ready market analysis article for OptionLab.
+        content: `Write a complete, publication-ready educational article for OptionsLab blog.
 
 Title: "${title}"
-Category: ${category || 'Market Analysis'}
+Category: ${category || 'Options Education'}
 ${outline_points ? `Key points to cover: ${outline_points}` : ''}
 
 Requirements:
-- Use markdown formatting with ## H2 headings, **bold** for key data, *italic* for emphasis
-- Include at least one data table (use markdown table format)  
+- Use markdown formatting with ## H2 headings, **bold** for key terms, *italic* for emphasis
+- Include at least one example table (use markdown table format)
 - Include 2-3 callout boxes using > notation for key insights
-- Include specific NIFTY/BANKNIFTY/VIX numbers and strike levels
-- Three scenarios (bull/bear/base case) where relevant
+- Use ONLY hypothetical examples — never reference real current market prices or levels
+- Explain concepts clearly for intermediate Indian retail traders
 - 600-900 words
-- End with "Watch Levels" section
-- Professional tone, educational framing (no buy/sell advice)
-- SEBI-compliant disclaimer note at end
+- End with "Key Takeaways" section
+- Professional, educational tone — no buy/sell advice
+- Add SEBI disclaimer at end: "This article is for educational purposes only and does not constitute investment advice. OptionsLab is not a SEBI-registered Research Analyst or Investment Adviser."
 
-Write the complete article now:`
+Write the complete article now:`,
       }],
     });
 
@@ -140,7 +84,7 @@ Write the complete article now:`
   }
 });
 
-// POST /api/ai/score-sentiment — score an article's sentiment and AI score
+// POST /api/blog/ai/score-sentiment — score article sentiment and metadata (admin only)
 router.post('/score-sentiment', auth, async (req, res) => {
   const { title, excerpt, body } = req.body;
   if (!title) return res.status(400).json({ error: 'Title required' });
@@ -152,13 +96,13 @@ router.post('/score-sentiment', auth, async (req, res) => {
       system: 'You are a financial content analyzer. Respond only with valid JSON.',
       messages: [{
         role: 'user',
-        content: `Analyze this market article and return JSON only (no markdown):
+        content: `Analyze this educational article and return JSON only (no markdown):
 
 Title: ${title}
 Excerpt: ${excerpt || ''}
 Body preview: ${body?.substring(0, 500) || ''}
 
-Return: {"sentiment": "bullish|bearish|neutral", "ai_score": 0-100, "key_themes": ["theme1","theme2"], "read_time_min": number}`
+Return: {"sentiment": "bullish|bearish|neutral", "ai_score": 0-100, "key_themes": ["theme1","theme2"], "read_time_min": number}`,
       }],
     });
 
@@ -170,18 +114,7 @@ Return: {"sentiment": "bullish|bearish|neutral", "ai_score": 0-100, "key_themes"
   }
 });
 
-// GET /api/ai/briefing/today — get today's briefing
-router.get('/briefing/today', async (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-  try {
-    const { rows } = await pool.query(`SELECT * FROM blog_ai_briefings WHERE date=$1`, [today]);
-    res.json(rows[0] || null);
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// POST /api/blog/ai/education — SEBI-compliant education chat
+// POST /api/blog/ai/education — SEBI-compliant education chat (used by LearnPage)
 router.post('/education', async (req, res) => {
   const { question, messages } = req.body;
   if (!question && (!messages || !messages.length))
@@ -190,16 +123,19 @@ router.post('/education', async (req, res) => {
     const msgs = messages?.length
       ? messages.map(m => ({ role: m.role, content: m.content }))
       : [{ role: 'user', content: question }];
+
     const response = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 800,
-      system: `You are OptionsLab's financial education assistant for Indian retail traders. STRICT RULES: 1) Only explain options/derivatives concepts in general terms. 2) NEVER recommend buying or selling any specific stock or index level. 3) NEVER reference current market prices or live data. 4) Use ONLY hypothetical examples like "suppose a stock is at Rs 100". 5) Always remind users options trading involves substantial risk. 6) If asked for stock tips or trading signals, politely decline. This is a SEBI-compliant educational platform.`,
+      system: EDUCATION_SYSTEM,
       messages: msgs,
     });
+
     res.json({ response: response.content[0].text });
   } catch (err) {
     console.error('[AI] Education error:', err.message);
     res.status(500).json({ error: 'AI service unavailable' });
   }
 });
+
 module.exports = router;
