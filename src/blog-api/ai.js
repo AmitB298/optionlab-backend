@@ -181,4 +181,25 @@ router.get('/briefing/today', async (req, res) => {
   }
 });
 
+// POST /api/blog/ai/education — SEBI-compliant education chat
+router.post('/education', async (req, res) => {
+  const { question, messages } = req.body;
+  if (!question && (!messages || !messages.length))
+    return res.status(400).json({ error: 'Question required' });
+  try {
+    const msgs = messages?.length
+      ? messages.map(m => ({ role: m.role, content: m.content }))
+      : [{ role: 'user', content: question }];
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 800,
+      system: `You are OptionsLab's financial education assistant for Indian retail traders. STRICT RULES: 1) Only explain options/derivatives concepts in general terms. 2) NEVER recommend buying or selling any specific stock or index level. 3) NEVER reference current market prices or live data. 4) Use ONLY hypothetical examples like "suppose a stock is at Rs 100". 5) Always remind users options trading involves substantial risk. 6) If asked for stock tips or trading signals, politely decline. This is a SEBI-compliant educational platform.`,
+      messages: msgs,
+    });
+    res.json({ response: response.content[0].text });
+  } catch (err) {
+    console.error('[AI] Education error:', err.message);
+    res.status(500).json({ error: 'AI service unavailable' });
+  }
+});
 module.exports = router;
