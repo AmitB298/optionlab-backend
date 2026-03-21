@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
     const author = rows[0];
     if (!author) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const valid = await bcrypt.compare(password, author.password);
+    const valid = await bcrypt.compare(password, author.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign(
@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
-    const { password: _pw, ...safeAuthor } = author;
+    const { password_hash: _pw, ...safeAuthor } = author;
     res.json({ token, author: safeAuthor });
   } catch (err) {
     console.error('[Auth] Login error:', err);
@@ -58,9 +58,9 @@ router.post('/change-password', auth, async (req, res) => {
   if (new_password.length < 6)
     return res.status(400).json({ error: 'New password must be at least 6 characters' });
   try {
-    const { rows } = await pool.query('SELECT password FROM blog_authors WHERE id=$1', [req.user.id]);
+    const { rows } = await pool.query('SELECT password_hash FROM blog_authors WHERE id=$1', [req.user.id]);
     if (!rows[0]) return res.status(404).json({ error: 'Author not found' });
-    const valid = await bcrypt.compare(current_password, rows[0].password);
+    const valid = await bcrypt.compare(current_password, rows[0].password_hash);
     if (!valid) return res.status(401).json({ error: 'Current password incorrect' });
     const hash = await bcrypt.hash(new_password, 10);
     await pool.query('UPDATE blog_authors SET password=$1, updated_at=NOW() WHERE id=$2', [hash, req.user.id]);
@@ -71,3 +71,4 @@ router.post('/change-password', auth, async (req, res) => {
 });
 
 module.exports = router;
+
