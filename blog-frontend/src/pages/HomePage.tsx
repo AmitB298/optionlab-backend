@@ -1,213 +1,274 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { RefreshCw } from 'lucide-react'
-import { articlesApi, aiApi } from '../utils/api'
-import ArticleCard from '../components/blog/ArticleCard'
-import { VixWidget, OptionsChainWidget, TrendingWidget, NewsletterWidget } from '../components/blog/Sidebar'
+import { Link } from 'react-router-dom'
+import { Clock, User, BookOpen, TrendingUp, Shield, BarChart2, Lightbulb, ArrowRight } from 'lucide-react'
+import { articlesApi } from '../utils/api'
 
 const FILTER_TABS = [
   { key: 'all',        label: 'ALL' },
-  { key: 'nifty',     label: 'NIFTY' },
-  { key: 'banknifty', label: 'BANKNIFTY' },
-  { key: 'options',   label: 'OPTIONS' },
-  { key: 'macro',     label: 'MACRO' },
-  { key: 'technicals',label: 'TECHNICALS' },
-  { key: 'briefing',  label: 'AI BRIEFS' },
+  { key: 'options',    label: 'OPTIONS' },
+  { key: 'derivatives',label: 'DERIVATIVES' },
+  { key: 'strategy',   label: 'STRATEGIES' },
+  { key: 'risk',       label: 'RISK MGMT' },
+  { key: 'concepts',   label: 'CONCEPTS' },
 ]
 
-const TRENDING_ITEMS = [
-  { title: 'NIFTY 22,500 CE — 45L OI Buildup Analysis',  views: '12.4k', change: '+2.4%', dir: 'up'  as const, slug: '' },
-  { title: 'RBI Policy Preview: Rate Hold Expected',       views: '9.8k',  change: '-0.3%', dir: 'dn'  as const, slug: '' },
-  { title: 'BANKNIFTY Expiry Pin Dissected',               views: '8.1k',  change: '+0.8%', dir: 'up'  as const, slug: '' },
-  { title: 'VIX Spike: What the Market Is Telling You',   views: '6.4k',  change: '+6.2%', dir: 'up'  as const, slug: '' },
-  { title: 'FII Net Long Index Futures: Full Analysis',    views: '5.2k',  change: '+1.1%', dir: 'up'  as const, slug: '' },
+const QUICK_LINKS = [
+  { to: '/learn',    icon: Lightbulb,  label: 'Learn with AI',     desc: 'Ask any options question' },
+  { to: '/glossary', icon: BookOpen,   label: 'Options Glossary',  desc: '30+ terms explained' },
+  { to: '/analysis', icon: TrendingUp, label: 'Analysis',          desc: 'In-depth education' },
+  { to: '/tools',    icon: BarChart2,  label: 'Tools',             desc: 'Calculators & reference' },
 ]
 
 export default function HomePage() {
   const [activeFilter, setActiveFilter] = useState('all')
-  const [briefing, setBriefing] = useState<{ title?: string; body?: string } | null>(null)
-  const [briefingLoading, setBriefingLoading] = useState(false)
-  const [heroQuestion, setHeroQuestion] = useState('')
-  const [heroAnswer, setHeroAnswer] = useState('')
-  const [heroLoading, setHeroLoading] = useState(false)
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['articles', activeFilter],
-    queryFn: () => articlesApi.list(activeFilter !== 'all' ? { cat: activeFilter, limit: 20 } : { limit: 20 }).then(r => r.data),
+    queryFn: () => articlesApi.list(
+      activeFilter !== 'all'
+        ? { category: activeFilter, status: 'published', limit: 20 }
+        : { status: 'published', limit: 20 }
+    ).then(r => r.data),
   })
 
-  useEffect(() => { loadBriefing() }, [])
-
-  const loadBriefing = async () => {
-    setBriefingLoading(true)
-    try {
-      // Try to get existing briefing first
-      const { data: existing } = await aiApi.getBriefing()
-      if (existing) { setBriefing(existing); return }
-      // Generate if none exists
-      const { data: generated } = await aiApi.briefing()
-      setBriefing(generated)
-    } catch {
-      setBriefing({ body: 'NIFTY consolidates below the critical 22,500 CE resistance wall. The 45.2 lakh call concentration at 22,500 remains the primary overhead pressure — bulls need a decisive close above this level with volume to shift the structure. BANKNIFTY shows relative strength, trading above its own max pain level of 47,900 ahead of weekly expiry. India VIX at 14.3 suggests moderate fear — elevated for the current spot level.\n\nWatch Level: 22,500 CE max OI wall. Break above on volume = bullish trigger. Break below 22,180 = bearish confirmation.' })
-    } finally {
-      setBriefingLoading(false)
-    }
-  }
-
-  const askHero = async () => {
-    if (!heroQuestion.trim() || heroLoading) return
-    setHeroLoading(true)
-    setHeroAnswer('')
-    try {
-      const { data } = await aiApi.chat({ question: heroQuestion })
-      setHeroAnswer(data.response)
-    } catch {
-      setHeroAnswer('AI service unavailable. Please check ANTHROPIC_API_KEY in backend .env')
-    } finally {
-      setHeroLoading(false)
-    }
-  }
+  const articles = data?.articles || []
+  const featured = articles[0]
+  const rest = articles.slice(1)
 
   return (
-    <div>
-      {/* SENTIMENT ROW */}
-      <div className="grid grid-cols-4 border-b border-line bg-line gap-px">
-        {[
-          { label: 'NIFTY SENTIMENT',  val: 'BEARISH',  color: 'text-red',   pct: 35, sub: 'PCR 0.73 · Rising call OI' },
-          { label: 'BANKNIFTY',         val: 'NEUTRAL',  color: 'text-amber', pct: 55, sub: 'Max pain 47,900 · Flat OI' },
-          { label: 'MARKET BREADTH',    val: 'NEGATIVE', color: 'text-red',   pct: 32, sub: 'Adv 624 · Dec 1,218' },
-          { label: 'AI CONFIDENCE',     val: '72/100',   color: 'text-cyan',  pct: 72, sub: 'Model updated 08:31 IST' },
-        ].map((s) => (
-          <div key={s.label} className="bg-ink-1 px-4 py-3">
-            <div className="font-mono text-[9px] text-t-3 uppercase tracking-wider mb-1.5">{s.label}</div>
-            <div className="h-1 bg-ink-3 mb-1.5">
-              <div className={`h-full transition-all duration-1000 ${s.color.replace('text-', 'bg-')}`} style={{ width: `${s.pct}%` }} />
-            </div>
-            <div className={`font-mono font-semibold text-[15px] leading-none ${s.color}`}>{s.val}</div>
-            <div className="font-mono text-[9px] text-t-4 mt-1">{s.sub}</div>
+    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+
+        {/* Hero section */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-semibold mb-3 tracking-widest">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            OPTIONSLAB TERMINAL
           </div>
-        ))}
-      </div>
+          <h1 className="text-4xl font-black text-white tracking-tight mb-2">
+            Financial Education<br />
+            <span className="text-amber-400">for Derivatives Traders</span>
+          </h1>
+          <p className="text-zinc-500 text-sm max-w-lg">
+            In-depth articles on options strategies, Greeks, risk management, and derivatives concepts.
+            Educational content only — not investment advice.
+          </p>
+        </div>
 
-      <div className="grid grid-cols-[1fr_300px] bg-line gap-px">
-        {/* MAIN */}
-        <div className="bg-ink flex flex-col">
-          {/* AI BRIEFING HERO */}
-          <div className="bg-ink-1 border-b border-line p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-full bg-gradient-to-l from-cyan/5 to-transparent pointer-events-none" />
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-2 h-2 rounded-full bg-cyan animate-pulse-glow" />
-              <span className="font-mono text-[9px] text-cyan uppercase tracking-[2px]">AI Morning Briefing</span>
-              <span className="font-mono text-[9px] text-t-4 ml-auto">
-                {new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' })} · 08:30 IST
-              </span>
-            </div>
+        {/* Quick links */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+          {QUICK_LINKS.map(({ to, icon: Icon, label, desc }) => (
+            <Link
+              key={to}
+              to={to}
+              className="group bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-amber-500/30 hover:bg-zinc-900/80 transition-all"
+            >
+              <Icon size={18} className="text-amber-400 mb-2 group-hover:scale-110 transition-transform" />
+              <p className="text-xs font-mono font-bold text-zinc-200 group-hover:text-amber-400 transition-colors">{label}</p>
+              <p className="text-[11px] text-zinc-600 mt-0.5">{desc}</p>
+            </Link>
+          ))}
+        </div>
 
-            <h1 className="font-display font-bold text-[24px] leading-tight text-t-1 mb-3 max-w-2xl">
-              NIFTY Faces <em className="text-amber not-italic">Critical Resistance</em> at 22,500 — OI Data Signals Distribution Phase
-            </h1>
+        {/* Filter tabs */}
+        <div className="flex gap-1.5 flex-wrap mb-6">
+          {FILTER_TABS.map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveFilter(tab.key)}
+              className={`px-3 py-1.5 rounded text-xs font-mono font-semibold tracking-widest transition-all ${
+                activeFilter === tab.key
+                  ? 'bg-amber-500 text-black'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-600'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-            {briefingLoading ? (
-              <div className="flex items-center gap-2 font-mono text-[12px] text-t-4 mb-4">
-                <RefreshCw size={12} className="animate-spin" /> Generating AI briefing...
-              </div>
-            ) : (
-              <div className="font-sans font-light text-[13px] text-t-2 leading-relaxed mb-4 max-w-2xl whitespace-pre-line">
-                {briefing?.body || 'Loading briefing...'}
-              </div>
-            )}
-
-            <div className="flex gap-2 mb-4 flex-wrap">
-              {[
-                { label: '▲ BULL CASE: 22,520+ breakout', cls: 'border-green/30 text-green' },
-                { label: '▼ BEAR CASE: Close below 22,180', cls: 'border-red/30 text-red' },
-                { label: '→ KEY LEVEL: 22,500 CE MAX OI', cls: 'border-amber/30 text-amber' },
-              ].map(b => (
-                <span key={b.label} className={`font-mono text-[10px] px-2.5 py-1 border ${b.cls}`}>{b.label}</span>
-              ))}
-              <button
-                onClick={loadBriefing}
-                disabled={briefingLoading}
-                className="font-mono text-[10px] px-2.5 py-1 border border-line-2 text-t-3 hover:border-amber hover:text-amber transition-colors ml-auto flex items-center gap-1"
-              >
-                <RefreshCw size={9} className={briefingLoading ? 'animate-spin' : ''} /> REFRESH
-              </button>
-            </div>
-
-            {/* Ask AI inline */}
-            <div className="flex gap-0 max-w-xl">
-              <input
-                value={heroQuestion}
-                onChange={e => setHeroQuestion(e.target.value)}
-                onKeyPress={e => e.key === 'Enter' && askHero()}
-                placeholder="Ask the AI: What does today's PCR of 0.72 mean for NIFTY?"
-                className="flex-1 bg-ink-2 border border-line-2 border-r-0 px-3 py-2.5 font-mono text-[12px] text-t-1 outline-none placeholder:text-t-4 focus:border-amber transition-colors"
-              />
-              <button
-                onClick={askHero}
-                disabled={heroLoading}
-                className="px-4 border border-amber text-amber hover:bg-amber hover:text-black font-mono text-[10px] uppercase tracking-wider transition-colors disabled:opacity-50 flex items-center gap-1.5"
-              >
-                {heroLoading ? <RefreshCw size={11} className="animate-spin" /> : '▶'} ANALYZE
-              </button>
-            </div>
-            {heroAnswer && (
-              <div className="mt-3 bg-ink-2 border border-line border-l-2 border-l-cyan px-4 py-3 font-sans font-light text-[13px] text-t-2 leading-relaxed max-w-2xl whitespace-pre-wrap">
-                {heroAnswer}
-              </div>
-            )}
-          </div>
-
-          {/* FILTER TABS */}
-          <div className="flex overflow-x-auto bg-ink-1 border-b border-line">
-            {FILTER_TABS.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveFilter(tab.key)}
-                className={`px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.8px] border-r border-line border-b-2 whitespace-nowrap transition-all
-                  ${activeFilter === tab.key
-                    ? 'text-amber border-b-amber bg-amber/5'
-                    : 'text-t-3 border-b-transparent hover:text-t-2 hover:bg-ink-2'}`}
-              >
-                {tab.label}
-                <span className="ml-1.5 bg-ink-3 font-mono text-[9px] px-1 text-t-4">
-                  {tab.key === 'all' ? data?.total || 0 : data?.articles?.filter((a: any) => a.cat_slug === tab.key).length || ''}
-                </span>
-              </button>
+        {isLoading ? (
+          <div className="grid gap-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-28 bg-zinc-900 border border-zinc-800 rounded-xl animate-pulse" />
             ))}
           </div>
+        ) : articles.length === 0 ? (
+          /* Empty state */
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center mb-6">
+              <BookOpen size={28} className="text-amber-400" />
+            </div>
+            <h2 className="text-xl font-black text-white mb-2">No articles yet</h2>
+            <p className="text-zinc-500 text-sm mb-6 max-w-xs">
+              The first articles are being prepared. Check back soon, or explore the education tools below.
+            </p>
+            <div className="flex gap-3">
+              <Link to="/learn" className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs font-mono rounded-lg transition-all">
+                <Lightbulb size={13} /> LEARN WITH AI
+              </Link>
+              <Link to="/glossary" className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs font-mono rounded-lg transition-all">
+                <BookOpen size={13} /> GLOSSARY
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main feed */}
+            <div className="lg:col-span-2 space-y-4">
+              {/* Featured article */}
+              {featured && (
+                <Link
+                  to={`/article/${featured.slug}`}
+                  className="group block bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-amber-500/30 transition-all"
+                >
+                  {featured.cover_image && (
+                    <img src={featured.cover_image} alt="" className="w-full h-48 object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                  )}
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      {featured.category && (
+                        <span className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] font-mono text-amber-500">
+                          {featured.category.toUpperCase()}
+                        </span>
+                      )}
+                      <span className="text-[10px] font-mono text-zinc-700">FEATURED</span>
+                    </div>
+                    <h2 className="text-lg font-black text-zinc-100 group-hover:text-amber-400 transition-colors mb-2 leading-tight">
+                      {featured.title}
+                    </h2>
+                    {featured.excerpt && (
+                      <p className="text-sm text-zinc-500 line-clamp-2 mb-3">{featured.excerpt}</p>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {featured.author_name && (
+                          <span className="flex items-center gap-1 text-xs text-zinc-600 font-mono">
+                            <User size={10} /> {featured.author_name}
+                          </span>
+                        )}
+                        {featured.published_at && (
+                          <span className="flex items-center gap-1 text-xs text-zinc-700 font-mono">
+                            <Clock size={10} />
+                            {new Date(featured.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </span>
+                        )}
+                      </div>
+                      <span className="flex items-center gap-1 text-xs text-amber-400 font-mono group-hover:gap-2 transition-all">
+                        READ <ArrowRight size={11} />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              )}
 
-          {/* ARTICLES */}
-          {isLoading ? (
-            Array(4).fill(0).map((_, i) => (
-              <div key={i} className="flex border-b border-line bg-ink animate-pulse">
-                <div className="w-[3px] bg-transparent" />
-                <div className="flex-1 px-5 py-4 space-y-2">
-                  <div className="h-3 bg-ink-3 rounded w-1/4" />
-                  <div className="h-5 bg-ink-3 rounded w-3/4" />
-                  <div className="h-3 bg-ink-3 rounded w-full" />
-                  <div className="h-3 bg-ink-3 rounded w-2/3" />
+              {/* Article list */}
+              {rest.map((article: any) => (
+                <Link
+                  key={article.id}
+                  to={`/article/${article.slug}`}
+                  className="group flex gap-4 bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-zinc-700 transition-all"
+                >
+                  {article.cover_image && (
+                    <img src={article.cover_image} alt="" className="w-20 h-20 rounded-lg object-cover shrink-0 opacity-80" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    {article.category && (
+                      <span className="inline-block px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] font-mono text-amber-500 mb-1.5">
+                        {article.category.toUpperCase()}
+                      </span>
+                    )}
+                    <h3 className="text-sm font-bold text-zinc-200 group-hover:text-amber-400 transition-colors line-clamp-2 mb-1">
+                      {article.title}
+                    </h3>
+                    {article.excerpt && (
+                      <p className="text-xs text-zinc-600 line-clamp-1">{article.excerpt}</p>
+                    )}
+                    <div className="flex items-center gap-3 mt-2">
+                      {article.author_name && (
+                        <span className="text-[10px] text-zinc-700 font-mono">{article.author_name}</span>
+                      )}
+                      {article.published_at && (
+                        <span className="text-[10px] text-zinc-700 font-mono">
+                          {new Date(article.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        </span>
+                      )}
+                      {article.read_time && (
+                        <span className="text-[10px] text-zinc-700 font-mono">{article.read_time}m read</span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-4">
+              {/* About box */}
+              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Shield size={14} className="text-amber-400" />
+                  <span className="text-xs font-mono font-semibold text-zinc-400 tracking-widest">ABOUT THIS PLATFORM</span>
                 </div>
-                <div className="w-24 bg-ink-1 border-l border-line" />
+                <p className="text-xs text-zinc-500 leading-relaxed mb-3">
+                  OptionsLab publishes in-depth educational content on options and derivatives trading for Indian markets.
+                </p>
+                <p className="text-[10px] text-zinc-700 font-mono leading-relaxed">
+                  Not SEBI registered · Educational only · Not investment advice
+                </p>
               </div>
-            ))
-          ) : (
-            data?.articles?.map((article: any) => (
-              <ArticleCard key={article.id} article={article} />
-            ))
-          )}
-        </div>
 
-        {/* SIDEBAR */}
-        <div className="bg-ink flex flex-col">
-          <VixWidget />
-          <OptionsChainWidget />
-          <TrendingWidget items={TRENDING_ITEMS} />
-          <NewsletterWidget />
-        </div>
+              {/* Quick learn */}
+              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+                <p className="text-xs font-mono font-semibold text-zinc-400 tracking-widest mb-3">QUICK LEARN</p>
+                <div className="space-y-2">
+                  {[
+                    'What is Delta?',
+                    'How does Theta decay work?',
+                    'What is an Iron Condor?',
+                    'What is IV Percentile?',
+                    'How to manage a losing trade?',
+                  ].map(q => (
+                    <Link
+                      key={q}
+                      to={`/learn`}
+                      className="flex items-center gap-2 text-xs text-zinc-500 hover:text-amber-400 transition-colors py-1 group"
+                    >
+                      <ArrowRight size={10} className="text-zinc-700 group-hover:text-amber-400 shrink-0 transition-colors" />
+                      {q}
+                    </Link>
+                  ))}
+                </div>
+                <Link
+                  to="/learn"
+                  className="mt-4 flex items-center justify-center gap-2 w-full py-2 bg-amber-500/10 border border-amber-500/20 rounded-lg text-amber-400 text-xs font-mono font-semibold hover:bg-amber-500/20 transition-all"
+                >
+                  <Lightbulb size={12} /> ASK AI TUTOR
+                </Link>
+              </div>
+
+              {/* Glossary teaser */}
+              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+                <p className="text-xs font-mono font-semibold text-zinc-400 tracking-widest mb-3">OPTIONS GLOSSARY</p>
+                <div className="space-y-1.5">
+                  {['Delta', 'Theta', 'Iron Condor', 'PCR', 'Max Pain', 'IV Percentile'].map(term => (
+                    <Link key={term} to="/glossary" className="block text-xs text-zinc-600 hover:text-zinc-300 font-mono transition-colors py-0.5">
+                      → {term}
+                    </Link>
+                  ))}
+                </div>
+                <Link
+                  to="/glossary"
+                  className="mt-3 flex items-center gap-1 text-xs text-zinc-500 hover:text-amber-400 font-mono transition-colors"
+                >
+                  View all 30+ terms <ArrowRight size={10} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
 }
-
-
