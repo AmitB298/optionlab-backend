@@ -48,15 +48,6 @@ router.post('/send-magic-link', async (req, res) => {
       return res.status(400).json({ error: 'Invalid redirect URL' });
     }
 
-    // Check if email already has a registered account
-    const existing = await pool.query(
-      'SELECT id FROM users WHERE email = $1',
-      [email]
-    );
-    if (existing.rows.length > 0) {
-      return res.status(409).json({ error: 'An account with this email already exists. Please login instead.' });
-    }
-
     // Rate limit: max 3 magic links per email per 10 minutes
     const rateCheck = await pool.query(
       `SELECT COUNT(*) AS cnt FROM email_verifications
@@ -206,3 +197,4 @@ router.post('/check-verified', async (req, res) => {
 });
 
 module.exports = router;
+
