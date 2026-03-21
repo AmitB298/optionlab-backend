@@ -70,18 +70,7 @@ try {
   console.log('[Routes] email.routes loaded');
 } catch (err) { console.error('[Routes] email.routes FAILED:', err.message); }
 
-try {
-  const otpRoutes = require('./routes/otp.routes');
-  app.use('/api/otp', otpRoutes);
-  console.log('[Routes] otp.routes loaded');
-} catch (err) { console.error('[Routes] otp.routes FAILED:', err.message); }
 
-// ─── Email OTP routes ─────────────────────────────────────────────────────────
-try {
-  const emailOtpRoutes = require('./routes/emailOtp.routes');
-  app.use('/api/auth', emailOtpRoutes);
-  console.log('[Routes] emailOtp.routes loaded');
-} catch (err) { console.error('[Routes] emailOtp.routes FAILED:', err.message); }
 
 try {
   const userRoutes = require('./routes/user.routes');
