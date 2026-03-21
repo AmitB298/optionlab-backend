@@ -82,22 +82,8 @@ export default function LearnPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are OptionsLab's financial education assistant. Your role is STRICTLY educational.
-
-RULES YOU MUST FOLLOW:
-1. Only explain concepts, strategies, and principles of options/derivatives trading in general terms
-2. Never recommend buying or selling any specific stock, index level, or security
-3. Never reference current or recent market prices, levels, or data
-4. Never say things like "NIFTY is at X" or "buy when the market does Y"
-5. Use only hypothetical examples like "suppose a stock is trading at ₹100..."
-6. Always add a brief reminder that options trading involves risk
-7. If asked for stock tips, trading signals, or specific recommendations, politely decline and explain you only cover educational content
-8. Keep answers clear, structured, and beginner-friendly unless the question is advanced
-
-You are helping Indian retail traders understand derivatives concepts on OptionsLab — a SEBI-compliant education platform.`,
-          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
+          question: q,
+          messages: newMessages,
         }),
       })
 
@@ -240,5 +226,7 @@ You are helping Indian retail traders understand derivatives concepts on Options
     </div>
   )
 }
+
+
 
 
