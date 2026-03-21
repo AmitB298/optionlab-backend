@@ -13,7 +13,7 @@
 const express  = require('express');
 const crypto   = require('crypto');
 const jwt      = require('jsonwebtoken');
-const { pool } = require('../db');                              // src/db/index.js adapter
+const pool = require('../db/pool');
 const { sendMagicLinkEmail } = require('../services/emailService');
 
 const router = express.Router();
