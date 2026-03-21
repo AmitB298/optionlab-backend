@@ -14,7 +14,7 @@ const express  = require('express');
 const crypto   = require('crypto');
 const jwt      = require('jsonwebtoken');
 const pool = require('../db/pool');
-const { sendMagicLinkEmail } = require('../services/emailService');
+const { sendMagicLink } = require('../services/emailService');
 
 const router = express.Router();
 
@@ -89,7 +89,7 @@ router.post('/send-magic-link', async (req, res) => {
 
     const magicLink = `${redirectUrl}?token=${rawToken}&email=${encodeURIComponent(email)}`;
 
-    await sendMagicLinkEmail({ to: email, magicLink, expiresMinutes: MAGIC_EXPIRES_MINUTES });
+    await sendMagicLink({ to: email, magicLink, expiresMinutes: MAGIC_EXPIRES_MINUTES });
 
     console.log(`[Email] Magic link sent to ${email}`);
     return res.json({ ok: true, message: 'Magic link sent' });
