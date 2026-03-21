@@ -19,7 +19,7 @@ const MARKET_STRIP = TICKER_DATA.slice(0, 5)
 
 const NAV_LINKS = [
   { to: '/',          label: 'TERMINAL' },
-  { to: '/analysis',  label: 'AI ANALYSIS' },
+  { to: '/analysis',  label: 'OPTIONSLAB BOT' },
   { to: '/tools',     label: 'TOOLS' },
   { to: '/authors',   label: 'AUTHORS' },
 ]
@@ -73,7 +73,7 @@ export default function Header() {
             </div>
             <div>
               <div className="font-sans font-bold text-[15px] text-t-1 leading-none">
-                Option<span className="text-amber">Lab</span>
+                Options<span className="text-amber">Lab</span>
               </div>
               <div className="font-mono text-[8px] text-t-3 tracking-widest mt-0.5 uppercase">
                 Market Intelligence
@@ -244,4 +244,6 @@ function SearchBox({ onClose }: { onClose: () => void }) {
     </div>
   )
 }
+
+
 

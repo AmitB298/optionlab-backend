@@ -7,7 +7,7 @@ export default function Footer() {
         {/* Brand */}
         <div className="col-span-2 p-7 border-r border-line">
           <div className="font-sans font-bold text-base text-t-1 mb-1">
-            Option<span className="text-amber">Lab</span>
+            Options<span className="text-amber">Lab</span>
           </div>
           <div className="font-mono text-[8px] text-t-4 tracking-widest uppercase mb-3">Market Intelligence Platform</div>
           <p className="font-sans font-light text-xs text-t-3 leading-relaxed max-w-xs">
@@ -38,10 +38,11 @@ export default function Footer() {
       </div>
 
       <div className="flex justify-between items-center px-6 py-3">
-        <span className="font-mono text-[10px] text-t-4">© 2026 OptionsLab INTELLIGENCE. ALL RIGHTS RESERVED. | OPTIONSLAB.IN</span>
+        <span className="font-mono text-[10px] text-t-4">© 2026 OptionsLab INTELLIGENCE. ALL RIGHTS RESERVED. | optionslab.in</span>
         <span className="font-mono text-[10px] text-t-4">DATA DELAYED 15 MIN. NOT SEBI REGISTERED.</span>
       </div>
     </footer>
   )
 }
+
 
