@@ -14,7 +14,15 @@ export default function LoginPage() {
     e.preventDefault()
     setError(''); setLoading(true)
     try {
-      await login(email, password)
+      const res = await fetch('/api/blog/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Login failed')
+      localStorage.setItem('ol_token', data.token)
+      localStorage.setItem('ol_user', JSON.stringify(data.author))
       navigate('/admin')
     } catch {
       setError('Invalid credentials')
@@ -47,3 +55,4 @@ export default function LoginPage() {
     </div>
   )
 }
+
