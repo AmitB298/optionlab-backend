@@ -70,8 +70,6 @@ try {
   console.log('[Routes] email.routes loaded');
 } catch (err) { console.error('[Routes] email.routes FAILED:', err.message); }
 
-
-
 try {
   const userRoutes = require('./routes/user.routes');
   app.use('/api/user', userRoutes);
@@ -93,16 +91,38 @@ try {
 // ─── Static files ─────────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// ─── Blog routes ──────────────────────────────────────────────────────────────
+// ─── Blog API routes (new React platform) ────────────────────────────────────
 try {
-  app.use('/api/blog', require('./blog/routes'));
-  const { sitemapHandler, rssHandler } = require('./blog/seo');
-  app.get('/sitemap.xml', sitemapHandler);
-  app.get('/rss.xml',     rssHandler);
-  app.get('/blog',       (req, res) => res.sendFile('blog/index.html', { root: path.join(__dirname, '../public') }));
-  app.get('/blog/:slug', (req, res) => res.sendFile('blog/post.html',  { root: path.join(__dirname, '../public') }));
-  console.log('[Routes] blog routes loaded');
-} catch (err) { console.error('[Routes] blog routes FAILED:', err.message); }
+  const blogArticlesRouter = require('./blog-api/articles');
+  const blogAuthRouter     = require('./blog-api/blog-auth');
+  const blogAiRouter       = require('./blog-api/ai');
+  const blogMisc           = require('./blog-api/misc');
+
+  app.use('/api/blog/articles',    blogArticlesRouter);
+  app.use('/api/blog/auth',        blogAuthRouter);
+  app.use('/api/blog/ai',          blogAiRouter);
+  app.use('/api/blog/comments',    blogMisc.commentsRouter);
+  app.use('/api/blog/categories',  blogMisc.categoriesRouter);
+  app.use('/api/blog/tags',        blogMisc.tagsRouter);
+  app.use('/api/blog/authors',     blogMisc.authorsRouter);
+  app.use('/api/blog/subscribers', blogMisc.subscribersRouter);
+  app.use('/api/blog/analytics',   blogMisc.analyticsRouter);
+
+  // Also keep old blog routes for backwards compat
+  try {
+    const { sitemapHandler, rssHandler } = require('./blog/seo');
+    app.get('/sitemap.xml', sitemapHandler);
+    app.get('/rss.xml',     rssHandler);
+  } catch (e) { /* optional */ }
+
+  console.log('[Routes] blog-api routes loaded');
+} catch (err) { console.error('[Routes] blog-api routes FAILED:', err.message); }
+
+// ─── Serve blog React SPA ─────────────────────────────────────────────────────
+app.use('/blog', express.static(path.join(__dirname, '..', 'public', 'blog')));
+app.get('/blog/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'blog', 'index.html'));
+});
 
 // ─── Admin HTML ───────────────────────────────────────────────────────────────
 app.get('/admin', (req, res) => {
@@ -286,7 +306,6 @@ async function start() {
             ON otp_verifications(mobile);
         `,
       },
-      // ─── NEW: email column on users table ────────────────────────────────
       {
         id: '008_users_email_column',
         sql: `
@@ -296,7 +315,6 @@ async function start() {
             ON users(email) WHERE email IS NOT NULL;
         `,
       },
-      // ─── NEW: email_verifications table (magic link flow) ─────────────
       {
         id: '009_email_verifications',
         sql: `
@@ -320,7 +338,6 @@ async function start() {
             ON email_verifications (expires_at);
         `,
       },
-      // ─── NEW: extra user profile columns ─────────────────────────────────
       {
         id: '010_users_profile_columns',
         sql: `
@@ -330,7 +347,6 @@ async function start() {
             ADD COLUMN IF NOT EXISTS referral_code VARCHAR(30);
         `,
       },
-      // ─── KEPT: email OTP table (not used in magic link flow, kept for safety) ───
       {
         id: '007_email_otps',
         sql: `

@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Barlow:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── BASE ── */
+* { box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body {
+  background: #030508;
+  color: #f0f4f8;
+  font-family: 'Barlow', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+* { cursor: crosshair; }
+button, a, [role="button"] { cursor: pointer !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: #060b12; }
+::-webkit-scrollbar-thumb { background: #2d4470; border-radius: 1px; }
+
+/* Scanlines */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── ARTICLE MARKDOWN ── */
+.prose-terminal h2 {
+  @apply font-display text-2xl text-t-1 mt-10 mb-4 font-bold;
+}
+.prose-terminal h3 {
+  @apply font-sans text-base font-bold text-t-1 mt-7 mb-3;
+}
+.prose-terminal p {
+  @apply text-t-2 font-light text-[15px] leading-relaxed mb-5;
+}
+.prose-terminal strong {
+  @apply text-t-1 font-semibold;
+}
+.prose-terminal em {
+  @apply text-amber italic;
+}
+.prose-terminal a {
+  @apply text-cyan border-b border-cyan/30;
+}
+.prose-terminal blockquote {
+  @apply border-l-2 border-amber pl-4 my-5 bg-amber/5 py-3 pr-4 text-t-2 text-sm;
+}
+.prose-terminal table {
+  @apply w-full border-collapse text-xs font-mono my-6 border border-line;
+}
+.prose-terminal th {
+  @apply bg-ink-2 text-t-3 uppercase tracking-wider text-[9px] px-3 py-2 text-left border-b border-line-2 font-medium;
+}
+.prose-terminal td {
+  @apply px-3 py-2 border-b border-line text-t-2;
+}
+.prose-terminal tr:hover td {
+  @apply bg-ink-2;
+}
+.prose-terminal ul {
+  @apply list-none my-4 space-y-2;
+}
+.prose-terminal li {
+  @apply text-t-2 text-[14px] pl-4 relative;
+}
+.prose-terminal li::before {
+  content: '▸';
+  @apply absolute left-0 text-amber;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker { animation: ticker 60s linear infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.5); }
+}
+.animate-pulse-glow { animation: pulse-glow 2s ease infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fade-up { animation: fade-up 0.25s ease; }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.animate-blink { animation: blink 2s step-end infinite; }
