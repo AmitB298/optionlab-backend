@@ -110,7 +110,7 @@ router.get('/users', async (req, res) => {
 
     if (search.value) {
       params.push(`%${search.value}%`);
-      where.push(`(u.name ILIKE $${params.length} OR u.mobile ILIKE $${params.length})`);
+      where.push(`(u.name ILIKE $${params.length} OR u.mobile ILIKE $${params.length} OR u.email ILIKE $${params.length})`);
     }
     if (planVal.ok) {
       params.push(planVal.value);
@@ -125,7 +125,7 @@ router.get('/users', async (req, res) => {
 
     const { rows: users } = await pool.query(`
       SELECT
-        u.id, u.name, u.mobile, u.plan, u.is_active, u.flagged,
+        u.id, u.name, u.email, u.mobile, u.plan, u.is_active, u.flagged,
         u.flag_reason, u.notes, u.created_at,
         ua.last_login_at, ua.total_logins, ua.last_login_ip, ua.last_device,
         ua.failed_logins,
@@ -170,8 +170,9 @@ router.get('/users/:userId', async (req, res) => {
   try {
     const [userRes, devicesRes, subHistRes, auditRes] = await Promise.all([
       pool.query(`
-        SELECT u.id, u.name, u.mobile, u.plan, u.is_active, u.flagged,
+        SELECT u.id, u.name, u.email, u.mobile, u.plan, u.is_active, u.flagged,
                u.flag_reason, u.notes, u.role, u.created_at,
+               u.experience, u.trading_style, u.referral_code,
                ua.total_logins, ua.last_login_at, ua.last_login_ip,
                ua.last_device, ua.failed_logins, ua.session_count,
                CASE WHEN ac.user_id IS NOT NULL THEN true ELSE false END AS has_angel_creds,
@@ -416,7 +417,8 @@ router.get('/audit', async (req, res) => {
       SELECT al.id, al.action, al.success, al.ip_address, al.created_at,
              u.name   AS admin_name,
              t.name   AS target_name,
-             t.mobile AS target_mobile
+             t.mobile AS target_mobile,
+             t.email  AS target_email
       FROM admin_audit_log al
       LEFT JOIN admins u ON u.id = al.admin_id
       LEFT JOIN users t ON t.id = al.target_user_id
