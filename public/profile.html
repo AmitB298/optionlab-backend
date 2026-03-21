@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>My Profile | OptionLab</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f97316">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --or:#f97316; --or2:#ea580c; --or3:#fb923c;
+  --bg:#06080d; --bg2:#0c1019; --bg3:#111827;
+  --bd:rgba(255,255,255,.07); --bd2:rgba(249,115,22,.15);
+  --tx:#e8eef8; --tx2:#7b8fa8; --tx3:#4e6278;
+  --gn:#10b981; --rd:#ef4444; --bl:#3b82f6; --pu:#8b5cf6;
+  --card:linear-gradient(155deg,#090d15 0%,#0c1019 100%);
+  --or-glow:rgba(249,115,22,.35);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;}
+
+/* ── BACKGROUND ── */
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(249,115,22,.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(249,115,22,.015) 1px,transparent 1px);
+  background-size:60px 60px;}
+.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(140px);}
+.o1{width:700px;height:700px;top:-300px;left:-200px;background:radial-gradient(circle,rgba(249,115,22,.06),transparent 65%);}
+.o2{width:500px;height:500px;bottom:-200px;right:-150px;background:radial-gradient(circle,rgba(16,185,129,.04),transparent 65%);}
+.o3{width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(59,130,246,.03),transparent 65%);}
+
+/* ── TOP NAV ── */
+nav{position:sticky;top:0;z-index:100;
+  background:rgba(6,8,13,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bd);padding:0 clamp(16px,4vw,48px);}
+.nav-inner{max-width:1100px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.brand-mark{width:36px;height:36px;background:linear-gradient(135deg,#f97316,#c2410c);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#fff;
+  box-shadow:0 0 20px rgba(249,115,22,.4);}
+.brand-name{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--tx);letter-spacing:-.01em;}
+.brand-name b{color:var(--or);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-plan{padding:4px 10px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);
+  border-radius:20px;font-size:11px;font-weight:700;color:var(--or);letter-spacing:.05em;text-transform:uppercase;}
+.nav-plan.paid{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.2);color:var(--gn);}
+.sign-out-btn{padding:6px 14px;border:1px solid var(--bd);border-radius:8px;
+  background:transparent;color:var(--tx2);font-size:13px;cursor:pointer;
+  transition:all .2s;font-family:'Outfit',sans-serif;}
+.sign-out-btn:hover{border-color:var(--rd);color:var(--rd);}
+
+/* ── LAYOUT ── */
+.page{position:relative;z-index:1;max-width:1100px;margin:0 auto;
+  padding:40px clamp(16px,4vw,48px) 80px;}
+
+/* ── HERO HEADER ── */
+.profile-hero{display:flex;align-items:flex-end;gap:24px;margin-bottom:40px;flex-wrap:wrap;}
+.avatar-wrap{position:relative;flex-shrink:0;}
+.avatar{width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,#f97316,#c2410c);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:#fff;
+  border:3px solid rgba(249,115,22,.3);
+  box-shadow:0 0 0 6px rgba(249,115,22,.08),0 20px 60px rgba(0,0,0,.6);}
+.avatar-upload{position:absolute;bottom:0;right:0;width:26px;height:26px;
+  background:var(--bg3);border:2px solid var(--bd2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .2s;font-size:11px;}
+.avatar-upload:hover{background:var(--or);border-color:var(--or);}
+.hero-info{flex:1;min-width:200px;}
+.hero-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(22px,4vw,32px);
+  letter-spacing:-.03em;line-height:1.1;margin-bottom:6px;}
+.hero-email{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tx2);margin-bottom:10px;}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.badge-free{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);color:var(--or);}
+.badge-paid{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--gn);}
+.badge-exp{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:var(--pu);}
+.badge-style{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);color:var(--bl);}
+.hero-actions{margin-left:auto;display:flex;gap:10px;align-self:flex-start;padding-top:8px;}
+.btn-edit{padding:9px 20px;background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
+  border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;
+  cursor:pointer;transition:all .25s;box-shadow:0 4px 16px var(--or-glow);}
+.btn-edit:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--or-glow);}
+.btn-secondary{padding:9px 20px;background:transparent;color:var(--tx2);
+  border:1px solid var(--bd);border-radius:10px;font-family:'Outfit',sans-serif;font-size:13px;
+  cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--bd2);color:var(--tx);}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:32px;}
+.stat-card{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:16px 20px;transition:border-color .2s;}
+.stat-card:hover{border-color:var(--bd2);}
+.stat-label{font-size:11px;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;}
+.stat-value{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--tx);}
+.stat-value.gn{color:var(--gn);}
+.stat-value.or{color:var(--or);}
+.stat-sub{font-size:11px;color:var(--tx3);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr;}}
+
+/* ── SECTION CARD ── */
+.section{background:var(--card);border:1px solid var(--bd);border-radius:18px;
+  padding:24px;margin-bottom:20px;transition:border-color .2s;}
+.section:hover{border-color:rgba(255,255,255,.1);}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-title{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;
+  display:flex;align-items:center;gap:8px;}
+.section-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.icon-or{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2);}
+.icon-gn{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.2);}
+.icon-bl{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);}
+.icon-pu{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);}
+.edit-link{font-size:12px;color:var(--or);cursor:pointer;font-weight:600;
+  padding:4px 10px;border-radius:6px;transition:background .2s;}
+.edit-link:hover{background:rgba(249,115,22,.08);}
+
+/* ── FIELD ROW ── */
+.field-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.field-row:last-child{border-bottom:none;padding-bottom:0;}
+.field-label{font-size:12px;color:var(--tx3);min-width:120px;}
+.field-value{font-size:14px;color:var(--tx);font-weight:500;text-align:right;
+  font-family:'JetBrains Mono',monospace;}
+.field-value.name-val{font-family:'Outfit',sans-serif;font-weight:600;}
+.field-value.loading{color:var(--tx3);font-style:italic;font-family:'Outfit',sans-serif;}
+
+/* ── INLINE EDIT ── */
+.edit-form{display:none;flex-direction:column;gap:14px;}
+.edit-form.show{display:flex;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:12px;color:var(--tx3);letter-spacing:.04em;text-transform:uppercase;}
+.form-input{padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid var(--bd);
+  border-radius:10px;color:var(--tx);font-size:14px;font-family:'Outfit',sans-serif;
+  transition:border-color .2s;outline:none;}
+.form-input:focus{border-color:var(--or);background:rgba(249,115,22,.04);}
+.form-hint{font-size:11px;color:var(--tx3);}
+.form-actions{display:flex;gap:8px;margin-top:4px;}
+.btn-save{padding:8px 18px;background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
+  border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;
+  cursor:pointer;transition:all .2s;}
+.btn-save:hover{opacity:.9;}
+.btn-cancel{padding:8px 16px;background:transparent;border:1px solid var(--bd);
+  border-radius:8px;color:var(--tx2);font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;}
+
+/* ── BROKER CARD ── */
+.broker-status{display:flex;align-items:center;gap:12px;padding:14px;
+  background:rgba(255,255,255,.02);border:1px solid var(--bd);border-radius:12px;}
+.broker-logo{width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--or);letter-spacing:.05em;}
+.broker-info{flex:1;}
+.broker-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.broker-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2);}
+.broker-dot{width:8px;height:8px;border-radius:50%;background:var(--gn);
+  box-shadow:0 0 8px var(--gn);flex-shrink:0;}
+.broker-dot.inactive{background:var(--tx3);box-shadow:none;}
+
+/* ── SECURITY ── */
+.security-item{display:flex;align-items:center;gap:12px;padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);}
+.security-item:last-child{border-bottom:none;}
+.sec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;flex-shrink:0;}
+.sec-info{flex:1;}
+.sec-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.sec-sub{font-size:11px;color:var(--tx3);}
+.sec-action{font-size:12px;color:var(--or);cursor:pointer;font-weight:600;white-space:nowrap;}
+.sec-action:hover{text-decoration:underline;}
+
+/* ── DEVICES ── */
+.device-item{display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);}
+.device-item:last-child{border-bottom:none;}
+.device-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.04);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.device-info{flex:1;min-width:0;}
+.device-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.device-meta{font-size:11px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+.device-revoke{font-size:11px;color:var(--rd);cursor:pointer;opacity:.7;flex-shrink:0;}
+.device-revoke:hover{opacity:1;}
+.no-devices{font-size:13px;color:var(--tx3);text-align:center;padding:20px 0;}
+
+/* ── DANGER ZONE ── */
+.danger-section{background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:18px;padding:24px;}
+.danger-title{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--rd);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;}
+.danger-item{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid rgba(239,68,68,.08);}
+.danger-item:last-child{border-bottom:none;}
+.danger-info .danger-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.danger-info .danger-desc{font-size:11px;color:var(--tx3);}
+.btn-danger{padding:7px 14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);
+  color:var(--rd);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:'Outfit',sans-serif;}
+.btn-danger:hover{background:rgba(239,68,68,.2);}
+
+/* ── MPIN MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--bd);border-radius:20px;
+  padding:32px;max-width:400px;width:100%;}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--tx2);margin-bottom:24px;line-height:1.6;}
+.mpin-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
+.mpin-digit{width:52px;height:60px;background:rgba(255,255,255,.04);border:2px solid var(--bd);
+  border-radius:12px;text-align:center;font-size:24px;color:var(--tx);
+  font-family:'JetBrains Mono',monospace;outline:none;transition:all .2s;}
+.mpin-digit:focus{border-color:var(--or);background:rgba(249,115,22,.06);}
+.modal-actions{display:flex;gap:10px;}
+.modal-err{font-size:12px;color:var(--rd);text-align:center;margin-bottom:12px;min-height:16px;}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;top:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:12px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+  animation:slide-in .3s cubic-bezier(.175,.885,.32,1.275) both,
+    fade-out .3s ease-in forwards 3s;
+  max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.toast.ok{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:var(--gn);}
+.toast.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--rd);}
+@keyframes slide-in{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fade-out{from{opacity:1}to{opacity:0;pointer-events:none}}
+
+/* ── LOADING SKELETON ── */
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);
+  background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-line{height:14px;border-radius:4px;}
+.sk-w60{width:60%;}
+.sk-w40{width:40%;}
+.sk-w80{width:80%;}
+
+/* ── UTIL ── */
+.full-width{grid-column:1/-1;}
+.mt20{margin-top:20px;}
+
+@media(max-width:500px){
+  .profile-hero{gap:16px;}
+  .hero-actions{width:100%;margin-left:0;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-orb o1" aria-hidden="true"></div>
+<div class="bg-orb o2" aria-hidden="true"></div>
+<div class="bg-orb o3" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">OL</div>
+      <span class="brand-name">Option<b>Lab</b></span>
+    </a>
+    <div class="nav-right">
+      <span class="nav-plan" id="navPlan">FREE</span>
+      <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- MPIN CHANGE MODAL -->
+<div class="modal-overlay" id="mpinModal">
+  <div class="modal">
+    <div class="modal-title">Change MPIN</div>
+    <div class="modal-sub">Enter your current 4-digit MPIN, then set a new one.</div>
+    <div style="margin-bottom:16px;">
+      <div class="form-label" style="margin-bottom:8px;">Current MPIN</div>
+      <div class="mpin-inputs" id="currentMpinInputs">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div class="form-label" style="margin-bottom:8px;">New MPIN</div>
+      <div class="mpin-inputs" id="newMpinInputs">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+        <input class="mpin-digit" maxlength="1" type="password" inputmode="numeric" pattern="[0-9]">
+      </div>
+    </div>
+    <div class="modal-err" id="mpinErr"></div>
+    <div class="modal-actions">
+      <button class="btn-save" style="flex:1" onclick="submitMpinChange()">Change MPIN</button>
+      <button class="btn-cancel" onclick="closeMpinModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page" id="page" style="opacity:0;transition:opacity .4s">
+
+  <!-- HERO -->
+  <div class="profile-hero">
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatarCircle">?</div>
+      <div class="avatar-upload" title="Change avatar" onclick="toast('Avatar upload coming soon','ok')">✏</div>
+    </div>
+    <div class="hero-info">
+      <div class="hero-name" id="heroName"><div class="skeleton sk-line sk-w60" style="height:28px"></div></div>
+      <div class="hero-email" id="heroEmail"><div class="skeleton sk-line sk-w40" style="height:14px;margin-top:6px"></div></div>
+      <div class="hero-badges" id="heroBadges"></div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-edit" onclick="toggleEdit()">✏ Edit Profile</button>
+      <button class="btn-secondary" onclick="window.location.href='index.html'">← Dashboard</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Logins</div>
+      <div class="stat-value or" id="statLogins">—</div>
+      <div class="stat-sub" id="statLastLogin">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Member Since</div>
+      <div class="stat-value" id="statJoined">—</div>
+      <div class="stat-sub" id="statDays">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Plan</div>
+      <div class="stat-value gn" id="statPlan">—</div>
+      <div class="stat-sub">Current subscription</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Trusted Devices</div>
+      <div class="stat-value" id="statDevices">—</div>
+      <div class="stat-sub">Active sessions</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="grid-2">
+
+    <!-- PERSONAL INFO -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon icon-or">👤</div>
+          Personal Info
+        </div>
+        <span class="edit-link" onclick="toggleEdit()" id="editToggle">Edit</span>
+      </div>
+
+      <!-- VIEW MODE -->
+      <div id="viewMode">
+        <div class="field-row">
+          <span class="field-label">Full Name</span>
+          <span class="field-value name-val" id="fieldName">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Email</span>
+          <span class="field-value" id="fieldEmail">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Mobile</span>
+          <span class="field-value" id="fieldMobile">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Experience</span>
+          <span class="field-value" id="fieldExp">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Trading Style</span>
+          <span class="field-value" id="fieldStyle">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Joined</span>
+          <span class="field-value" id="fieldJoined">—</span>
+        </div>
+      </div>
+
+      <!-- EDIT MODE -->
+      <div class="edit-form" id="editMode">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" type="text" id="editName" placeholder="Your display name" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email (read-only)</label>
+          <input class="form-input" type="email" id="editEmail" readonly style="opacity:.5;cursor:not-allowed">
+          <span class="form-hint">Email cannot be changed after registration.</span>
+        </div>
+        <div class="form-actions">
+          <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+          <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BROKER -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon icon-gn">📊</div>
+          Broker Connection
+        </div>
+      </div>
+      <div class="broker-status" id="brokerStatus">
+        <div class="broker-logo">A1</div>
+        <div class="broker-info">
+          <div class="broker-name">Angel One</div>
+          <div class="broker-id" id="brokerId">Loading…</div>
+        </div>
+        <div class="broker-dot inactive" id="brokerDot"></div>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="field-row">
+          <span class="field-label">Client ID</span>
+          <span class="field-value" id="brokerClientId">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">API Status</span>
+          <span class="field-value" id="brokerApiStatus">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Last Trade</span>
+          <span class="field-value" id="brokerLastTrade">Via Desktop App</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon icon-bl">🔐</div>
+          Security
+        </div>
+      </div>
+      <div class="security-item">
+        <div class="sec-icon icon-or">🔑</div>
+        <div class="sec-info">
+          <div class="sec-title">MPIN</div>
+          <div class="sec-sub">4-digit login PIN for mobile & desktop</div>
+        </div>
+        <span class="sec-action" onclick="openMpinModal()">Change →</span>
+      </div>
+      <div class="security-item">
+        <div class="sec-icon icon-gn">📧</div>
+        <div class="sec-info">
+          <div class="sec-title">Email Verified</div>
+          <div class="sec-sub" id="secEmail">—</div>
+        </div>
+        <span style="font-size:16px;">✅</span>
+      </div>
+      <div class="security-item">
+        <div class="sec-icon icon-bl">🕐</div>
+        <div class="sec-info">
+          <div class="sec-title">Last Login</div>
+          <div class="sec-sub" id="secLastLogin">—</div>
+        </div>
+      </div>
+      <div class="security-item">
+        <div class="sec-icon" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.15)">⚠</div>
+        <div class="sec-info">
+          <div class="sec-title">Failed Attempts</div>
+          <div class="sec-sub" id="secFailed">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRUSTED DEVICES -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon icon-pu">💻</div>
+          Trusted Devices
+        </div>
+        <span class="edit-link" onclick="loadDevices()">Refresh</span>
+      </div>
+      <div id="devicesList">
+        <div class="no-devices">Loading devices…</div>
+      </div>
+    </div>
+
+  </div><!-- /grid-2 -->
+
+  <!-- DANGER ZONE -->
+  <div class="danger-section mt20">
+    <div class="danger-title">⚠ Danger Zone</div>
+    <div class="danger-item">
+      <div class="danger-info">
+        <div class="danger-name">Sign out all devices</div>
+        <div class="danger-desc">Revoke all trusted devices and active sessions</div>
+      </div>
+      <button class="btn-danger" onclick="signOutAll()">Sign Out All</button>
+    </div>
+    <div class="danger-item">
+      <div class="danger-info">
+        <div class="danger-name">Delete account</div>
+        <div class="danger-desc">Permanently delete your OptionLab account and all data</div>
+      </div>
+      <button class="btn-danger" onclick="toast('Please contact support to delete your account.','err')">Delete Account</button>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+const API = 'https://web-production-8a8e1.up.railway.app';
+let userData = null;
+let isEditing = false;
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function getToken() {
+  return localStorage.getItem('ol_token') || sessionStorage.getItem('ol_token');
+}
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() };
+}
+
+function signOut() {
+  localStorage.removeItem('ol_token');
+  sessionStorage.removeItem('ol_token');
+  window.location.href = 'register.html';
+}
+
+async function signOutAll() {
+  const devs = document.querySelectorAll('[data-device-id]');
+  let count = 0;
+  for (const d of devs) {
+    try {
+      await fetch(API + '/api/user/devices/' + d.dataset.deviceId, {
+        method: 'DELETE', headers: authHeaders()
+      });
+      count++;
+    } catch {}
+  }
+  toast('Signed out from ' + count + ' device(s)', 'ok');
+  await loadDevices();
+}
+
+// ── LOAD PROFILE ──────────────────────────────────────────────────────────────
+async function loadProfile() {
+  const token = getToken();
+  if (!token) { window.location.href = 'register.html'; return; }
+
+  try {
+    const res = await fetch(API + '/api/user/profile', { headers: authHeaders() });
+    if (res.status === 401) { signOut(); return; }
+    const data = await res.json();
+    userData = data;
+    renderProfile(data);
+  } catch (e) {
+    toast('Failed to load profile', 'err');
+  }
+
+  document.getElementById('page').style.opacity = '1';
+}
+
+function renderProfile(d) {
+  // Avatar
+  const initials = (d.name || 'U').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('avatarCircle').textContent = initials;
+
+  // Hero
+  document.getElementById('heroName').textContent = d.name || 'User';
+  document.getElementById('heroEmail').textContent = '✦ ' + (d.email || 'No email');
+
+  // Badges
+  const badges = document.getElementById('heroBadges');
+  badges.innerHTML = '';
+  const planBadge = document.createElement('span');
+  planBadge.className = 'badge ' + (d.plan === 'FREE' ? 'badge-free' : 'badge-paid');
+  planBadge.textContent = d.plan || 'FREE';
+  badges.appendChild(planBadge);
+
+  if (d.experience) {
+    const expBadge = document.createElement('span');
+    expBadge.className = 'badge badge-exp';
+    expBadge.textContent = d.experience;
+    badges.appendChild(expBadge);
+  }
+  if (d.trading_style || d.tradingStyle) {
+    const styleBadge = document.createElement('span');
+    styleBadge.className = 'badge badge-style';
+    styleBadge.textContent = (d.trading_style || d.tradingStyle);
+    badges.appendChild(styleBadge);
+  }
+
+  // Nav plan
+  const navPlan = document.getElementById('navPlan');
+  navPlan.textContent = d.plan || 'FREE';
+  if (d.plan !== 'FREE') navPlan.classList.add('paid');
+
+  // Stats
+  document.getElementById('statLogins').textContent = d.totalLogins || 0;
+  document.getElementById('statLastLogin').textContent = d.lastLoginAt
+    ? 'Last: ' + timeAgo(d.lastLoginAt) : 'First time';
+  document.getElementById('statJoined').textContent = d.createdAt
+    ? new Date(d.createdAt).toLocaleDateString('en-IN',{month:'short',year:'numeric'}) : '—';
+  document.getElementById('statDays').textContent = d.createdAt
+    ? daysSince(d.createdAt) + ' days ago' : '';
+  document.getElementById('statPlan').textContent = d.plan || 'FREE';
+  document.getElementById('statDevices').textContent = (d.devices || []).length;
+
+  // Fields
+  document.getElementById('fieldName').textContent = d.name || '—';
+  document.getElementById('fieldEmail').textContent = d.email || '—';
+  document.getElementById('fieldMobile').textContent = d.mobile ? maskMobile(d.mobile) : '—';
+  document.getElementById('fieldExp').textContent = capitalize(d.experience) || '—';
+  document.getElementById('fieldStyle').textContent = capitalize(d.trading_style || d.tradingStyle) || '—';
+  document.getElementById('fieldJoined').textContent = d.createdAt
+    ? new Date(d.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) : '—';
+
+  // Edit form prefill
+  document.getElementById('editName').value = d.name || '';
+  document.getElementById('editEmail').value = d.email || '';
+
+  // Broker
+  const clientId = d.broker_client_id || d.brokerClientId || null;
+  document.getElementById('brokerClientId').textContent = clientId || '—';
+  document.getElementById('brokerId').textContent = clientId || 'Not connected';
+  if (clientId) {
+    document.getElementById('brokerDot').classList.remove('inactive');
+    document.getElementById('brokerApiStatus').textContent = 'Connected';
+    document.getElementById('brokerApiStatus').style.color = 'var(--gn)';
+  } else {
+    document.getElementById('brokerApiStatus').textContent = 'Not configured';
+    document.getElementById('brokerApiStatus').style.color = 'var(--tx3)';
+  }
+
+  // Security
+  document.getElementById('secEmail').textContent = d.email || '—';
+  document.getElementById('secLastLogin').textContent = d.lastLoginAt ? timeAgo(d.lastLoginAt) : 'Never';
+  document.getElementById('secFailed').textContent = (d.failedLogins || 0) + ' failed login(s)';
+
+  // Devices
+  renderDevices(d.devices || []);
+}
+
+function renderDevices(devices) {
+  const el = document.getElementById('devicesList');
+  if (!devices.length) {
+    el.innerHTML = '<div class="no-devices">No trusted devices yet</div>';
+    return;
+  }
+  el.innerHTML = devices.map(d => `
+    <div class="device-item">
+      <div class="device-icon">${platformIcon(d.platform)}</div>
+      <div class="device-info">
+        <div class="device-name">${d.device_name || 'Unknown Device'}</div>
+        <div class="device-meta">${d.platform || ''} · ${d.last_seen_at ? timeAgo(d.last_seen_at) : '—'}</div>
+      </div>
+      <span class="device-revoke" data-device-id="${d.id}" onclick="revokeDevice(${d.id}, this)">Revoke</span>
+    </div>
+  `).join('');
+}
+
+async function loadDevices() {
+  try {
+    const res = await fetch(API + '/api/user/devices', { headers: authHeaders() });
+    const data = await res.json();
+    renderDevices(data.devices || []);
+    document.getElementById('statDevices').textContent = (data.devices || []).length;
+  } catch {}
+}
+
+async function revokeDevice(id, el) {
+  try {
+    const res = await fetch(API + '/api/user/devices/' + id, {
+      method: 'DELETE', headers: authHeaders()
+    });
+    if (res.ok) {
+      el.closest('.device-item').style.opacity = '0';
+      setTimeout(() => { el.closest('.device-item').remove(); }, 300);
+      toast('Device revoked', 'ok');
+    }
+  } catch { toast('Failed to revoke device', 'err'); }
+}
+
+// ── EDIT PROFILE ─────────────────────────────────────────────────────────────
+function toggleEdit() {
+  isEditing = !isEditing;
+  document.getElementById('viewMode').style.display = isEditing ? 'none' : 'block';
+  document.getElementById('editMode').classList.toggle('show', isEditing);
+  document.getElementById('editToggle').textContent = isEditing ? 'Cancel' : 'Edit';
+}
+
+function cancelEdit() {
+  isEditing = false;
+  document.getElementById('viewMode').style.display = 'block';
+  document.getElementById('editMode').classList.remove('show');
+  document.getElementById('editToggle').textContent = 'Edit';
+  if (userData) document.getElementById('editName').value = userData.name || '';
+}
+
+async function saveProfile() {
+  const name = document.getElementById('editName').value.trim();
+  if (!name || name.length < 2) { toast('Name must be at least 2 characters', 'err'); return; }
+
+  try {
+    const res = await fetch(API + '/api/user/profile', {
+      method: 'PATCH',
+      headers: authHeaders(),
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
+    if (!res.ok) { toast(data.error || 'Update failed', 'err'); return; }
+
+    userData.name = data.name;
+    document.getElementById('heroName').textContent = data.name;
+    document.getElementById('fieldName').textContent = data.name;
+    const initials = data.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('avatarCircle').textContent = initials;
+    cancelEdit();
+    toast('Profile updated!', 'ok');
+  } catch { toast('Failed to save profile', 'err'); }
+}
+
+// ── MPIN MODAL ────────────────────────────────────────────────────────────────
+function setupMpinInputs(containerId) {
+  const inputs = document.querySelectorAll('#' + containerId + ' .mpin-digit');
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/\D/g, '').slice(-1);
+      if (inp.value && i < inputs.length - 1) inputs[i+1].focus();
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) inputs[i-1].focus();
+    });
+  });
+}
+
+function getMpinValue(containerId) {
+  return [...document.querySelectorAll('#' + containerId + ' .mpin-digit')].map(i=>i.value).join('');
+}
+
+function clearMpin(containerId) {
+  document.querySelectorAll('#' + containerId + ' .mpin-digit').forEach(i=>i.value='');
+}
+
+function openMpinModal() {
+  clearMpin('currentMpinInputs');
+  clearMpin('newMpinInputs');
+  document.getElementById('mpinErr').textContent = '';
+  document.getElementById('mpinModal').classList.add('show');
+  document.querySelector('#currentMpinInputs .mpin-digit').focus();
+}
+
+function closeMpinModal() {
+  document.getElementById('mpinModal').classList.remove('show');
+}
+
+async function submitMpinChange() {
+  const current = getMpinValue('currentMpinInputs');
+  const next = getMpinValue('newMpinInputs');
+  const errEl = document.getElementById('mpinErr');
+
+  if (current.length !== 4) { errEl.textContent = 'Enter your current 4-digit MPIN'; return; }
+  if (next.length !== 4) { errEl.textContent = 'Enter a new 4-digit MPIN'; return; }
+  if (current === next) { errEl.textContent = 'New MPIN must differ from current'; return; }
+
+  errEl.textContent = '';
+  try {
+    const res = await fetch(API + '/api/user/change-mpin', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ current_mpin: current, new_mpin: next })
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = data.error || 'Change failed'; return; }
+    closeMpinModal();
+    toast('MPIN changed successfully. Please log in again.', 'ok');
+    setTimeout(signOut, 2500);
+  } catch { errEl.textContent = 'Request failed. Try again.'; }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'ok') {
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = (type === 'ok' ? '✓ ' : '✗ ') + msg;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff/60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins/60);
+  if (hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs/24);
+  if (days < 30) return days + 'd ago';
+  return new Date(dateStr).toLocaleDateString('en-IN');
+}
+
+function daysSince(dateStr) {
+  return Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
+}
+
+function maskMobile(m) {
+  return m.replace(/(\d{2})\d{6}(\d{2})/, '$1••••••$2');
+}
+
+function capitalize(s) {
+  if (!s) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function platformIcon(p) {
+  if (!p) return '💻';
+  const pl = p.toLowerCase();
+  if (pl.includes('win')) return '🖥';
+  if (pl.includes('mac') || pl.includes('ios')) return '🍎';
+  if (pl.includes('android')) return '📱';
+  if (pl.includes('linux')) return '🐧';
+  return '💻';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+setupMpinInputs('currentMpinInputs');
+setupMpinInputs('newMpinInputs');
+document.getElementById('mpinModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('mpinModal')) closeMpinModal();
+});
+loadProfile();
+</script>
+</body>
+</html>
