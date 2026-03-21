@@ -65,10 +65,23 @@ try {
 } catch (err) { console.error('[Routes] auth.routes FAILED:', err.message); }
 
 try {
+  const emailRoutes = require('./routes/email.routes');
+  app.use('/api/email', emailRoutes);
+  console.log('[Routes] email.routes loaded');
+} catch (err) { console.error('[Routes] email.routes FAILED:', err.message); }
+
+try {
   const otpRoutes = require('./routes/otp.routes');
   app.use('/api/otp', otpRoutes);
   console.log('[Routes] otp.routes loaded');
 } catch (err) { console.error('[Routes] otp.routes FAILED:', err.message); }
+
+// ─── Email OTP routes ─────────────────────────────────────────────────────────
+try {
+  const emailOtpRoutes = require('./routes/emailOtp.routes');
+  app.use('/api/auth', emailOtpRoutes);
+  console.log('[Routes] emailOtp.routes loaded');
+} catch (err) { console.error('[Routes] emailOtp.routes FAILED:', err.message); }
 
 try {
   const userRoutes = require('./routes/user.routes');
@@ -282,6 +295,70 @@ async function start() {
           );
           CREATE INDEX IF NOT EXISTS idx_otp_verifications_mobile
             ON otp_verifications(mobile);
+        `,
+      },
+      // ─── NEW: email column on users table ────────────────────────────────
+      {
+        id: '008_users_email_column',
+        sql: `
+          ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS email VARCHAR(255);
+          CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email
+            ON users(email) WHERE email IS NOT NULL;
+        `,
+      },
+      // ─── NEW: email_verifications table (magic link flow) ─────────────
+      {
+        id: '009_email_verifications',
+        sql: `
+          CREATE TABLE IF NOT EXISTS email_verifications (
+            id           SERIAL PRIMARY KEY,
+            email        VARCHAR(254)  NOT NULL,
+            token        CHAR(64)      NOT NULL UNIQUE,
+            redirect_url TEXT          NOT NULL,
+            expires_at   TIMESTAMPTZ   NOT NULL,
+            verified     BOOLEAN       NOT NULL DEFAULT false,
+            verified_at  TIMESTAMPTZ,
+            used         BOOLEAN       NOT NULL DEFAULT false,
+            used_at      TIMESTAMPTZ,
+            created_at   TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+          );
+          CREATE INDEX IF NOT EXISTS idx_email_verifications_email
+            ON email_verifications (email);
+          CREATE INDEX IF NOT EXISTS idx_email_verifications_token
+            ON email_verifications (token);
+          CREATE INDEX IF NOT EXISTS idx_email_verifications_expires
+            ON email_verifications (expires_at);
+        `,
+      },
+      // ─── NEW: extra user profile columns ─────────────────────────────────
+      {
+        id: '010_users_profile_columns',
+        sql: `
+          ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS experience    VARCHAR(20),
+            ADD COLUMN IF NOT EXISTS trading_style VARCHAR(20),
+            ADD COLUMN IF NOT EXISTS referral_code VARCHAR(30);
+        `,
+      },
+      // ─── KEPT: email OTP table (not used in magic link flow, kept for safety) ───
+      {
+        id: '007_email_otps',
+        sql: `
+          CREATE TABLE IF NOT EXISTS email_otps (
+            id         SERIAL      PRIMARY KEY,
+            email      VARCHAR(255) NOT NULL,
+            otp_hash   VARCHAR(255) NOT NULL,
+            purpose    VARCHAR(50)  NOT NULL DEFAULT 'registration',
+            expires_at TIMESTAMPTZ  NOT NULL,
+            used       BOOLEAN      NOT NULL DEFAULT FALSE,
+            attempts   INT          NOT NULL DEFAULT 0,
+            created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+          );
+          CREATE INDEX IF NOT EXISTS idx_email_otps_email_purpose
+            ON email_otps (email, purpose);
+          CREATE INDEX IF NOT EXISTS idx_email_otps_expires_at
+            ON email_otps (expires_at);
         `,
       },
     ];
