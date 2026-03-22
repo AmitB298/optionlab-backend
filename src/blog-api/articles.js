@@ -173,12 +173,11 @@ router.post('/', auth, async (req, res) => {
   try {
     const { rows } = await pool.query(`
       INSERT INTO blog_posts
-        (slug, title, subtitle, excerpt, body_markdown, body_html, cover_emoji,
+        (slug, title, subtitle, excerpt, content, body_markdown, body_html, cover_emoji,
          author_id, category_id, status, sentiment, ai_score, ai_summary,
          read_time_min, featured, is_ai_generated, scheduled_at,
          seo_title, seo_description, published_at)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
-      RETURNING id, slug
+      VALUES ($1,$2,$3,$4,$5,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
     `, [slug, title, subtitle, excerpt, body_markdown, `<p>${excerpt || ''}</p>`,
         cover_emoji || '📊', req.user.id, category_id || null,
         status || 'draft', sentiment || 'neutral', ai_score || 0, ai_summary || null,
@@ -278,6 +277,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
