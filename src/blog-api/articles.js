@@ -25,7 +25,7 @@ const ARTICLE_SELECT = `
   FROM blog_articles a
   JOIN blog_authors au ON au.id = a.author_id
   LEFT JOIN blog_categories c ON c.id = a.category_id
-  LEFT JOIN blog_post_tags at2 ON at2.article_id = a.id
+  LEFT JOIN blog_post_tags at2 ON at2.post_id = a.id
   LEFT JOIN blog_tags t ON t.id = at2.tag_id
 `;
 
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
   const conds = [`a.status = 'published'`];
 
   if (cat)      { params.push(cat);    conds.push(`c.slug = $${params.length}`); }
-  if (tag)      { params.push(tag);    conds.push(`EXISTS (SELECT 1 FROM blog_post_tags at3 JOIN blog_tags tg ON tg.id=at3.tag_id WHERE at3.article_id=a.id AND tg.slug=$${params.length})`); }
+  if (tag)      { params.push(tag);    conds.push(`EXISTS (SELECT 1 FROM blog_post_tags at3 JOIN blog_tags tg ON tg.id=at3.tag_id WHERE at3.post_id=a.id AND tg.slug=$${params.length})`); }
   if (author)   { params.push(parseInt(author)); conds.push(`a.author_id = $${params.length}`); }
   if (featured === 'true') { conds.push(`a.featured = true`); }
   if (search)   {
@@ -190,7 +190,7 @@ router.post('/', auth, async (req, res) => {
     if (tag_ids?.length) {
       for (const tid of tag_ids) {
         await pool.query(
-          `INSERT INTO blog_post_tags (article_id, tag_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`,
+          `INSERT INTO blog_post_tags (post_id, tag_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`,
           [artId, tid]
         );
       }
@@ -249,9 +249,9 @@ router.put('/:id', auth, async (req, res) => {
     await pool.query(`UPDATE blog_articles SET ${updateFields.join(',')} WHERE id=$${vals.length}`, vals);
 
     if (tag_ids !== undefined) {
-      await pool.query(`DELETE FROM blog_post_tags WHERE article_id=$1`, [req.params.id]);
+      await pool.query(`DELETE FROM blog_post_tags WHERE post_id=$1`, [req.params.id]);
       for (const tid of tag_ids) {
-        await pool.query(`INSERT INTO blog_post_tags (article_id, tag_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`, [req.params.id, tid]);
+        await pool.query(`INSERT INTO blog_post_tags (post_id, tag_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`, [req.params.id, tid]);
       }
     }
 
@@ -278,4 +278,6 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+
+
 
