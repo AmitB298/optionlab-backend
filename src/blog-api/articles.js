@@ -171,18 +171,18 @@ router.post('/', auth, async (req, res) => {
   const pub = status === 'published' ? new Date() : null;
 
   try {
-    const { rows } = await pool.query(`
-      INSERT INTO blog_posts
-        (slug, title, subtitle, excerpt, content, body_markdown, body_html, cover_emoji,
-         author_id, category_id, status, sentiment, ai_score, ai_summary,
-         read_time_min, featured, is_ai_generated, scheduled_at,
-         seo_title, seo_description, published_at)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21) RETURNING *
-    `, [slug, title, subtitle, excerpt, body_markdown, body_markdown, body_markdown,
-        cover_emoji || '📊', req.user.id, category_id || null,
-        status || 'draft', sentiment || 'neutral', ai_score || 0, ai_summary || null,
-        read_time_min || 5, featured || false, is_ai_generated || false,
-        scheduled_at || null, seo_title || null, seo_description || null, pub]);
+    const { rows } = await pool.query(
+      'INSERT INTO blog_posts (slug,title,subtitle,excerpt,content,body_markdown,body_html,cover_emoji,author_id,category_id,status,sentiment,ai_score,ai_summary,read_time_min,featured,is_ai_generated,scheduled_at,seo_title,seo_description,published_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21) RETURNING *',
+      [slug,title,subtitle||null,excerpt||null,body_markdown,body_markdown,body_markdown,cover_emoji||null,req.user.id,category_id||null,status||'draft',sentiment||'neutral',ai_score||0,ai_summary||null,read_time_min||5,featured||false,is_ai_generated||false,scheduled_at||null,seo_title||null,seo_description||null,pub]
+    );
+
+
+
+
+
+
+
+
 
     const artId = rows[0].id;
 
