@@ -62,8 +62,8 @@ categoriesRouter.post('/', auth, adminOnly, async (req, res) => {
   const { name, slug, description, color, sort_order } = req.body;
   if (!name || !slug) return res.status(400).json({ error: 'Name and slug required' });
   try {
-    const { rows } = await pool.query(
-      `INSERT INTO blog_categories (name, slug, description, color, sort_order) VALUES ($1,$2,$3,$4,$5) RETURNING *`,
+      `INSERT INTO blog_categories (name, slug, description) VALUES ($1,$2,$3) RETURNING *`,
+      [name, slug, description]
       [name, slug, description, color || '#ff9f0a', sort_order || 0]
     );
     res.status(201).json(rows[0]);
