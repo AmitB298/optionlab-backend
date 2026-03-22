@@ -334,7 +334,7 @@ function startRedirect(fillId,cdId,dur,dest){
       sessionStorage.setItem('ol_verify_token', data.email_token);
       sessionStorage.setItem('ol_verify_email', email);
       document.getElementById('continueBtn').href='register.html?tab=register';
-      document.getElementById('continueBtn').href=url;
+
       show('stNew');
     }
   }catch(err){
