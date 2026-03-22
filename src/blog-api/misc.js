@@ -73,9 +73,9 @@ const tagsRouter = require('express').Router();
 tagsRouter.get('/', async (req, res) => {
   try {
     const { rows } = await pool.query(`
-      SELECT t.*, COUNT(at2.article_id) AS article_count
+      SELECT t.*, COUNT(at2.post_id) AS article_count
       FROM blog_tags t
-      LEFT JOIN blog_article_tags at2 ON at2.tag_id = t.id
+      LEFT JOIN blog_post_tags at2 ON at2.tag_id = t.id
       GROUP BY t.id ORDER BY article_count DESC
     `);
     res.json(rows);
@@ -172,6 +172,7 @@ analyticsRouter.get('/dashboard', auth, adminOnly, async (req, res) => {
 });
 
 module.exports = { commentsRouter, categoriesRouter, tagsRouter, authorsRouter, subscribersRouter, analyticsRouter };
+
 
 
 
