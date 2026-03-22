@@ -71,7 +71,7 @@ router.get('/', async (req, res) => {
 router.get('/featured', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `${ARTICLE_SELECT} WHERE a.status='published' AND a.featured=true GROUP BY a.id,au.id,c.id ORDER BY a.published_at DESC LIMIT 1`
+      `${ARTICLE_SELECT} WHERE a.status='published' AND a.featured=true GROUP BY a.id, a.slug, a.title, a.subtitle, a.excerpt, a.body_markdown, a.body_html, a.cover_emoji, a.cover_image, a.status, a.sentiment, a.ai_score, a.ai_summary, a.read_time_min, a.views_count, a.likes_count, a.shares_count, a.featured, a.is_ai_generated, a.published_at, a.created_at, a.updated_at, a.seo_title, a.seo_description, a.scheduled_at, au.id, au.name, au.role, au.initials, au.avatar_color, au.avatar_url, c.id, c.name, c.slug ORDER BY a.published_at DESC LIMIT 1`
     );
     res.json(rows[0] || null);
   } catch (err) {
@@ -83,7 +83,7 @@ router.get('/featured', async (req, res) => {
 router.get('/trending', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `${ARTICLE_SELECT} WHERE a.status='published' GROUP BY a.id,au.id,c.id ORDER BY a.views_count DESC LIMIT 6`
+      `${ARTICLE_SELECT} WHERE a.status='published' GROUP BY a.id, a.slug, a.title, a.subtitle, a.excerpt, a.body_markdown, a.body_html, a.cover_emoji, a.cover_image, a.status, a.sentiment, a.ai_score, a.ai_summary, a.read_time_min, a.views_count, a.likes_count, a.shares_count, a.featured, a.is_ai_generated, a.published_at, a.created_at, a.updated_at, a.seo_title, a.seo_description, a.scheduled_at, au.id, au.name, au.role, au.initials, au.avatar_color, au.avatar_url, c.id, c.name, c.slug ORDER BY a.views_count DESC LIMIT 6`
     );
     res.json(rows);
   } catch (err) {
@@ -95,7 +95,7 @@ router.get('/trending', async (req, res) => {
 router.get('/:slug', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `${ARTICLE_SELECT} WHERE a.slug = $1 AND a.status='published' GROUP BY a.id,au.id,c.id`,
+      `${ARTICLE_SELECT} WHERE a.slug = $1 AND a.status='published' GROUP BY a.id, a.slug, a.title, a.subtitle, a.excerpt, a.body_markdown, a.body_html, a.cover_emoji, a.cover_image, a.status, a.sentiment, a.ai_score, a.ai_summary, a.read_time_min, a.views_count, a.likes_count, a.shares_count, a.featured, a.is_ai_generated, a.published_at, a.created_at, a.updated_at, a.seo_title, a.seo_description, a.scheduled_at, au.id, au.name, au.role, au.initials, au.avatar_color, au.avatar_url, c.id, c.name, c.slug`,
       [req.params.slug]
     );
     if (!rows[0]) return res.status(404).json({ error: 'Article not found' });
@@ -144,7 +144,7 @@ router.get('/admin/all', auth, async (req, res) => {
   params.push(parseInt(limit), offset);
   try {
     const { rows } = await pool.query(
-      `${ARTICLE_SELECT} ${where} GROUP BY a.id,au.id,c.id ORDER BY a.created_at DESC LIMIT $${params.length-1} OFFSET $${params.length}`,
+      `${ARTICLE_SELECT} ${where} GROUP BY a.id, a.slug, a.title, a.subtitle, a.excerpt, a.body_markdown, a.body_html, a.cover_emoji, a.cover_image, a.status, a.sentiment, a.ai_score, a.ai_summary, a.read_time_min, a.views_count, a.likes_count, a.shares_count, a.featured, a.is_ai_generated, a.published_at, a.created_at, a.updated_at, a.seo_title, a.seo_description, a.scheduled_at, au.id, au.name, au.role, au.initials, au.avatar_color, au.avatar_url, c.id, c.name, c.slug ORDER BY a.created_at DESC LIMIT $${params.length-1} OFFSET $${params.length}`,
       params
     );
     res.json(rows);
@@ -278,6 +278,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
