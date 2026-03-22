@@ -18,7 +18,7 @@ const ARTICLE_SELECT = `
     au.avatar_url AS author_avatar,
     c.id AS cat_id, c.name AS cat_name, c.slug AS cat_slug,
     COALESCE(
-      json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'slug', t.slug, 'color', t.color))
+      json_agg(DISTINCT jsonb_build_object('id', t.id, 'name', t.name, 'slug', t.slug, 'slug', t.slug))
       FILTER (WHERE t.id IS NOT NULL), '[]'
     ) AS tags,
     (SELECT COUNT(*) FROM blog_comments cm WHERE cm.post_id = a.id AND cm.approved = true) AS comments_count
@@ -278,6 +278,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
