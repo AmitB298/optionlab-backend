@@ -876,15 +876,7 @@ async function resendMagicLink(){
 }
 
 /* Handle return from /verify.html */
-(function checkVerifyReturn(){
-  const p=new URLSearchParams(window.location.search);
-  const tok=p.get('email_token'),email=p.get('email');
-  if(tok&&email){
-    window.history.replaceState({},'',window.location.pathname+'?tab=register');
-    _rd.email=email;_rd.email_token=tok;
-    switchTab('register');advanceToStep2();
-  }
-})();
+(function checkVerifyReturn(){try{const tok=sessionStorage.getItem('ol_verify_token');const email=sessionStorage.getItem('ol_verify_email');if(tok&&email){sessionStorage.removeItem('ol_verify_token');sessionStorage.removeItem('ol_verify_email');_rd.email=email;_rd.email_token=tok;switchTab('register');advanceToStep2();}}catch(e){}})();
 
 /* STEP 2 -> 3 */
 function toStep3(){
@@ -1011,3 +1003,4 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 </nav>
 </body>
 </html>
+
