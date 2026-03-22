@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Search, PenSquare, LogOut, User, Sun, Moon, X, BookOpen } from 'lucide-react'
+import { Search, PenSquare, LogOut, User, Sun, Moon, X, BookOpen, ChevronDown, ChevronUp } from 'lucide-react'
 import { useAuthStore } from '../../store/authStore'
 import { articlesApi } from '../../utils/api'
 
@@ -22,6 +22,7 @@ export default function Header() {
   const [results, setResults] = useState<any[]>([])
   const [searching, setSearching] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
+  const [disclaimerExpanded, setDisclaimerExpanded] = useState(false)
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
@@ -59,15 +60,15 @@ export default function Header() {
       <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/95 backdrop-blur-sm">
         {/* Brand + Nav row */}
         <div className="flex items-center gap-6 px-4 h-14">
-          {/* Brand */}
-          <Link to="/" className="flex items-center gap-2 shrink-0 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-content font-black text-white text-xs font-mono flex items-center justify-center">
+          {/* Brand — links to main site */}
+          <a href="https://www.optionslab.in" className="flex items-center gap-2 shrink-0 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-black text-white text-xs font-mono">
               OL
             </div>
             <span className="font-black text-white tracking-tight text-base hidden sm:block">
               Options<span className="text-amber-400">Lab</span>
             </span>
-          </Link>
+          </a>
 
           {/* Nav */}
           <nav className="hidden md:flex items-center gap-1 flex-1">
@@ -139,13 +140,25 @@ export default function Header() {
           </div>
         </div>
 
-        {/* SEBI Disclaimer bar */}
-        <div className="px-4 py-1.5 bg-zinc-900/80 border-t border-zinc-800/60">
-          <p className="text-[10px] text-zinc-600 font-mono text-center leading-tight">
-            <span className="text-amber-600/70 font-semibold">DISCLAIMER:</span>{' '}
-            OptionsLab is a financial education platform. Content is for informational purposes only and does not constitute investment advice or recommendations.
-            Not SEBI registered. Do not make investment decisions based on this content. Trading involves substantial risk of loss.
-          </p>
+        {/* Collapsible SEBI Disclaimer bar */}
+        <div className="px-4 bg-zinc-900/80 border-t border-zinc-800/60">
+          <button
+            onClick={() => setDisclaimerExpanded(d => !d)}
+            className="w-full flex items-center justify-center gap-2 py-1 text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors"
+          >
+            <span className="text-amber-600/70 font-semibold">DISCLAIMER</span>
+            <span className="text-zinc-700">— Not SEBI registered. Educational content only.</span>
+            {disclaimerExpanded ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
+          </button>
+          {disclaimerExpanded && (
+            <p className="text-[10px] text-zinc-600 font-mono text-center leading-relaxed pb-2 border-t border-zinc-800/40 pt-1.5">
+              OptionsLab is a financial education and information platform only. We are NOT registered with SEBI as a Research Analyst or Investment Adviser.
+              Nothing on this website constitutes investment advice, a recommendation to buy or sell securities, or a solicitation of any kind.
+              All educational content, tools, and articles are for informational purposes only and should not be relied upon for trading or investment decisions.
+              Options and derivatives trading involves a substantial risk of loss and is not suitable for all investors.
+              Always consult a SEBI-registered Research Analyst or Investment Adviser before making investment decisions.
+            </p>
+          )}
         </div>
       </header>
 
@@ -197,4 +210,3 @@ export default function Header() {
     </>
   )
 }
-
