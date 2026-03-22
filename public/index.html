@@ -158,175 +158,6 @@ footer{position:relative;z-index:10;background:var(--bg);border-top:1px solid va
 }
 
 /* ═══ BLOG PAGE ═══ */
-.blog-hero{padding:3rem 2.5rem 2rem;background:var(--bg);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-.blog-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(251,191,36,.07),transparent 65%);pointer-events:none;}
-.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem;padding:2rem 2.5rem 4rem;max-width:1300px;margin:0 auto;}
-.blog-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;}
-.blog-card:hover{border-color:var(--yellow);transform:translateY(-3px);box-shadow:0 8px 32px rgba(251,191,36,.12);}
-.blog-card-img{height:160px;background:var(--bg3);position:relative;overflow:hidden;flex-shrink:0;}
-.blog-card-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;}
-.blog-card-tag{position:absolute;top:.6rem;left:.6rem;padding:.18rem .55rem;border-radius:20px;font-family:var(--font-m);font-size:.48rem;font-weight:700;letter-spacing:.06em;}
-.blog-card-body{padding:1rem 1.1rem;flex:1;display:flex;flex-direction:column;}
-.blog-card-title{font-family:var(--font-r);font-size:.96rem;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:.4rem;}
-.blog-card-excerpt{font-family:var(--font-b);font-size:.76rem;color:var(--text2);line-height:1.65;font-weight:300;flex:1;margin-bottom:.75rem;}
-.blog-card-meta{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:.55rem;margin-top:auto;}
-.blog-card-author{display:flex;align-items:center;gap:.4rem;font-family:var(--font-m);font-size:.5rem;color:var(--text3);}
-.blog-card-date{font-family:var(--font-m);font-size:.48rem;color:var(--text3);}
-.blog-card-read{font-family:var(--font-m);font-size:.48rem;color:var(--yellow);}
-.blog-filters{display:flex;gap:.4rem;flex-wrap:wrap;padding:.85rem 2.5rem;border-bottom:1px solid var(--border);background:var(--bg2);}
-.blog-filter-btn{padding:.24rem .65rem;border-radius:20px;border:1px solid var(--border);background:none;font-family:var(--font-m);font-size:.52rem;color:var(--text3);cursor:pointer;transition:all .18s;}
-.blog-filter-btn:hover{border-color:var(--yellow);color:var(--yellow);}
-.blog-filter-btn.active{background:rgba(251,191,36,.1);border-color:var(--yellow);color:var(--yellow);text-shadow:0 0 8px rgba(251,191,36,.5);}
-.blog-featured{grid-column:1/-1;}
-.blog-featured .blog-card-img{height:220px;}
-.blog-featured .blog-card-title{font-size:1.18rem;}
-.blog-read-more{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--font-m);font-size:.52rem;color:var(--yellow);font-weight:600;cursor:pointer;transition:all .2s;}
-.blog-read-more:hover{text-shadow:0 0 8px rgba(251,191,36,.6);}
-.blog-post-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;}
-.blog-post-overlay.open{display:flex;}
-.blog-post-modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:100%;max-width:780px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s ease;position:relative;}
-.blog-post-header{padding:2rem 2rem 1.2rem;border-bottom:1px solid var(--border);}
-.blog-post-body{padding:1.5rem 2rem 2.5rem;font-family:var(--font-b);font-size:.9rem;color:var(--text2);line-height:1.85;}
-.blog-post-body h2{font-family:var(--font-r);font-size:1.05rem;font-weight:700;color:var(--text);margin:1.2rem 0 .5rem;text-transform:uppercase;letter-spacing:.04em;}
-.blog-post-body p{margin-bottom:.9rem;}
-.blog-post-body strong{color:var(--text);}
-.blog-post-body .highlight{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:.75rem 1rem;margin:1rem 0;color:var(--yellow);}
-.blog-close-btn{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;color:var(--text2);transition:all .2s;}
-.blog-close-btn:hover{background:var(--accentGlow);border-color:var(--yellow);color:var(--yellow);}
-@media(max-width:768px){
-  .blog-grid{grid-template-columns:1fr;padding:1rem;}
-  .blog-hero{padding:2rem 1rem 1.5rem;}
-  .blog-filters{padding:.75rem 1rem;}
-  .blog-featured{grid-column:auto;}
-}
-
-/* ═══════════════════════════════════════════════════
-   BLOG PAGE
-   ═══════════════════════════════════════════════════ */
-.blog-filter-btn{
-  font-family:var(--font-m);font-size:.52rem;letter-spacing:.07em;text-transform:uppercase;
-  padding:.3rem .8rem;border-radius:20px;border:1px solid var(--border);
-  background:transparent;color:var(--text3);cursor:pointer;white-space:nowrap;
-  transition:all .18s;flex-shrink:0;
-}
-.blog-filter-btn:hover{border-color:var(--yellow);color:var(--yellow);}
-.blog-filter-btn.active{
-  background:rgba(0,255,136,.08);border-color:var(--nav-green);
-  color:var(--nav-green);text-shadow:0 0 8px rgba(0,255,136,.5);
-}
-.blog-featured{
-  background:linear-gradient(135deg,var(--card),var(--card2));
-  border:1px solid var(--borderH);border-radius:16px;padding:2rem 2.5rem;
-  cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
-  margin-bottom:1.5rem;
-}
-.blog-featured::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--accent),var(--cyan),var(--nav-green));
-}
-.blog-featured:hover{border-color:var(--accent3);transform:translateY(-2px);box-shadow:0 8px 32px rgba(249,115,22,.15);}
-.blog-feat-badge{
-  display:inline-flex;align-items:center;gap:.4rem;
-  font-family:var(--font-m);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--accent3);margin-bottom:.8rem;
-}
-.blog-feat-title{
-  font-family:var(--font-d);font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:.03em;
-  color:var(--text);line-height:1.1;margin-bottom:.75rem;
-}
-.blog-feat-desc{
-  font-family:var(--font-b);font-size:.9rem;color:var(--text2);line-height:1.75;
-  font-weight:300;max-width:760px;margin-bottom:1rem;
-}
-.blog-feat-meta{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
-.blog-feat-read{
-  font-family:var(--font-m);font-size:.52rem;color:var(--accent3);margin-left:auto;
-  letter-spacing:.04em;
-}
-.blog-tag{
-  font-family:var(--font-m);font-size:.46rem;font-weight:700;letter-spacing:.06em;
-  text-transform:uppercase;padding:.18rem .5rem;border-radius:4px;
-}
-.blog-tag-fii{background:rgba(168,85,247,.1);color:var(--purple);border:1px solid rgba(168,85,247,.25);}
-.blog-tag-greeks{background:rgba(34,211,238,.08);color:var(--cyan);border:1px solid rgba(34,211,238,.2);}
-.blog-tag-expiry{background:rgba(249,115,22,.08);color:var(--accent3);border:1px solid rgba(249,115,22,.2);}
-.blog-tag-volatility{background:rgba(251,191,36,.08);color:var(--yellow);border:1px solid rgba(251,191,36,.2);}
-.blog-tag-strategy{background:rgba(0,230,118,.08);color:var(--green);border:1px solid rgba(0,230,118,.2);}
-.blog-tag-tutorial{background:rgba(99,155,255,.08);color:#639bff;border:1px solid rgba(99,155,255,.2);}
-.blog-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;
-}
-.blog-card{
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:1.4rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;gap:.6rem;
-}
-.blog-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  transition:opacity .2s;opacity:0;
-}
-.blog-card:hover{border-color:var(--borderH);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.3);}
-.blog-card:hover::after{opacity:1;}
-.blog-card-num{
-  font-family:var(--font-d);font-size:2.4rem;color:var(--border);line-height:1;
-  position:absolute;top:.8rem;right:1rem;letter-spacing:.04em;pointer-events:none;
-}
-.blog-card-tags{display:flex;gap:.4rem;flex-wrap:wrap;}
-.blog-card-title{
-  font-family:var(--font-r);font-size:1rem;font-weight:700;color:var(--text);
-  line-height:1.35;letter-spacing:.01em;
-}
-.blog-card-excerpt{
-  font-family:var(--font-b);font-size:.78rem;color:var(--text2);line-height:1.65;
-  font-weight:300;flex:1;
-}
-.blog-card-meta{
-  display:flex;align-items:center;justify-content:space-between;
-  font-family:var(--font-m);font-size:.48rem;color:var(--text3);
-  padding-top:.5rem;border-top:1px solid var(--border);margin-top:auto;
-}
-.blog-card-read{color:var(--accent3);font-weight:700;}
-/* Modal body styles */
-#blog-modal-body h2{
-  font-family:var(--font-r);font-size:1.1rem;font-weight:700;color:var(--text);
-  text-transform:uppercase;letter-spacing:.04em;margin:1.6rem 0 .6rem;
-  padding-left:.6rem;border-left:3px solid var(--accent);
-}
-#blog-modal-body p{margin-bottom:.9rem;}
-#blog-modal-body .callout{
-  background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.2);
-  border-radius:8px;padding:.85rem 1rem;margin:1rem 0;
-  font-family:var(--font-m);font-size:.62rem;color:var(--green);line-height:1.65;
-}
-#blog-modal-body .warn-callout{
-  background:rgba(255,61,113,.05);border:1px solid rgba(255,61,113,.2);
-  border-radius:8px;padding:.85rem 1rem;margin:1rem 0;
-  font-family:var(--font-m);font-size:.62rem;color:var(--red);line-height:1.65;
-}
-#blog-modal-body table{
-  width:100%;border-collapse:collapse;font-family:var(--font-m);
-  font-size:.56rem;margin:1rem 0;
-}
-#blog-modal-body table th{
-  background:var(--bg3);padding:.4rem .6rem;border-bottom:1px solid var(--border);
-  text-align:left;font-size:.48rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);
-}
-#blog-modal-body table td{
-  padding:.4rem .6rem;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text2);
-}
-#blog-modal-body .pos{color:var(--green);}
-#blog-modal-body .neg{color:var(--red);}
-@media(max-width:768px){
-  .blog-featured{padding:1.2rem;}
-  .blog-grid{grid-template-columns:1fr;}
-  .blog-feat-read{margin-left:0;}
-  #blog-modal{width:100vw;left:0;transform:none;border-radius:16px 16px 0 0;top:auto;bottom:0;max-height:90vh;}
-  #blog-modal-overlay{top:0;}
-}
-
-.wel-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(249,115,22,.12),transparent 65%);pointer-events:none;z-index:0;}
-.wel-scan{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent3),transparent);animation:scanline 4s linear infinite;pointer-events:none;z-index:1;}
-@keyframes scanline{0%{top:0;opacity:1}95%{opacity:.3}100%{top:100%;opacity:0}}
 </style>
 </head>
 
@@ -401,7 +232,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     <button class="drawer-tab" onclick="showPage('setup');closeDrawer()">Setup</button>
     <button class="drawer-tab" onclick="showPage('contact');closeDrawer()">Contact</button>
     <button class="drawer-tab" onclick="showPage('changelog');closeDrawer()">Changelog</button>
-    <button class="drawer-tab" onclick="showPage('blog');closeDrawer()">✦ Blog</button>
+    <button class="drawer-tab" onclick="window.open('https://www.optionslab.in/blog/','_blank');closeDrawer()">✦ Blog</button>
     <div class="drawer-divider"></div>
     <button class="drawer-tab" onclick="showPage('privacy');closeDrawer()">Privacy</button>
     <button class="drawer-tab" onclick="showPage('terms');closeDrawer()">Terms</button>
@@ -422,7 +253,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     <button class="nav-tab" onclick="showPage('why',this)">Why Us</button>
     <button class="nav-tab" onclick="showPage('about',this)">About</button>
     <button class="nav-tab" onclick="showPage('setup',this)">Setup</button>
-    <button class="nav-tab" onclick="showPage('blog',this)">✦ Blog</button>
+    <button class="nav-tab" onclick="window.open('https://www.optionslab.in/blog/','_blank')" style="color:var(--yellow);">✦ Blog</button>
     <button id="nav-tab-profile" style="display:none;" class="nav-tab" onclick="showPage('profile',this)">Profile</button>
   </div>
   <div class="nav-end">
@@ -539,75 +370,12 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
 <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I cancel anytime? <span class="faq-icon">+</span></div><div class="faq-a">Yes. Cancel from your profile dashboard at any time. No lock-in periods. Your account reverts to the Free plan immediately.</div></div>
 <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What payment methods are accepted? <span class="faq-icon">+</span></div><div class="faq-a">All major UPI apps (GPay, PhonePe, Paytm), credit/debit cards, and net banking &mdash; powered by Razorpay.</div></div>
 <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is this SEBI registered? <span class="faq-icon">+</span></div><div class="faq-a">No. OptionsLab is NOT registered with SEBI as an Investment Advisor, Research Analyst, or Portfolio Manager. We provide analytical tools only &mdash; not investment advice.</div></div>
-<div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What is the refund policy? <span class="faq-icon">+</span></div><div class="faq-a">First-time subscribers get a 7-day full refund guarantee, no questions asked. Email support@optionslab.in within 7 days.</div></div>
+<div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What is the refund policy? <span class="faq-icon">+</span></div><div class="faq-a">First-time subscribers get a 7-day full refund guarantee, no questions asked. Email <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="03707673736c7177436c73776a6c6d706f62612d6a6d">[email&#160;protected]</a> within 7 days.</div></div>
 </div>
 </div>
 
 <!-- WHY -->
-<div class="page" id="page-blog">
 
-<!-- BLOG HERO -->
-<div class="ip-hero">
-  <div class="ip-grid"></div>
-  <div class="ip-kicker">
-    <span style="width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;animation:blink 1.6s infinite;"></span>
-    Updated weekly · Free forever
-  </div>
-  <h1 class="ip-h1">MARKET INTEL &amp; ANALYSIS</h1>
-  <p class="ip-sub">Deep-dives on FII positioning, expiry week setups, volatility regimes and options strategies — written by traders, for traders.</p>
-</div>
-
-<!-- FILTER BAR -->
-<div style="display:flex;align-items:center;gap:.5rem;padding:.6rem 2rem;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;">
-  <button class="blog-filter-btn active" onclick="blogFilter(this,'all')">All</button>
-  <button class="blog-filter-btn" onclick="blogFilter(this,'fii')">FII Flows</button>
-  <button class="blog-filter-btn" onclick="blogFilter(this,'greeks')">Greeks</button>
-  <button class="blog-filter-btn" onclick="blogFilter(this,'expiry')">Expiry</button>
-  <button class="blog-filter-btn" onclick="blogFilter(this,'volatility')">Volatility</button>
-  <button class="blog-filter-btn" onclick="blogFilter(this,'strategy')">Strategy</button>
-  <button class="blog-filter-btn" onclick="blogFilter(this,'tutorial')">Tutorial</button>
-</div>
-
-<!-- FEATURED POST -->
-<section style="padding:2rem 2.5rem 0;max-width:1200px;margin:0 auto;">
-  <div class="blog-featured reveal" onclick="blogOpenPost(0)">
-    <div class="blog-feat-badge">
-      <span style="width:5px;height:5px;background:var(--accent3);border-radius:50%;display:inline-block;animation:blink 2s infinite;"></span>
-      Featured Article
-    </div>
-    <h2 class="blog-feat-title">How FII Positioning Predicted the 22,500 Pin on Expiry Day</h2>
-    <p class="blog-feat-desc">We tracked FII net futures from Monday through Thursday. Here's how the data pointed to a 22,500 max pain gravitational pull three days before it happened — and exactly how to trade it next time.</p>
-    <div class="blog-feat-meta">
-      <span class="blog-tag blog-tag-fii">FII Flows</span>
-      <span class="blog-tag blog-tag-expiry">Expiry</span>
-      <span style="font-family:var(--font-m);font-size:.52rem;color:var(--text3);">March 18, 2026</span>
-      <span style="font-family:var(--font-m);font-size:.52rem;color:var(--text3);">8 min read</span>
-      <span class="blog-feat-read">Read article →</span>
-    </div>
-  </div>
-</section>
-
-<!-- POSTS GRID -->
-<section style="padding:1.5rem 2.5rem 4rem;max-width:1200px;margin:0 auto;">
-  <div style="font-family:var(--font-m);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;">All Articles</div>
-  <div class="blog-grid" id="blog-grid"></div>
-</section>
-
-<!-- POST MODAL OVERLAY -->
-<div id="blog-modal-overlay" onclick="blogClosePost()" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);"></div>
-<div id="blog-modal" style="display:none;position:fixed;top:var(--nav-h,60px);left:50%;transform:translateX(-50%);z-index:501;width:min(780px,95vw);max-height:calc(100vh - var(--nav-h,60px) - 20px);background:var(--bg2);border:1px solid var(--borderB);border-radius:16px;overflow-y:auto;animation:fadeUp .25s ease;">
-  <div style="padding:1.5rem 2rem .5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;position:sticky;top:0;background:var(--bg2);z-index:1;">
-    <div id="blog-modal-tags" style="display:flex;gap:.4rem;flex-wrap:wrap;"></div>
-    <button onclick="blogClosePost()" style="flex-shrink:0;font-family:var(--font-m);font-size:.7rem;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.28rem .6rem;cursor:pointer;transition:.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">✕ Close</button>
-  </div>
-  <div style="padding:1.5rem 2rem 2.5rem;">
-    <h1 id="blog-modal-title" style="font-family:var(--font-d);font-size:2rem;letter-spacing:.03em;line-height:1.1;color:var(--text);margin-bottom:.6rem;"></h1>
-    <div id="blog-modal-meta" style="font-family:var(--font-m);font-size:.52rem;color:var(--text3);margin-bottom:1.8rem;display:flex;gap:1rem;flex-wrap:wrap;"></div>
-    <div id="blog-modal-body" style="font-family:var(--font-b);font-size:.92rem;color:var(--text2);line-height:1.85;font-weight:300;"></div>
-  </div>
-</div>
-
-</div>
 <div class="page" id="page-why">
 <div class="ip-hero"><div class="ip-grid"></div><div class="ip-kicker">What makes OptionsLab different</div><h1 class="ip-h1">WHY OPTIONSLAB?</h1><p class="ip-sub">Most options tools show you price. OptionsLab shows you positioning &mdash; the only thing that actually precedes the move.</p></div>
 <div class="why-grid">
@@ -634,9 +402,9 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     <button class="cf-submit" onclick="aToast('Message sent! We will respond within 24 hours.','ok')">Send Message &rarr;</button>
   </div>
   <div class="contact-info">
-    <div class="contact-info-card"><div class="ci-icon">&#128231;</div><div class="ci-title">Email Support</div><div class="ci-body">For account issues, billing, or technical problems.<br><a href="/cdn-cgi/l/email-protection#41323431312e3335012e3135282e2f322d20236f282f" class="ci-link">support@optionslab.in</a></div></div>
+    <div class="contact-info-card"><div class="ci-icon">&#128231;</div><div class="ci-title">Email Support</div><div class="ci-body">For account issues, billing, or technical problems.<br><a href="/cdn-cgi/l/email-protection#41323431312e3335012e3135282e2f322d20236f282f" class="ci-link"><span class="__cf_email__" data-cfemail="cab9bfbabaa5b8be8aa5babea3a5a4b9a6aba8e4a3a4">[email&#160;protected]</span></a></div></div>
     <div class="contact-info-card"><div class="ci-icon">&#128241;</div><div class="ci-title">Telegram Community</div><div class="ci-body">Join F&amp;O traders. Daily signals and market commentary.<br><a href="https://t.me/optionslab_in" target="_blank" class="ci-link">t.me/optionslab_in</a></div></div>
-    <div class="contact-info-card"><div class="ci-icon">&#129309;</div><div class="ci-title">Partnerships &amp; Media</div><div class="ci-body">White-label, API integration, media appearances.<br><a href="/cdn-cgi/l/email-protection#1475797d60547b64607d7b7a677875763a7d7a" class="ci-link">support@optionslab.in</a></div></div>
+    <div class="contact-info-card"><div class="ci-icon">&#129309;</div><div class="ci-title">Partnerships &amp; Media</div><div class="ci-body">White-label, API integration, media appearances.<br><a href="/cdn-cgi/l/email-protection#1475797d60547b64607d7b7a677875763a7d7a" class="ci-link"><span class="__cf_email__" data-cfemail="4c3f393c3c233e380c233c382523223f202d2e622522">[email&#160;protected]</span></a></div></div>
   </div>
 </div>
 </div>
@@ -680,9 +448,9 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
   <div class="prose-h2">5. Cookies &amp; Analytics</div>
   <p class="prose-p">OptionsLab does not use third-party analytics cookies. We use only essential session storage in your browser to maintain your login state.</p>
   <div class="prose-h2">6. Your Rights</div>
-  <p class="prose-p">You may request deletion of your account and all associated data at any time by emailing <strong>support@optionslab.in</strong>. We will process deletion requests within 7 business days.</p>
+  <p class="prose-p">You may request deletion of your account and all associated data at any time by emailing <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9deee8ededf2efe9ddf2ede9f4f2f3eef1fcffb3f4f3">[email&#160;protected]</a></strong>. We will process deletion requests within 7 business days.</p>
   <div class="prose-h2">7. Contact</div>
-  <p class="prose-p">Privacy concerns: <strong>privacy@optionslab.in</strong></p>
+  <p class="prose-p">Privacy concerns: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5424263d2235372d143b24203d3b3a273835367a3d3a">[email&#160;protected]</a></strong></p>
 </div>
 </div>
 <div class="page" id="page-terms"><div class="ip-hero"><div class="ip-grid"></div><div class="ip-kicker">Last updated March 2026</div><h1 class="ip-h1">TERMS OF SERVICE</h1><p class="ip-sub">Plain English — read them. They protect both you and us.</p></div>
@@ -700,7 +468,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
   <div class="prose-h2">6. Limitation of Liability</div>
   <p class="prose-p">OptionsLab is not liable for any trading losses arising from use of this platform. All data is provided for informational purposes only. Past signal performance does not guarantee future results.</p>
   <div class="prose-h2">7. Contact</div>
-  <p class="prose-p">Legal queries: <strong>support@optionslab.in</strong></p>
+  <p class="prose-p">Legal queries: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="35464045455a4741755a45415c5a5b465954571b5c5b">[email&#160;protected]</a></strong></p>
 </div>
 </div>
 <div class="page" id="page-disclaimer"><div class="ip-hero"><div class="ip-grid"></div><div class="ip-kicker">Please read before using</div><h1 class="ip-h1">RISK DISCLAIMER</h1><p class="ip-sub">OptionsLab is an analytical tools platform. Not a registered advisor. Not investment advice.</p></div>
@@ -725,7 +493,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     <p class="prose-p" style="margin:0">If you subscribed to a paid plan for the first time and are not satisfied for any reason, email us within <strong>7 calendar days</strong> of your first payment for a full refund. No questions asked.</p>
   </div>
   <div class="prose-h2">How to Request a Refund</div>
-  <p class="prose-p">Email <strong>support@optionslab.in</strong> from your registered email address with the subject line "Refund Request". Include your registered mobile number. We will process the refund within <strong>5–7 business days</strong> back to your original payment method.</p>
+  <p class="prose-p">Email <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="62111712120d1016220d12160b0d0c110e03004c0b0c">[email&#160;protected]</a></strong> from your registered email address with the subject line "Refund Request". Include your registered mobile number. We will process the refund within <strong>5–7 business days</strong> back to your original payment method.</p>
   <div class="prose-h2">After the 7-Day Period</div>
   <p class="prose-p">After the guarantee period expires, or on any renewal payment, payments are <strong>non-refundable</strong>. We strongly recommend using the FREE plan to evaluate OptionsLab before upgrading.</p>
   <div class="prose-h2">Cancellations</div>
@@ -733,7 +501,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
   <div class="prose-h2">Plan Downgrades</div>
   <p class="prose-p">Downgrades (e.g. Pro to Free) take effect at the end of the current billing cycle. You retain access to paid features until then.</p>
   <div class="prose-h2">Contact</div>
-  <p class="prose-p">Refund queries: <strong>support@optionslab.in</strong></p>
+  <p class="prose-p">Refund queries: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="780b0d0808170a0c3817080c1117160b14191a561116">[email&#160;protected]</a></strong></p>
 </div>
 </div>
 <div class="page" id="page-changelog"><div class="ip-hero"><div class="ip-grid"></div><div class="ip-kicker">Actively maintained</div><h1 class="ip-h1">CHANGELOG</h1></div><div class="prose-wrap"><div class="prose-h2">v1.1.0 &mdash; March 2026</div><p class="prose-p"><strong>Fixed:</strong> showPage ReferenceError &mdash; early stub script now runs before DOM loads. <strong>New:</strong> Glowing green nav tabs. Saffron/orange accent text. Full Pricing, Contact, Why, About pages. All auth buttons redirect to register.html. SyntaxError (template literals) fixed. Responsive design v2.0.</p><div class="prose-h2">v1.0.0 &mdash; January 2026</div><p class="prose-p"><strong>Launch:</strong> Options chain, Greeks engine, Strategy Lab, Smart Money FII Footprint, Analytics Engine, Academy (19 chapters EN + Hindi).</p></div></div>
@@ -810,29 +578,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
 </div>
 
 <!-- ══════════════ PAGE: BLOG ══════════════ -->
-<div class="page" id="page-blog">
-  <div class="blog-hero">
-    <div style="position:relative;z-index:1;">
-      <div style="font-family:var(--font-m);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;">
-        <span style="width:6px;height:6px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px rgba(251,191,36,.6);"></span>
-        OptionsLab Blog
-      </div>
-      <div style="font-family:var(--font-d);font-size:clamp(1.8rem,4vw,3rem);letter-spacing:.04em;line-height:1;margin-bottom:.5rem;">F&amp;O INTELLIGENCE. <span style="color:var(--yellow);">DECODED.</span></div>
-      <p style="font-family:var(--font-b);font-size:.9rem;color:var(--text2);font-weight:300;max-width:520px;line-height:1.7;">Deep-dive analysis on FII positioning, expiry strategies, Greeks, and market microstructure — written by a trader who builds the tools.</p>
-    </div>
-  </div>
 
-  <div class="blog-filters" id="blogFilters">
-    <button class="blog-filter-btn active" onclick="blogFilter('all',this)">All Posts</button>
-    <button class="blog-filter-btn" onclick="blogFilter('strategy',this)">Strategy</button>
-    <button class="blog-filter-btn" onclick="blogFilter('fii',this)">FII Analysis</button>
-    <button class="blog-filter-btn" onclick="blogFilter('greeks',this)">Greeks</button>
-    <button class="blog-filter-btn" onclick="blogFilter('expiry',this)">Expiry</button>
-    <button class="blog-filter-btn" onclick="blogFilter('tools',this)">Platform</button>
-  </div>
-
-  <div class="blog-grid" id="blogGrid"></div>
-</div>
 
 <!-- BLOG POST MODAL -->
 <div class="blog-post-overlay" id="blogPostOverlay" onclick="closeBlogPost(event)">
@@ -1196,12 +942,13 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
       <button class="pf-nav-btn" onclick="pfTab('sessions',this)"><span class="pf-nav-ico">📱</span>Sessions</button>
       <div class="pf-nav-sec">Billing</div>
       <button class="pf-nav-btn" onclick="pfTab('subscription',this)"><span class="pf-nav-ico">💳</span>Subscription</button>
-      <div style="padding:.75rem 1.2rem;border-top:1px solid var(--border);">
-        <button onclick="doLogout()" style="width:100%;padding:.5rem;background:rgba(255,61,113,.08);border:1px solid rgba(255,61,113,.2);border-radius:6px;font-family:var(--font-m);font-size:.56rem;color:var(--red);cursor:pointer;">⏻ Sign Out</button>
+      <div style="padding:.75rem 1.2rem;border-top:1px solid var(--border);margin-top:.5rem;">
+        <button onclick="doLogout()" style="width:100%;padding:.55rem;background:rgba(255,61,113,.08);border:1px solid rgba(255,61,113,.2);border-radius:6px;font-family:var(--font-m);font-size:.56rem;color:var(--red);cursor:pointer;">⏻ Sign Out</button>
       </div>
     </nav>
   </aside>
   <main class="pf-main">
+
     <!-- OVERVIEW -->
     <div class="pf-tab pf-on" id="pftab-overview">
       <div class="pf-sec-title">OVERVIEW</div>
@@ -1212,169 +959,175 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
         <div class="pf-stat"><div class="pf-stat-val" id="pf-ov-since" style="color:var(--accent3);font-size:1rem;padding-top:.35rem">—</div><div class="pf-stat-lbl">Member Since</div></div>
         <div class="pf-stat"><div class="pf-stat-val" id="pf-ov-status" style="color:var(--green);font-size:1.1rem;padding-top:.3rem">✓</div><div class="pf-stat-lbl">Account Status</div></div>
       </div>
-      <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">🪪 Identity</span><button class="pf-ghost-btn" onclick="pfTab('myprofile',null)">Edit Profile →</button></div>
-        <div style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap">
-          <div class="pf-ava" id="pf-ov-ava" style="width:64px;height:64px;font-size:1.6rem;flex-shrink:0">U</div>
-          <div style="flex:1;min-width:160px">
-            <div style="font-family:var(--font-d);font-size:1.5rem;letter-spacing:.04em;margin-bottom:.2rem" id="pf-ov-name">—</div>
-            <div style="font-family:var(--font-m);font-size:.56rem;color:var(--text3);margin-bottom:.4rem" id="pf-ov-mobile">—</div>
-            <div id="pf-ov-badges" style="display:flex;gap:.3rem;flex-wrap:wrap"></div>
-          </div>
-          <button class="pf-dl-btn" onclick="pfTab('download',null)" style="padding:.55rem 1.2rem;font-size:.64rem">⬇ Download App</button>
+      <div class="pf-card" style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;margin-bottom:1rem;">
+        <div class="pf-ava" id="pf-ov-ava" style="width:64px;height:64px;font-size:1.6rem;border:2px solid var(--borderH);flex-shrink:0;">U</div>
+        <div style="flex:1;min-width:160px;">
+          <div style="font-family:var(--font-d);font-size:1.4rem;letter-spacing:.03em;color:var(--text);margin-bottom:.2rem;" id="pf-ov-name">—</div>
+          <div style="font-family:var(--font-m);font-size:.54rem;color:var(--text2);margin-bottom:.4rem;" id="pf-ov-mobile">—</div>
+          <div style="display:flex;gap:.35rem;flex-wrap:wrap;" id="pf-ov-badges"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.45rem;">
+          <button onclick="pfTab('myprofile',null)" style="font-family:var(--font-m);font-size:.54rem;padding:.38rem .9rem;border:1px solid var(--borderB);border-radius:5px;color:var(--accent3);background:var(--accentGlow3);cursor:pointer;">Edit Profile</button>
+          <button onclick="pfTab('download',null)" style="font-family:var(--font-m);font-size:.54rem;padding:.38rem .9rem;border:1px solid rgba(0,230,118,.25);border-radius:5px;color:var(--green);background:rgba(0,230,118,.06);cursor:pointer;">⬇ Download App</button>
         </div>
       </div>
-      <div class="pf-upgrade-banner" id="pf-upgrade-banner" onclick="showPage('pricing')">
-        <div style="font-size:2rem">⚡</div>
-        <div>
-          <div style="font-family:var(--font-d);font-size:1.1rem;color:var(--accent3);margin-bottom:.25rem">UPGRADE TO PRO</div>
-          <div style="font-family:var(--font-b);font-size:.78rem;color:var(--text2);font-weight:300">FII flows, Kill Zones, Telegram alerts &amp; Regime Classifier. ₹1,499/month.</div>
-        </div>
-        <div style="margin-left:auto;font-family:var(--font-m);font-size:.58rem;color:var(--accent3);white-space:nowrap">See Plans →</div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">Trader Profile</span></div>
+        <div class="pf-row"><div class="pf-key">Experience</div><div class="pf-val pf-val-acc" id="pf-ov-exp">—</div></div>
+        <div class="pf-row"><div class="pf-key">Trading Style</div><div class="pf-val pf-val-acc" id="pf-ov-style">—</div></div>
+        <div class="pf-row"><div class="pf-key">Angel One ID</div><div class="pf-val" id="pf-ov-broker">Not connected</div></div>
+        <div class="pf-row"><div class="pf-key">Joined</div><div class="pf-val" id="pf-joined-act">—</div></div>
       </div>
-      <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">📋 Recent Activity</span></div>
-        <div class="pf-activity-item"><div class="pf-activity-dot" style="background:var(--green)"></div><div class="pf-activity-txt">Account created and verified</div><div class="pf-activity-time" id="pf-joined-act">—</div></div>
-        <div class="pf-activity-item"><div class="pf-activity-dot" style="background:var(--accent3)"></div><div class="pf-activity-txt">Last login from web browser</div><div class="pf-activity-time">Today</div></div>
-        <div class="pf-activity-item"><div class="pf-activity-dot" style="background:var(--cyan)"></div><div class="pf-activity-txt">Options Terminal accessed (Live Chain)</div><div class="pf-activity-time">Session</div></div>
+      <div class="pf-upgrade-banner" id="pf-upgrade-banner" onclick="showPage('pricing')" style="display:none;">
+        <div style="font-family:var(--font-d);font-size:1.1rem;letter-spacing:.03em;color:var(--accent3);">⚡ UPGRADE TO PRO</div>
+        <div style="font-family:var(--font-b);font-size:.78rem;color:var(--text2);font-weight:300;margin:.25rem 0;">FII vs Retail divergence, kill zones, operator phases, Telegram alerts</div>
+        <div style="font-family:var(--font-m);font-size:.58rem;color:var(--accent3);letter-spacing:.06em;">₹1,499/month — See Pricing →</div>
       </div>
     </div>
 
     <!-- MY PROFILE -->
     <div class="pf-tab" id="pftab-myprofile">
       <div class="pf-sec-title">MY PROFILE</div>
-      <div class="pf-sec-sub">Personal and account information</div>
-      <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">👤 Personal Information</span></div>
-        <div class="pf-row"><div class="pf-key">Full Name</div><div class="pf-val" id="pf-fullname">—</div></div>
-        <div class="pf-row"><div class="pf-key">Mobile Number</div><div class="pf-val pf-val-acc" id="pf-phone">—</div></div>
-        <div class="pf-row"><div class="pf-key">Member Since</div><div class="pf-val" id="pf-joined">—</div></div>
-        <div class="pf-row"><div class="pf-key">Account Status</div><div class="pf-val pf-val-green" id="pf-acct-status">✓ Active</div></div>
-        <div class="pf-row"><div class="pf-key">User ID</div><div class="pf-val" id="pf-uid" style="font-size:.5rem;color:var(--text3)">—</div></div>
-      </div>
-      <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">🖼️ Profile Photo</span></div>
-        <div style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap">
-          <div class="pf-ava" id="pf-pic-preview" style="width:64px;height:64px;font-size:1.6rem">U</div>
-          <div>
-            <label style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-family:var(--font-m);font-size:.6rem;color:var(--text2);cursor:pointer;">
-              📷 Upload Photo<input type="file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="uploadPic(this)">
-            </label>
-            <div style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);margin-top:.4rem">JPG or PNG · Max 200KB</div>
-          </div>
+      <div class="pf-sec-sub">Your account details</div>
+      <div class="pf-card" style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+        <div style="position:relative;flex-shrink:0;">
+          <div class="pf-ava" id="pf-pic-preview" style="width:72px;height:72px;font-size:1.8rem;">U</div>
+          <label style="position:absolute;bottom:0;right:0;width:22px;height:22px;border-radius:50%;background:var(--accent3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.6rem;border:2px solid var(--bg2);">📷<input type="file" accept="image/*" onchange="uploadPic(this)" style="display:none;"></label>
+        </div>
+        <div>
+          <div style="font-family:var(--font-d);font-size:1.3rem;color:var(--text);" id="pf-fullname">—</div>
+          <div style="font-family:var(--font-m);font-size:.52rem;color:var(--text3);margin-top:.2rem;" id="pf-uid">—</div>
         </div>
       </div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">Personal Information</span></div>
+        <div class="pf-row"><div class="pf-key">Full Name</div><div class="pf-val" id="pf-fullname2">—</div></div>
+        <div class="pf-row"><div class="pf-key">Mobile Number</div><div class="pf-val pf-val-acc" id="pf-phone">—</div></div>
+        <div class="pf-row"><div class="pf-key">Email</div><div class="pf-val" id="pf-email">—</div></div>
+        <div class="pf-row"><div class="pf-key">Joined</div><div class="pf-val" id="pf-joined">—</div></div>
+        <div class="pf-row"><div class="pf-key">Account Status</div><div class="pf-val pf-val-green" id="pf-acct-status">—</div></div>
+        <div class="pf-row"><div class="pf-key">Plan</div><div class="pf-val pf-val-acc" id="pf-plan-name">FREE</div></div>
+      </div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">Trader Profile</span><span style="font-family:var(--font-m);font-size:.46rem;color:var(--text3);">Set at registration</span></div>
+        <div class="pf-row"><div class="pf-key">Experience</div><div class="pf-val pf-val-acc" id="pf-exp">—</div></div>
+        <div class="pf-row"><div class="pf-key">Trading Style</div><div class="pf-val pf-val-acc" id="pf-style">—</div></div>
+        <div class="pf-row"><div class="pf-key">Referral Code Used</div><div class="pf-val" id="pf-referral">—</div></div>
+      </div>
       <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">💳 Subscription</span></div>
-        <div class="pf-row"><div class="pf-key">Current Plan</div><div class="pf-val" id="pf-plan-name">FREE</div></div>
-        <div class="pf-row"><div class="pf-key">Plan Status</div><div class="pf-val pf-val-green">Active</div></div>
+        <div class="pf-card-hdr"><span class="pf-card-title">Authentication</span></div>
         <div class="pf-row"><div class="pf-key">mPIN Status</div><div class="pf-val" id="pf-mpin-status">—</div></div>
-        <div class="pf-row"><div class="pf-key">Session Token</div><div class="pf-val pf-val-green" id="pf-token-status">Authenticated</div></div>
+        <div class="pf-row"><div class="pf-key">Session Token</div><div class="pf-val" id="pf-token-status">—</div></div>
       </div>
     </div>
 
     <!-- BROKER API -->
     <div class="pf-tab" id="pftab-broker">
       <div class="pf-sec-title">BROKER API</div>
-      <div class="pf-sec-sub">Connect Angel One SmartAPI for live NSE data</div>
-      <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">🔗 Angel One Connection</span><span id="pf-broker-badge" class="pf-badge-warn">Not Connected</span></div>
+      <div class="pf-sec-sub">Angel One SmartAPI connection</div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">Connection Status</span><span class="pf-badge-warn" id="pf-broker-badge">Not Connected</span></div>
         <div class="pf-api-row">
           <div class="pf-api-dot pf-api-dot-off" id="pf-broker-dot"></div>
-          <div style="flex:1">
-            <div style="font-family:var(--font-m);font-size:.58rem;color:var(--text);margin-bottom:.12rem">Angel One Client ID</div>
-            <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text3)" id="pf-broker-status-text">Not connected — add your Client ID below</div>
+          <div>
+            <div style="font-family:var(--font-m);font-size:.6rem;color:var(--text);" id="pf-broker-status-text">Not connected</div>
+            <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text3);margin-top:.15rem;">Angel One Client ID</div>
           </div>
-          <div style="font-family:var(--font-m);font-size:.56rem;color:var(--accent3);font-weight:600" id="pf-angel-id-display">—</div>
+          <div style="margin-left:auto;font-family:var(--font-d);font-size:1.1rem;color:var(--accent3);" id="pf-angel-id-display">—</div>
         </div>
+      </div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">Update Client ID</span></div>
+        <div style="font-family:var(--font-b);font-size:.78rem;color:var(--text2);margin-bottom:.85rem;line-height:1.6;font-weight:300;">Found in Angel One app → Profile. Typically 6–8 alphanumeric characters (e.g. SBH3321).</div>
+        <div style="display:flex;gap:.6rem;align-items:flex-end;">
+          <div style="flex:1;">
+            <label style="font-family:var(--font-m);font-size:.48rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);display:block;margin-bottom:.35rem;">Angel One Client ID</label>
+            <input class="pf-input" id="update-angel-input" type="text" placeholder="e.g. SBH3321" maxlength="12" autocomplete="off" autocorrect="off" spellcheck="false">
+          </div>
+          <button class="pf-save-btn" id="angel-save-btn" onclick="updateAngelId()">Save</button>
+        </div>
+        <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text3);margin-top:.5rem;line-height:1.6;">⚠ After updating, re-run the Connection Test in the desktop app. <a onclick="showPage('setup')" style="color:var(--accent3);cursor:pointer;">Setup guide →</a></div>
       </div>
       <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">✏️ Update Client ID</span></div>
-        <div style="display:flex;gap:.5rem;align-items:flex-end;margin-bottom:.5rem">
-          <div style="flex:1">
-            <label style="font-family:var(--font-m);font-size:.48rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);display:block;margin-bottom:.3rem">Angel One Client ID</label>
-            <input class="pf-input" type="text" id="update-angel-input" placeholder="e.g. SBH3321" autocomplete="off">
-          </div>
-          <button class="pf-save-btn" onclick="updateAngelId()" id="angel-save-btn">Save</button>
+        <div class="pf-card-hdr"><span class="pf-card-title">How to Connect</span></div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div class="pf-sec-item"><div class="pf-sec-ico">1</div><div class="pf-sec-body"><div class="pf-sec-t">Enter your Client ID above and save</div><div class="pf-sec-d">Found in Angel One app → Profile</div></div></div>
+          <div class="pf-sec-item"><div class="pf-sec-ico">2</div><div class="pf-sec-body"><div class="pf-sec-t">Register SmartAPI at smartapi.angelone.in</div><div class="pf-sec-d">Create app named OptionsLab, whitelist your IP</div></div></div>
+          <div class="pf-sec-item"><div class="pf-sec-ico">3</div><div class="pf-sec-body"><div class="pf-sec-t">Open OptionsLab desktop app → Broker Setup</div><div class="pf-sec-d">Paste API key + TOTP secret, test connection</div></div></div>
         </div>
-        <div style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);line-height:1.6">Angel One app → Profile → Client ID. <a href="#" onclick="showPage('setup');return false;" style="color:var(--accent3)">Full setup guide →</a></div>
-      </div>
-      <div class="pf-card" style="background:rgba(249,115,22,.03)">
-        <div class="pf-card-hdr"><span class="pf-card-title">📋 SmartAPI Setup Steps</span></div>
-        <div style="display:flex;flex-direction:column;gap:.5rem">
-          <div style="display:flex;gap:.6rem"><div style="font-family:var(--font-d);font-size:1rem;color:var(--accent3);min-width:22px">1</div><div style="font-family:var(--font-m);font-size:.56rem;color:var(--text2);line-height:1.55">Go to <strong style="color:var(--text)">smartapi.angelone.in</strong> → create app named "OptionsLab", whitelist your IP</div></div>
-          <div style="display:flex;gap:.6rem"><div style="font-family:var(--font-d);font-size:1rem;color:var(--accent3);min-width:22px">2</div><div style="font-family:var(--font-m);font-size:.56rem;color:var(--text2);line-height:1.55">Enable TOTP → scan QR in Google Authenticator. <strong style="color:var(--red)">Copy 32-char secret immediately.</strong></div></div>
-          <div style="display:flex;gap:.6rem"><div style="font-family:var(--font-d);font-size:1rem;color:var(--accent3);min-width:22px">3</div><div style="font-family:var(--font-m);font-size:.56rem;color:var(--text2);line-height:1.55">Enter all credentials in desktop app → Settings → Broker → Test Connection</div></div>
-        </div>
+        <button onclick="showPage('setup')" style="margin-top:.85rem;width:100%;padding:.5rem;background:var(--accentGlow3);border:1px solid var(--accentGlow);border-radius:6px;font-family:var(--font-m);font-size:.56rem;color:var(--accent3);cursor:pointer;">📋 Open Full Setup Guide →</button>
       </div>
     </div>
 
     <!-- DOWNLOAD -->
     <div class="pf-tab" id="pftab-download">
-      <div class="pf-sec-title">DOWNLOAD</div>
-      <div class="pf-sec-sub">OptionsLab Pro Desktop App — Windows 10/11 · 64-bit</div>
+      <div class="pf-sec-title">DOWNLOAD SOFTWARE</div>
+      <div class="pf-sec-sub">OptionsLab Pro Options Chain Analyzer</div>
       <div class="pf-dl-hero">
-        <div style="font-size:3.5rem;flex-shrink:0">⬇️</div>
-        <div style="flex:1">
-          <div style="font-family:var(--font-d);font-size:1.8rem;letter-spacing:.05em;margin-bottom:.3rem">OptionsLab Pro <span style="color:var(--accent3)">v3.0</span></div>
-          <div style="font-family:var(--font-m);font-size:.6rem;color:var(--text2);margin-bottom:.65rem">Windows 10/11 · 64-bit · ~45MB · Free for registered users</div>
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
-            <button class="pf-dl-btn" onclick="requestDownload()" id="pf-dl-btn">⬇ Download Now</button>
-            <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text3)">Signed secure link · expires 2 min</div>
-          </div>
-        </div>
+        <div style="font-size:3rem;margin-bottom:.75rem;">⬇️</div>
+        <div style="font-family:var(--font-d);font-size:1.8rem;letter-spacing:.05em;margin-bottom:.35rem;">OptionsLab Pro <span style="color:var(--accent3);">v3.0</span></div>
+        <div style="font-family:var(--font-m);font-size:.58rem;color:var(--text2);margin-bottom:.5rem;">Windows 10/11 · 64-bit · ~45MB · Electron app</div>
+        <div style="font-family:var(--font-m);font-size:.52rem;color:var(--text3);margin-bottom:1.4rem;">Free for all registered users</div>
+        <button class="pf-dl-btn" id="pf-dl-btn" onclick="requestDownload()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          DOWNLOAD NOW
+        </button>
+        <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text3);margin-top:.65rem;">Secure signed link — expires 2 min after generation</div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
-        <div class="pf-card" style="margin:0"><div class="pf-card-hdr" style="margin-bottom:.5rem"><span class="pf-card-title">✅ Requirements</span></div>
-          <div class="pf-row"><div class="pf-key">OS</div><div class="pf-val">Windows 10 / 11</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem;">
+        <div class="pf-card">
+          <div class="pf-card-hdr"><span class="pf-card-title">Download History</span></div>
+          <div class="pf-row"><div class="pf-key">Total Downloads</div><div class="pf-val pf-val-acc" id="pf-dl-count">0</div></div>
+          <div class="pf-row"><div class="pf-key">Last Downloaded</div><div class="pf-val" id="pf-dl-last">Never</div></div>
+        </div>
+        <div class="pf-card">
+          <div class="pf-card-hdr"><span class="pf-card-title">Requirements</span></div>
+          <div class="pf-row"><div class="pf-key">OS</div><div class="pf-val">Windows 10/11</div></div>
           <div class="pf-row"><div class="pf-key">Architecture</div><div class="pf-val">64-bit</div></div>
           <div class="pf-row"><div class="pf-key">RAM</div><div class="pf-val">4GB minimum</div></div>
-          <div class="pf-row"><div class="pf-key">Internet</div><div class="pf-val">Required</div></div>
+          <div class="pf-row"><div class="pf-key">Internet</div><div class="pf-val">Required (live data)</div></div>
         </div>
-        <div class="pf-card" style="margin:0"><div class="pf-card-hdr" style="margin-bottom:.5rem"><span class="pf-card-title">🚀 Included</span></div>
-          <div class="pf-row"><div class="pf-key">Live Options Chain</div><div class="pf-val pf-val-green">✓</div></div>
-          <div class="pf-row"><div class="pf-key">Smart Money</div><div class="pf-val pf-val-green">✓</div></div>
-          <div class="pf-row"><div class="pf-key">Telegram Alerts</div><div class="pf-val pf-val-acc">Pro+</div></div>
-          <div class="pf-row"><div class="pf-key">Auto-updates</div><div class="pf-val pf-val-green">✓</div></div>
-        </div>
-      </div>
-      <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">📥 Download History</span></div>
-        <div class="pf-row"><div class="pf-key">Total Downloads</div><div class="pf-val pf-val-green" id="pf-dl-count">0</div></div>
-        <div class="pf-row"><div class="pf-key">Last Downloaded</div><div class="pf-val" id="pf-dl-last">Never</div></div>
-        <div class="pf-row"><div class="pf-key">Latest Version</div><div class="pf-val">v3.0.1</div></div>
       </div>
     </div>
 
     <!-- SECURITY -->
     <div class="pf-tab" id="pftab-security">
       <div class="pf-sec-title">SECURITY</div>
-      <div class="pf-sec-sub">Account security status and recommendations</div>
-      <div id="pf-security-list"></div>
-      <div class="pf-card" style="margin-top:.8rem">
-        <div class="pf-card-hdr"><span class="pf-card-title">🔐 mPIN Management</span></div>
-        <div class="pf-row"><div class="pf-key">mPIN Status</div><div class="pf-val" id="pf-mpin-s2">—</div></div>
-        <div style="margin-top:.85rem;padding:.85rem;background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.18);border-radius:8px;font-family:var(--font-m);font-size:.58rem;color:var(--accent3);line-height:1.7;">⚡ To change mPIN: open OptionsLab desktop app → Settings → Security → Change MPIN</div>
+      <div class="pf-sec-sub">Account security status</div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">Security Checklist</span></div>
+        <div id="pf-security-list"></div>
+      </div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">mPIN Status</span></div>
+        <div class="pf-row"><div class="pf-key">Current Status</div><div class="pf-val" id="pf-mpin-s2">—</div></div>
+        <div style="margin-top:.85rem;padding:.85rem;background:var(--accentGlow3);border:1px solid var(--accentGlow);border-radius:8px;font-family:var(--font-m);font-size:.58rem;color:var(--accent3);line-height:1.7;">⚡ To change your mPIN, open the OptionsLab desktop app → Settings → Security → Change MPIN.</div>
       </div>
       <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">⚠️ Privacy</span></div>
-        <div class="pf-row"><div class="pf-key">Broker credentials stored</div><div class="pf-val">Local device only</div></div>
-        <div class="pf-row"><div class="pf-key">Data sold to third parties</div><div class="pf-val pf-val-green">Never</div></div>
-        <div class="pf-row"><div class="pf-key">SEBI Registration</div><div class="pf-val pf-val-red">Not registered (tools only)</div></div>
+        <div class="pf-card-hdr"><span class="pf-card-title">Data Privacy</span></div>
+        <div style="font-family:var(--font-b);font-size:.78rem;color:var(--text2);line-height:1.7;font-weight:300;margin-bottom:.85rem;">Your Angel One API credentials are stored <strong style="color:var(--text);">only on your local device</strong>. They never pass through OptionsLab servers.</div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+          <button onclick="showPage('privacy')" style="font-family:var(--font-m);font-size:.52rem;padding:.32rem .75rem;border:1px solid var(--border);border-radius:5px;color:var(--text2);background:transparent;cursor:pointer;">Privacy Policy →</button>
+          <button onclick="doLogout()" style="font-family:var(--font-m);font-size:.52rem;padding:.32rem .75rem;border:1px solid rgba(255,61,113,.2);border-radius:5px;color:var(--red);background:rgba(255,61,113,.04);cursor:pointer;">Sign Out All Devices</button>
+        </div>
       </div>
     </div>
 
     <!-- SESSIONS -->
     <div class="pf-tab" id="pftab-sessions">
       <div class="pf-sec-title">SESSIONS</div>
-      <div class="pf-sec-sub">Active login sessions</div>
+      <div class="pf-sec-sub">Active session details</div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><div class="pf-api-dot pf-api-dot-on" style="flex-shrink:0;"></div><span class="pf-card-title">Current Session</span><span class="pf-badge-ok">Active</span></div>
+        <div class="pf-row"><div class="pf-key">Session Type</div><div class="pf-val pf-val-acc" id="pf-sess-type">—</div></div>
+        <div class="pf-row"><div class="pf-key">Auth Status</div><div class="pf-val pf-val-green" id="pf-sess-status">—</div></div>
+        <div class="pf-row"><div class="pf-key">Token Expiry</div><div class="pf-val" id="pf-sess-expiry">24 hours from login</div></div>
+        <div class="pf-row"><div class="pf-key">Storage</div><div class="pf-val">sessionStorage (browser memory only)</div></div>
+      </div>
       <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">📱 Current Session</span><span class="pf-badge-ok">Active</span></div>
-        <div class="pf-row"><div class="pf-key">Device</div><div class="pf-val">Web Browser</div></div>
-        <div class="pf-row"><div class="pf-key">Token Type</div><div class="pf-val" id="pf-sess-type">JWT Bearer</div></div>
-        <div class="pf-row"><div class="pf-key">Status</div><div class="pf-val pf-val-green" id="pf-sess-status">Authenticated</div></div>
-        <div class="pf-row"><div class="pf-key">Storage</div><div class="pf-val">sessionStorage (auto-clears on close)</div></div>
-        <div style="margin-top:.85rem"><button onclick="doLogout()" style="padding:.45rem 1.1rem;background:rgba(255,61,113,.08);border:1px solid rgba(255,61,113,.25);border-radius:6px;font-family:var(--font-m);font-size:.58rem;color:var(--red);cursor:pointer;">⏻ Sign Out</button></div>
+        <div class="pf-card-hdr"><span class="pf-card-title">Session Security</span></div>
+        <div style="font-family:var(--font-b);font-size:.78rem;color:var(--text2);line-height:1.7;font-weight:300;margin-bottom:.85rem;">JWT Bearer tokens stored in sessionStorage. Session ends automatically when the browser tab is closed.</div>
+        <button onclick="doLogout()" style="font-family:var(--font-m);font-size:.58rem;padding:.45rem 1rem;background:rgba(255,61,113,.08);border:1px solid rgba(255,61,113,.2);border-radius:6px;color:var(--red);cursor:pointer;">⏻ End Session &amp; Sign Out</button>
       </div>
     </div>
 
@@ -1382,30 +1135,42 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     <div class="pf-tab" id="pftab-subscription">
       <div class="pf-sec-title">SUBSCRIPTION</div>
       <div class="pf-sec-sub">Your current plan and billing</div>
-      <div class="pf-card">
-        <div class="pf-card-hdr"><span class="pf-card-title">💳 Current Plan</span><div class="pf-plan-pill pf-plan-free" id="pf-sub-badge">FREE</div></div>
-        <div class="pf-row"><div class="pf-key">Plan</div><div class="pf-val" id="pf-sub-plan">FREE — No expiry</div></div>
-        <div class="pf-row"><div class="pf-key">Billing</div><div class="pf-val">No card required</div></div>
-        <div class="pf-row"><div class="pf-key">Status</div><div class="pf-val pf-val-green">Active</div></div>
+      <div class="pf-card" style="margin-bottom:1rem;">
+        <div class="pf-card-hdr"><span class="pf-card-title">Current Plan</span><span class="pf-plan-pill pf-plan-free" id="pf-sub-badge">FREE</span></div>
+        <div class="pf-row"><div class="pf-key">Plan</div><div class="pf-val pf-val-acc" id="pf-sub-plan">FREE — No expiry</div></div>
+        <div class="pf-row"><div class="pf-key">Billing Cycle</div><div class="pf-val" id="pf-sub-cycle">—</div></div>
+        <div class="pf-row"><div class="pf-key">Next Renewal</div><div class="pf-val" id="pf-sub-renewal">—</div></div>
+        <div class="pf-row"><div class="pf-key">Status</div><div class="pf-val pf-val-green" id="pf-sub-status">Active</div></div>
       </div>
-      <div class="pf-card" style="background:linear-gradient(135deg,rgba(249,115,22,.07),rgba(168,85,247,.04));border-color:rgba(249,115,22,.22)">
-        <div class="pf-card-hdr"><span class="pf-card-title">⚡ Upgrade to Pro — ₹1,499/month</span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-bottom:1rem">
-          <div style="font-family:var(--font-m);font-size:.54rem;color:var(--text2)">✓ Smart Money FII Footprint</div>
-          <div style="font-family:var(--font-m);font-size:.54rem;color:var(--text2)">✓ Operator Phase Detector</div>
-          <div style="font-family:var(--font-m);font-size:.54rem;color:var(--text2)">✓ Kill Zone countdown</div>
-          <div style="font-family:var(--font-m);font-size:.54rem;color:var(--text2)">✓ Telegram Alerts (real-time)</div>
-          <div style="font-family:var(--font-m);font-size:.54rem;color:var(--text2)">✓ GARCH vol forecasting</div>
-          <div style="font-family:var(--font-m);font-size:.54rem;color:var(--text2)">✓ Regime Classifier</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:1rem;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;">
+          <div style="font-family:var(--font-m);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem;">FREE</div>
+          <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--green);">₹0</div>
+          <div style="font-family:var(--font-m);font-size:.44rem;color:var(--text3);margin-bottom:.65rem;">forever</div>
+          <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text2);line-height:1.8;text-align:left;">✓ Options Terminal<br>✓ 19 Academy chapters<br>✓ IV Skew chart<br>✗ FII Smart Money<br>✗ Telegram alerts</div>
         </div>
-        <button onclick="showPage('pricing')" style="padding:.6rem 1.4rem;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;font-family:var(--font-m);font-size:.68rem;color:#fff;cursor:pointer;font-weight:700;">Get Pro →</button>
-        <div style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);margin-top:.45rem">7-day money-back · Cancel anytime</div>
+        <div style="background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--accent3);border-radius:10px;padding:1rem;text-align:center;position:relative;">
+          <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:.44rem;font-weight:700;background:var(--accent3);color:#fff;padding:.18rem .55rem;border-radius:20px;white-space:nowrap;letter-spacing:.06em;">POPULAR</div>
+          <div style="font-family:var(--font-m);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent3);margin-bottom:.5rem;">PRO</div>
+          <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent3);">₹1,499</div>
+          <div style="font-family:var(--font-m);font-size:.44rem;color:var(--text3);margin-bottom:.65rem;">/month</div>
+          <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text2);line-height:1.8;text-align:left;">✓ Everything in Free<br>✓ Smart Money signals<br>✓ FII vs Retail engine<br>✓ Kill zone alerts<br>✓ Telegram integration</div>
+        </div>
+        <div style="background:var(--card);border:1px solid rgba(168,85,247,.3);border-radius:10px;padding:1rem;text-align:center;">
+          <div style="font-family:var(--font-m);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.5rem;">ELITE</div>
+          <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--purple);">₹3,999</div>
+          <div style="font-family:var(--font-m);font-size:.44rem;color:var(--text3);margin-bottom:.65rem;">/month</div>
+          <div style="font-family:var(--font-m);font-size:.5rem;color:var(--text2);line-height:1.8;text-align:left;">✓ Everything in Pro<br>✓ Dark pool signals<br>✓ GARCH volatility lab<br>✓ Priority support<br>✓ 1-on-1 onboarding</div>
+        </div>
       </div>
+      <button onclick="showPage('pricing')" style="width:100%;padding:.7rem;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;font-family:var(--font-r);font-weight:700;font-size:.88rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;cursor:pointer;box-shadow:0 4px 18px rgba(249,115,22,.35);">View All Plans &amp; Upgrade →</button>
     </div>
 
   </main>
 </div>
 </div>
+
+
 
 <!-- WELCOME -->
 <div class="page" id="page-welcome">
@@ -1444,7 +1209,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
   <button class="mbn-btn" id="mbn-terminal" onclick="showPage('terminal');_setMbn('terminal')">Terminal</button>
   <button class="mbn-btn" id="mbn-smartmoney" onclick="showPage('smartmoney');_setMbn('smartmoney')">Smart</button>
   <button class="mbn-btn" id="mbn-academy" onclick="showPage('academy');_setMbn('academy')">Academy</button>
-  <button class="mbn-btn" id="mbn-blog" onclick="showPage('blog');_setMbn('blog')">Blog</button>
+  <button class="mbn-btn" onclick="window.open('https://www.optionslab.in/blog/','_blank')"><span class="mbn-icon">✦</span>Blog</button>
 </nav>
 
 <div id="railway-hint" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--card);border:1px solid rgba(249,115,22,.35);border-radius:10px;padding:10px 18px;font-family:var(--font-m);font-size:.6rem;color:rgba(249,115,22,.9);align-items:center;gap:8px;box-shadow:0 4px 24px rgba(0,0,0,.6);pointer-events:none;white-space:nowrap;"><span style="width:8px;height:8px;border-radius:50%;background:#f97316;display:inline-block;animation:blink 1s infinite;margin-right:2px"></span>Waking up server… may take 10–12s on first request</div>
@@ -1459,7 +1224,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
   <div class="footer-bottom"><div class="footer-sebi">&#9888; OptionsLab is NOT a SEBI registered investment advisor. Analytical tools only. F&amp;O trading carries substantial risk of loss.</div><div>Made in India</div></div>
 </footer>
 <div id="auth-toasts"></div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── The real implementations (override the early stubs) ──
 var _realShowPage=null,_realAnalyze=null,_realAddLeg=null,_realLoadPreset=null,_realCalcPayoff=null;
 
@@ -1567,7 +1332,6 @@ _realShowPage=function(id,tabEl){
       setTimeout(function(){safeCanvas('candleCanvas',drawCandle);safeCanvas('ivSkewCanvas',drawIVSkew);safeCanvas('gexCanvas',drawGEX);safeCanvas('deltaCanvas',drawDelta);safeCanvas('thetaCanvas',drawTheta);safeCanvas('vegaCanvas',drawVega);safeCanvas('maxPainCanvas',drawMaxPain);try{initLegs();}catch(e){}},120);}
     if(id==='smartmoney'){try{_realAnalyze();}catch(e){}}
     if(id==='profile'){try{loadProfileAll();}catch(e){}}
-    if(id==='blog'){try{initBlog();}catch(e){}}
     if(id==='analytics'){setTimeout(function(){try{initAnalyticsCharts();}catch(e){}},150);}
   }
 };
@@ -1991,6 +1755,24 @@ function loadProfileAll() {
   // Activity
   S('pf-joined-act', joined);
 
+  // ── NEW FIELDS from register.html payload ──
+  var expMap={'beginner':'Beginner (< 1 yr)','intermediate':'Intermediate (1-3 yrs)','pro':'Pro (3+ yrs)'};
+  var styleMap={'intraday':'Intraday / Scalp','positional':'Positional / Swing','both':'Both'};
+  var expLabel=expMap[me.experience]||me.experience||'—';
+  var styleLabel=styleMap[me.trading_style]||me.trading_style||'—';
+  var angelId2=me.angel_one_client_id||me.broker_client_id||'';
+  // Overview trader profile
+  S('pf-ov-exp',expLabel); S('pf-ov-style',styleLabel);
+  S('pf-ov-broker',angelId2?angelId2:'Not connected');
+  // My Profile extras
+  S('pf-fullname2',n); S('pf-email',me.email||'—');
+  S('pf-exp',expLabel); S('pf-style',styleLabel);
+  S('pf-referral',me.referral_code||'None');
+  // Subscription extras
+  S('pf-sub-cycle',me.plan==='FREE'?'None':'Monthly');
+  S('pf-sub-renewal',me.plan==='FREE'?'N/A':(me.subscription_end?new Date(me.subscription_end).toLocaleDateString('en-IN'):'—'));
+  S('pf-sub-status',me.is_active?'Active':'Inactive');
+
   // MY PROFILE tab
   S('pf-fullname', n);
   S('pf-phone', me.mobile ? '+91 '+me.mobile : '—');
@@ -2348,82 +2130,36 @@ function smInitClock() {
   setInterval(updateSmClock, 1000);
 }
 
-
-// ═══════════════════════════════════════════════════════
-// BLOG PAGE
-// ═══════════════════════════════════════════════════════
-
-var _blogFilter = 'all';
-var _blogInited = false;
-
-function initBlog() {
-  blogRenderGrid();
-}
-
-
-function blogFilter(cat, btn) {
-  _blogFilter = cat;
-  document.querySelectorAll('.blog-filter-btn').forEach(function(b){ b.classList.remove('active'); });
-  if(btn) btn.classList.add('active');
-  renderBlogGrid(cat);
-}
-
-function openBlogPost(id) {
-  var post = BLOG_POSTS.find(function(p){ return p.id === id; });
-  if(!post) return;
-  var overlay = document.getElementById('blogPostOverlay');
-  var header = document.getElementById('blogPostHeader');
-  var body = document.getElementById('blogPostBody');
-  if(!overlay || !header || !body) return;
-  header.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;">'
-    + '<span style="padding:.2rem .6rem;border-radius:20px;font-family:var(--font-m);font-size:.48rem;font-weight:700;background:' + post.tagColor + '18;border:1px solid ' + post.tagColor + '30;color:' + post.tagColor + ';">' + post.tag + '</span>'
-    + '<span style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);">' + post.date + ' · ' + post.readTime + '</span></div>'
-    + '<div style="font-family:var(--font-d);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.03em;color:var(--text);line-height:1.1;margin-bottom:.5rem;">' + post.title + '</div>'
-    + '<div style="display:flex;align-items:center;gap:.5rem;font-family:var(--font-m);font-size:.52rem;color:var(--text2);">'
-    + '<span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#ff9933,#e05a00);display:inline-flex;align-items:center;justify-content:center;font-size:.55rem;color:#fff;font-weight:700;">A</span>'
-    + 'Amit Banerjee · Founder, OptionsLab</div>';
-  body.innerHTML = post.body;
-  overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeBlogPost(event, force) {
-  if(!force && event && event.target !== document.getElementById('blogPostOverlay')) return;
-  var overlay = document.getElementById('blogPostOverlay');
-  if(overlay) overlay.classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-// ═══════════════════════════════════════════════════════
-// SETUP PAGE — su- namespace
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// SETUP PAGE — su- namespace IIFE
+// ═══════════════════════════════════════════════
 (function(){
-const SU_PHASES = [
+var SU_PHASES=[
   {id:"account",num:"01",title:"Open Broker Account",subtitle:"Your trading foundation",time:"15 min",icon:"🏦",color:"#818cf8",dark:"#3730a3",steps:[
-    {id:"visit",title:"Visit Broker Portal",time:"1 min",icon:"🌐",content:"Head to your broker's website and click Open Free Account. Use a SEBI-registered broker that supports SmartAPI (e.g. Angel One — India's largest retail broker, serving 2 crore+ clients).",action:{label:"angelone.in",url:"https://www.angelone.in"},tip:"Use Chrome or Edge for best compatibility."},
-    {id:"mobile",title:"Verify Mobile Number",time:"1 min",icon:"📱",content:"Enter your Aadhaar-linked mobile number. An OTP will be sent for verification. This must be the same number registered with your Aadhaar card.",warn:"Use the same number you'll register on OptionsLab — this links your identity across both platforms."},
-    {id:"pan",title:"PAN Card Verification",time:"2 min",icon:"🪪",content:"Enter your PAN number. The broker instantly verifies it with NSDL and auto-fills your name and date of birth.",tip:"PAN must be active and KYC-compliant. Verify status at the Income Tax portal if unsure."},
-    {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",icon:"✅",content:"Enter Aadhaar number — an OTP is sent to your linked mobile for instant address + identity verification. No physical documents needed.",warn:"If Aadhaar OTP fails, document-based KYC is needed — adds 2–3 working days to activation."},
-    {id:"bank",title:"Link Bank Account",time:"2 min",icon:"🏦",content:"Add your savings account number and IFSC code. The broker does a penny-drop to confirm ownership — a small amount is credited then debited.",tip:"Use your primary account. Avoid joint accounts as they can slow down verification."},
-    {id:"ipv",title:"Video Verification (IPV)",time:"2 min",icon:"📷",content:"A quick live video where you show your PAN card to camera and say a few words. Fully online, under 2 minutes.",tip:"Good lighting + plain background = instant pass. Low light = retry."},
-    {id:"wait",title:"Account Activation",time:"Up to 24 hrs",icon:"⏳",content:"Submitted! Most accounts activate within 1–4 hours on working days. Watch for your Client Code via SMS — it looks like: SBHS331.",warn:"Activations on weekends or holidays carry over to the next working day.",isWait:true}
+    {id:"visit",title:"Visit Broker Portal",time:"1 min",icon:"🌐",content:"Head to your broker's website and click Open Free Account. Use a SEBI-registered broker that supports SmartAPI (Angel One — India's largest retail broker).",action:{label:"angelone.in",url:"https://www.angelone.in"},tip:"Use Chrome or Edge for best compatibility."},
+    {id:"mobile",title:"Verify Mobile Number",time:"1 min",icon:"📱",content:"Enter your Aadhaar-linked mobile number. An OTP will be sent for verification.",warn:"Use the same number you'll register on OptionsLab."},
+    {id:"pan",title:"PAN Card Verification",time:"2 min",icon:"🪪",content:"Enter your PAN number. The broker instantly verifies it with NSDL.",tip:"PAN must be active and KYC-compliant."},
+    {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",icon:"✅",content:"Enter Aadhaar number — OTP sent to linked mobile for instant verification.",warn:"If Aadhaar OTP fails, document-based KYC adds 2–3 working days."},
+    {id:"bank",title:"Link Bank Account",time:"2 min",icon:"🏦",content:"Add savings account number and IFSC. Broker does a penny-drop to confirm ownership.",tip:"Use your primary account. Avoid joint accounts."},
+    {id:"ipv",title:"Video Verification (IPV)",time:"2 min",icon:"📷",content:"Quick live video — show your PAN card to camera. Fully online, under 2 minutes.",tip:"Good lighting + plain background = instant pass."},
+    {id:"wait",title:"Account Activation",time:"Up to 24 hrs",icon:"⏳",content:"Submitted! Most accounts activate within 1–4 hours. Watch for your Client Code via SMS.",warn:"Weekend/holiday activations carry to next working day.",isWait:true}
   ]},
   {id:"mpin",num:"02",title:"Set Trading MPIN",subtitle:"Your secure trading PIN",time:"3 min",icon:"🔐",color:"#fbbf24",dark:"#92400e",steps:[
-    {id:"app",title:"Download Broker App",time:"2 min",icon:"📲",content:"Get your broker's app from Play Store or App Store. Log in using your Client Code and the mobile number used during registration.",action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.angel.one"},tip:"Prefer desktop? Use trade.angelone.in instead."},
-    {id:"setmpin",title:"Create Your MPIN",time:"1 min",icon:"🔑",content:"First login prompts you to create a 4-digit MPIN — your trading PIN used to authorize every API connection and trade.",warn:"⚠️ Critical: Do NOT use the same MPIN as your OptionsLab login password. Keep these completely separate.",tip:"Avoid obvious PINs like 1234, 0000, or your birth year."}
+    {id:"app",title:"Download Broker App",time:"2 min",icon:"📲",content:"Get Angel One app from Play Store or App Store. Login with your Client Code.",action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.angel.one"},tip:"Prefer desktop? Use trade.angelone.in instead."},
+    {id:"setmpin",title:"Create Your MPIN",time:"1 min",icon:"🔑",content:"First login prompts you to create a 4-digit MPIN for API authorization.",warn:"Do NOT use the same MPIN as your OptionsLab login. Keep these separate.",tip:"Avoid obvious PINs like 1234, 0000, or your birth year."}
   ]},
   {id:"smartapi",num:"03",title:"SmartAPI Setup",subtitle:"Unlock API access",time:"5 min",icon:"⚙️",color:"#34d399",dark:"#065f46",steps:[
-    {id:"register",title:"Register SmartAPI Account",time:"2 min",icon:"🔒",content:"Visit smartapi.angelone.in and register with your email. This is a developer portal — entirely separate from your trading account.",action:{label:"smartapi.angelone.in",url:"https://smartapi.angelone.in"},warn:"Use a completely different password here — never reuse your trading credentials."},
-    {id:"totp",title:"Enable TOTP Authentication",time:"2 min",icon:"🔐",content:"Navigate to the Enable TOTP page. Enter your Client Code and MPIN, then scan the QR code with Google Authenticator.",action:{label:"Enable TOTP",url:"https://smartapi.angelbroking.com/enable-totp"},warn:"🚨 The 32-character Secret Key shown after QR scan is displayed ONLY ONCE. Copy and store it securely right now.",tip:"Install Google Authenticator on your phone before this step."},
-    {id:"ipdetect",title:"Detect IP & Create App",time:"2 min",icon:"🌐",content:"Use the live IP detector below to find your exact public IP, then create your OptionsLab app in the SmartAPI portal.",tip:"Your API Key generates instantly after creating the app — click the eye icon to reveal it.",isIPDetect:true}
+    {id:"register",title:"Register SmartAPI Account",time:"2 min",icon:"🔒",content:"Visit smartapi.angelone.in and register with your email. Entirely separate from trading account.",action:{label:"smartapi.angelone.in",url:"https://smartapi.angelone.in"},warn:"Use a different password here — never reuse trading credentials."},
+    {id:"totp",title:"Enable TOTP Authentication",time:"2 min",icon:"🔐",content:"Navigate to Enable TOTP page. Enter Client Code and MPIN, then scan QR with Google Authenticator.",action:{label:"Enable TOTP",url:"https://smartapi.angelbroking.com/enable-totp"},warn:"🚨 The 32-character Secret Key is shown ONLY ONCE. Copy and store it securely now.",tip:"Install Google Authenticator before this step."},
+    {id:"ipdetect",title:"Detect IP & Create App",time:"2 min",icon:"🌐",content:"Use the live IP detector below to find your public IP, then create your OptionsLab app in SmartAPI portal.",tip:"API Key generates instantly after creating the app.",isIPDetect:true}
   ]},
   {id:"connect",num:"04",title:"Connect to OptionsLab",subtitle:"Go live in 2 minutes",time:"2 min",icon:"🚀",color:"#fb923c",dark:"#9a3412",steps:[
-    {id:"open",title:"Open OptionsLab Setup",time:"30 sec",icon:"💻",content:"In the OptionsLab desktop app, navigate to Settings → Broker Setup. Your IP is auto-detected — compare it with what you registered.",tip:"This is a one-time setup per device — future logins are fully automatic."},
-    {id:"creds",title:"Enter Credentials",time:"1 min",icon:"🗝️",content:"Input your Broker Client Code, MPIN, TOTP 32-char Secret Key, and API Key. Every field stays on your local device — OptionsLab servers never see this data.",warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP."},
-    {id:"test",title:"Test & Go Live",time:"30 sec",icon:"⚡",content:"Hit Test Connection. OptionsLab authenticates with the broker API and confirms live data access. Nifty 50 data will stream within seconds.",tip:"If test fails, revisit IP registration or TOTP secret. Contact support@optionslab.in for help."}
+    {id:"open",title:"Open OptionsLab Setup",time:"30 sec",icon:"💻",content:"In the OptionsLab desktop app, navigate to Settings → Broker Setup. Your IP is auto-detected.",tip:"One-time setup per device — future logins are fully automatic."},
+    {id:"creds",title:"Enter Credentials",time:"1 min",icon:"🗝️",content:"Input your Client Code, MPIN, TOTP 32-char Secret Key, and API Key. Everything stays on your local device.",warn:"TOTP Secret = the 32-char code, NOT the 6-digit rotating OTP."},
+    {id:"test",title:"Test & Go Live",time:"30 sec",icon:"⚡",content:"Hit Test Connection. OptionsLab authenticates and confirms live data access. Nifty 50 streams within seconds.",tip:"If test fails, revisit IP registration or TOTP secret. Contact support@optionslab.in for help."}
   ]}
 ];
-const SU_REQS=[
+var SU_REQS=[
   {icon:"📋",label:"PAN Card",desc:"Active & KYC-verified",color:"#818cf8"},
   {icon:"🪪",label:"Aadhaar",desc:"Mobile number linked",color:"#34d399"},
   {icon:"🏦",label:"Bank Account",desc:"Savings + IFSC ready",color:"#fbbf24"},
@@ -2431,83 +2167,70 @@ const SU_REQS=[
   {icon:"💻",label:"Windows/Mac",desc:"For OptionsLab app",color:"#60a5fa"},
   {icon:"📷",label:"Webcam",desc:"For video KYC",color:"#fb923c"}
 ];
-const SU_IP_SOURCES=[
-  {name:"ipify",url:"https://api.ipify.org?format=json",parse:d=>d.ip,color:"#6366f1"},
-  {name:"ipapi",url:"https://ipapi.co/json/",parse:d=>d.ip,color:"#8b5cf6"},
-  {name:"ipinfo",url:"https://ipinfo.io/json",parse:d=>d.ip,color:"#f59e0b"},
-  {name:"myip",url:"https://api.myip.com",parse:d=>d.ip,color:"#10b981"},
-  {name:"seeip",url:"https://api.seeip.org/jsonip",parse:d=>d.ip,color:"#f97316"}
+var SU_IP_SOURCES=[
+  {name:"ipify",url:"https://api.ipify.org?format=json",parse:function(d){return d.ip;},color:"#6366f1"},
+  {name:"ipapi",url:"https://ipapi.co/json/",parse:function(d){return d.ip;},color:"#8b5cf6"},
+  {name:"ipinfo",url:"https://ipinfo.io/json",parse:function(d){return d.ip;},color:"#f59e0b"},
+  {name:"myip",url:"https://api.myip.com",parse:function(d){return d.ip;},color:"#10b981"},
+  {name:"seeip",url:"https://api.seeip.org/jsonip",parse:function(d){return d.ip;},color:"#f97316"}
 ];
-const SU_PRIV=[/^10\./,/^192\.168\./,/^172\.(1[6-9]|2\d|3[01])\./,/^127\./,/^169\.254\./];
-const SU_TOTAL=SU_PHASES.reduce((a,p)=>a+p.steps.length,0);
-let suAP=0,suAS=0,suDone={},suDetIP='',suRunning=false,suBDOpen=false,suBDData={results:[],errors:[]};
-const suKey=(pi,si)=>pi+'-'+si;
-const suIsDone=k=>!!suDone[k];
-const suDoneCount=()=>Object.keys(suDone).length;
-
-function suIsPublicIP(ip){if(!ip||typeof ip!=='string')return false;const p=ip.trim().split('.');return p.length===4&&p.every(x=>/^\d+$/.test(x)&&+x>=0&&+x<=255)&&!SU_PRIV.some(r=>r.test(ip));}
-const suSleep=ms=>new Promise(r=>setTimeout(r,ms));
+var SU_PRIV=[/^10\./,/^192\.168\./,/^172\.(1[6-9]|2\d|3[01])\./,/^127\./,/^169\.254\./];
+var SU_TOTAL=SU_PHASES.reduce(function(a,p){return a+p.steps.length;},0);
+var suAP=0,suAS=0,suDone={},suDetIP='',suRunning=false,suBDOpen=false,suBDData={results:[],errors:[]};
+function suKey(pi,si){return pi+'-'+si;}
+function suIsDone(k){return !!suDone[k];}
+function suDoneCount(){return Object.keys(suDone).length;}
+function suIsPublicIP(ip){if(!ip||typeof ip!=='string')return false;var p=ip.trim().split('.');return p.length===4&&p.every(function(x){return /^\d+$/.test(x)&&+x>=0&&+x<=255;})&&!SU_PRIV.some(function(r){return r.test(ip);});}
+function suSleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
 
 window.suInit=function(){
-  const pc=document.getElementById('su-phaseCards');
+  var pc=document.getElementById('su-phaseCards');
   if(!pc)return;
-  pc.innerHTML=SU_PHASES.map(p=>`<div class="su-pc" style="border:1px solid ${p.color}25"><div style="font-size:22px;margin-bottom:8px;">${p.icon}</div><div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:${p.color};margin-bottom:4px;">${p.num}</div><div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px;">${p.title}</div><div style="font-size:11px;color:#475569;">${p.time}</div></div>`).join('');
-  const rg=document.getElementById('su-reqGrid');
-  if(rg)rg.innerHTML=SU_REQS.map(r=>`<div style="padding:12px;border-radius:10px;text-align:center;background:${r.color}08;border:1px solid ${r.color}20"><div style="font-size:22px;margin-bottom:6px;">${r.icon}</div><div style="font-size:13px;font-weight:600;color:#e2e8f0;">${r.label}</div><div style="font-size:11px;color:#64748b;margin-top:2px;">${r.desc}</div></div>`).join('');
+  pc.innerHTML=SU_PHASES.map(function(p){return'<div class="su-pc" style="border:1px solid '+p.color+'25"><div style="font-size:22px;margin-bottom:8px;">'+p.icon+'</div><div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:'+p.color+';margin-bottom:4px;">'+p.num+'</div><div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px;">'+p.title+'</div><div style="font-size:11px;color:#475569;">'+p.time+'</div></div>';}).join('');
+  var rg=document.getElementById('su-reqGrid');
+  if(rg)rg.innerHTML=SU_REQS.map(function(r){return'<div style="padding:12px;border-radius:10px;text-align:center;background:'+r.color+'08;border:1px solid '+r.color+'20"><div style="font-size:22px;margin-bottom:6px;">'+r.icon+'</div><div style="font-size:13px;font-weight:600;color:#e2e8f0;">'+r.label+'</div><div style="font-size:11px;color:#64748b;margin-top:2px;">'+r.desc+'</div></div>';}).join('');
 };
-
 window.suToggleReqs=function(){
-  const g=document.getElementById('su-reqGrid'),btn=document.getElementById('su-reqToggleBtn');
+  var g=document.getElementById('su-reqGrid'),btn=document.getElementById('su-reqToggleBtn');
   if(!g||!btn)return;
-  const open=g.style.display!=='none'&&g.style.display!=='';
+  var open=g.style.display!=='none'&&g.style.display!=='';
   g.style.display=open?'none':'grid';
   btn.textContent=(open?'▼':'▲')+' What you\'ll need before starting';
 };
-
 window.suStartGuide=function(){
-  const l=document.getElementById('su-landing'),g=document.getElementById('su-guide');
+  var l=document.getElementById('su-landing'),g=document.getElementById('su-guide');
   if(l)l.classList.remove('su-show');
   if(g){g.classList.add('su-show');g.style.minHeight='100vh';}
   suRenderAll();
 };
-
 window.suBackToLanding=function(){
-  const l=document.getElementById('su-landing'),g=document.getElementById('su-guide');
-  if(g)g.classList.remove('su-show');
-  if(l)l.classList.add('su-show');
+  var l=document.getElementById('su-landing'),g=document.getElementById('su-guide');
+  if(g)g.classList.remove('su-show');if(l)l.classList.add('su-show');
 };
-
 window.suGoPhase=function(pi){suAP=pi;suAS=0;suRenderAll();};
-window.suGoStep=function(si){suAS=si;suRenderAll();document.getElementById('su-content')?.scrollIntoView({behavior:'smooth',block:'start'});};
+window.suGoStep=function(si){suAS=si;suRenderAll();var el=document.getElementById('su-content');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
 window.suMarkDone=function(){
   suDone[suKey(suAP,suAS)]=true;
-  const ph=SU_PHASES[suAP];
+  var ph=SU_PHASES[suAP];
   if(suAS<ph.steps.length-1)suAS++;
   else if(suAP<SU_PHASES.length-1){suAP++;suAS=0;}
-  suRenderAll();
-  document.getElementById('su-content')?.scrollIntoView({behavior:'smooth',block:'start'});
+  suRenderAll();var el=document.getElementById('su-content');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
 };
 window.suGoBack=function(){
   if(suAS>0)suAS--;
   else if(suAP>0){suAP--;suAS=SU_PHASES[suAP].steps.length-1;}
-  suRenderAll();
-  document.getElementById('su-content')?.scrollIntoView({behavior:'smooth',block:'start'});
+  suRenderAll();var el=document.getElementById('su-content');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
 };
-
 function suRenderAll(){suRenderTopBar();suRenderSidebar();suRenderStep();suRenderCompletion();}
-
 function suRenderTopBar(){
-  const dc=suDoneCount(),pct=Math.round(dc/SU_TOTAL*100);
-  const pt=document.getElementById('su-progTxt'),pf=document.getElementById('su-progFill'),pp=document.getElementById('su-progPct');
-  if(pt)pt.textContent=dc+'/'+SU_TOTAL;
-  if(pf)pf.style.width=pct+'%';
-  if(pp)pp.textContent=pct+'%';
-  const tabs=document.getElementById('su-phaseTabs');
-  if(!tabs)return;
-  tabs.innerHTML=SU_PHASES.map((p,pi)=>{
-    const allDone=p.steps.every((_,si)=>suIsDone(suKey(pi,si))),isAct=pi===suAP;
-    const barBg=allDone?p.color:isAct?'linear-gradient(90deg,'+p.color+','+p.color+'40)':'rgba(255,255,255,0.06)';
-    const bR=pi===0?'2px 0 0 2px':pi===SU_PHASES.length-1?'0 2px 2px 0':'0';
+  var dc=suDoneCount(),pct=Math.round(dc/SU_TOTAL*100);
+  var pt=document.getElementById('su-progTxt'),pf=document.getElementById('su-progFill'),pp=document.getElementById('su-progPct');
+  if(pt)pt.textContent=dc+'/'+SU_TOTAL;if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';
+  var tabs=document.getElementById('su-phaseTabs');if(!tabs)return;
+  tabs.innerHTML=SU_PHASES.map(function(p,pi){
+    var allDone=p.steps.every(function(_,si){return suIsDone(suKey(pi,si));}),isAct=pi===suAP;
+    var barBg=allDone?p.color:isAct?'linear-gradient(90deg,'+p.color+','+p.color+'40)':'rgba(255,255,255,0.06)';
+    var bR=pi===0?'2px 0 0 2px':pi===SU_PHASES.length-1?'0 2px 2px 0':'0';
     return'<div class="su-ptab" onclick="suGoPhase('+pi+')">'
       +'<div class="su-ptab-bar" style="background:'+barBg+';border-radius:'+bR+'"></div>'
       +'<div class="su-ptab-info"><span style="font-size:14px;">'+p.icon+'</span><div>'
@@ -2517,18 +2240,17 @@ function suRenderTopBar(){
       +'</div></div>';
   }).join('');
 }
-
 function suRenderSidebar(){
-  const ph=SU_PHASES[suAP],sl=document.getElementById('su-stepList'),sw=document.getElementById('su-phaseSwitcher');
+  var ph=SU_PHASES[suAP],sl=document.getElementById('su-stepList'),sw=document.getElementById('su-phaseSwitcher');
   if(!sl||!sw)return;
-  sl.innerHTML=ph.steps.map((s,si)=>{
-    const d=suIsDone(suKey(suAP,si)),act=si===suAS,col=ph.color;
+  sl.innerHTML=ph.steps.map(function(s,si){
+    var d=suIsDone(suKey(suAP,si)),act=si===suAS,col=ph.color;
     return'<div class="su-step-item" onclick="suGoStep('+si+')" style="background:'+(act?col+'12':d?'rgba(255,255,255,0.02)':'transparent')+';border:1px solid '+(act?col+'35':d?'rgba(255,255,255,0.06)':'transparent')+';border-left:3px solid '+(d||act?col:'rgba(255,255,255,0.06)')+';opacity:'+(d&&!act?'0.7':'1')+';">'
       +'<div class="su-step-icon-wrap" style="background:'+(d?col:act?col+'20':'rgba(255,255,255,0.05)')+';color:'+(d?'#fff':act?col:'#475569')+';border-color:'+(d||act?col:'rgba(255,255,255,0.08)')+';">'+(d?'✓':s.icon)+'</div>'
       +'<div style="min-width:0;"><div class="su-step-label" style="color:'+(act?'#e2e8f0':d?'#94a3b8':'#64748b')+';font-weight:'+(act?700:400)+';">'+s.title+'</div><div class="su-step-time">'+s.time+'</div></div></div>';
   }).join('');
-  sw.innerHTML=SU_PHASES.map((p,pi)=>{
-    const cnt=p.steps.filter((_,si)=>suIsDone(suKey(pi,si))).length,isAct=pi===suAP,fw=Math.round(cnt/p.steps.length*100);
+  sw.innerHTML=SU_PHASES.map(function(p,pi){
+    var cnt=p.steps.filter(function(_,si){return suIsDone(suKey(pi,si));}).length,isAct=pi===suAP,fw=Math.round(cnt/p.steps.length*100);
     return'<div class="su-ps-phase" onclick="suGoPhase('+pi+')" style="background:'+(isAct?p.color+'10':'transparent')+';">'
       +'<span style="font-size:14px;">'+p.icon+'</span>'
       +'<div style="flex:1;min-width:0;"><div style="font-size:11px;font-weight:'+(isAct?700:400)+';color:'+(isAct?'#e2e8f0':'#64748b')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.title+'</div>'
@@ -2536,352 +2258,133 @@ function suRenderSidebar(){
       +'<span style="font-size:10px;font-weight:700;flex-shrink:0;color:'+(cnt===p.steps.length?p.color:'#334155')+';">'+cnt+'/'+p.steps.length+'</span></div>';
   }).join('');
 }
-
 function suRenderStep(){
-  const dc=suDoneCount(),allDone=dc===SU_TOTAL;
-  const comp=document.getElementById('su-completion'),cont=document.getElementById('su-stepContent');
+  var dc=suDoneCount(),allDone=dc===SU_TOTAL;
+  var comp=document.getElementById('su-completion'),cont=document.getElementById('su-stepContent');
   if(!comp||!cont)return;
   if(allDone){comp.style.display='block';cont.style.display='none';return;}
   comp.style.display='none';cont.style.display='block';
-  const ph=SU_PHASES[suAP],st=ph.steps[suAS],key=suKey(suAP,suAS),isDn=suIsDone(key);
-  const c=ph.color,dk=ph.dark||c;
-  const isFirst=suAP===0&&suAS===0,isLast=suAP===SU_PHASES.length-1&&suAS===ph.steps.length-1;
-  const nip=suAS<ph.steps.length-1;
-  let nextLbl='';
-  if(!isLast)nextLbl=nip?(ph.steps[suAS+1].icon+' '+ph.steps[suAS+1].title):(SU_PHASES[suAP+1].icon+' '+SU_PHASES[suAP+1].title+' — '+SU_PHASES[suAP+1].steps[0].title);
-  const btnLbl=isLast?'🎉 Complete Setup!':!nip?'✓ Done — '+SU_PHASES[suAP+1].title+' →':'✓ Mark Done & Continue →';
-  const btnBg=isDn?'linear-gradient(135deg,#22c55e,#16a34a)':'linear-gradient(135deg,'+c+','+dk+'cc)';
+  var ph=SU_PHASES[suAP],st=ph.steps[suAS],key=suKey(suAP,suAS),isDn=suIsDone(key);
+  var col=ph.color,dk=ph.dark||col;
+  var isFirst=suAP===0&&suAS===0,isLast=suAP===SU_PHASES.length-1&&suAS===ph.steps.length-1;
+  var nip=suAS<ph.steps.length-1;
+  var nextLbl=isLast?'':nip?(ph.steps[suAS+1].icon+' '+ph.steps[suAS+1].title):(SU_PHASES[suAP+1].icon+' '+SU_PHASES[suAP+1].title+' — '+SU_PHASES[suAP+1].steps[0].title);
+  var btnLbl=isLast?'🎉 Complete Setup!':!nip?'✓ Done — '+SU_PHASES[suAP+1].title+' →':'✓ Mark Done & Continue →';
+  var btnBg=isDn?'linear-gradient(135deg,#22c55e,#16a34a)':'linear-gradient(135deg,'+col+','+dk+'cc)';
   cont.innerHTML='<div class="su-phase-header">'
-    +'<div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:'+c+'15;border:1px solid '+c+'35;">'+ph.icon+'</div>'
-    +'<div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:'+c+';font-family:\'DM Sans\',sans-serif;">'+ph.num+' · '+ph.subtitle.toUpperCase()+'</div>'
+    +'<div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:'+col+'15;border:1px solid '+col+'35;">'+ph.icon+'</div>'
+    +'<div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:'+col+';font-family:\'DM Sans\',sans-serif;">'+ph.num+' · '+ph.subtitle.toUpperCase()+'</div>'
     +'<div style="font-size:18px;font-weight:800;color:#f1f5f9;font-family:\'DM Sans\',sans-serif;">'+ph.title+'</div></div>'
     +'<div style="margin-left:auto;font-size:12px;color:#475569;font-family:\'DM Sans\',sans-serif;">Step '+(suAS+1)+' of '+ph.steps.length+'</div></div>'
-    +'<div class="su-step-card" style="background:rgba(255,255,255,0.02);border:1px solid '+(isDn?c+'35':'rgba(255,255,255,0.07)')+';box-shadow:0 0 60px '+c+'10;">'
-    +'<div class="su-step-card-topbar" style="background:'+(isDn?c:'linear-gradient(90deg,'+c+','+c+'40)')+'"></div>'
+    +'<div class="su-step-card" style="background:rgba(255,255,255,0.02);border:1px solid '+(isDn?col+'35':'rgba(255,255,255,0.07)')+';box-shadow:0 0 60px '+col+'10;">'
+    +'<div class="su-step-card-topbar" style="background:'+(isDn?col:'linear-gradient(90deg,'+col+','+col+'40)')+'"></div>'
     +'<div class="su-step-card-head"><div class="su-sch-left">'
-    +'<div class="su-sch-icon" style="background:'+c+'15;border:1px solid '+c+'30;">'+st.icon+'</div>'
+    +'<div class="su-sch-icon" style="background:'+col+'15;border:1px solid '+col+'30;">'+st.icon+'</div>'
     +'<div><h3 style="font-size:20px;font-weight:800;margin:0;color:#f1f5f9;letter-spacing:-.02em;font-family:\'DM Sans\',sans-serif;">'+st.title+'</h3>'
-    +'<div class="su-sch-tags"><span class="su-tag" style="background:'+c+'12;border:1px solid '+c+'28;color:'+c+'">⏱ '+st.time+'</span>'
+    +'<div class="su-sch-tags"><span class="su-tag" style="background:'+col+'12;border:1px solid '+col+'28;color:'+col+'">⏱ '+st.time+'</span>'
     +(st.isWait?'<span class="su-tag" style="background:#f59e0b12;border:1px solid #f59e0b28;color:#f59e0b">⌛ Waiting</span>':'')
     +(st.isIPDetect?'<span class="su-tag" style="background:#34d39912;border:1px solid #34d39928;color:#34d399">🌐 IP Detect</span>':'')
     +'</div></div></div>'
-    +(isDn?'<div style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:linear-gradient(135deg,'+c+','+c+'cc);box-shadow:0 0 16px '+c+'50;">✓</div>':'')
+    +(isDn?'<div style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:linear-gradient(135deg,'+col+','+col+'cc);box-shadow:0 0 16px '+col+'50;">✓</div>':'')
     +'</div>'
     +'<div class="su-step-card-body">'
     +'<p class="su-step-content">'+st.content+'</p>'
-    +(st.action?'<a href="'+st.action.url+'" target="_blank" rel="noreferrer" class="su-action-link" style="background:'+c+'12;border:1px solid '+c+'35;color:'+c+';">🌐 Open '+st.action.label+' ↗</a>':'')
+    +(st.action?'<a href="'+st.action.url+'" target="_blank" rel="noreferrer" class="su-action-link" style="background:'+col+'12;border:1px solid '+col+'35;color:'+col+';">🌐 Open '+st.action.label+' ↗</a>':'')
     +(st.warn?'<div class="su-warn-box"><span style="flex-shrink:0">⚠️</span><span><strong>Important:</strong> '+st.warn+'</span></div>':'')
     +(st.tip?'<div class="su-tip-box"><span style="flex-shrink:0">💡</span><span><strong>Pro tip:</strong> '+st.tip+'</span></div>':'')
     +(st.isIPDetect?suRenderIPWidget():'')
-    +(st.isWait?'<div class="su-wait-box"><div style="font-size:13px;font-weight:700;color:#fcd34d;margin-bottom:10px;">⌛ While you wait — do these now:</div>'
-      +['Install Google Authenticator on your phone (Play Store / App Store)','Download the broker app','Watch for Client Code SMS — save it immediately','Prepare your API portal email & password idea']
-        .map(i=>'<div class="su-wait-item"><span style="color:#f59e0b;flex-shrink:0;margin-top:1px;">→</span>'+i+'</div>').join('')+'</div>':'')
+    +(st.isWait?'<div class="su-wait-box"><div style="font-size:13px;font-weight:700;color:#fcd34d;margin-bottom:10px;">⌛ While you wait:</div>'
+      +['Install Google Authenticator on your phone','Download the broker app','Watch for Client Code SMS — save it immediately','Prepare your API portal email & password']
+        .map(function(i){return'<div class="su-wait-item"><span style="color:#f59e0b;flex-shrink:0;margin-top:1px;">→</span>'+i+'</div>';}).join('')+'</div>':'')
     +'<div class="su-step-actions">'
     +(!isFirst?'<button class="su-btn-prev" onclick="suGoBack()">← Back</button>':'')
-    +'<button class="su-btn-done" onclick="suMarkDone()" style="background:'+btnBg+';box-shadow:0 4px 24px '+c+'40;">'+btnLbl+'</button>'
+    +'<button class="su-btn-done" onclick="suMarkDone()" style="background:'+btnBg+';box-shadow:0 4px 24px '+col+'40;">'+btnLbl+'</button>'
     +'</div></div></div>'
     +(!isLast?'<div class="su-next-preview"><span style="font-size:10px;color:#334155;font-weight:700;letter-spacing:.06em;flex-shrink:0;font-family:\'DM Sans\',sans-serif;">NEXT</span><span style="font-size:13px;color:#64748b;font-family:\'DM Sans\',sans-serif;">'+nextLbl+'</span></div>':'');
   if(st.isIPDetect)suInitIPDetector();
 }
-
-function suRenderCompletion(){if(suDoneCount()===SU_TOTAL){const c=document.getElementById('su-completion'),s=document.getElementById('su-stepContent');if(c)c.style.display='block';if(s)s.style.display='none';}}
-
+function suRenderCompletion(){if(suDoneCount()===SU_TOTAL){var c=document.getElementById('su-completion'),s=document.getElementById('su-stepContent');if(c)c.style.display='block';if(s)s.style.display='none';}}
 function suRenderIPWidget(){
   return'<div class="su-ip-widget" id="su-ipWidget">'
-    +'<div class="su-ip-head"><div style="display:flex;align-items:center;gap:10px;"><div class="su-ip-head-icon">🌐</div><div><div style="font-size:13px;font-weight:700;color:#e2e8f0;font-family:\'DM Sans\',sans-serif;">Live IP Detection Engine</div><div style="font-size:11px;color:#64748b;font-family:\'DM Sans\',sans-serif;">5 sources · Consensus · Auto-verified</div></div></div>'
+    +'<div class="su-ip-head"><div style="display:flex;align-items:center;gap:10px;"><div class="su-ip-head-icon">🌐</div><div><div style="font-size:13px;font-weight:700;color:#e2e8f0;font-family:\'DM Sans\',sans-serif;">Live IP Detection Engine</div><div style="font-size:11px;color:#64748b;">5 sources · Consensus · Auto-verified</div></div></div>'
     +'<div style="display:flex;gap:8px;align-items:center;"><div id="su-ipCurrentDisplay" style="font-size:11px;font-family:\'JetBrains Mono\',monospace;color:#34d399;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);padding:4px 10px;border-radius:6px;display:none;"></div>'
     +'<button class="su-btn-detect su-idle" id="su-btnDetect" onclick="suRunDetect()">🔍 Detect My IP</button></div></div>'
-    +'<div class="su-ip-body">'
-    +'<div id="su-ipIdle"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><span style="font-size:12px;color:#64748b;font-family:\'DM Sans\',sans-serif;">Sources:</span>'
-    +SU_IP_SOURCES.map(s=>'<span class="su-ip-src-chip" style="background:'+s.color+'15;border:1px solid '+s.color+'30;color:'+s.color+';">'+s.name+'</span>').join('')+'</div></div>'
-    +'<div id="su-ipRunning" style="display:none;">'
-    +'<div style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span id="su-ipPhaseMsg" style="font-size:12px;color:#94a3b8;font-family:\'DM Sans\',sans-serif;">Starting…</span><span id="su-ipPct" style="font-size:12px;color:#34d399;font-weight:700;">0%</span></div>'
-    +'<div class="su-ip-bar-wrap"><div class="su-ip-bar-fill" id="su-ipBar" style="width:0%;"></div></div></div>'
-    +'<div class="su-ip-src-grid" id="su-ipSrcGrid">'
-    +SU_IP_SOURCES.map(s=>'<div class="su-ip-src-card" id="su-ipSrc_'+s.name+'"><div class="su-ip-src-name">'+s.name+'</div><div class="su-ip-src-val" style="color:#334155;">…</div></div>').join('')
-    +'</div></div>'
-    +'<div id="su-ipResult" style="display:none;">'
-    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">'
-    +'<div class="su-ip-result-addr" id="su-ipAddr"></div><div style="display:flex;gap:6px;flex-wrap:wrap;" id="su-ipTags"></div></div>'
-    +'<div class="su-ip-result-meta" id="su-ipMeta"></div>'
-    +'<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+    +'<div class="su-ip-body"><div id="su-ipIdle"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><span style="font-size:12px;color:#64748b;">Sources:</span>'
+    +SU_IP_SOURCES.map(function(s){return'<span class="su-ip-src-chip" style="background:'+s.color+'15;border:1px solid '+s.color+'30;color:'+s.color+';">'+s.name+'</span>';}).join('')+'</div></div>'
+    +'<div id="su-ipRunning" style="display:none;"><div style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span id="su-ipPhaseMsg" style="font-size:12px;color:#94a3b8;">Starting…</span><span id="su-ipPct" style="font-size:12px;color:#34d399;font-weight:700;">0%</span></div><div class="su-ip-bar-wrap"><div class="su-ip-bar-fill" id="su-ipBar" style="width:0%;"></div></div></div>'
+    +'<div class="su-ip-src-grid" id="su-ipSrcGrid">'+SU_IP_SOURCES.map(function(s){return'<div class="su-ip-src-card" id="su-ipSrc_'+s.name+'"><div class="su-ip-src-name">'+s.name+'</div><div class="su-ip-src-val" style="color:#334155;">…</div></div>';}).join('')+'</div></div>'
+    +'<div id="su-ipResult" style="display:none;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;"><div class="su-ip-result-addr" id="su-ipAddr"></div><div style="display:flex;gap:6px;flex-wrap:wrap;" id="su-ipTags"></div></div>'
+    +'<div class="su-ip-result-meta" id="su-ipMeta"></div><div style="display:flex;gap:8px;flex-wrap:wrap;">'
     +'<button class="su-btn-copy" onclick="suCopyIP()" id="su-btnCopy">📋 Copy IP</button>'
     +'<button id="su-expandBtn" onclick="suToggleBreakdown()" style="margin-top:12px;background:none;border:none;color:#475569;font-size:11px;cursor:pointer;padding:0;font-family:\'DM Sans\',sans-serif;"></button></div>'
-    +'<div id="su-dynamicWarn" style="display:none;margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);font-size:12px;color:#fcd34d;line-height:1.6;font-family:\'DM Sans\',sans-serif;">⚡ <strong>Dynamic IP detected.</strong> Your ISP may change this. Re-run if API stops working.</div>'
+    +'<div id="su-dynamicWarn" style="display:none;margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);font-size:12px;color:#fcd34d;line-height:1.6;">⚡ <strong>Dynamic IP detected.</strong> Re-run if API stops working.</div>'
     +'<div class="su-src-breakdown" id="su-srcBreakdown"></div>'
-    +'<div class="su-ip-next-note">📋 <strong>Next:</strong> Copy IP → SmartAPI portal → <em>+ADD APP</em> → App name: OptionsLab → Paste IP as "Primary Static IP" → Save → Copy API Key</div>'
-    +'</div>'
-    +'<div id="su-ipError" style="display:none;">'
-    +'<div id="su-ipErrMsg" style="padding:12px 14px;border-radius:8px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);font-size:13px;color:#fca5a5;margin-bottom:12px;display:none;font-family:\'DM Sans\',sans-serif;"></div>'
-    +'<div style="font-size:12px;color:#64748b;line-height:1.8;display:none;font-family:\'DM Sans\',sans-serif;">Manual: Open browser → <a href="https://api.ipify.org" target="_blank" style="color:#fb923c">api.ipify.org</a> → Copy number → Paste in SmartAPI</div>'
-    +'</div></div></div>'
+    +'<div class="su-ip-next-note">📋 <strong>Next:</strong> Copy IP → SmartAPI portal → +ADD APP → App name: OptionsLab → Paste IP as Primary Static IP → Save → Copy API Key</div></div>'
+    +'<div id="su-ipError" style="display:none;"><div id="su-ipErrMsg" style="padding:12px 14px;border-radius:8px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);font-size:13px;color:#fca5a5;margin-bottom:12px;display:none;"></div>'
+    +'<div style="font-size:12px;color:#64748b;line-height:1.8;display:none;">Manual: Open browser → <a href="https://api.ipify.org" target="_blank" style="color:#fb923c">api.ipify.org</a> → Copy → Paste in SmartAPI</div></div></div></div>'
     +'<div class="su-ip-confirmed" id="su-ipConfirmedBox"></div>';
 }
-
 function suInitIPDetector(){suRunning=false;suBDOpen=false;}
-
 window.suRunDetect=async function(){
   if(suRunning)return;suRunning=true;
-  const btn=document.getElementById('su-btnDetect');if(!btn)return;btn.disabled=true;
-  const ge=id=>document.getElementById(id);
+  var btn=document.getElementById('su-btnDetect');if(!btn)return;btn.disabled=true;
+  var ge=function(id){return document.getElementById(id);};
   ge('su-ipIdle').style.display='none';ge('su-ipResult').style.display='none';
   ge('su-ipError').style.display='none';ge('su-ipRunning').style.display='block';
-  const setP=(pct,msg)=>{const b=ge('su-ipBar'),p=ge('su-ipPct'),m=ge('su-ipPhaseMsg');if(b)b.style.width=pct+'%';if(p)p.textContent=pct+'%';if(m)m.textContent=msg;};
-  const updSrc=(name,ok,val)=>{const el=ge('su-ipSrc_'+name);if(!el)return;const c=ok?'rgba(34,197,94,0.1)':'rgba(239,68,68,0.07)',bc=ok?'rgba(34,197,94,0.25)':'rgba(239,68,68,0.18)';el.style.background=c;el.style.borderColor=bc;el.querySelector('.su-ip-src-val').style.color=ok?'#22c55e':'#ef4444';el.querySelector('.su-ip-src-val').textContent=ok?val.slice(0,13):'failed';};
-  setP(5,'Initializing multi-source query…');
-  const results=[],errors=[];
-  const settled=await Promise.allSettled(SU_IP_SOURCES.map(async(src)=>{const t0=Date.now(),ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),5000);try{const r=await fetch(src.url,{signal:ctrl.signal});clearTimeout(t);const d=await r.json();return{src,ip:src.parse(d),ms:Date.now()-t0};}catch(e){clearTimeout(t);throw e;}}));
-  settled.forEach((s,i)=>{const src=SU_IP_SOURCES[i];setP(15+i*12,'Querying '+src.name+'…');if(s.status==='fulfilled'){const{ip,ms}=s.value;if(suIsPublicIP(ip)){results.push({...src,ip,ms,ok:true});updSrc(src.name,true,ip);}else{errors.push({...src,error:'Bad IP: '+ip});updSrc(src.name,false,'bad');}}else{errors.push({...src,error:s.reason?.name==='AbortError'?'timeout':(s.reason?.message||'failed')});updSrc(src.name,false,errors[errors.length-1].error);}});
-  if(!results.length){ge('su-ipRunning').style.display='none';const em=ge('su-ipErrMsg');if(em){em.textContent='❌ All sources failed. Check internet.';em.style.display='block';}ge('su-ipError').style.display='block';if(btn){btn.disabled=false;btn.textContent='🔄 Retry';}suRunning=false;return;}
-  setP(78,'Running consensus…');await suSleep(400);
-  const freq={};results.forEach(r=>(freq[r.ip]=(freq[r.ip]||0)+1));
-  const[bestIP,bestCount]=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
-  const conf=Math.round(bestCount/SU_IP_SOURCES.length*100);
-  setP(88,'Verifying…');await suSleep(300);
+  var setP=function(pct,msg){var b=ge('su-ipBar'),p=ge('su-ipPct'),m=ge('su-ipPhaseMsg');if(b)b.style.width=pct+'%';if(p)p.textContent=pct+'%';if(m)m.textContent=msg;};
+  var updSrc=function(name,ok,val){var el=ge('su-ipSrc_'+name);if(!el)return;el.style.background=ok?'rgba(34,197,94,0.1)':'rgba(239,68,68,0.07)';el.style.borderColor=ok?'rgba(34,197,94,0.25)':'rgba(239,68,68,0.18)';el.querySelector('.su-ip-src-val').style.color=ok?'#22c55e':'#ef4444';el.querySelector('.su-ip-src-val').textContent=ok?val.slice(0,13):'failed';};
+  setP(5,'Initializing…');
+  var results=[],errors=[];
+  var settled=await Promise.allSettled(SU_IP_SOURCES.map(async function(src){var t0=Date.now(),ctrl=new AbortController(),t=setTimeout(function(){ctrl.abort();},5000);try{var r=await fetch(src.url,{signal:ctrl.signal});clearTimeout(t);var d=await r.json();return{src:src,ip:src.parse(d),ms:Date.now()-t0};}catch(e){clearTimeout(t);throw e;}}));
+  settled.forEach(function(s,i){var src=SU_IP_SOURCES[i];setP(15+i*12,'Querying '+src.name+'…');if(s.status==='fulfilled'){var ip=s.value.ip,ms=s.value.ms;if(suIsPublicIP(ip)){results.push(Object.assign({},src,{ip:ip,ms:ms,ok:true}));updSrc(src.name,true,ip);}else{errors.push(Object.assign({},src,{error:'Bad IP: '+ip}));updSrc(src.name,false,'bad');}}else{var msg=s.reason&&s.reason.name==='AbortError'?'timeout':(s.reason&&s.reason.message||'failed');errors.push(Object.assign({},src,{error:msg}));updSrc(src.name,false,msg);}});
+  if(!results.length){ge('su-ipRunning').style.display='none';var em=ge('su-ipErrMsg');if(em){em.textContent='❌ All sources failed.';em.style.display='block';}ge('su-ipError').style.display='block';if(btn){btn.disabled=false;btn.textContent='🔄 Retry';}suRunning=false;return;}
+  setP(78,'Consensus…');await suSleep(400);
+  var freq={};results.forEach(function(r){freq[r.ip]=(freq[r.ip]||0)+1;});
+  var best=Object.entries(freq).sort(function(a,b){return b[1]-a[1];})[0];
+  var bestIP=best[0],bestCount=best[1],conf=Math.round(bestCount/SU_IP_SOURCES.length*100);
   setP(94,'Fetching ISP data…');
-  let geo=null;
-  try{const gr=await fetch('https://ipapi.co/'+bestIP+'/json/',{signal:AbortSignal.timeout(5000)});const gd=await gr.json();geo={isp:gd.org||'',city:gd.city||'',region:gd.region||'',isDynamic:!(gd.org||'').toLowerCase().includes('static')};}catch{}
+  var geo=null;try{var gr=await fetch('https://ipapi.co/'+bestIP+'/json/',{signal:AbortSignal.timeout(5000)});var gd=await gr.json();geo={isp:gd.org||'',city:gd.city||'',region:gd.region||'',isDynamic:!(gd.org||'').toLowerCase().includes('static')};}catch(e){}
   setP(100,'Complete!');await suSleep(200);
-  suBDData={results,errors,bestIP};suDetIP=bestIP;
-  const cd=ge('su-ipCurrentDisplay');if(cd){cd.textContent=bestIP;cd.style.display='block';}
+  suBDData={results:results,errors:errors,bestIP:bestIP};suDetIP=bestIP;
+  var cd=ge('su-ipCurrentDisplay');if(cd){cd.textContent=bestIP;cd.style.display='block';}
   ge('su-ipRunning').style.display='none';ge('su-ipResult').style.display='block';
-  const addr=ge('su-ipAddr');if(addr)addr.textContent=bestIP;
-  const tags=ge('su-ipTags');
-  if(tags){const chips=[{c:'#34d399',t:'✓ Verified'},{c:'#818cf8',t:conf+'% confidence'},{c:'#34d399',t:'🔄 '+bestCount+'/'+SU_IP_SOURCES.length}];if(geo?.isDynamic)chips.push({c:'#f59e0b',t:'⚡ Dynamic'});tags.innerHTML=chips.map(x=>'<span class="su-tag" style="background:'+x.c+'12;border:1px solid '+x.c+'28;color:'+x.c+';">'+x.t+'</span>').join('');}
-  const meta=ge('su-ipMeta');if(meta&&geo)meta.textContent=geo.isp+(geo.city?' · '+geo.city:'')+(geo.region?' · '+geo.region:'');
-  if(geo?.isDynamic){const dw=ge('su-dynamicWarn');if(dw)dw.style.display='block';}
-  const eb=ge('su-expandBtn');if(eb)eb.textContent='▼ Show source breakdown ('+results.length+' ok, '+errors.length+' failed)';
-  const cb=ge('su-ipConfirmedBox');if(cb){cb.innerHTML='✅ IP confirmed: <strong style="font-family:monospace;color:#fb923c;font-size:15px;">'+bestIP+'</strong> — paste as "Primary Static IP" in SmartAPI app.';cb.style.display='block';}
+  var addr=ge('su-ipAddr');if(addr)addr.textContent=bestIP;
+  var tags=ge('su-ipTags');
+  if(tags){var chips=[{c:'#34d399',t:'✓ Verified'},{c:'#818cf8',t:conf+'% confidence'},{c:'#34d399',t:'🔄 '+bestCount+'/'+SU_IP_SOURCES.length}];if(geo&&geo.isDynamic)chips.push({c:'#f59e0b',t:'⚡ Dynamic'});tags.innerHTML=chips.map(function(x){return'<span class="su-tag" style="background:'+x.c+'12;border:1px solid '+x.c+'28;color:'+x.c+';">'+x.t+'</span>';}).join('');}
+  var meta=ge('su-ipMeta');if(meta&&geo)meta.textContent=geo.isp+(geo.city?' · '+geo.city:'')+(geo.region?' · '+geo.region:'');
+  if(geo&&geo.isDynamic){var dw=ge('su-dynamicWarn');if(dw)dw.style.display='block';}
+  var eb=ge('su-expandBtn');if(eb)eb.textContent='▼ Show source breakdown ('+results.length+' ok, '+errors.length+' failed)';
+  var cb=ge('su-ipConfirmedBox');if(cb){cb.innerHTML='✅ IP confirmed: <strong style="font-family:monospace;color:#fb923c;font-size:15px;">'+bestIP+'</strong> — paste as Primary Static IP in SmartAPI.';cb.style.display='block';}
   if(btn){btn.className='su-btn-detect su-done';btn.disabled=false;btn.textContent='🔄 Re-detect';}
   suRunning=false;
 };
-
 window.suCopyIP=function(){
   if(!suDetIP)return;
-  const fallback=()=>{const ta=document.createElement('textarea');ta.value=suDetIP;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);};
-  const done=()=>{const b=document.getElementById('su-btnCopy');if(b){b.textContent='✅ Copied!';setTimeout(()=>{if(b)b.textContent='📋 Copy IP';},2500);}};
-  if(navigator.clipboard){navigator.clipboard.writeText(suDetIP).then(done).catch(()=>{fallback();done();});}else{fallback();done();}
+  var done=function(){var b=document.getElementById('su-btnCopy');if(b){b.textContent='✅ Copied!';setTimeout(function(){if(b)b.textContent='📋 Copy IP';},2500);}};
+  if(navigator.clipboard){navigator.clipboard.writeText(suDetIP).then(done).catch(function(){var ta=document.createElement('textarea');ta.value=suDetIP;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();});}
+  else{var ta=document.createElement('textarea');ta.value=suDetIP;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}
 };
-
 window.suToggleBreakdown=function(){
-  const bd=document.getElementById('su-srcBreakdown'),eb=document.getElementById('su-expandBtn');
-  if(!bd||!eb)return;
+  var bd=document.getElementById('su-srcBreakdown'),eb=document.getElementById('su-expandBtn');if(!bd||!eb)return;
   suBDOpen=!suBDOpen;
   if(suBDOpen){
-    const{results,errors,bestIP}=suBDData;
-    bd.innerHTML=[...results.map(r=>'<div class="su-src-row"><span style="color:#22c55e;width:12px;">✓</span><span style="width:60px;color:'+r.color+';font-weight:600;">'+r.name+'</span><span style="font-family:\'JetBrains Mono\',monospace;color:'+(r.ip===bestIP?'#fb923c':'#94a3b8')+';font-weight:'+(r.ip===bestIP?700:400)+';">'+r.ip+'</span>'+(r.ip===bestIP?'<span style="font-size:10px;color:#fb923c;background:rgba(249,115,22,.1);padding:1px 7px;border-radius:50px;">consensus</span>':'')+'<span style="margin-left:auto;color:#334155;font-size:10px;">'+r.ms+'ms</span></div>'),...errors.map(e=>'<div class="su-src-row"><span style="color:#ef4444;width:12px;">✗</span><span style="width:60px;color:#475569;">'+e.name+'</span><span style="color:#334155;">'+e.error+'</span></div>')].join('');
+    var r=suBDData;
+    bd.innerHTML=r.results.map(function(rx){return'<div class="su-src-row"><span style="color:#22c55e;width:12px;">✓</span><span style="width:60px;color:'+rx.color+';font-weight:600;">'+rx.name+'</span><span style="font-family:\'JetBrains Mono\',monospace;color:'+(rx.ip===r.bestIP?'#fb923c':'#94a3b8')+';font-weight:'+(rx.ip===r.bestIP?700:400)+';">'+rx.ip+'</span>'+(rx.ip===r.bestIP?'<span style="font-size:10px;color:#fb923c;background:rgba(249,115,22,.1);padding:1px 7px;border-radius:50px;">consensus</span>':'')+'<span style="margin-left:auto;color:#334155;font-size:10px;">'+rx.ms+'ms</span></div>';}).concat(r.errors.map(function(e){return'<div class="su-src-row"><span style="color:#ef4444;width:12px;">✗</span><span style="width:60px;color:#475569;">'+e.name+'</span><span style="color:#334155;">'+e.error+'</span></div>';})).join('');
     bd.style.display='flex';eb.textContent='▲ Hide source breakdown';
   }else{bd.style.display='none';eb.textContent='▼ Show source breakdown ('+suBDData.results.length+' ok, '+suBDData.errors.length+' failed)';}
 };
-
-// Auto-init when setup page becomes active
-const suObserver=new MutationObserver(()=>{const pg=document.getElementById('page-setup');if(pg&&pg.classList.contains('active')&&!document.getElementById('su-phaseCards').children.length)suInit();});
-document.addEventListener('DOMContentLoaded',()=>{suObserver.observe(document.getElementById('page-setup')||document.body,{attributes:true,attributeFilter:['class']});});
-window.suInit();
+// Auto-init when setup page shown
+(function(){
+  var obs=new MutationObserver(function(){
+    var pg=document.getElementById('page-setup');
+    if(pg&&pg.classList.contains('active')){var pc=document.getElementById('su-phaseCards');if(pc&&!pc.children.length)window.suInit();}
+  });
+  var pg=document.getElementById('page-setup')||document.body;
+  obs.observe(pg,{attributes:true,attributeFilter:['class']});
+  window.suInit();
+})();
 })();
 
-
-// ═══════════════════════════════════════════════════════
-// BLOG PAGE
-// ═══════════════════════════════════════════════════════
-var BLOG_POSTS = [
-  {
-    id:0, tags:['fii','expiry'],
-    title:"How FII Positioning Predicted the 22,500 Pin on Expiry Day",
-    excerpt:"We tracked FII net futures from Monday through Thursday. Here's how the data pointed to a 22,500 max pain gravitational pull three days before it happened.",
-    date:"March 18, 2026", read:"8 min",
-    accent:"var(--purple)",
-    body:`<h2>The Setup — Monday FII Data</h2>
-<p>Every expiry week begins the same way: FII data drops at 6:30 PM on Monday via NSE participant-wise OI. That Monday, FII net futures showed a short position of <strong style="color:var(--red)">–1,46,984 contracts</strong>. That number doesn't lie.</p>
-<p>Retail was net long 96,067 contracts on the same day — a textbook divergence. When FII is short and retail is long, you already know what's coming. The question is always: at what level will the pin happen?</p>
-<h2>Reading the OI Walls</h2>
-<p>The highest Call OI was sitting at <strong style="color:var(--accent3)">22,500</strong> — 8.92 lakh contracts. The highest Put OI was at <strong style="color:var(--green)">22,000</strong> — 6.84 lakh contracts. Max Pain computed to 22,400.</p>
-<div class="callout">📌 Rule: When Max Pain (22,400) and highest Call OI strike (22,500) are within 100 points of each other, the probability of pinning between them on expiry is historically above 70% on Nifty weekly.</div>
-<h2>Tuesday — Confirmation via GEX</h2>
-<p>By Tuesday afternoon, Gamma Exposure (GEX) showed dealer long Gamma above 22,500 and short Gamma below 22,400. This means market makers were incentivised to push price back toward the 22,400–22,500 band any time it deviated.</p>
-<h2>The Trade</h2>
-<p>Wednesday entry: Sold 22,600 CE at ₹38 and 22,300 PE at ₹42. Net credit ₹80 per lot (₹2,000). By Thursday 2:00 PM both expired worthless. Nifty closed at 22,513.</p>
-<div class="warn-callout">⚠ SEBI: OptionsLab is not a registered investment advisor. This is an educational case study only. Options trading involves substantial risk of loss. Do not trade based on this alone.</div>
-<h2>Key Takeaways</h2>
-<table><thead><tr><th>Signal</th><th>Value</th><th>Interpretation</th></tr></thead><tbody>
-<tr><td>FII Net Futures</td><td class="neg">-1,46,984</td><td>Bearish institutional bias</td></tr>
-<tr><td>Retail Net Futures</td><td class="pos">+96,067</td><td>Retail trapped long</td></tr>
-<tr><td>Max Pain</td><td>22,400</td><td>Gravitational pin level</td></tr>
-<tr><td>Highest Call OI</td><td>22,500</td><td>Resistance wall</td></tr>
-<tr><td>GEX Flip</td><td>22,450</td><td>Dealer hedging mid-point</td></tr>
-</tbody></table>`
-  },
-  {
-    id:1, tags:['greeks','tutorial'],
-    title:"Gamma Explained: Why Expiry Day Moves Are 3× More Violent",
-    excerpt:"Gamma accelerates near ATM strikes as DTE approaches zero. Here's the exact math behind why a ₹50 Nifty move on expiry Thursday can move a premium by ₹200.",
-    date:"March 12, 2026", read:"6 min",
-    accent:"var(--cyan)",
-    body:`<h2>What Gamma Actually Does</h2>
-<p>Delta tells you how much an option moves per ₹1 change in Nifty. Gamma tells you how fast Delta itself is changing. Near expiry, with very low DTE, Gamma on ATM options becomes enormous.</p>
-<p>Formula: For an ATM call with spot at 22,500, DTE = 1 day, IV = 14%:</p>
-<div class="callout">Γ = e^(–d1²/2) / (S × σ × √T × √2π)<br>= ~0.0048 per ₹1<br>So a ₹100 move changes Delta by 0.48 — nearly doubling it</div>
-<h2>The 3× Multiplier Effect</h2>
-<p>On a normal day (DTE=7), a ₹50 Nifty move might move your ATM call from ₹142 to ₹167 (+₹25). On expiry day (DTE=0), the same ₹50 move can take it from ₹35 to ₹120 (+₹85). Same underlying move, 3× the premium response.</p>
-<h2>How to Trade High Gamma</h2>
-<p>You have two choices: be a Gamma buyer (buy options, bet on big moves) or a Gamma seller (sell options, bet on pinning). FII + Max Pain data helps you decide which side to be on each week.</p>
-<div class="warn-callout">⚠ High Gamma cuts both ways. A ₹50 move against you on expiry day destroys premium just as fast.</div>`
-  },
-  {
-    id:2, tags:['volatility'],
-    title:"India VIX Under 12 — The Most Dangerous Market Condition for Options Buyers",
-    excerpt:"When VIX drops below 12, option premiums are historically cheap. But this is not a buying opportunity — it's a trap. Here's why and what to do instead.",
-    date:"March 8, 2026", read:"5 min",
-    accent:"var(--yellow)",
-    body:`<h2>The VIX Paradox</h2>
-<p>Retail traders see low VIX and think: cheap premiums, great time to buy options! Institutions see the same thing and think: zero volatility regime, time to aggressively sell premium and collect theta.</p>
-<p>Who wins? Almost always the seller, when VIX is below 12.</p>
-<h2>Historical Data — Nifty Weekly Options</h2>
-<table><thead><tr><th>VIX Range</th><th>ATM Buyer Win Rate</th><th>ATM Seller Win Rate</th></tr></thead><tbody>
-<tr><td>Below 12</td><td class="neg">18%</td><td class="pos">82%</td></tr>
-<tr><td>12–15</td><td class="neg">31%</td><td class="pos">69%</td></tr>
-<tr><td>15–20</td><td class="pos">44%</td><td>56%</td></tr>
-<tr><td>Above 20</td><td class="pos">61%</td><td class="neg">39%</td></tr>
-</tbody></table>
-<div class="callout">📌 OptionsLab VIX Rule: Never buy ATM options when VIX is below 11. Consider next-week expiry only when VIX is between 11 and 14. Full options buying only above 14.</div>`
-  },
-  {
-    id:3, tags:['strategy','expiry'],
-    title:"The Wednesday Entry Rule: Why 95% of Profitable Expiry Trades Start on Wednesday",
-    excerpt:"Stop hunting happens Monday-Tuesday. The real bias direction is confirmed by Wednesday. Here is the data and the exact entry trigger to look for each week.",
-    date:"March 3, 2026", read:"7 min",
-    accent:"var(--green)",
-    body:`<h2>The Weekly Operator Cycle</h2>
-<p><strong>Monday:</strong> Stop hunt both ways. Institutions test PDH and PDL. No directional bias yet. Retail enters — institutions watch.</p>
-<p><strong>Tuesday:</strong> The real bias starts to emerge. FII adjusts their futures book. Watch for a Change of Character (CHoCH) candle on the 15m chart after 11 AM.</p>
-<p><strong>Wednesday:</strong> Highest risk-reward entry day. The direction is confirmed, DTE is 1 day, premium is still meaningful (not crushed yet), and you have 24 hours for the move to play out.</p>
-<h2>The Exact Entry Checklist</h2>
-<div class="callout">✓ FII net futures confirmed bias (same direction two days in a row)<br>✓ Spot has swept PDH or PDL (stop hunt complete)<br>✓ CHoCH confirmed on 15m after 10:30 AM<br>✓ VIX between 13 and 20<br>✓ Entry time: 10:30 AM – 12:30 PM only</div>
-<div class="warn-callout">⚠ Never enter after 2:00 PM on any expiry week day. Time decay becomes unpredictable in the final hour.</div>`
-  },
-  {
-    id:4, tags:['fii','strategy'],
-    title:"Dark Pool OI Signals: How Institutions Hide Their Real Position",
-    excerpt:"Block trades above 100L OI in a single order don't show up in the regular chain. Here's how OptionsLab detects them and what they mean for direction.",
-    date:"Feb 26, 2026", read:"6 min",
-    accent:"var(--purple)",
-    body:`<h2>What Are Block Trades?</h2>
-<p>A block trade is a large order — typically 100 lakh contracts or more — executed outside the regular market to minimise price impact. In NSE options, institutions use these to build or unwind large positions quietly.</p>
-<h2>How to Detect Them</h2>
-<p>OptionsLab's Analytics Engine tracks OI velocity — the rate of change of Open Interest per minute. A sudden spike of 100L+ OI appearing in a single 1-minute candle is a block trade signature.</p>
-<div class="callout">📌 In the last 6 months, 78% of block trades in Nifty weekly options were directionally correct within 24 hours. The key is not the strike but which side (Call or Put) and whether it's opening or closing.</div>`
-  },
-  {
-    id:5, tags:['tutorial','greeks'],
-    title:"Reading the IV Skew: Why OTM Puts Always Cost More Than OTM Calls",
-    excerpt:"The volatility smile is not symmetric in Indian markets. OTM puts carry a 15-30% IV premium over equivalent OTM calls. Here's why, and how to use it.",
-    date:"Feb 20, 2026", read:"5 min",
-    accent:"var(--red)",
-    body:`<h2>The Skew Explained</h2>
-<p>In a perfectly efficient market, the IV of an OTM call 200 points above spot and an OTM put 200 points below spot should be equal. In reality, the put is almost always more expensive.</p>
-<p>Why? Institutions are perpetual buyers of OTM puts as tail-risk hedges. This constant buying pressure inflates put IV. The 25-Delta skew on Nifty typically runs at 1.2–1.4x (put IV / call IV).</p>
-<div class="callout">📌 When skew spikes above 1.5x, sell put spreads. When skew compresses below 1.1x, buy put spreads or buy puts outright — they're cheap relative to historical levels.</div>
-<h2>Using the OptionsLab Skew Chart</h2>
-<p>Open the Terminal → Chart + IV Skew tab. The blue line shows current call IV by strike; the red line shows put IV. The gap between them at each strike is the skew. OptionsLab marks the 25-Delta levels automatically.</p>`
-  }
-];
-
-var _blogFilter = 'all';
-var _blogCurrentPost = null;
-
-// Map tag to CSS class
-function blogTagClass(tag) {
-  var map = {fii:'blog-tag-fii',greeks:'blog-tag-greeks',expiry:'blog-tag-expiry',
-             volatility:'blog-tag-volatility',strategy:'blog-tag-strategy',tutorial:'blog-tag-tutorial'};
-  return map[tag] || 'blog-tag-fii';
-}
-function blogTagLabel(tag) {
-  var map = {fii:'FII Flows',greeks:'Greeks',expiry:'Expiry',
-             volatility:'Volatility',strategy:'Strategy',tutorial:'Tutorial'};
-  return map[tag] || tag;
-}
-function blogAccentFromTags(tags) {
-  var map = {fii:'var(--purple)',greeks:'var(--cyan)',expiry:'var(--accent3)',
-             volatility:'var(--yellow)',strategy:'var(--green)',tutorial:'#639bff'};
-  return map[tags[0]] || 'var(--accent3)';
-}
-
-function blogRenderGrid() {
-  var grid = document.getElementById('blog-grid');
-  if(!grid) return;
-  var filtered = _blogFilter === 'all'
-    ? BLOG_POSTS
-    : BLOG_POSTS.filter(function(p){ return p.tags.indexOf(_blogFilter) > -1; });
-  // Skip featured (id=0) from grid
-  var gridPosts = filtered.filter(function(p){ return p.id !== 0; });
-  var accent = blogAccentFromTags;
-  grid.innerHTML = gridPosts.map(function(post, i) {
-    var ac = post.accent || blogAccentFromTags(post.tags);
-    return '<div class="blog-card reveal" onclick="blogOpenPost('+post.id+')" style="border-top:2px solid '+ac+';">'
-      + '<div class="blog-card-num">0'+(i+1)+'</div>'
-      + '<div class="blog-card-tags">'
-        + post.tags.map(function(t){ return '<span class="blog-tag '+blogTagClass(t)+'">'+blogTagLabel(t)+'</span>'; }).join('')
-      + '</div>'
-      + '<div class="blog-card-title">'+post.title+'</div>'
-      + '<div class="blog-card-excerpt">'+post.excerpt+'</div>'
-      + '<div class="blog-card-meta">'
-        + '<span>'+post.date+'</span>'
-        + '<span class="blog-card-read">'+post.read+' read →</span>'
-      + '</div>'
-      + '</div>';
-  }).join('');
-  // If filtered is empty
-  if(gridPosts.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;font-family:var(--font-m);font-size:.62rem;color:var(--text3);">No articles in this category yet. Check back soon.</div>';
-  }
-  triggerReveal();
-}
-
-function blogFilter(btn, tag) {
-  _blogFilter = tag;
-  document.querySelectorAll('.blog-filter-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  blogRenderGrid();
-}
-
-function blogOpenPost(id) {
-  var post = BLOG_POSTS.find(function(p){ return p.id === id; });
-  if(!post) return;
-  _blogCurrentPost = id;
-  var overlay = document.getElementById('blog-modal-overlay');
-  var modal   = document.getElementById('blog-modal');
-  var titleEl = document.getElementById('blog-modal-title');
-  var metaEl  = document.getElementById('blog-modal-meta');
-  var tagsEl  = document.getElementById('blog-modal-tags');
-  var bodyEl  = document.getElementById('blog-modal-body');
-  if(!overlay || !modal) return;
-  if(titleEl) titleEl.textContent = post.title;
-  if(metaEl)  metaEl.innerHTML = '<span>'+post.date+'</span><span>'+post.read+' read</span>';
-  if(tagsEl)  tagsEl.innerHTML = post.tags.map(function(t){
-    return '<span class="blog-tag '+blogTagClass(t)+'">'+blogTagLabel(t)+'</span>';
-  }).join('');
-  if(bodyEl)  bodyEl.innerHTML = post.body || '';
-  overlay.style.display = 'block';
-  modal.style.display   = 'block';
-  document.body.style.overflow = 'hidden';
-}
-
-function blogClosePost() {
-  var overlay = document.getElementById('blog-modal-overlay');
-  var modal   = document.getElementById('blog-modal');
-  if(overlay) overlay.style.display = 'none';
-  if(modal)   modal.style.display   = 'none';
-  document.body.style.overflow = '';
-  _blogCurrentPost = null;
-}
-
-// Close modal on Escape key
-document.addEventListener('keydown', function(e) {
-  if(e.key === 'Escape' && _blogCurrentPost !== null) blogClosePost();
-});
-
-// Init blog page on first show
-// Blog renders on first showPage('blog') call via initBlog()
-
 </script>
+</body>
 </html>
