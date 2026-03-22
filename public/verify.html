@@ -331,9 +331,9 @@ function startRedirect(fillId,cdId,dur,dest){
       document.getElementById('retEmail').textContent=email;
       show('stReturn');
       startRedirect('retFill','retCd',3000,'profile.html');
-    } else {
-      const url='register.html?tab=register&email_token='+encodeURIComponent(data.email_token)+'&email='+encodeURIComponent(email);
-      document.getElementById('newEmail').textContent=email;
+      sessionStorage.setItem('ol_verify_token', data.email_token);
+      sessionStorage.setItem('ol_verify_email', email);
+      document.getElementById('continueBtn').href='register.html?tab=register';
       document.getElementById('continueBtn').href=url;
       show('stNew');
     }
