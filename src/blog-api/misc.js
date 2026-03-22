@@ -64,7 +64,7 @@ categoriesRouter.post('/', auth, adminOnly, async (req, res) => {
   try {
       `INSERT INTO blog_categories (name, slug, description) VALUES ($1,$2,$3) RETURNING *`,
       [name, slug, description]
-      [name, slug, description, color || '#ff9f0a', sort_order || 0]
+
     );
     res.status(201).json(rows[0]);
   } catch (err) { res.status(500).json({ error: err.message }); }
