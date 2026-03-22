@@ -172,7 +172,7 @@ router.post('/', auth, async (req, res) => {
 
   try {
     const { rows } = await pool.query(`
-      INSERT INTO blog_articles
+      INSERT INTO blog_posts
         (slug, title, subtitle, excerpt, body_markdown, body_html, cover_emoji,
          author_id, category_id, status, sentiment, ai_score, ai_summary,
          read_time_min, featured, is_ai_generated, scheduled_at,
@@ -278,6 +278,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
