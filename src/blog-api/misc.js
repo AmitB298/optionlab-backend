@@ -50,7 +50,7 @@ categoriesRouter.get('/', async (req, res) => {
   try {
     const { rows } = await pool.query(`
       SELECT c.*, COUNT(a.id) FILTER (WHERE a.status='published') AS article_count
-      FROM blog_categories c
+      FROM blog_categories c ORDER BY name
       LEFT JOIN blog_articles a ON a.category_id = c.id
       GROUP BY c.id ORDER BY c.sort_order
     `);
@@ -175,3 +175,4 @@ analyticsRouter.get('/dashboard', auth, adminOnly, async (req, res) => {
 });
 
 module.exports = { commentsRouter, categoriesRouter, tagsRouter, authorsRouter, subscribersRouter, analyticsRouter };
+
