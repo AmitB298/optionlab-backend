@@ -195,7 +195,7 @@ router.post('/', auth, async (req, res) => {
       }
     }
 
-    await pool.query(`UPDATE blog_authors SET articles_count = articles_count + 1 WHERE id = $1`, [req.user.id]);
+    // articles_count column removed
 
     res.status(201).json({ id: artId, slug: rows[0].slug });
   } catch (err) {
