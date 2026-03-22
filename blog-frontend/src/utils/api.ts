@@ -15,10 +15,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
-      localStorage.removeItem('ol_token')
-      localStorage.removeItem('ol_user')
-    }
+    // Don't auto-logout on 401 - let components handle auth
     return Promise.reject(err)
   }
 )
@@ -89,5 +86,6 @@ export const aiApi = {
 }
 
 export default api
+
 
 
