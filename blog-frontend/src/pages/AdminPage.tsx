@@ -19,10 +19,21 @@ export default function AdminPage() {
   const { isAuthenticated } = useAuthStore()
   const navigate = useNavigate()
   const [tab, setTab] = useState('dashboard')
+  const [editingArticle, setEditingArticle] = useState<any>(null)
 
   useEffect(() => {
     if (!isAuthenticated) navigate('/login')
   }, [isAuthenticated])
+
+  const handleEdit = (article: any) => {
+    setEditingArticle(article)
+    setTab('editor')
+  }
+
+  const handleNewArticle = () => {
+    setEditingArticle(null)
+    setTab('editor')
+  }
 
   return (
     <div className="flex bg-line gap-px min-h-screen">
@@ -34,7 +45,7 @@ export default function AdminPage() {
         {NAV.slice(0, 3).map((n) => {
           const Icon = n.icon
           return (
-            <button key={n.key} onClick={() => setTab(n.key)}
+            <button key={n.key} onClick={() => n.key === 'editor' ? handleNewArticle() : setTab(n.key)}
               className={`flex items-center gap-2.5 px-4 py-2.5 font-mono text-[11px] border-l-2 text-left w-full transition-colors
                 ${tab === n.key ? 'text-amber border-l-amber bg-amber/5' : 'text-t-3 border-l-transparent hover:text-t-2 hover:bg-ink-2'}`}>
               <Icon size={13} /> {n.label}
@@ -72,9 +83,9 @@ export default function AdminPage() {
 
       {/* CONTENT */}
       <div className="flex-1 bg-ink overflow-auto">
-        {tab === 'dashboard'  && <AdminDashboard setTab={setTab} />}
-        {tab === 'editor'     && <ArticleEditor />}
-        {tab === 'posts'      && <PostsTable setTab={setTab} />}
+        {tab === 'dashboard'  && <AdminDashboard setTab={setTab} onNewArticle={handleNewArticle} />}
+        {tab === 'editor'     && <ArticleEditor article={editingArticle} onSaved={() => { setEditingArticle(null); setTab('posts') }} />}
+        {tab === 'posts'      && <PostsTable setTab={setTab} onEdit={handleEdit} onNewArticle={handleNewArticle} />}
         {tab === 'analytics'  && <AnalyticsPanel />}
         {tab === 'readers'    && <ReadersPanel />}
         {tab === 'newsletter' && <NewsletterPanel />}
@@ -84,7 +95,7 @@ export default function AdminPage() {
 }
 
 /* ── DASHBOARD ───────────────────────────────────────────── */
-function AdminDashboard({ setTab }: { setTab: (t: string) => void }) {
+function AdminDashboard({ setTab, onNewArticle }: { setTab: (t: string) => void, onNewArticle: () => void }) {
   const { data: stats } = useQuery({ queryKey: ['admin-stats'], queryFn: () => analyticsApi.dashboard().then(r => r.data) })
   const { data: posts } = useQuery({ queryKey: ['admin-posts'], queryFn: () => articlesApi.adminAll().then(r => r.data) })
 
@@ -102,7 +113,7 @@ function AdminDashboard({ setTab }: { setTab: (t: string) => void }) {
           <div className="font-sans font-bold text-[17px] text-t-1">Dashboard</div>
           <div className="font-mono text-[10px] text-t-4 mt-0.5">{new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' })}</div>
         </div>
-        <button onClick={() => setTab('editor')}
+        <button onClick={onNewArticle}
           className="flex items-center gap-2 font-mono text-[10px] px-4 py-2 border border-amber text-amber hover:bg-amber hover:text-black transition-colors uppercase tracking-wider">
           <PenSquare size={11} /> NEW ARTICLE
         </button>
@@ -155,18 +166,25 @@ function AdminDashboard({ setTab }: { setTab: (t: string) => void }) {
 }
 
 /* ── ARTICLE EDITOR ───────────────────────────────────────── */
-function ArticleEditor() {
-  const [title, setTitle] = useState('')
-  const [excerpt, setExcerpt] = useState('')
-  const [body, setBody] = useState('')
-  const [category, setCategory] = useState('')
-  const [author, setAuthor] = useState('Rahul Verma')
-  const [emoji, setEmoji] = useState('📊')
+function ArticleEditor({ article, onSaved }: { article?: any, onSaved?: () => void }) {
+  const [title, setTitle]     = useState(article?.title || '')
+  const [excerpt, setExcerpt] = useState(article?.excerpt || '')
+  const [body, setBody]       = useState(article?.body_markdown || '')
+  const [category, setCategory] = useState(article?.cat_name || '')
+  const [emoji, setEmoji]     = useState(article?.cover_emoji || '📊')
   const [aiLoading, setAiLoading] = useState(false)
   const [publishing, setPublishing] = useState(false)
 
+  // Update fields when article prop changes
+  useEffect(() => {
+    setTitle(article?.title || '')
+    setExcerpt(article?.excerpt || '')
+    setBody(article?.body_markdown || '')
+    setCategory(article?.cat_name || '')
+    setEmoji(article?.cover_emoji || '📊')
+  }, [article])
+
   const { data: categories = [] } = useQuery({ queryKey: ['cats'], queryFn: () => categoriesApi.list().then(r => r.data) })
-  const { data: tags = [] } = useQuery({ queryKey: ['tags'], queryFn: () => tagsApi.list().then(r => r.data) })
 
   const preview = body
     .replace(/^## (.+)$/gm, '<h2 class="font-display text-xl text-t-1 mt-6 mb-3 font-bold">$1</h2>')
@@ -184,7 +202,7 @@ function ArticleEditor() {
       setBody(data.content)
       toast.success('AI draft generated!')
     } catch {
-      toast.error('AI assist failed. Check ANTHROPIC_API_KEY in .env')
+      toast.error('AI assist failed. Check ANTHROPIC_API_KEY in Railway.')
     } finally {
       setAiLoading(false)
     }
@@ -195,11 +213,24 @@ function ArticleEditor() {
     setPublishing(true)
     try {
       const cat = (categories as any[]).find((c: any) => c.name === category)
-      await articlesApi.create({ title, excerpt, body_markdown: body, cover_emoji: emoji, category_id: cat?.id, status, read_time_min: Math.max(1, Math.ceil(body.split(' ').length / 200)) })
-      toast.success(status === 'published' ? 'Article published!' : 'Draft saved!')
-      setTitle(''); setExcerpt(''); setBody('')
+      const payload = {
+        title, excerpt,
+        body_markdown: body,
+        cover_emoji: emoji,
+        category_id: cat?.id,
+        status,
+        read_time_min: Math.max(1, Math.ceil(body.split(' ').length / 200))
+      }
+      if (article?.id) {
+        await articlesApi.update(article.id, payload)
+        toast.success(status === 'published' ? 'Article updated & published!' : 'Draft updated!')
+      } else {
+        await articlesApi.create(payload)
+        toast.success(status === 'published' ? 'Article published!' : 'Draft saved!')
+      }
+      if (onSaved) onSaved()
     } catch {
-      toast.error('Failed to publish. Check you are logged in.')
+      toast.error('Failed to save. Check you are logged in.')
     } finally {
       setPublishing(false)
     }
@@ -218,8 +249,10 @@ function ArticleEditor() {
     <div>
       <div className="flex items-center justify-between px-6 py-4 border-b border-line bg-ink-1">
         <div>
-          <div className="font-sans font-bold text-[17px] text-t-1">New Article</div>
-          <div className="font-mono text-[10px] text-t-4 mt-0.5">Markdown editor with live preview</div>
+          <div className="font-sans font-bold text-[17px] text-t-1">{article?.id ? 'Edit Article' : 'New Article'}</div>
+          <div className="font-mono text-[10px] text-t-4 mt-0.5">
+            {article?.id ? `Editing: ${article.title}` : 'Markdown editor with live preview'}
+          </div>
         </div>
         <div className="flex gap-2">
           <button onClick={() => publish('draft')} disabled={publishing}
@@ -228,7 +261,7 @@ function ArticleEditor() {
           </button>
           <button onClick={() => publish('published')} disabled={publishing}
             className="font-mono text-[10px] px-4 py-2 border border-amber text-amber hover:bg-amber hover:text-black transition-colors disabled:opacity-50">
-            {publishing ? 'PUBLISHING...' : '▶ PUBLISH'}
+            {publishing ? 'SAVING...' : article?.id ? '▶ UPDATE & PUBLISH' : '▶ PUBLISH'}
           </button>
         </div>
       </div>
@@ -285,7 +318,7 @@ function ArticleEditor() {
             id="editorTA"
             value={body}
             onChange={e => setBody(e.target.value)}
-            placeholder="## Executive Summary&#10;&#10;Start with your key insight...&#10;&#10;## Analysis&#10;&#10;Your content here..."
+            placeholder={"## Executive Summary\n\nStart with your key insight...\n\n## Analysis\n\nYour content here..."}
             className="w-full h-[380px] bg-transparent outline-none font-mono text-[13px] text-t-1 leading-relaxed resize-none placeholder:text-t-4"
           />
         </div>
@@ -302,7 +335,7 @@ function ArticleEditor() {
       <div className="flex items-center gap-3 px-5 py-3 bg-ink-2 border-t border-line">
         <button onClick={() => publish('published')} disabled={publishing}
           className="font-mono text-[10px] px-5 py-2.5 border border-amber text-amber hover:bg-amber hover:text-black transition-colors disabled:opacity-50">
-          ▶ PUBLISH NOW
+          {article?.id ? '▶ UPDATE NOW' : '▶ PUBLISH NOW'}
         </button>
         <button onClick={() => toast.success('Scheduled for tomorrow 8:30 AM IST')}
           className="font-mono text-[10px] px-4 py-2.5 border border-line-2 text-t-3 hover:border-amber hover:text-amber transition-colors">
@@ -315,14 +348,26 @@ function ArticleEditor() {
 }
 
 /* ── POSTS TABLE ─────────────────────────────────────────── */
-function PostsTable({ setTab }: { setTab: (t:string)=>void }) {
-  const { data: posts = [] } = useQuery({ queryKey: ['admin-posts-all'], queryFn: () => articlesApi.adminAll().then(r => r.data) })
+function PostsTable({ setTab, onEdit, onNewArticle }: { setTab: (t:string)=>void, onEdit: (a:any)=>void, onNewArticle: ()=>void }) {
+  const { data: posts = [], refetch } = useQuery({ queryKey: ['admin-posts-all'], queryFn: () => articlesApi.adminAll().then(r => r.data) })
+
+  const handleDelete = async (e: React.MouseEvent, id: number) => {
+    e.stopPropagation()
+    if (!confirm('Delete this article?')) return
+    try {
+      await articlesApi.delete(id)
+      toast.success('Article deleted')
+      refetch()
+    } catch {
+      toast.error('Failed to delete')
+    }
+  }
 
   return (
     <div>
       <div className="flex items-center justify-between px-6 py-4 border-b border-line bg-ink-1">
         <div className="font-sans font-bold text-[17px] text-t-1">All Posts ({(posts as any[]).length})</div>
-        <button onClick={() => setTab('editor')} className="font-mono text-[10px] px-4 py-2 border border-amber text-amber hover:bg-amber hover:text-black transition-colors">+ NEW POST</button>
+        <button onClick={onNewArticle} className="font-mono text-[10px] px-4 py-2 border border-amber text-amber hover:bg-amber hover:text-black transition-colors">+ NEW POST</button>
       </div>
       <div className="p-5">
         <table className="w-full border-collapse">
@@ -349,10 +394,16 @@ function PostsTable({ setTab }: { setTab: (t:string)=>void }) {
                 <td className="px-3 py-3 font-mono text-[10px] text-t-4">{a.published_at ? new Date(a.published_at).toLocaleDateString('en-IN') : '—'}</td>
                 <td className="px-3 py-3">
                   <div className="flex gap-1.5">
-                    <button onClick={e => { e.stopPropagation(); toast.success('Edit mode opening') }}
-                      className="font-mono text-[9px] px-2 py-1 border border-line text-t-3 hover:border-amber hover:text-amber transition-colors">EDIT</button>
-                    <button onClick={e => { e.stopPropagation(); articlesApi.delete(a.id).then(() => toast.success('Archived')).catch(() => toast.error('Failed')) }}
-                      className="font-mono text-[9px] px-2 py-1 border border-line text-t-3 hover:border-red hover:text-red transition-colors">DEL</button>
+                    <button
+                      onClick={e => { e.stopPropagation(); onEdit(a) }}
+                      className="font-mono text-[9px] px-2 py-1 border border-line text-t-3 hover:border-amber hover:text-amber transition-colors">
+                      EDIT
+                    </button>
+                    <button
+                      onClick={e => handleDelete(e, a.id)}
+                      className="font-mono text-[9px] px-2 py-1 border border-line text-t-3 hover:border-red hover:text-red transition-colors">
+                      DEL
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -448,7 +499,7 @@ function ReadersPanel() {
             {(subs as any[]).map((s: any) => (
               <tr key={s.id} className="border-b border-line hover:bg-ink-1">
                 <td className="px-3 py-3 font-mono text-[11px] text-t-1">{s.email}</td>
-                <td className="px-3 py-3 font-mono text-[10px] text-t-3">{new Date(s.subscribed_at).toLocaleDateString('en-IN')}</td>
+                <td className="px-3 py-3 font-mono text-[10px] text-t-3">{new Date(s.subscribed_at || s.created_at).toLocaleDateString('en-IN')}</td>
                 <td className="px-3 py-3 font-mono text-[10px] text-t-4">{s.source}</td>
                 <td className="px-3 py-3 font-mono text-[10px] text-cyan">—</td>
                 <td className="px-3 py-3"><span className="font-mono text-[8px] px-1.5 py-0.5 bg-green/10 text-green border border-green/20">ACTIVE</span></td>
@@ -526,5 +577,3 @@ function NewsletterPanel() {
     </div>
   )
 }
-
-
