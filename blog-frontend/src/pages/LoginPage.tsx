@@ -21,7 +21,7 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.error || 'Login failed')
       localStorage.setItem('ol_token', data.token)
       localStorage.setItem('ol_user', JSON.stringify(data.author))
-      navigate('/admin')
+      navigate('/blog/admin')
     } catch (err: any) {
       setError(err.message || 'Invalid credentials')
     } finally { setLoading(false) }
@@ -53,3 +53,4 @@ export default function LoginPage() {
     </div>
   )
 }
+
