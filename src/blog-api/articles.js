@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `${ARTICLE_SELECT} ${where} GROUP BY a.id, au.id, c.id ORDER BY a.published_at DESC NULLS LAST LIMIT $${params.length - 1} OFFSET $${params.length}`,
+      `${ARTICLE_SELECT} ${where} GROUP BY a.id, a.slug, a.title, a.subtitle, a.excerpt, a.body_markdown, a.body_html, a.cover_emoji, a.cover_image, a.status, a.sentiment, a.ai_score, a.ai_summary, a.read_time_min, a.views_count, a.likes_count, a.shares_count, a.featured, a.is_ai_generated, a.published_at, a.created_at, a.updated_at, a.seo_title, a.seo_description, a.scheduled_at, au.id, au.name, au.role, au.initials, au.avatar_color, au.avatar_url, c.id, c.name, c.slug ORDER BY a.published_at DESC NULLS LAST LIMIT $${params.length - 1} OFFSET $${params.length}`,
       params
     );
     const countParams = params.slice(0, -2);
@@ -278,6 +278,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
