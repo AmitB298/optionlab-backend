@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard — OptionsLab</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Rajdhani:wght@500;600;700&family=Hind:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#030712;--bg2:#060d1a;--bg3:#0d1828;--card:#0f1e35;
+  --bo:rgba(99,155,255,.1);--boh:rgba(99,155,255,.2);
+  --acc:#f97316;--acc2:#ea580c;
+  --grn:#10b981;--red:#ef4444;--yel:#f59e0b;--cyn:#22d3ee;--pur:#a855f7;
+  --tx:#e2eeff;--tx2:#7da8d4;--tx3:#3a5678;
+  --fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',cursive;--fr:'Rajdhani',sans-serif;
+  --nav:58px;--side:240px;
+}
+html{font-size:15px}
+body{background:var(--bg);color:var(--tx);font-family:'Hind',sans-serif;min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;border:none;font-family:inherit}
+a{text-decoration:none;color:inherit}
+input{font-family:var(--fm);background:var(--bg3);border:1px solid var(--bo);color:var(--tx);border-radius:6px;outline:none;transition:border-color .15s;font-size:.8rem}
+input:focus{border-color:var(--acc)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(249,115,22,.3);border-radius:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* LOADING SCREEN */
+#loadScreen{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+#loadScreen .logo{font-family:var(--fd);font-size:2rem;letter-spacing:.05em;color:var(--tx)}
+#loadScreen .logo span{color:var(--acc)}
+#loadScreen .spinner{width:24px;height:24px;border:2px solid var(--bo);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;height:var(--nav);display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(3,7,18,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--bo)}
+.t-logo{display:flex;align-items:center;gap:.5rem;font-family:var(--fd);font-size:1.15rem;letter-spacing:.04em}
+.t-icon{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:900;color:#fff}
+.t-logo em{color:var(--acc);font-style:normal}
+.t-right{display:flex;align-items:center;gap:.75rem}
+.t-plan{font-family:var(--fm);font-size:.48rem;font-weight:700;padding:.18rem .6rem;border-radius:20px}
+.plan-FREE{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);color:var(--cyn)}
+.plan-PAID{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.25);color:var(--acc)}
+.plan-TRIAL{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:var(--yel)}
+.t-name{font-family:var(--fm);font-size:.52rem;color:var(--tx2)}
+.t-logout{font-family:var(--fm);font-size:.48rem;padding:.2rem .55rem;border-radius:5px;border:1px solid rgba(239,68,68,.2);color:var(--red);background:rgba(239,68,68,.05);transition:.15s}
+.t-logout:hover{background:rgba(239,68,68,.12)}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - var(--nav))}
+
+/* SIDEBAR */
+.sidebar{width:var(--side);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bo);padding:.5rem 0;overflow-y:auto;position:sticky;top:var(--nav);height:calc(100vh - var(--nav))}
+.s-section{font-family:var(--fm);font-size:.42rem;text-transform:uppercase;letter-spacing:.12em;color:var(--tx3);padding:.55rem 1rem .15rem;margin-top:.3rem}
+.s-btn{display:flex;align-items:center;gap:.55rem;width:100%;padding:.48rem 1rem;font-family:var(--fm);font-size:.54rem;text-transform:uppercase;letter-spacing:.04em;color:var(--tx2);text-align:left;border-left:2px solid transparent;transition:all .15s;background:none}
+.s-btn:hover{background:rgba(249,115,22,.06);color:var(--tx)}
+.s-btn.active{border-left-color:var(--acc);color:var(--acc);background:rgba(249,115,22,.07)}
+.s-btn .icon{font-size:.9rem;width:18px;text-align:center}
+.s-badge{margin-left:auto;font-family:var(--fm);font-size:.4rem;background:rgba(249,115,22,.15);color:var(--acc);padding:.06rem .35rem;border-radius:10px}
+.s-badge-new{background:rgba(16,185,129,.15);color:var(--grn)}
+
+/* MAIN */
+.main{flex:1;padding:1.5rem;overflow-y:auto;min-width:0}
+.tab{display:none;animation:fadeUp .2s ease}
+.tab.active{display:block}
+.page-title{font-family:var(--fd);font-size:1.6rem;letter-spacing:.04em;margin-bottom:.15rem}
+.page-sub{font-family:var(--fm);font-size:.5rem;color:var(--tx3);margin-bottom:1.5rem}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bo);border-radius:10px;padding:1rem;margin-bottom:1rem}
+.card-title{font-family:var(--fm);font-size:.48rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2);margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
+.card-title2{font-family:var(--fr);font-size:.95rem;font-weight:700;margin-bottom:.6rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.65rem;margin-bottom:1.2rem}
+.stat-card{background:var(--card);border:1px solid var(--bo);border-radius:9px;padding:.75rem;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc-grn::after{background:linear-gradient(90deg,var(--grn),transparent)}
+.sc-org::after{background:linear-gradient(90deg,var(--acc),transparent)}
+.sc-cyn::after{background:linear-gradient(90deg,var(--cyn),transparent)}
+.sc-pur::after{background:linear-gradient(90deg,var(--pur),transparent)}
+.sc-yel::after{background:linear-gradient(90deg,var(--yel),transparent)}
+.stat-lbl{font-family:var(--fm);font-size:.42rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.2rem}
+.stat-val{font-family:var(--fd);font-size:1.85rem;line-height:1}
+.stat-sub{font-family:var(--fm);font-size:.42rem;color:var(--tx3);margin-top:.18rem}
+
+/* DOWNLOAD HERO */
+.dl-hero{background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(168,85,247,.04));border:1px solid rgba(249,115,22,.2);border-radius:14px;padding:2rem;text-align:center;margin-bottom:1rem}
+.dl-title{font-family:var(--fd);font-size:2rem;letter-spacing:.04em;margin-bottom:.3rem}
+.dl-sub{font-family:'Hind',sans-serif;font-size:.88rem;color:var(--tx2);margin-bottom:1.5rem;font-weight:300}
+.dl-btn{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--fr);font-weight:700;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;padding:1rem 2.5rem;border-radius:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(249,115,22,.4);transition:.2s}
+.dl-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(249,115,22,.55)}
+.dl-meta{font-family:var(--fm);font-size:.48rem;color:var(--tx3);margin-top:.85rem}
+
+/* APP STATUS */
+.app-status{display:flex;align-items:center;gap:.5rem;font-family:var(--fm);font-size:.52rem}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-on{background:var(--grn);box-shadow:0 0 8px var(--grn);animation:pulse 2s infinite}
+.dot-off{background:var(--tx3)}
+.dot-warn{background:var(--yel);box-shadow:0 0 8px var(--yel)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:.1rem .42rem;border-radius:20px;font-family:var(--fm);font-size:.42rem;font-weight:700}
+.badge-grn{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:var(--grn)}
+.badge-org{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.25);color:var(--acc)}
+.badge-red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:var(--red)}
+.badge-cyn{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);color:var(--cyn)}
+.badge-yel{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:var(--yel)}
+.badge-pur{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);color:var(--pur)}
+.badge-gry{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--tx3)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.25rem;padding:.3rem .7rem;border-radius:6px;font-family:var(--fr);font-size:.75rem;font-weight:700;letter-spacing:.04em;transition:all .15s;cursor:pointer}
+.btn-prim{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}
+.btn-prim:hover{box-shadow:0 3px 12px rgba(249,115,22,.4)}
+.btn-ghost{background:var(--bg3);border:1px solid var(--bo);color:var(--tx2)}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc)}
+.btn-danger{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red)}
+.btn-danger:hover{background:rgba(239,68,68,.15)}
+.btn-sm{padding:.18rem .45rem;font-size:.62rem}
+
+/* DEVICE ROW */
+.device-row{display:flex;align-items:center;gap:.65rem;padding:.55rem .75rem;background:var(--bg3);border:1px solid var(--bo);border-radius:8px;margin-bottom:.38rem}
+.device-icon{font-size:1.1rem;flex-shrink:0}
+.device-info{flex:1;min-width:0}
+.device-name{font-family:var(--fm);font-size:.54rem;color:var(--tx);font-weight:600}
+.device-meta{font-family:var(--fm);font-size:.44rem;color:var(--tx3);margin-top:.1rem}
+
+/* ANNOUNCEMENT */
+.ann-item{padding:.65rem .85rem;background:var(--bg3);border:1px solid var(--bo);border-radius:8px;margin-bottom:.38rem;border-left:3px solid transparent}
+.ann-info{border-left-color:var(--cyn)}
+.ann-warning{border-left-color:var(--yel)}
+.ann-critical{border-left-color:var(--red)}
+.ann-title{font-family:var(--fr);font-size:.88rem;font-weight:700;color:var(--tx);margin-bottom:.15rem}
+.ann-body{font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300}
+.ann-meta{font-family:var(--fm);font-size:.42rem;color:var(--tx3);margin-top:.3rem}
+
+/* REFERRAL BOX */
+.ref-code-box{background:var(--bg3);border:1px solid rgba(249,115,22,.25);border-radius:10px;padding:1rem;text-align:center;margin-bottom:1rem}
+.ref-code{font-family:var(--fd);font-size:2rem;letter-spacing:.15em;color:var(--acc);margin:.3rem 0}
+.ref-copy-btn{font-family:var(--fm);font-size:.5rem;padding:.22rem .6rem;border-radius:5px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25);color:var(--acc);cursor:pointer;transition:.15s}
+.ref-copy-btn:hover{background:rgba(249,115,22,.2)}
+
+/* ROW */
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:.32rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.info-row:last-child{border:none}
+.info-key{font-family:var(--fm);font-size:.49rem;color:var(--tx3)}
+.info-val{font-family:var(--fm);font-size:.52rem;color:var(--tx)}
+
+/* TOASTS */
+#toasts{position:fixed;bottom:1rem;right:1rem;z-index:999;display:flex;flex-direction:column;gap:.35rem}
+.toast{padding:.44rem .85rem;border-radius:7px;font-family:var(--fm);font-size:.52rem;font-weight:700;animation:fadeUp .2s ease;pointer-events:none;max-width:280px}
+.t-ok{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:var(--grn)}
+.t-err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.t-inf{background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);color:var(--cyn)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  :root{--side:60px}
+  .s-btn span.label{display:none}
+  .s-section{display:none}
+  .s-badge{display:none}
+  .sidebar{width:60px}
+  .s-btn{justify-content:center;padding:.55rem}
+}
+@media(max-width:600px){
+  .layout{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static;display:flex;flex-direction:row;overflow-x:auto;padding:0;border-right:none;border-bottom:1px solid var(--bo)}
+  .s-section{display:none}
+  .s-btn{border-left:none;border-bottom:2px solid transparent;padding:.55rem .7rem;flex-direction:column;gap:.15rem;font-size:.4rem;white-space:nowrap}
+  .s-btn.active{border-left:none;border-bottom-color:var(--acc)}
+  .main{padding:1rem}
+  .grid2,.grid3{grid-template-columns:1fr}
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVE — app.html
+   Minimum 375px (iPhone SE) — tested to 768px
+═══════════════════════════════════════════════ */
+
+/* Base: ensure readable text on all mobiles */
+@media(max-width:768px){
+  html{font-size:14px}
+  :root{--nav:52px;--side:0px}
+
+  /* Topbar */
+  .topbar{padding:0 .8rem;gap:.5rem}
+  .t-logo em{display:none}
+  .t-plan{font-size:.6rem;padding:.15rem .4rem}
+  .t-name{font-size:.7rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .t-logout{font-size:.6rem;padding:.25rem .5rem}
+
+  /* Main layout: stack sidebar on top as horizontal tab bar */
+  .layout{flex-direction:column}
+  .sidebar{
+    width:100% !important;
+    height:auto !important;
+    position:sticky !important;
+    top:var(--nav) !important;
+    z-index:90;
+    flex-direction:row !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    padding:.25rem .5rem !important;
+    border-right:none !important;
+    border-bottom:1px solid var(--bo) !important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .sidebar::-webkit-scrollbar{display:none}
+  .s-section{display:none !important}
+  .s-section-label{display:none}
+  .s-btn{
+    flex-direction:row !important;
+    gap:.4rem !important;
+    padding:.4rem .7rem !important;
+    white-space:nowrap !important;
+    border-left:none !important;
+    border-bottom:2px solid transparent !important;
+    font-size:.65rem !important;
+    min-width:auto !important;
+    justify-content:center !important;
+  }
+  .s-btn.active{border-left:none !important;border-bottom-color:var(--acc) !important}
+  .s-btn .label{display:block !important;font-size:.62rem !important}
+  .s-btn svg, .s-icon{width:14px !important;height:14px !important;font-size:.75rem !important}
+  .s-badge{display:none}
+
+  /* Main content */
+  .main{padding:.75rem !important}
+
+  /* Cards */
+  .card{padding:.8rem !important}
+  .card-title{font-size:.7rem !important}
+  .card-title2{font-size:.65rem !important}
+
+  /* Grids: stack everything */
+  .grid2,.grid3,.grid4{grid-template-columns:1fr !important}
+  .info-row{flex-wrap:wrap;gap:.25rem}
+  .info-key{font-size:.62rem !important;min-width:120px}
+  .info-val{font-size:.62rem !important}
+
+  /* Stats row */
+  .stats-row{grid-template-columns:1fr 1fr !important;gap:.5rem}
+  .stat-box{padding:.6rem !important}
+  .stat-val{font-size:1.1rem !important}
+  .stat-label{font-size:.55rem !important}
+
+  /* Download section */
+  #download .card{text-align:center}
+  .dl-btn{width:100% !important;padding:.7rem !important;font-size:.72rem !important}
+
+  /* Subscription cards */
+  .plan-cards{grid-template-columns:1fr !important}
+  .plan-card{padding:1rem !important}
+
+  /* Devices list */
+  .device-card{flex-wrap:wrap !important;gap:.5rem !important}
+
+  /* Tables: horizontal scroll */
+  .table-wrap,.sub-history{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{min-width:500px}
+
+  /* Bottom safe area */
+  .main{padding-bottom:env(safe-area-inset-bottom, 20px) !important}
+
+  /* Toast */
+  #toasts{bottom:1rem;right:.75rem;left:.75rem}
+  .toast{font-size:.65rem !important}
+}
+
+@media(max-width:480px){
+  html{font-size:13px}
+  .topbar{padding:0 .6rem}
+  .t-right{gap:.3rem}
+  .stats-row{grid-template-columns:1fr 1fr !important}
+  .s-btn .label{font-size:.58rem !important}
+  .main{padding:.5rem !important}
+  .card{padding:.65rem !important}
+}
+
+/* iOS input zoom prevention */
+@supports (-webkit-touch-callout: none){
+  input,select,textarea{font-size:16px !important}
+}
+@media screen and (-webkit-min-device-pixel-ratio:0){
+  select,textarea,input{font-size:max(16px,1em)}
+}
+</style>
+</head>
+<body>
+
+<div id="loadScreen">
+  <div class="logo">Options<span>Lab</span></div>
+  <div class="spinner"></div>
+</div>
+
+<div id="app" style="display:none">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="t-logo"><div class="t-icon">OL</div>Options<em>Lab</em></div>
+    <div class="t-right">
+      <div id="tPlanBadge" class="t-plan plan-FREE">FREE</div>
+      <div id="tName" class="t-name">Loading...</div>
+      <button class="t-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="s-section">Main</div>
+      <button class="s-btn active" onclick="showTab('home',this)">
+        <span class="icon">&#127968;</span><span class="label">Home</span>
+      </button>
+      <button class="s-btn" onclick="showTab('download',this)" id="sDownload">
+        <span class="icon">&#11015;</span><span class="label">Download App</span>
+        <span class="s-badge s-badge-new">NEW</span>
+      </button>
+      <div class="s-section">Account</div>
+      <button class="s-btn" onclick="showTab('subscription',this)">
+        <span class="icon">&#128179;</span><span class="label">Subscription</span>
+      </button>
+      <button class="s-btn" onclick="showTab('referral',this)">
+        <span class="icon">&#128279;</span><span class="label">Referral</span>
+      </button>
+      <button class="s-btn" onclick="showTab('devices',this)">
+        <span class="icon">&#128421;</span><span class="label">Devices</span>
+      </button>
+      <button class="s-btn" onclick="showTab('settings',this)">
+        <span class="icon">&#9881;</span><span class="label">Settings</span>
+      </button>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HOME TAB -->
+      <div class="tab active" id="tab-home">
+        <div class="page-title" id="welcomeName">Welcome Back</div>
+        <div class="page-sub" id="welcomeSub">Loading your dashboard...</div>
+
+        <!-- Announcements -->
+        <div id="annSection" style="display:none;margin-bottom:1rem">
+          <div style="font-family:var(--fm);font-size:.46rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.5rem">Announcements</div>
+          <div id="annList"></div>
+        </div>
+
+        <!-- App status card -->
+        <div class="card" id="appStatusCard">
+          <div class="card-title">Jobber Pro Status</div>
+          <div id="appStatus">
+            <div class="app-status"><div class="status-dot dot-off"></div><span style="color:var(--tx3)">Loading...</span></div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stat-grid">
+          <div class="stat-card sc-org">
+            <div class="stat-lbl">Plan</div>
+            <div class="stat-val" id="sPlan" style="font-size:1.2rem;padding-top:.3rem">--</div>
+          </div>
+          <div class="stat-card sc-grn">
+            <div class="stat-lbl">Total Logins</div>
+            <div class="stat-val" style="color:var(--grn)" id="sLogins">--</div>
+          </div>
+          <div class="stat-card sc-cyn">
+            <div class="stat-lbl">Member Since</div>
+            <div class="stat-val" style="color:var(--cyn);font-size:.9rem;padding-top:.4rem" id="sMember">--</div>
+          </div>
+          <div class="stat-card sc-pur">
+            <div class="stat-lbl">Angel One</div>
+            <div class="stat-val" style="color:var(--pur);font-size:.85rem;padding-top:.4rem" id="sAngel">--</div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <!-- Quick actions -->
+          <div class="card">
+            <div class="card-title">Quick Actions</div>
+            <div style="display:flex;flex-direction:column;gap:.45rem">
+              <button class="btn btn-prim" style="justify-content:center" onclick="showTab('download',null)">&#11015; Download Jobber Pro</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="showTab('subscription',null)">&#128179; Manage Subscription</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="showTab('referral',null)">&#128279; My Referral Code</button>
+            </div>
+          </div>
+          <!-- Last login info -->
+          <div class="card">
+            <div class="card-title">Last Activity</div>
+            <div id="lastActivity">
+              <div class="info-row"><span class="info-key">Last Login</span><span class="info-val" id="lastLogin">--</span></div>
+              <div class="info-row"><span class="info-key">IP Address</span><span class="info-val" id="lastIp">--</span></div>
+              <div class="info-row"><span class="info-key">Device</span><span class="info-val" id="lastDevice">--</span></div>
+              <div class="info-row"><span class="info-key">App Version</span><span class="info-val" id="appVer">--</span></div>
+              <div class="info-row"><span class="info-key">App Platform</span><span class="info-val" id="appPlat">--</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOWNLOAD TAB -->
+      <div class="tab" id="tab-download">
+        <div class="page-title">Download</div>
+        <div class="page-sub">Jobber Pro desktop application for Windows</div>
+
+        <div class="dl-hero" id="download">
+          <div class="dl-title">Jobber Pro</div>
+          <div class="dl-sub">
+            Full institutional options analysis software.<br>
+            Connect your Angel One account and get live data in seconds.
+          </div>
+          <button class="dl-btn" onclick="startDownload()">
+            &#11015; Download Jobber Pro
+          </button>
+          <div class="dl-meta">
+            Version <span id="dlVersion">--</span> &nbsp;&middot;&nbsp;
+            Windows 10/11 (64-bit) &nbsp;&middot;&nbsp;
+            Your license: <span id="dlLicense">FREE</span>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title">What's Included</div>
+            <div style="display:flex;flex-direction:column;gap:.4rem">
+              <div style="display:flex;align-items:center;gap:.5rem;font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2)"><span style="color:var(--grn)">&#10003;</span> Live Options Chain (Nifty + BankNifty)</div>
+              <div style="display:flex;align-items:center;gap:.5rem;font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2)"><span style="color:var(--grn)">&#10003;</span> OI Heatmap & Max Pain</div>
+              <div style="display:flex;align-items:center;gap:.5rem;font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2)"><span style="color:var(--grn)">&#10003;</span> Strategy Lab + Payoff Diagrams</div>
+              <div style="display:flex;align-items:center;gap:.5rem;font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2)"><span style="color:var(--grn)">&#10003;</span> Greeks Calculator</div>
+              <div style="display:flex;align-items:center;gap:.5rem;font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2)"><span style="color:var(--grn)">&#10003;</span> IV Rank & Skew Chart</div>
+              <div style="display:flex;align-items:center;gap:.5rem;font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2);opacity:.4"><span>&#8212;</span> FII Smart Money (Pro)</div>
+              <div style="display:flex;align-items:center;gap:.5rem;font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2);opacity:.4"><span>&#8212;</span> Kill Zone Alerts (Pro)</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">System Requirements</div>
+            <div class="info-row"><span class="info-key">Operating System</span><span class="info-val">Windows 10 / 11 (64-bit)</span></div>
+            <div class="info-row"><span class="info-key">RAM</span><span class="info-val">4 GB minimum, 8 GB recommended</span></div>
+            <div class="info-row"><span class="info-key">Disk Space</span><span class="info-val">200 MB</span></div>
+            <div class="info-row"><span class="info-key">Broker Required</span><span class="info-val">Angel One account</span></div>
+            <div class="info-row"><span class="info-key">Internet</span><span class="info-val">Required (live NSE data)</span></div>
+            <div class="info-row"><span class="info-key">Your Account</span><span class="info-val">OptionsLab login required</span></div>
+          </div>
+        </div>
+
+        <div class="card" style="background:rgba(249,115,22,.04);border-color:rgba(249,115,22,.15)">
+          <div class="card-title">Setup Guide</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem">
+            <div>
+              <div style="font-family:var(--fr);font-size:.88rem;font-weight:700;color:var(--acc);margin-bottom:.25rem">1. Download & Install</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300">Run the installer. Windows may show a SmartScreen warning — click "More info" then "Run anyway". We're working on code signing.</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fr);font-size:.88rem;font-weight:700;color:var(--acc);margin-bottom:.25rem">2. Sign In</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300">Use your OptionsLab mobile number and MPIN to log in to Jobber Pro. Same credentials you use here.</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fr);font-size:.88rem;font-weight:700;color:var(--acc);margin-bottom:.25rem">3. Connect Angel One</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300">Enter your Angel One Client ID, API Key, and MPIN inside the app. Your credentials are stored locally — we never receive them.</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fr);font-size:.88rem;font-weight:700;color:var(--acc);margin-bottom:.25rem">4. Start Trading</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300">Live options chain updates every 2.2 seconds. OI heatmap, GEX and strategy lab are immediately available.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBSCRIPTION TAB -->
+      <div class="tab" id="tab-subscription">
+        <div class="page-title">Subscription</div>
+        <div class="page-sub">Manage your plan and billing</div>
+
+        <div class="card" id="planCard">
+          <div class="card-title">Current Plan</div>
+          <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+            <div>
+              <div style="font-family:var(--fd);font-size:2rem;letter-spacing:.04em" id="currentPlan">--</div>
+              <div style="font-family:var(--fm);font-size:.5rem;color:var(--tx3)" id="planExpiry">Loading...</div>
+            </div>
+            <div style="margin-left:auto">
+              <button class="btn btn-prim" id="upgradeBtn" onclick="initiateUpgrade('monthly')">Upgrade to Pro &#8594;</button>
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--bo)">
+            <div class="info-row"><span class="info-key">Member Since</span><span class="info-val" id="subMember">--</span></div>
+            <div class="info-row"><span class="info-key">Plan</span><span class="info-val" id="subPlan">--</span></div>
+            <div class="info-row"><span class="info-key">Status</span><span class="info-val"><span class="badge badge-grn">Active</span></span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">What You Get</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem">
+            <div id="freeFeat" style="opacity:.5">
+              <div style="font-family:var(--fm);font-size:.46rem;text-transform:uppercase;color:var(--cyn);margin-bottom:.4rem">Free Plan</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.8;font-weight:300">
+                &#10003; Live Options Chain<br>
+                &#10003; OI Heatmap &amp; Max Pain<br>
+                &#10003; Strategy Lab<br>
+                &#10003; Greeks Calculator<br>
+                &#10003; IV Rank &amp; Skew
+              </div>
+            </div>
+            <div id="proFeat">
+              <div style="font-family:var(--fm);font-size:.46rem;text-transform:uppercase;color:var(--acc);margin-bottom:.4rem">Pro Plan — &#x20b9;1,499/mo</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.8;font-weight:300">
+                &#10003; Everything in Free<br>
+                &#10003; FII Smart Money Flow<br>
+                &#10003; Kill Zone Alerts<br>
+                &#10003; Operator Phase Detector<br>
+                &#10003; GARCH Volatility Forecast
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:1rem">
+            <button class="btn btn-prim" onclick="initiateUpgrade('monthly')" style="width:100%;justify-content:center;padding:.65rem">
+              Upgrade to Professional — &#x20b9;1,499/month
+            </button>
+            <p style="font-family:var(--fm);font-size:.44rem;color:var(--tx3);text-align:center;margin-top:.4rem">7-day money-back guarantee · Cancel anytime</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Payment History</div>
+          <div id="subHistory">
+            <div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFERRAL TAB -->
+      <div class="tab" id="tab-referral">
+        <div class="page-title">Referral Program</div>
+        <div class="page-sub">Share OptionsLab. Earn commission on every paid signup.</div>
+
+        <div class="ref-code-box">
+          <div style="font-family:var(--fm);font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3)">Your Referral Code</div>
+          <div class="ref-code" id="refCode">--</div>
+          <div style="font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2);margin-bottom:.75rem;font-weight:300">Share this code. Anyone who registers with it gets a discount. You earn commission.</div>
+          <button class="ref-copy-btn" onclick="copyRef()">&#128203; Copy Code</button>
+          <button class="ref-copy-btn" onclick="shareRef()" style="margin-left:.5rem">&#128279; Share Link</button>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card sc-org">
+            <div class="stat-lbl">Users Referred</div>
+            <div class="stat-val" style="color:var(--acc)" id="rUsers">--</div>
+          </div>
+          <div class="stat-card sc-grn">
+            <div class="stat-lbl">Paid Referrals</div>
+            <div class="stat-val" style="color:var(--grn)" id="rPaid">--</div>
+          </div>
+          <div class="stat-card sc-pur">
+            <div class="stat-lbl">Revenue Generated</div>
+            <div class="stat-val" style="color:var(--pur);font-size:1.2rem;padding-top:.3rem" id="rRevenue">--</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">How It Works</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem">
+            <div>
+              <div style="font-family:var(--fr);font-size:.9rem;font-weight:700;color:var(--acc);margin-bottom:.25rem">1. Share your code</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300">Give your referral code to traders you know. They enter it during registration.</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fr);font-size:.9rem;font-weight:700;color:var(--acc);margin-bottom:.25rem">2. They get a discount</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300">Your referrals get a discount on their Pro subscription based on the code configuration.</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fr);font-size:.9rem;font-weight:700;color:var(--acc);margin-bottom:.25rem">3. You earn commission</div>
+              <div style="font-family:'Hind',sans-serif;font-size:.8rem;color:var(--tx2);line-height:1.55;font-weight:300">Commission rates are set by the OptionsLab team. Contact support to activate your referral program.</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding:.65rem;background:var(--bg3);border-radius:7px;font-family:var(--fm);font-size:.48rem;color:var(--tx3)">
+            &#9432; Commission rates and terms are managed by the OptionsLab admin team. Contact <a href="mailto:support@optionslab.in" style="color:var(--acc)">support@optionslab.in</a> to discuss your referral arrangement.
+          </div>
+        </div>
+      </div>
+
+      <!-- DEVICES TAB -->
+      <div class="tab" id="tab-devices">
+        <div class="page-title">Devices</div>
+        <div class="page-sub">Trusted devices connected to your account</div>
+
+        <div class="card">
+          <div class="card-title">
+            Trusted Devices
+            <button class="btn btn-ghost btn-sm" onclick="loadDashboard()">&#8635; Refresh</button>
+          </div>
+          <div id="deviceList">
+            <div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">Loading...</div>
+          </div>
+        </div>
+
+        <div class="card" style="background:rgba(239,68,68,.03);border-color:rgba(239,68,68,.12)">
+          <div class="card-title" style="color:var(--red)">Security</div>
+          <p style="font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2);line-height:1.6;font-weight:300;margin-bottom:.75rem">
+            If you see an unfamiliar device, revoke its access immediately. All active sessions on that device will be logged out.
+          </p>
+          <button class="btn btn-danger" onclick="if(confirm('This will log you out of ALL devices including this one. Continue?'))forceLogoutAll()">
+            &#9888; Logout All Devices
+          </button>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="tab" id="tab-settings">
+        <div class="page-title">Account Settings</div>
+        <div class="page-sub">Manage your profile and security</div>
+
+        <div class="card">
+          <div class="card-title2">Profile</div>
+          <div class="info-row"><span class="info-key">Mobile Number</span><span class="info-val" id="setMobile">--</span></div>
+          <div class="info-row"><span class="info-key">Email</span><span class="info-val" id="setEmail">--</span></div>
+          <div class="info-row" style="align-items:flex-start;padding:.5rem 0">
+            <span class="info-key">Display Name</span>
+            <div style="display:flex;gap:.4rem;align-items:center">
+              <input id="nameInput" style="padding:.32rem .55rem;width:160px" placeholder="Your name">
+              <button class="btn btn-ghost btn-sm" onclick="saveName()">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title2">Change MPIN</div>
+          <p style="font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2);line-height:1.6;font-weight:300;margin-bottom:.75rem">
+            Your MPIN is used to log in to Jobber Pro and this dashboard. Use a 4–6 digit code you haven't used elsewhere.
+          </p>
+          <div style="display:flex;flex-direction:column;gap:.5rem;max-width:280px">
+            <input id="oldMpin" type="password" maxlength="6" placeholder="Current MPIN" style="padding:.42rem .6rem">
+            <input id="newMpin" type="password" maxlength="6" placeholder="New MPIN (4-6 digits)" style="padding:.42rem .6rem">
+            <input id="confirmMpin" type="password" maxlength="6" placeholder="Confirm new MPIN" style="padding:.42rem .6rem">
+            <button class="btn btn-prim" style="margin-top:.25rem" onclick="changeMpin()">Update MPIN</button>
+          </div>
+        </div>
+
+        <div class="card" style="background:rgba(239,68,68,.03);border-color:rgba(239,68,68,.12)">
+          <div class="card-title2" style="color:var(--red)">Danger Zone</div>
+          <p style="font-family:'Hind',sans-serif;font-size:.82rem;color:var(--tx2);line-height:1.6;font-weight:300;margin-bottom:.75rem">
+            To delete your account and all associated data, email <a href="mailto:privacy@optionslab.in" style="color:var(--acc)">privacy@optionslab.in</a> from your registered email. We process requests within 30 days as required by DPDP Act 2023.
+          </p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+'use strict';
+
+// ── State ──────────────────────────────────────────────────────────────────
+// Token stored in localStorage ONLY for Jobber Pro desktop app header fallback.
+// Browser auth uses httpOnly cookie (ol_tok) — set automatically by server.
+let token = localStorage.getItem('ol_token') || '';
+let userData = null;
+
+// ── Utils ──────────────────────────────────────────────────────────────────
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fdt = iso => iso ? new Date(iso).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '--';
+const fds = iso => iso ? new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '--';
+
+function toast(msg, type) {
+  const el = document.createElement('div');
+  el.className = 'toast ' + (type==='ok'?'t-ok':type==='err'?'t-err':'t-inf');
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+async function api(path, opts) {
+  opts = opts || {};
+  const headers = Object.assign({'Content-Type':'application/json'}, opts.headers||{});
+  // Include Bearer token for backwards compat (also sent as cookie automatically)
+  if (token) headers['Authorization'] = 'Bearer '+token;
+  const res = await fetch(path, Object.assign({}, opts, {
+    credentials: 'include', // send httpOnly cookie automatically
+    headers
+  }));
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || data.message || 'HTTP '+res.status);
+  return data;
+}
+
+function planBadge(plan) {
+  const m = {FREE:'badge-cyn',PAID:'badge-org',TRIAL:'badge-yel',SUSPENDED:'badge-red'};
+  return '<span class="badge '+(m[plan]||'badge-gry')+'">'+esc(plan||'--')+'</span>';
+}
+
+// ── Auth ───────────────────────────────────────────────────────────────────
+function doLogout() {
+  fetch('/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token}
+  }).catch(()=>{});
+  localStorage.removeItem('ol_token');
+  location.href = '/';
+}
+
+// ── Navigation ─────────────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
+  const tab = document.getElementById('tab-'+name);
+  if (tab) tab.classList.add('active');
+  if (btn) btn.classList.add('active');
+  // If no btn passed (called programmatically), find and activate sidebar btn
+  if (!btn) {
+    document.querySelectorAll('.s-btn').forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+name+"'")) {
+        b.classList.add('active');
+      }
+    });
+  }
+  // Hash for deep linking
+  history.replaceState(null, '', '#'+name);
+}
+
+// ── Load dashboard data ───────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const d = await api('/api/user/dashboard');
+    userData = d;
+    renderDashboard(d);
+  } catch(e) {
+    toast('Failed to load dashboard: '+e.message, 'err');
+    if (e.message.includes('401') || e.message.includes('token')) {
+      doLogout();
+    }
+  }
+}
+
+function renderDashboard(d) {
+  const u = d.user;
+
+  // Topbar
+  document.getElementById('tName').textContent = u.name;
+  const planEl = document.getElementById('tPlanBadge');
+  planEl.textContent = u.plan;
+  planEl.className = 't-plan plan-'+u.plan;
+
+  // Home tab
+  document.getElementById('welcomeName').textContent = 'Welcome back, '+u.name.split(' ')[0];
+  document.getElementById('welcomeSub').textContent =
+    (u.plan==='PAID' ? 'Professional Plan' : 'Free Plan') +
+    ' · Member for '+u.daysSince+' days · '+u.totalLogins+' total logins';
+
+  // Stats
+  document.getElementById('sPlan').innerHTML = planBadge(u.plan);
+  document.getElementById('sLogins').textContent = u.totalLogins || 0;
+  document.getElementById('sMember').textContent = fds(u.createdAt);
+  document.getElementById('sAngel').textContent = u.hasAngelCreds ? 'Connected' : 'Not connected';
+
+  // Last activity
+  document.getElementById('lastLogin').textContent = fdt(u.lastLoginAt);
+  document.getElementById('lastIp').textContent = u.lastLoginIp || '--';
+  document.getElementById('lastDevice').textContent = u.lastDevice || '--';
+
+  // App session
+  const sess = d.appSession;
+  const appEl = document.getElementById('appStatus');
+  if (sess) {
+    const online = sess.is_online;
+    appEl.innerHTML =
+      '<div class="app-status">' +
+      '<div class="status-dot '+(online?'dot-on':'dot-off')+'"></div>' +
+      '<div>' +
+        '<div style="font-family:var(--fm);font-size:.54rem;color:var(--tx);margin-bottom:.1rem">' +
+          'Jobber Pro v'+esc(sess.app_version)+' &nbsp; '+
+          '<span class="badge '+(online?'badge-grn':'badge-gry')+'">'+(online?'ONLINE':'OFFLINE')+'</span>' +
+        '</div>' +
+        '<div style="font-family:var(--fm);font-size:.44rem;color:var(--tx3)">' +
+          esc(sess.platform)+' &nbsp;&middot;&nbsp; IP: '+esc(sess.ip_address||'--')+
+          ' &nbsp;&middot;&nbsp; Last seen: '+fdt(sess.last_seen_at) +
+        '</div>' +
+      '</div>' +
+      '</div>';
+    document.getElementById('appVer').textContent = 'v'+sess.app_version;
+    document.getElementById('appPlat').textContent = sess.platform;
+    // Download tab
+    document.getElementById('dlVersion').textContent = sess.app_version;
+  } else {
+    appEl.innerHTML =
+      '<div class="app-status">' +
+      '<div class="status-dot dot-warn"></div>' +
+      '<span style="color:var(--tx2)">Jobber Pro not yet activated on any device</span>' +
+      '</div>';
+    document.getElementById('appVer').textContent = 'Not installed';
+    document.getElementById('appPlat').textContent = '--';
+  }
+  document.getElementById('dlLicense').textContent = u.plan;
+
+  // Announcements
+  if (d.announcements && d.announcements.length > 0) {
+    document.getElementById('annSection').style.display = 'block';
+    const typeClass = {info:'ann-info', warning:'ann-warning', critical:'ann-critical'};
+    document.getElementById('annList').innerHTML = d.announcements.map(a =>
+      '<div class="ann-item '+(typeClass[a.type]||'ann-info')+'">' +
+        '<div class="ann-title">'+esc(a.title)+'</div>' +
+        '<div class="ann-body">'+esc(a.body)+'</div>' +
+        '<div class="ann-meta">'+fds(a.created_at)+'</div>' +
+      '</div>'
+    ).join('');
+  }
+
+  // Subscription tab
+  document.getElementById('currentPlan').innerHTML = planBadge(u.plan);
+  document.getElementById('planExpiry').textContent =
+    u.daysUntilExpiry !== null
+      ? 'Expires in '+u.daysUntilExpiry+' days ('+fds(u.planExpiresAt)+')'
+      : u.plan === 'FREE' ? 'Free plan — no expiry' : 'Active';
+  document.getElementById('subMember').textContent = fds(u.createdAt);
+  document.getElementById('subPlan').innerHTML = planBadge(u.plan);
+  if (u.plan === 'PAID') {
+    document.getElementById('upgradeBtn').textContent = 'Currently Pro';
+    document.getElementById('upgradeBtn').disabled = true;
+  }
+
+  // Subscription history
+  const histEl = document.getElementById('subHistory');
+  if (d.subHistory && d.subHistory.length > 0) {
+    histEl.innerHTML = d.subHistory.map(h =>
+      '<div class="info-row">' +
+        '<div>' +
+          '<span style="font-family:var(--fm);font-size:.5rem;color:var(--tx2)">'+planBadge(h.plan_from)+' &rarr; '+planBadge(h.plan_to)+'</span>' +
+          '<div style="font-family:var(--fm);font-size:.44rem;color:var(--tx3);margin-top:.1rem">'+esc(h.reason||'--')+'</div>' +
+        '</div>' +
+        '<div style="text-align:right">' +
+          '<div style="font-family:var(--fm);font-size:.52rem;color:var(--grn)">'+(h.amount?'&#x20b9;'+Number(h.amount).toLocaleString('en-IN'):'--')+'</div>' +
+          '<div style="font-family:var(--fm);font-size:.44rem;color:var(--tx3)">'+fds(h.created_at)+'</div>' +
+        '</div>' +
+      '</div>'
+    ).join('');
+  } else {
+    histEl.innerHTML = '<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">No payment history yet</div>';
+  }
+
+  // Devices
+  renderDevices(d.devices || []);
+
+  // Referral
+  const refCode = u.mobile ? 'OL'+u.mobile.slice(-4).toUpperCase() : '--';
+  document.getElementById('refCode').textContent = refCode;
+  const rs = d.referralStats || {};
+  document.getElementById('rUsers').textContent = rs.referred_users || 0;
+  document.getElementById('rPaid').textContent = rs.referred_paid || 0;
+  document.getElementById('rRevenue').textContent =
+    rs.total_revenue_generated > 0
+      ? '\u20b9'+Number(rs.total_revenue_generated).toLocaleString('en-IN')
+      : '--';
+
+  // Settings
+  document.getElementById('setMobile').textContent = u.mobile;
+  document.getElementById('setEmail').textContent = u.email || 'Not set';
+  document.getElementById('nameInput').value = u.name;
+}
+
+function renderDevices(devices) {
+  const el = document.getElementById('deviceList');
+  if (!devices.length) {
+    el.innerHTML = '<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">No trusted devices registered. Install Jobber Pro and log in to register your device.</div>';
+    return;
+  }
+  el.innerHTML = devices.map(d =>
+    '<div class="device-row">' +
+      '<div class="device-icon">'+(d.platform==='win32'?'&#128421;':'&#128187;')+'</div>' +
+      '<div class="device-info">' +
+        '<div class="device-name">'+esc(d.device_name||'Unknown Device')+'</div>' +
+        '<div class="device-meta">'+esc(d.platform||'?')+' &middot; IP: '+esc(d.ip_address||'--')+' &middot; Last: '+fdt(d.last_seen_at)+'</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:.4rem">' +
+        (d.is_trusted ? '<span class="badge badge-grn">Trusted</span>' : '<span class="badge badge-gry">Untrusted</span>') +
+        '<button class="btn btn-danger btn-sm" onclick="revokeDevice('+d.id+')">Revoke</button>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+async function revokeDevice(id) {
+  if (!confirm('Revoke this device? It will be logged out of Jobber Pro.')) return;
+  try {
+    await api('/api/user/devices/'+id, {method:'DELETE'});
+    toast('Device revoked', 'ok');
+    loadDashboard();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function forceLogoutAll() {
+  try {
+    await api('/api/auth/logout', {method:'POST'});
+    localStorage.removeItem('ol_token');
+    toast('Logged out of all devices', 'ok');
+    setTimeout(() => location.href = '/', 1500);
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function saveName() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { toast('Name cannot be empty', 'err'); return; }
+  try {
+    await api('/api/user/profile', {method:'PATCH', body:JSON.stringify({name})});
+    toast('Name updated', 'ok');
+    document.getElementById('tName').textContent = name;
+    document.getElementById('welcomeName').textContent = 'Welcome back, '+name.split(' ')[0];
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function changeMpin() {
+  const old_mpin = document.getElementById('oldMpin').value;
+  const new_mpin = document.getElementById('newMpin').value;
+  const confirm_mpin = document.getElementById('confirmMpin').value;
+  if (!old_mpin || !new_mpin) { toast('All fields required', 'err'); return; }
+  if (new_mpin !== confirm_mpin) { toast('New MPINs do not match', 'err'); return; }
+  if (new_mpin.length < 4 || new_mpin.length > 6) { toast('MPIN must be 4-6 digits', 'err'); return; }
+  try {
+    await api('/api/user/change-mpin', {method:'POST', body:JSON.stringify({old_mpin, new_mpin})});
+    toast('MPIN updated successfully', 'ok');
+    ['oldMpin','newMpin','confirmMpin'].forEach(id => document.getElementById(id).value = '');
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+function copyRef() {
+  const code = document.getElementById('refCode').textContent;
+  navigator.clipboard.writeText(code).then(() => toast('Code copied!', 'ok')).catch(() => {
+    const el = document.createElement('input');
+    el.value = code;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    el.remove();
+    toast('Code copied!', 'ok');
+  });
+}
+
+function shareRef() {
+  const code = document.getElementById('refCode').textContent;
+  const link = 'https://www.optionslab.in/register.html?ref='+code;
+  const text = 'Download Jobber Pro — professional options analysis for Indian traders. Use my code '+code+' for a discount: '+link;
+  if (navigator.share) {
+    navigator.share({title:'Join OptionsLab',text,url:link}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(link).then(() => toast('Link copied!', 'ok'));
+  }
+}
+
+async function startDownload() {
+  toast('Preparing download...', 'inf');
+  try {
+    // Fetch with credentials so cookie is sent
+    const res = await fetch('/api/download/jobber-pro', {
+      credentials: 'include',
+      headers: token ? {'Authorization': 'Bearer '+token} : {}
+    });
+    if (res.status === 404) {
+      const d = await res.json();
+      toast(d.message || 'Installer not available yet. Contact support.', 'err');
+      return;
+    }
+    if (!res.ok) {
+      toast('Download failed. Please try again.', 'err');
+      return;
+    }
+    // Trigger file download
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'JobberPro-Setup.exe';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 2000);
+    toast('Download started!', 'ok');
+  } catch(e) {
+    toast('Download failed: '+e.message, 'err');
+  }
+}
+
+async function initiateUpgrade(planType) {
+  planType = planType || 'monthly';
+  toast('Creating payment order...', 'inf');
+  try {
+    const order = await api('/api/payments/create-order', {
+      method: 'POST',
+      body:   JSON.stringify({ plan_type: planType })
+    });
+    openRazorpayCheckout(order, planType);
+  } catch(e) {
+    toast('Could not start payment: '+e.message, 'err');
+  }
+}
+
+function openRazorpayCheckout(order, planType) {
+  const options = {
+    key:         order.key_id,
+    amount:      order.amount,
+    currency:    order.currency,
+    name:        'OptionsLab',
+    description: order.plan_label,
+    order_id:    order.order_id,
+    prefill: {
+      name:    order.user_name,
+      email:   order.user_email,
+      contact: order.user_mobile,
+    },
+    theme: { color: '#f97316' },
+    handler: async function(response) {
+      toast('Payment successful! Activating your plan...', 'ok');
+      try {
+        const result = await api('/api/payments/verify', {
+          method: 'POST',
+          body:   JSON.stringify({
+            razorpay_order_id:   response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature:  response.razorpay_signature,
+            plan_type:           planType,
+          })
+        });
+        toast(result.message || 'Plan upgraded!', 'ok');
+        // Refresh dashboard to show new plan
+        setTimeout(() => loadDashboard(), 1500);
+      } catch(e) {
+        toast('Payment done but activation failed. Contact support with: '+response.razorpay_payment_id, 'err');
+      }
+    },
+    modal: {
+      ondismiss: function() {
+        toast('Payment cancelled', 'inf');
+      }
+    }
+  };
+
+  // Load Razorpay checkout script if not loaded
+  if (window.Razorpay) {
+    new window.Razorpay(options).open();
+  } else {
+    const script   = document.createElement('script');
+    script.src     = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload  = () => new window.Razorpay(options).open();
+    script.onerror = () => toast('Could not load payment gateway. Check your internet connection.', 'err');
+    document.body.appendChild(script);
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+async function init() {
+  // Validate session — works via cookie (browser) or Bearer token (desktop app)
+  // Cookie is httpOnly so JS can't read it, but fetch sends it automatically
+  try {
+    const valid = await fetch('/api/auth/validate', {
+      credentials: 'include',
+      headers: token ? {'Authorization': 'Bearer '+token} : {}
+    });
+    if (!valid.ok) throw new Error('Not authenticated');
+    const data = await valid.json();
+    // Sync token if server returned one
+    if (data.user) {
+      document.title = 'Dashboard — '+data.user.id;
+    }
+  } catch(e) {
+    localStorage.removeItem('ol_token');
+    location.href = '/register.html?next=' + encodeURIComponent(location.pathname);
+    return;
+  }
+
+  // Load data
+  await loadDashboard();
+
+  // Hide load screen, show app
+  document.getElementById('loadScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  // Handle deep linking via hash
+  const hash = location.hash.slice(1);
+  if (hash && document.getElementById('tab-'+hash)) {
+    showTab(hash, null);
+  }
+}
+
+// Start
+init();
+</script>
+</body>
+</html>

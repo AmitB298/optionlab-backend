@@ -158,6 +158,101 @@ footer{position:relative;z-index:10;background:var(--bg);border-top:1px solid va
 }
 
 /* ═══ BLOG PAGE ═══ */
+
+/* ═══════════════════════════════════════════════
+   MOBILE FONT FIX — index.html
+   Fix unreadably small fonts in content areas
+═══════════════════════════════════════════════ */
+
+@media(max-width:960px){
+  /* Fix tiny rem fonts in profile/terminal/smart sections */
+  .pf-row .pf-key, .pf-row .pf-val { font-size: 12px !important; }
+  .pf-sec-t { font-size: 12px !important; }
+  .pf-sec-d { font-size: 11px !important; }
+  .badge { font-size: 10px !important; }
+  
+  /* Terminal/chain table fonts */
+  .chain-val, .chain-label { font-size: 11px !important; }
+  .oi-val { font-size: 11px !important; }
+  
+  /* Smart money */
+  .sweep-type, .sweep-val { font-size: 11px !important; }
+  .flow-name { font-size: 11px !important; }
+  
+  /* Profile section labels */
+  .pf-plan-pill { font-size: 10px !important; }
+  .pf-badge-ok, .pf-badge-warn { font-size: 10px !important; }
+
+  /* Welcome section */
+  .wel-title { font-size: 1.1rem !important; }
+  .wel-sub { font-size: .65rem !important; }
+  
+  /* Stats in profile */
+  .pf-ov-val { font-size: 1rem !important; }
+  .pf-ov-label { font-size: .58rem !important; }
+  
+  /* Download button */
+  .pf-dl-btn { font-size: .7rem !important; padding: .6rem 1rem !important; width: 100% !important; }
+  
+  /* Profile cards */
+  .pf-card { padding: .8rem !important; margin-bottom: .6rem !important; }
+  
+  /* Security list */
+  .pf-sec-item { flex-wrap: wrap; gap: .3rem; }
+  
+  /* About section */
+  .about-hero-grid h2 { font-size: 1.4rem !important; }
+
+  /* Pricing cards */
+  .pricing-card { padding: 1rem !important; }
+  .pricing-name { font-size: .75rem !important; }
+  .pricing-price { font-size: 1.5rem !important; }
+  .pricing-feature { font-size: .62rem !important; }
+}
+
+@media(max-width:768px){
+  /* Force minimum readable sizes across all content */
+  .sm-main p, .sm-main li, .sm-main span:not(.badge) { min-font-size: 12px; }
+  
+  /* Welcome tab */
+  .wel-plan { font-size: 10px !important; }
+  .wel-mkt-val { font-size: .85rem !important; }
+  .wel-mkt-label { font-size: .55rem !important; }
+  
+  /* Bottom nav items */
+  .mbn-btn { font-size: 9px !important; padding: .3rem .1rem !important; }
+  .mbn-icon { font-size: .9rem !important; }
+  
+  /* Ticker bar */
+  .ticker-bar { font-size: .58rem !important; }
+  
+  /* Academy */
+  .acad-link { font-size: .6rem !important; }
+  .chap-title { font-size: .7rem !important; }
+  .chap-body { font-size: .62rem !important; }
+  
+  /* Profile inputs */
+  .pf-edit-input { font-size: 14px !important; }
+  
+  /* Modals */
+  .modal-overlay .modal { width: 92vw !important; padding: 1rem !important; max-height: 85vh !important; overflow-y: auto !important; }
+}
+
+@media(max-width:480px){
+  /* Absolute minimum - 375px phones */
+  .top-nav { padding: 0 .6rem !important; }
+  .top-nav .brand-name { font-size: .7rem !important; }
+  
+  /* Pricing: ensure single column */
+  .pricing-grid { grid-template-columns: 1fr !important; }
+  
+  /* Footer */
+  .footer-grid { grid-template-columns: 1fr !important; }
+  
+  /* Profile layout on small phones */
+  .pf-layout { padding: 0 !important; }
+  .pf-main { padding: .6rem !important; }
+}
 </style>
 </head>
 
@@ -239,7 +334,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     <button class="drawer-tab" onclick="showPage('disclaimer');closeDrawer()">Disclaimer</button>
     <button class="drawer-tab" onclick="showPage('refund');closeDrawer()">Refund</button>
   </div>
-  <div class="drawer-footer"><button class="drawer-cta" onclick="window.location.href='https://www.optionslab.in/register.html';closeDrawer()">GET ACCESS &rarr;</button></div>
+  <div class="drawer-footer"><button class="drawer-cta" onclick="window.location.href='/register.html';closeDrawer()">GET ACCESS &rarr;</button></div>
 </div>
 <nav class="top-nav">
   <div class="nav-logo" onclick="showPage('home')"><div class="logo-box">OL</div><div class="logo-name">Options<em>Lab</em></div></div>
@@ -260,8 +355,8 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     <div class="mkt-pill"><div class="mkt-dot"></div><span id="navMarketStatus">NSE Closed</span></div>
     <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">&#127769;</button>
     <div id="nav-auth-out" style="display:flex;align-items:center;gap:.45rem;">
-      <button class="btn-signin-nav" onclick="window.location.href='https://www.optionslab.in/register.html'">Sign In</button>
-      <button class="nav-cta" onclick="window.location.href='https://www.optionslab.in/register.html'">Get Access</button>
+      <button class="btn-signin-nav" onclick="window.location.href='/register.html'">Sign In</button>
+      <button class="nav-cta" onclick="window.location.href='/register.html'">Get Access</button>
     </div>
     <div id="nav-auth-in" style="display:none;align-items:center;gap:.45rem;">
       <div class="nav-user-chip" onclick="showPage('profile')"><div class="nav-ava" id="nav-ava-chip">A</div><span id="nav-username-chip">User</span></div>
@@ -361,9 +456,9 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
 <div class="page" id="page-pricing">
 <div class="ip-hero"><div class="ip-grid"></div><div class="ip-kicker">Transparent pricing &middot; Cancel anytime</div><h1 class="ip-h1">CHOOSE YOUR EDGE</h1><p class="ip-sub">Start free forever. Upgrade only when you need institutional-grade intelligence.</p></div>
 <div class="pricing-grid">
-  <div class="price-card"><div class="price-card-top"><div class="price-tier">Plan 01</div><div class="price-name free-color">FREE</div><div class="price-amount"><span class="price-num free-color">&#x20b9;0</span><span class="price-period">/ forever</span></div><div class="price-desc">Everything you need to start trading with data. No credit card, no expiry.</div></div><div class="price-features"><div class="pf-item"><span class="pf-check yes">&#10003;</span>Live Options Chain (Nifty &amp; BankNifty)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>OI Heatmap &amp; Max Pain</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Greeks Calculator</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Strategy Lab (payoff diagrams)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Academy &mdash; all 19 chapters (EN + Hindi)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>PCR, IV Rank, Skew data</div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Smart Money FII Footprint</div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Operator Phase Detector</div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Telegram Alerts</div></div><button class="price-cta free-cta" onclick="window.location.href='https://www.optionslab.in/register.html'">Start Free &rarr;</button><div class="price-guarantee">No credit card &middot; No expiry</div></div>
-  <div class="price-card featured"><div class="price-card-top"><div class="price-tier">Plan 02</div><div class="price-name pro-color">PROFESSIONAL</div><div class="price-amount"><span class="price-num pro-color">&#x20b9;1,499</span><span class="price-period">/ month</span></div><div class="price-desc">Full institutional intelligence suite. FII flows, kill zones, operator phases &amp; live alerts.</div></div><div class="price-features"><div class="pf-item"><span class="pf-check yes">&#10003;</span>Everything in Free</div><div class="pf-item"><span class="pf-check yes">&#10003;</span><strong>Smart Money FII Footprint</strong></div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Operator Phase Detector</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Kill Zone countdown + alerts</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Decision Engine (6-check)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>GARCH volatility forecasting</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Regime Classifier</div><div class="pf-item"><span class="pf-check yes">&#10003;</span><strong>Telegram Alerts (real-time)</strong></div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Dark Pool + Spoofing signals</div></div><button class="price-cta pro-cta" onclick="window.location.href='https://www.optionslab.in/register.html'">Get Professional &rarr;</button><div class="price-guarantee">7-day money-back &middot; Cancel anytime</div></div>
-  <div class="price-card"><div class="price-card-top"><div class="price-tier">Plan 03</div><div class="price-name elite-color">ELITE</div><div class="price-amount"><span class="price-num elite-color">&#x20b9;3,499</span><span class="price-period">/ month</span></div><div class="price-desc">Complete institutional stack. Dark Pool, spoofing signals &amp; desktop software.</div></div><div class="price-features"><div class="pf-item"><span class="pf-check yes">&#10003;</span>Everything in Professional</div><div class="pf-item"><span class="pf-check yes">&#10003;</span><strong>Dark Pool OI Score</strong></div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Bid-Ask Spoofing Detection</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Options Flow Monitor (live block trades)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Volatility Cone (percentile bands)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Priority Support (24h)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Desktop Software (Windows 10/11)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>API access (coming soon)</div></div><button class="price-cta elite-cta" onclick="window.location.href='https://www.optionslab.in/register.html'">Get Elite &rarr;</button><div class="price-guarantee">7-day money-back &middot; Cancel anytime</div></div>
+  <div class="price-card"><div class="price-card-top"><div class="price-tier">Plan 01</div><div class="price-name free-color">FREE</div><div class="price-amount"><span class="price-num free-color">&#x20b9;0</span><span class="price-period">/ forever</span></div><div class="price-desc">Everything you need to start trading with data. No credit card, no expiry.</div></div><div class="price-features"><div class="pf-item"><span class="pf-check yes">&#10003;</span>Live Options Chain (Nifty &amp; BankNifty)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>OI Heatmap &amp; Max Pain</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Greeks Calculator</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Strategy Lab (payoff diagrams)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Academy &mdash; all 19 chapters (EN + Hindi)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>PCR, IV Rank, Skew data</div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Smart Money FII Footprint</div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Operator Phase Detector</div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Telegram Alerts</div></div><button class="price-cta free-cta" onclick="window.location.href='/register.html'">Start Free &rarr;</button><div class="price-guarantee">No credit card &middot; No expiry</div></div>
+  <div class="price-card featured"><div class="price-card-top"><div class="price-tier">Plan 02</div><div class="price-name pro-color">PROFESSIONAL</div><div class="price-amount"><span class="price-num pro-color">&#x20b9;1,499</span><span class="price-period">/ month</span></div><div class="price-desc">Full institutional intelligence suite. FII flows, kill zones, operator phases &amp; live alerts.</div></div><div class="price-features"><div class="pf-item"><span class="pf-check yes">&#10003;</span>Everything in Free</div><div class="pf-item"><span class="pf-check yes">&#10003;</span><strong>Smart Money FII Footprint</strong></div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Operator Phase Detector</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Kill Zone countdown + alerts</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Decision Engine (6-check)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>GARCH volatility forecasting</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Regime Classifier</div><div class="pf-item"><span class="pf-check yes">&#10003;</span><strong>Telegram Alerts (real-time)</strong></div><div class="pf-item locked"><span class="pf-check no">&mdash;</span>Dark Pool + Spoofing signals</div></div><button class="price-cta pro-cta" onclick="window.location.href='/register.html'">Get Professional &rarr;</button><div class="price-guarantee">7-day money-back &middot; Cancel anytime</div></div>
+  <div class="price-card"><div class="price-card-top"><div class="price-tier">Plan 03</div><div class="price-name elite-color">ELITE</div><div class="price-amount"><span class="price-num elite-color">&#x20b9;3,499</span><span class="price-period">/ month</span></div><div class="price-desc">Complete institutional stack. Dark Pool, spoofing signals &amp; desktop software.</div></div><div class="price-features"><div class="pf-item"><span class="pf-check yes">&#10003;</span>Everything in Professional</div><div class="pf-item"><span class="pf-check yes">&#10003;</span><strong>Dark Pool OI Score</strong></div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Bid-Ask Spoofing Detection</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Options Flow Monitor (live block trades)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Volatility Cone (percentile bands)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Priority Support (24h)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>Desktop Software (Windows 10/11)</div><div class="pf-item"><span class="pf-check yes">&#10003;</span>API access (coming soon)</div></div><button class="price-cta elite-cta" onclick="window.location.href='/register.html'">Get Elite &rarr;</button><div class="price-guarantee">7-day money-back &middot; Cancel anytime</div></div>
 </div>
 <div class="faq-section"><div class="faq-title">Frequently Asked Questions</div>
 <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is the Free plan really free forever? <span class="faq-icon">+</span></div><div class="faq-a">Yes. The Free plan has no expiry, no trial period, and no credit card required. You get the full options chain, Greeks calculator, OI heatmap, and all 19 academy chapters &mdash; free, always.</div></div>
@@ -386,7 +481,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
 <div class="why-card reveal"><div class="why-icon">&#128336;</div><div class="why-head">Kill Zone Timing</div><div class="why-body">Four daily kill zones define when institutional moves happen: Open Drive, Continuation, Midday Reversal, Power Hour. OptionsLab counts down to each.</div></div>
 <div class="why-card reveal"><div class="why-icon">&#128218;</div><div class="why-head">Free Academy &mdash; 19 Chapters</div><div class="why-body">From basics to expiry week playbooks &mdash; 19 chapters in English and Hindi, free forever. A tool is only as powerful as the trader using it.</div></div>
 </div>
-<div style="max-width:800px;margin:0 auto;padding:0 2.5rem 4rem;"><div style="background:linear-gradient(135deg,rgba(255,153,51,.07),rgba(255,153,51,.03));border:1px solid rgba(255,153,51,.2);border-radius:16px;padding:2rem;text-align:center;"><div style="font-family:var(--font-d);font-size:1.8rem;letter-spacing:.04em;margin-bottom:.5rem;">LEVEL THE PLAYING FIELD</div><div style="font-family:var(--font-b);font-size:.92rem;color:var(--text2);line-height:1.7;font-weight:300;max-width:520px;margin:0 auto 1.4rem;">Institutions have had GEX data, dark pool signals, and FII flow analysis for years. Retail traders deserve the same tools.</div><button onclick="window.location.href='https://www.optionslab.in/register.html'" style="font-family:var(--font-r);font-weight:700;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;padding:.72rem 2rem;background:linear-gradient(135deg,#ff9933,#e05a00);color:#fff;border-radius:9px;border:none;cursor:pointer;">Start Free &mdash; No Card Required &rarr;</button></div></div>
+<div style="max-width:800px;margin:0 auto;padding:0 2.5rem 4rem;"><div style="background:linear-gradient(135deg,rgba(255,153,51,.07),rgba(255,153,51,.03));border:1px solid rgba(255,153,51,.2);border-radius:16px;padding:2rem;text-align:center;"><div style="font-family:var(--font-d);font-size:1.8rem;letter-spacing:.04em;margin-bottom:.5rem;">LEVEL THE PLAYING FIELD</div><div style="font-family:var(--font-b);font-size:.92rem;color:var(--text2);line-height:1.7;font-weight:300;max-width:520px;margin:0 auto 1.4rem;">Institutions have had GEX data, dark pool signals, and FII flow analysis for years. Retail traders deserve the same tools.</div><button onclick="window.location.href='/register.html'" style="font-family:var(--font-r);font-weight:700;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;padding:.72rem 2rem;background:linear-gradient(135deg,#ff9933,#e05a00);color:#fff;border-radius:9px;border:none;cursor:pointer;">Start Free &mdash; No Card Required &rarr;</button></div></div>
 </div>
 
 <!-- CONTACT -->
@@ -1552,10 +1647,10 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
 
 // ══════════════════════════════════════════════
 // COMPLETE AUTH + PROFILE BACKEND WIRING
-// Backend: https://web-production-8a8e1.up.railway.app/api
+// Backend: relative API URLs
 // ══════════════════════════════════════════════
 var authToken = null, me = null;
-var AUTH_API = 'https://web-production-8a8e1.up.railway.app/api';
+var AUTH_API = '/api';  // Relative API base — works on any domain
 
 // ── apiFetch: 15s timeout + cold-start hint + single retry ──
 async function apiFetch(url, opts) {
@@ -1580,7 +1675,7 @@ async function apiFetch(url, opts) {
 }
 
 // redirect to register
-function openAuth() { window.location.href='https://www.optionslab.in/register.html'; }
+function openAuth() { window.location.href='/register.html'; }
 
 
 
@@ -1857,7 +1952,7 @@ async function updateAngelId() {
 }
 
 async function requestDownload() {
-  if(!me) { aToast('Please sign in first','er'); window.location.href='https://www.optionslab.in/register.html'; return; }
+  if(!me) { aToast('Please sign in first','er'); window.location.href='/register.html'; return; }
   if(authToken === 'demo') { aToast('Demo account — sign in with real credentials to download','in'); return; }
   var btn = document.getElementById('pf-dl-btn');
   if(btn) { btn.disabled=true; btn.textContent='Generating link…'; }

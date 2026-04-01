@@ -188,9 +188,13 @@ router.post('/check-verified', async (req, res) => {
       { expiresIn: EMAIL_TOKEN_EXPIRES }
     );
 
-    return res.json({ verified: true, email_token: emailToken });
+        // Bug #12: Mark as used — token is single-use
+    await pool.query(
+      `UPDATE email_verifications SET used = true WHERE email = $1 AND verified = true`,
+      [email]
+    ).catch(() => {});
 
-  } catch (err) {
+    return res.json({ verified: true, email_token: emailToken });} catch (err) {
     console.error('[Email] check-verified error:', err.message);
     return res.status(500).json({ error: 'Check failed' });
   }

@@ -131,6 +131,48 @@ main{position:relative;z-index:5;width:100%;max-width:520px;padding:72px 20px 20
 .err-code{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#2d3748;padding:5px 12px;background:rgba(255,255,255,.02);border:1px solid #1a1d27;border-radius:4px;display:inline-block;}
 
 @media(max-width:480px){.ticker-data .tick:last-child{display:none;}}
+
+/* ═══ MOBILE — verify.html ═══ */
+@media(max-width:768px){
+  html{font-size:14px}
+  * {-webkit-text-size-adjust:100%}
+  
+  /* Center content */
+  .container,.wrap,.card,.verify-card{
+    padding:1.2rem 1rem !important;
+    max-width:95vw !important;
+    width:95vw !important;
+  }
+  
+  /* Typography */
+  h1,.title{font-size:1.2rem !important}
+  h2,.subtitle{font-size:.85rem !important}
+  p,.body-text{font-size:.7rem !important}
+  
+  /* Buttons */
+  .btn,.button,[class*="btn"]{
+    font-size:.7rem !important;
+    padding:.55rem 1rem !important;
+    width:100% !important;
+  }
+  
+  /* Progress bars */
+  .progress-fill{height:3px !important}
+  
+  /* Ticker */
+  .ticker,[class*="ticker"]{font-size:.58rem !important}
+  
+  /* Status icons */
+  .status-icon{font-size:2rem !important}
+  
+  /* Error messages */
+  .err,[class*="err"]{font-size:.65rem !important;padding:.4rem .6rem !important}
+}
+
+@media(max-width:480px){
+  html{font-size:13px}
+  .container,.wrap,.card,.verify-card{padding:1rem .8rem !important}
+}
 </style>
 </head>
 <body>
@@ -292,7 +334,7 @@ main{position:relative;z-index:5;width:100%;max-width:520px;padding:72px 20px 20
 </main>
 
 <script>
-const API = 'https://web-production-8a8e1.up.railway.app';
+const API = '';
 
 /* ── STATE ── */
 function show(id) {
@@ -405,7 +447,7 @@ function autoRedirect(fillId, cdId, dest, dur) {
       localStorage.setItem('ol_token', sessionToken);
       document.getElementById('retEmail').textContent = email;
       show('stReturn');
-      autoRedirect('retFill', 'retCd', 'profile.html', 3000);
+      autoRedirect('retFill', 'retCd', '/index.html', 3000);
 
     } else {
       // ── NEW USER — store in sessionStorage, auto-advance ──
@@ -414,7 +456,7 @@ function autoRedirect(fillId, cdId, dest, dur) {
 
       document.getElementById('newEmail').textContent = email;
 
-      const dest = 'register.html?tab=register';
+      const dest = '/register.html?tab=register';
       const skipBtn = document.getElementById('skipNewBtn');
       if (skipBtn) skipBtn.href = dest;
 

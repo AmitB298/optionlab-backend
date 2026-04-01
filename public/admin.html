@@ -1,1341 +1,991 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Jobber Pro — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OptionsLab Admin v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Rajdhani:wght@500;600;700&family=Hind:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"><\/script>
 <style>
-:root{
-  --bg:#07080c;--sidebar:#0c0e14;--surface:#10121a;--surface2:#161923;
-  --border:#1a1f2e;--border2:#222840;
-  --amber:#f5a623;--amber-dim:rgba(245,166,35,0.1);
-  --green:#00d68f;--green-dim:rgba(0,214,143,0.08);
-  --red:#ff4757;--red-dim:rgba(255,71,87,0.1);
-  --blue:#3d8bff;--blue-dim:rgba(61,139,255,0.1);
-  --text:#e0e4f0;--muted:#444d6a;--muted2:#2a3048;
-  --radius:10px;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#030712;--bg2:#060d1a;--bg3:#0d1828;--card:#0f1e35;--bo:rgba(99,155,255,.1);--boh:rgba(99,155,255,.22);--acc:#f97316;--acc2:#ea580c;--grn:#10b981;--red:#ef4444;--yel:#f59e0b;--cyn:#22d3ee;--pur:#a855f7;--tx:#e2eeff;--tx2:#7da8d4;--tx3:#3a5678;--fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',cursive;--fr:'Rajdhani',sans-serif;}
+html{font-size:15px}body{background:var(--bg);color:var(--tx);font-family:'Hind',sans-serif;min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+input,select,textarea{font-family:var(--fm);font-size:.8rem;background:var(--bg3);border:1px solid var(--bo);color:var(--tx);border-radius:6px;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:rgba(249,115,22,.35);border-radius:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#loginScreen{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.lCard{background:var(--card);border:1px solid var(--boh);border-radius:16px;padding:2.2rem;width:340px;animation:fadeUp .3s ease}
+.lLogo{font-family:var(--fd);font-size:2rem;letter-spacing:.05em}.lLogo span{color:var(--acc)}
+.lSub{font-family:var(--fm);font-size:.5rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:1.8rem;margin-top:.1rem}
+.lLabel{display:block;font-family:var(--fm);font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.28rem}
+.lInput{width:100%;padding:.5rem .7rem;border-radius:6px;margin-bottom:.85rem}
+.lBtn{width:100%;padding:.65rem;border-radius:8px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-family:var(--fr);font-size:1rem;font-weight:700;letter-spacing:.05em;transition:all .2s;box-shadow:0 4px 16px rgba(249,115,22,.3)}
+.lBtn:hover{transform:translateY(-1px)}.lBtn:disabled{opacity:.5;cursor:not-allowed}
+.lErr{font-family:var(--fm);font-size:.52rem;color:var(--red);margin-top:.5rem;min-height:.8rem;text-align:center}
+#app{display:none;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:100;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:rgba(3,7,18,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--bo)}
+.tLogo{font-family:var(--fd);font-size:1.15rem;letter-spacing:.05em;display:flex;align-items:center;gap:.45rem}
+.tIcon{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:900;color:#fff}
+.tLogo em{color:var(--acc);font-style:normal}.tRight{display:flex;align-items:center;gap:.7rem}
+.aChip{font-family:var(--fm);font-size:.48rem;color:var(--tx2);background:var(--bg3);border:1px solid var(--bo);padding:.18rem .6rem;border-radius:20px}
+.outBtn{font-family:var(--fm);font-size:.5rem;padding:.2rem .6rem;border-radius:5px;border:1px solid rgba(239,68,68,.25);color:var(--red);background:rgba(239,68,68,.06);transition:.15s}
+.outBtn:hover{background:rgba(239,68,68,.14)}
+.layout{display:flex;min-height:calc(100vh - 52px)}
+.sidebar{width:205px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bo);padding:.5rem 0;overflow-y:auto}
+.sLabel{font-family:var(--fm);font-size:.42rem;text-transform:uppercase;letter-spacing:.12em;color:var(--tx3);padding:.55rem 1rem .15rem;margin-top:.3rem}
+.sBtn{display:flex;align-items:center;gap:.4rem;width:100%;padding:.42rem .9rem;font-family:var(--fm);font-size:.52rem;text-transform:uppercase;letter-spacing:.04em;color:var(--tx2);text-align:left;border-left:2px solid transparent;transition:all .15s}
+.sBtn:hover{background:rgba(249,115,22,.06);color:var(--tx)}.sBtn.active{border-left-color:var(--acc);color:var(--acc);background:rgba(249,115,22,.07)}
+.sBadge{margin-left:auto;font-family:var(--fm);font-size:.4rem;background:rgba(16,185,129,.15);color:var(--grn);padding:.06rem .35rem;border-radius:10px}
+.main{flex:1;padding:1.2rem;overflow-y:auto;min-width:0}
+.page{display:none;animation:fadeUp .2s ease}.page.active{display:block}
+.pHead{margin-bottom:1.1rem}.pTitle{font-family:var(--fd);font-size:1.55rem;letter-spacing:.04em}
+.pSub{font-family:var(--fm);font-size:.5rem;color:var(--tx3);margin-top:.1rem}
+.sGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.6rem;margin-bottom:1rem}
+.sCard{background:var(--card);border:1px solid var(--bo);border-radius:9px;padding:.75rem;transition:border-color .2s;position:relative;overflow:hidden}
+.sCard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sCard.cGrn::after{background:linear-gradient(90deg,var(--grn),transparent)}.sCard.cOrg::after{background:linear-gradient(90deg,var(--acc),transparent)}
+.sCard.cCyn::after{background:linear-gradient(90deg,var(--cyn),transparent)}.sCard.cRed::after{background:linear-gradient(90deg,var(--red),transparent)}
+.sCard.cPur::after{background:linear-gradient(90deg,var(--pur),transparent)}.sCard.cYel::after{background:linear-gradient(90deg,var(--yel),transparent)}
+.sCard:hover{border-color:var(--boh)}.sLbl{font-family:var(--fm);font-size:.42rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.2rem}
+.sVal{font-family:var(--fd);font-size:1.9rem;line-height:1}.sSub{font-family:var(--fm);font-size:.42rem;color:var(--tx3);margin-top:.18rem}
+.sTrend{font-family:var(--fm);font-size:.44rem;font-weight:700;margin-top:.15rem}.tUp{color:var(--grn)}.tDn{color:var(--red)}
+.cG{color:var(--grn)}.cR{color:var(--red)}.cO{color:var(--acc)}.cC{color:var(--cyn)}.cW{color:var(--tx)}.cY{color:var(--yel)}.cP{color:var(--pur)}
+.card{background:var(--card);border:1px solid var(--bo);border-radius:9px;padding:.9rem;margin-bottom:.85rem}
+.cHead{font-family:var(--fm);font-size:.48rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2);margin-bottom:.7rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.cHead2{font-family:var(--fr);font-size:.9rem;font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem}
+.chartWrap{position:relative;width:100%;height:200px}.chartWrapLg{height:260px}
+.tWrap{overflow-x:auto;border-radius:8px;border:1px solid var(--bo);margin-bottom:.75rem}
+table{width:100%;border-collapse:collapse;font-family:var(--fm);font-size:.54rem;white-space:nowrap}
+thead th{background:var(--bg3);border-bottom:1px solid var(--bo);padding:.4rem .6rem;text-align:left;font-size:.43rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s}tbody tr:hover{background:rgba(255,255,255,.022)}
+td{padding:.38rem .6rem;vertical-align:middle}.tName{color:var(--tx);font-weight:600}.tMute{color:var(--tx3)}
+.tLoad td{text-align:center;padding:1.2rem;color:var(--tx3)}
+.badge{display:inline-flex;align-items:center;padding:.1rem .4rem;border-radius:20px;font-family:var(--fm);font-size:.42rem;font-weight:700}
+.bG{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:var(--grn)}
+.bR{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:var(--red)}
+.bO{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.25);color:var(--acc)}
+.bY{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:var(--yel)}
+.bC{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);color:var(--cyn)}
+.bP{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);color:var(--pur)}
+.bX{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--tx3)}
+.btn{display:inline-flex;align-items:center;gap:.25rem;padding:.28rem .65rem;border-radius:5px;font-family:var(--fr);font-size:.72rem;font-weight:700;letter-spacing:.04em;transition:all .15s;cursor:pointer}
+.btnP{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}.btnP:hover{box-shadow:0 3px 12px rgba(249,115,22,.4)}
+.btnG{background:var(--bg3);border:1px solid var(--bo);color:var(--tx2)}.btnG:hover{border-color:var(--acc);color:var(--acc)}
+.btnD{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.22);color:var(--red)}.btnD:hover{background:rgba(239,68,68,.16)}
+.btnS{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.22);color:var(--grn)}
+.btnSm{padding:.18rem .44rem;font-size:.62rem}.btn:disabled{opacity:.4;cursor:not-allowed}
+.fBar{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.85rem}
+.fSrc{padding:.34rem .65rem;font-size:.6rem;border-radius:6px;flex:1;min-width:160px}
+.fSel{padding:.34rem .55rem;font-size:.56rem;border-radius:6px}
+.pag{display:flex;align-items:center;gap:.5rem;margin-top:.6rem;font-family:var(--fm);font-size:.5rem;color:var(--tx3)}
+.pBtn{padding:.22rem .55rem;border-radius:5px;background:var(--bg3);border:1px solid var(--bo);color:var(--tx2);cursor:pointer;transition:.15s}
+.pBtn:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}.pBtn:disabled{opacity:.4;cursor:not-allowed}.pInfo{flex:1;text-align:center}
+.bulkBar{display:none;align-items:center;gap:.4rem;flex-wrap:wrap;background:var(--bg3);border:1px solid var(--boh);border-radius:7px;padding:.42rem .7rem;margin-bottom:.6rem}
+.dOvl{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(3px)}
+.dOvl.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;top:0;right:-100%;width:min(560px,96vw);height:100vh;z-index:201;background:var(--bg2);border-left:1px solid var(--bo);display:flex;flex-direction:column;transition:right .28s cubic-bezier(.4,0,.2,1)}
+.drawer.open{right:0}
+.dHead{padding:.9rem 1rem;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.dAva{width:38px;height:38px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--acc),var(--cyn));display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.95rem;color:#fff}
+.dName{font-family:var(--fr);font-size:.95rem;font-weight:700}.dSub2{font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-top:.08rem}
+.dClose{margin-left:auto;color:var(--tx3);cursor:pointer;font-size:1.1rem;padding:.25rem}.dClose:hover{color:var(--tx)}
+.dTabs{display:flex;border-bottom:1px solid var(--bo);flex-shrink:0}
+.dTab{flex:1;padding:.48rem;font-family:var(--fm);font-size:.46rem;text-align:center;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.dTab.active{color:var(--acc);border-bottom-color:var(--acc)}.dPanel{display:none;padding:.85rem;overflow-y:auto;flex:1}.dPanel.active{display:block}
+.dRow{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.04)}.dRow:last-child{border:none}
+.dKey{font-family:var(--fm);font-size:.48rem;color:var(--tx3)}.dVal{font-family:var(--fm);font-size:.51rem;color:var(--tx)}
+.dSec{font-family:var(--fm);font-size:.41rem;text-transform:uppercase;letter-spacing:.1em;color:var(--acc);margin:.65rem 0 .28rem}
+.actGrid{display:grid;grid-template-columns:1fr 1fr;gap:.38rem;margin-top:.65rem}
+.mOvl{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(5px)}
+.mOvl.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--boh);border-radius:12px;padding:1.4rem;width:min(440px,100%);animation:fadeUp .2s ease;max-height:90vh;overflow-y:auto}
+.mTitle{font-family:var(--fd);font-size:1.2rem;margin-bottom:.9rem}
+.mLbl{display:block;font-family:var(--fm);font-size:.45rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.28rem}
+.mIn{width:100%;padding:.45rem .65rem;border-radius:6px;margin-bottom:.65rem}
+.mTa{width:100%;padding:.45rem .65rem;border-radius:6px;resize:vertical;min-height:68px;margin-bottom:.65rem}
+.mActs{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.3rem}
+#toasts{position:fixed;bottom:1rem;right:1rem;z-index:999;display:flex;flex-direction:column;gap:.35rem}
+.toast{padding:.42rem .8rem;border-radius:7px;font-family:var(--fm);font-size:.52rem;font-weight:700;display:flex;align-items:center;gap:.35rem;animation:fadeUp .2s ease;pointer-events:none;max-width:290px}
+.tOk{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:var(--grn)}
+.tErr{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.tInf{background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);color:var(--cyn)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--bo);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
+.dotOn{background:var(--grn);box-shadow:0 0 6px var(--grn);animation:pulse 2s infinite}.dotOff{background:var(--tx3)}
+.row{display:flex;align-items:center;gap:.6rem;padding:.42rem .65rem;background:var(--bg3);border:1px solid var(--bo);border-radius:7px;margin-bottom:.35rem}
+.healthBar{height:6px;border-radius:3px;background:var(--bg3);overflow:hidden;margin:.3rem 0;width:80px}
+.healthFill{height:100%;border-radius:3px;transition:width .5s}.hGrn{background:var(--grn)}.hYel{background:var(--yel)}.hRed{background:var(--red)}
+.refBox{background:var(--bg3);border:1px solid var(--bo);border-radius:8px;padding:.7rem .9rem;margin-bottom:.4rem;transition:border-color .15s;cursor:pointer}
+.refBox:hover{border-color:var(--acc)}
+.tpPill{padding:.18rem .6rem;border-radius:20px;font-family:var(--fm);font-size:.46rem;font-weight:700;cursor:pointer;border:1px solid var(--bo);color:var(--tx2);transition:.15s;display:inline-block;margin:.1rem}
+.tpActive{border-color:var(--acc)!important;color:var(--acc)!important;background:rgba(249,115,22,.08)!important}
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVE — admin.html
+   Complete mobile layout from scratch
+═══════════════════════════════════════════════ */
+
+@media(max-width:900px){
+  html{font-size:14px}
+
+  /* Login screen */
+  .lCard{padding:1.5rem 1.2rem !important;max-width:95vw !important;width:95vw !important}
+  .lLogo{font-size:1.4rem !important}
+
+  /* App shell */
+  #app{display:flex;flex-direction:column}
+
+  /* Topbar */
+  .topbar{padding:0 .8rem !important;height:48px !important}
+  .tLogo{font-size:.8rem !important;gap:.4rem !important}
+  .tIcon{width:28px !important;height:28px !important;font-size:.6rem !important}
+  .tRight{gap:.4rem !important}
+  .aChip{font-size:.55rem !important;padding:.15rem .4rem !important}
+
+  /* Sidebar: collapse to horizontal tab bar on mobile */
+  .sidebar{
+    position:static !important;
+    width:100% !important;
+    height:auto !important;
+    flex-direction:row !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    border-right:none !important;
+    border-bottom:1px solid var(--bo) !important;
+    padding:.25rem .4rem !important;
+    gap:.1rem !important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    flex-shrink:0;
+  }
+  .sidebar::-webkit-scrollbar{display:none}
+  .sNav{flex-direction:row !important;gap:0 !important;padding:0 !important}
+  .sGrp{flex-direction:row !important;border-bottom:none !important;padding:0 !important;gap:.1rem !important}
+  .sGrpLabel{display:none !important}
+  .sBtn{
+    flex-direction:row !important;
+    gap:.3rem !important;
+    padding:.35rem .6rem !important;
+    border-left:none !important;
+    border-bottom:2px solid transparent !important;
+    white-space:nowrap !important;
+    font-size:.6rem !important;
+    min-width:auto !important;
+    border-radius:6px !important;
+  }
+  .sBtn.active{border-bottom-color:var(--acc) !important;background:rgba(249,115,22,.1) !important}
+  .sBtnLabel{display:block !important;font-size:.58rem !important}
+  .sBtnIcon{font-size:.8rem !important}
+
+  /* Main content area */
+  .content{
+    padding:.75rem !important;
+    overflow-x:hidden !important;
+  }
+
+  /* Section headers */
+  .sec-hdr{flex-wrap:wrap !important;gap:.5rem !important;margin-bottom:.75rem !important}
+  .sec-title{font-size:.75rem !important}
+  .sec-sub{font-size:.58rem !important}
+
+  /* Stats grid: 2 cols on tablet, stack on phone */
+  .ov-grid{grid-template-columns:1fr 1fr !important;gap:.5rem !important}
+  .ov-card{padding:.75rem !important}
+  .ov-val{font-size:1.3rem !important}
+  .ov-label{font-size:.55rem !important}
+  .ov-trend{font-size:.5rem !important}
+
+  /* Charts: full width */
+  .chart-row{grid-template-columns:1fr !important;gap:.75rem !important}
+  .chart-card{padding:.75rem !important}
+  .chart-title{font-size:.65rem !important}
+
+  /* Tables: horizontal scroll */
+  .table-wrap,.tWrap{
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    margin:0 -.75rem !important;
+    padding:0 .75rem !important;
+  }
+  table,#uTable{min-width:700px !important}
+  th,td{padding:.4rem .6rem !important;font-size:.58rem !important;white-space:nowrap !important}
+  thead th{font-size:.55rem !important}
+
+  /* Filters bar */
+  .filters,.filter-row{flex-wrap:wrap !important;gap:.4rem !important}
+  .filter-row select,.filter-row input{font-size:.6rem !important;padding:.3rem .5rem !important}
+  .btn-sm{font-size:.58rem !important;padding:.3rem .5rem !important}
+
+  /* User detail modal */
+  .modal{width:95vw !important;max-width:95vw !important;padding:1rem !important;max-height:90vh !important;overflow-y:auto !important}
+  .modal-title{font-size:.8rem !important}
+  .modal-tabs{flex-wrap:wrap !important;gap:.25rem !important}
+  .modal-tab{font-size:.58rem !important;padding:.3rem .5rem !important}
+
+  /* Announcement cards */
+  .ann-item{padding:.6rem !important}
+  .ann-title{font-size:.65rem !important}
+  .ann-body{font-size:.6rem !important}
+
+  /* Health cards */
+  .health-grid{grid-template-columns:1fr 1fr !important;gap:.5rem !important}
+  .health-card{padding:.6rem !important}
+
+  /* Forms */
+  .form-group{margin-bottom:.75rem !important}
+  .form-label{font-size:.62rem !important}
+  input,select,textarea{font-size:.65rem !important;padding:.4rem .6rem !important}
+  .btn{font-size:.65rem !important;padding:.4rem .8rem !important}
+  .btn-primary,.btn-danger,.btn-success{font-size:.62rem !important}
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
 
-/* ── Layout ── */
-.shell{display:grid;grid-template-columns:220px 1fr;height:100vh;}
+@media(max-width:600px){
+  html{font-size:13px}
+  .ov-grid{grid-template-columns:1fr 1fr !important}
+  .chart-row{grid-template-columns:1fr !important}
+  .health-grid{grid-template-columns:1fr !important}
+  .topbar{padding:0 .6rem !important}
+  .tLogo em,.tLogoSub{display:none}
+  .content{padding:.5rem !important}
+  .sec-title{font-size:.7rem !important}
+}
 
-/* ── Sidebar ── */
-.sidebar{background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.sb-logo{padding:24px 20px 16px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.2em;color:var(--amber);border-bottom:1px solid var(--border);}
-.sb-logo span{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.15em;margin-top:2px;}
-.sb-nav{flex:1;overflow-y:auto;padding:12px 0;}
-.nav-section{font-size:9px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.15em;color:var(--muted);padding:12px 20px 6px;text-transform:uppercase;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.15s;border-left:2px solid transparent;}
-.nav-item:hover{color:var(--text);background:var(--surface);}
-.nav-item.active{color:var(--amber);background:var(--amber-dim);border-left-color:var(--amber);}
-.nav-item .ni{font-size:15px;width:20px;text-align:center;}
-.sb-bottom{padding:16px;border-top:1px solid var(--border);}
-.admin-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:var(--radius);}
-.admin-av{width:32px;height:32px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--amber);}
-.admin-info{flex:1;min-width:0;}
-.admin-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.admin-role{font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace;}
+@media(max-width:400px){
+  .ov-grid{grid-template-columns:1fr 1fr !important}
+  .sBtn{padding:.3rem .45rem !important;font-size:.55rem !important}
+}
 
-/* ── Main ── */
-.main{display:flex;flex-direction:column;overflow:hidden;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:60px;border-bottom:1px solid var(--border);background:var(--sidebar);flex-shrink:0;}
-.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;}
-.topbar-right{display:flex;align-items:center;gap:12px;}
-.content{flex:1;overflow-y:auto;padding:28px;}
-
-/* ── Pages ── */
-.page{display:none;}
-.page.active{display:block;}
-
-/* ── Stat cards ── */
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.stat-card.amber::before{background:var(--amber);}
-.stat-card.green::before{background:var(--green);}
-.stat-card.blue::before{background:var(--blue);}
-.stat-card.red::before{background:var(--red);}
-.stat-label{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1;letter-spacing:0.02em;}
-.stat-card.amber .stat-val{color:var(--amber);}
-.stat-card.green .stat-val{color:var(--green);}
-.stat-card.blue  .stat-val{color:var(--blue);}
-.stat-card.red   .stat-val{color:var(--red);}
-.stat-sub{font-size:11px;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace;}
-
-/* ── Section card ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
-.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
-.card-title{font-size:13px;font-weight:700;letter-spacing:0.03em;}
-.card-body{padding:20px;}
-
-/* ── Table ── */
-.tbl-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-thead th{text-align:left;padding:10px 14px;font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap;}
-tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;cursor:pointer;}
-tbody tr:hover{background:var(--surface2);}
-tbody tr:last-child{border-bottom:none;}
-td{padding:12px 14px;vertical-align:middle;}
-.td-mono{font-family:'IBM Plex Mono',monospace;font-size:12px;}
-
-/* ── Badges ── */
-.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
-.badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,214,143,0.2);}
-.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,71,87,0.2);}
-.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.2);}
-.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(61,139,255,0.2);}
-.badge-muted{background:var(--muted2);color:var(--muted);border:1px solid var(--border2);}
-.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.dot-green{background:var(--green);box-shadow:0 0 4px var(--green);}
-.dot-red{background:var(--red);}
-.dot-amber{background:var(--amber);}
-
-/* ── Inputs ── */
-.inp{background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text);outline:none;transition:border-color 0.15s;}
-.inp:focus{border-color:var(--amber);}
-.inp::placeholder{color:var(--muted);}
-.inp-sm{padding:7px 10px;font-size:12px;}
-select.inp{cursor:pointer;}
-
-/* ── Buttons ── */
-.btn{padding:8px 16px;border-radius:8px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all 0.15s;letter-spacing:0.03em;}
-.btn-amber{background:var(--amber);color:#000;}
-.btn-amber:hover{background:#ffc040;}
-.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted);}
-.btn-ghost:hover{border-color:var(--muted);color:var(--text);}
-.btn-red{background:var(--red-dim);border:1px solid rgba(255,71,87,0.3);color:var(--red);}
-.btn-red:hover{background:rgba(255,71,87,0.2);}
-.btn-green{background:var(--green-dim);border:1px solid rgba(0,214,143,0.3);color:var(--green);}.btn-blue{background:var(--blue-dim);border:1px solid rgba(61,139,255,0.3);color:var(--blue);}
-.btn-green:hover{background:rgba(0,214,143,0.15);}
-.btn-sm{padding:5px 10px;font-size:11px;}
-.btn:disabled{opacity:0.4;cursor:not-allowed;}
-
-/* ── Search bar ── */
-.search-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-
-/* ── Pagination ── */
-.pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
-.pg-btns{display:flex;gap:6px;}
-.pg-btn{padding:5px 10px;border-radius:6px;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);cursor:pointer;font-size:12px;font-family:'IBM Plex Mono',monospace;transition:all 0.15s;}
-.pg-btn:hover:not(:disabled){border-color:var(--amber);color:var(--amber);}
-.pg-btn:disabled{opacity:0.3;cursor:not-allowed;}
-.pg-btn.current{background:var(--amber-dim);border-color:var(--amber);color:var(--amber);}
-
-/* ── Modal ── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;}
-.modal-bg.show{display:flex;}
-.modal{background:var(--surface);border:1px solid var(--border2);border-radius:14px;width:560px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
-.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;}
-.modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;transition:color 0.15s;padding:4px;}
-.modal-close:hover{color:var(--text);}
-.modal-body{padding:24px;overflow-y:auto;flex:1;}
-.modal-foot{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
-
-/* ── Detail rows ── */
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.detail-item{padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;}
-.detail-label{font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:5px;}
-.detail-val{font-size:13px;color:var(--text);font-weight:500;}
-.detail-val.mono{font-family:'IBM Plex Mono',monospace;font-size:12px;}
-
-/* ── Action buttons row ── */
-.action-row{display:flex;flex-wrap:wrap;gap:8px;padding:16px;background:var(--surface2);border-radius:10px;margin-bottom:20px;}
-
-/* ── Toast ── */
-.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;transform:translateY(80px);opacity:0;transition:all 0.3s;font-family:'IBM Plex Mono',monospace;}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.ok{background:var(--green-dim);border:1px solid rgba(0,214,143,0.3);color:var(--green);}
-.toast.err{background:var(--red-dim);border:1px solid rgba(255,71,87,0.3);color:var(--red);}
-
-/* ── Flag indicator ── */
-.flag-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--red);font-family:'IBM Plex Mono',monospace;}
-
-/* ── Checkbox ── */
-input[type=checkbox]{accent-color:var(--amber);width:15px;height:15px;cursor:pointer;}
-
-/* ── Login screen ── */
-#login-screen{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center;}
-.login-card{width:380px;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:40px;text-align:center;}
-.login-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.2em;color:var(--amber);margin-bottom:4px;}
-.login-sub{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted);margin-bottom:32px;}
-.login-field{text-align:left;margin-bottom:14px;}
-.login-field label{display:block;font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:7px;}
-.login-field input{width:100%;}
-#msg-login{font-size:12px;color:var(--red);font-family:'IBM Plex Mono',monospace;margin-bottom:12px;min-height:18px;}
-
-/* ── Responsive ── */
-@media(max-width:1100px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+/* iOS input zoom prevention */
+@supports (-webkit-touch-callout: none){
+  input,select,textarea{font-size:16px !important}
+}
+@media screen and (-webkit-min-device-pixel-ratio:0){
+  select,textarea,input{font-size:max(16px,1em)}
+}
 </style>
 </head>
-<body>
+<body style="background:#030712;color:#e2eeff">
 
-<!-- ── LOGIN ── -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">JOBBER PRO</div>
-    <div class="login-sub">ADMIN CONTROL PANEL</div>
-    <div id="msg-login"></div>
-    <div class="login-field">
-      <label>Admin Mobile</label>
-      <input class="inp" type="tel" id="lg-mobile" placeholder="9000000001" maxlength="10"/>
-    </div>
-    <div class="login-field">
-      <label>MPIN</label>
-      <input class="inp" type="password" id="lg-mpin" placeholder="••••" maxlength="4"
-             onkeyup="if(event.key==='Enter')doAdminLogin()"/>
-    </div>
-    <button class="btn btn-amber" style="width:100%;padding:12px;margin-top:8px;font-size:14px" onclick="doAdminLogin()" id="btn-lg">
-      Login to Admin →
-    </button>
+<div id="loginScreen" style="position:fixed;inset:0;background:#030712;display:flex;align-items:center;justify-content:center;z-index:999">
+  <div class="lCard">
+    <div class="lLogo">Options<span>Lab</span></div>
+    <div class="lSub">Admin Panel v2 · Restricted Access</div>
+    <label class="lLabel">Mobile</label>
+    <input id="lMob" class="lInput" type="tel" placeholder="10-digit mobile" maxlength="10">
+    <label class="lLabel">MPIN</label>
+    <input id="lPin" class="lInput" type="password" placeholder="MPIN" maxlength="6">
+    <button id="lBtn" class="lBtn" onclick="doLogin()">Sign In to Admin Panel</button>
+    <div id="lErr" class="lErr"></div>
   </div>
 </div>
 
-<!-- ── SHELL ── -->
-<div class="shell" id="shell" style="display:none">
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sb-logo">JOBBER PRO <span>ADMIN PANEL</span></div>
-    <nav class="sb-nav">
-      <div class="nav-section">Overview</div>
-      <div class="nav-item active" onclick="showPage('page-dash')" data-page="page-dash">
-        <span class="ni">◈</span> Dashboard
-      </div>
-      <div class="nav-section">Users</div>
-      <div class="nav-item" onclick="showPage('page-users')" data-page="page-users">
-        <span class="ni">◉</span> All Users
-      </div>
-      <div class="nav-item" onclick="showPage('page-flagged')" data-page="page-flagged">
-        <span class="ni">⚑</span> Flagged
-      </div>
-      <div class="nav-section">System</div>
-      <div class="nav-item" onclick="showPage('page-audit')" data-page="page-audit">
-        <span class="ni">◎</span> Audit Log
-      </div>
-      <div class="nav-item" onclick="showPage('page-announce')" data-page="page-announce">
-        <span class="ni">◈</span> Announcements
-      </div>
-      <div class="nav-section">Data</div>
-      <div class="nav-item" onclick="showPage('page-export')" data-page="page-export">
-        <span class="ni">↓</span> Export Data
-      </div>
+<div id="app">
+  <div class="topbar">
+    <div class="tLogo"><div class="tIcon">OL</div>Options<em>Lab</em><span style="font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-left:.25rem">ADMIN v2</span></div>
+    <div class="tRight">
+      <div id="aChip" class="aChip">Admin</div>
+      <div id="dbDot" class="dot dotOff" title="DB Status" style="width:8px;height:8px"></div>
+      <button class="outBtn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+  <div class="layout">
+    <nav class="sidebar">
+      <div class="sLabel">Dashboard</div>
+      <button class="sBtn active" onclick="nav('overview',this)">&#9672; Overview</button>
+      <div class="sLabel">Analytics</div>
+      <button class="sBtn" onclick="nav('analytics',this)">&#128200; Signups + Revenue</button>
+      <button class="sBtn" onclick="nav('retention',this)">&#9851; Retention + DAU</button>
+      <button class="sBtn" onclick="nav('activity',this)">&#9889; Live Activity <span id="onlineBadge" class="sBadge">0</span></button>
+      <div class="sLabel">Users</div>
+      <button class="sBtn" onclick="nav('users',this)">&#9673; All Users</button>
+      <button class="sBtn" onclick="nav('subscriptions',this)">&#128179; Subscriptions</button>
+      <div class="sLabel">Growth</div>
+      <button class="sBtn" onclick="nav('referrals',this)">&#128279; Referral Tracking</button>
+      <button class="sBtn" onclick="nav('announce',this)">&#128226; Announcements</button>
+      <div class="sLabel">System</div>
+      <button class="sBtn" onclick="nav('health',this)">&#128994; System Health</button>
+      <button class="sBtn" onclick="nav('audit',this)">&#128203; Audit Log</button>
+      <button class="sBtn" onclick="nav('export',this)">&#11015; Export</button>
     </nav>
-    <div class="sb-bottom">
-      <div class="admin-chip">
-        <div class="admin-av" id="sb-av">A</div>
-        <div class="admin-info">
-          <div class="admin-name" id="sb-name">Admin</div>
-          <div class="admin-role">SUPER ADMIN</div>
+    <main class="main">
+
+      <!-- OVERVIEW -->
+      <div class="page active" id="page-overview">
+        <div class="pHead"><div class="pTitle">Overview</div><div class="pSub" id="ovTs">Loading...</div></div>
+        <div class="sGrid">
+          <div class="sCard cOrg"><div class="sLbl">Total Users</div><div class="sVal cO" id="ov-total">--</div><div class="sSub">All time</div></div>
+          <div class="sCard cGrn"><div class="sLbl">Active</div><div class="sVal cG" id="ov-active">--</div><div class="sTrend tUp" id="ov-trend">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">Paid Users</div><div class="sVal cO" id="ov-paid">--</div><div class="sSub" id="ov-mrr">MRR --</div></div>
+          <div class="sCard cCyn"><div class="sLbl">Free Users</div><div class="sVal cC" id="ov-free">--</div></div>
+          <div class="sCard cGrn"><div class="sLbl">DAU</div><div class="sVal cG" id="ov-dau">--</div></div>
+          <div class="sCard cCyn"><div class="sLbl">WAU</div><div class="sVal cC" id="ov-wau">--</div></div>
+          <div class="sCard cPur"><div class="sLbl">MAU</div><div class="sVal cP" id="ov-mau">--</div></div>
+          <div class="sCard cRed"><div class="sLbl">Flagged</div><div class="sVal cR" id="ov-flagged">--</div></div>
+          <div class="sCard cYel"><div class="sLbl">Trusted Devices</div><div class="sVal cY" id="ov-devs">--</div></div>
+          <div class="sCard cGrn"><div class="sLbl">Upgrades 30d</div><div class="sVal cG" id="ov-upgrades">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">New 7d</div><div class="sVal cO" id="ov-new7">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">New 30d</div><div class="sVal cO" id="ov-new30">--</div></div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main -->
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-title" id="topbar-title">DASHBOARD</div>
-      <div class="topbar-right">
-        <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted)" id="topbar-time"></span>
-        <button class="btn btn-ghost btn-sm" onclick="adminLogout()">Logout</button>
-      </div>
-    </div>
-
-    <div class="content">
-
-      <!-- ── DASHBOARD ── -->
-      <div class="page active" id="page-dash">
-        <div class="stat-grid" id="stat-grid">
-          <div class="stat-card amber"><div class="stat-label">Total Users</div><div class="stat-val" id="s-total">—</div><div class="stat-sub" id="s-new7">Loading...</div></div>
-          <div class="stat-card green"><div class="stat-label">Paid Users</div><div class="stat-val" id="s-paid">—</div><div class="stat-sub" id="s-active">— active</div></div>
-          <div class="stat-card blue"><div class="stat-label">DAU / MAU</div><div class="stat-val" id="s-dau">—</div><div class="stat-sub" id="s-mau">— monthly</div></div>
-          <div class="stat-card red"><div class="stat-label">Flagged</div><div class="stat-val" id="s-flagged">—</div><div class="stat-sub">Needs review</div></div>
+        <div class="grid2">
+          <div class="card"><div class="cHead">Signups - 30 Days <button class="btn btnG btnSm" onclick="nav('analytics',null)">Full --></button></div><div class="chartWrap"><canvas id="ovSig"></canvas></div></div>
+          <div class="card"><div class="cHead">Revenue - 30 Days <button class="btn btnG btnSm" onclick="nav('analytics',null)">Full --></button></div><div class="chartWrap"><canvas id="ovRev"></canvas></div></div>
         </div>
+        <div class="card"><div class="cHead">Recent Events <span id="ovOnline" class="badge bG">0 online</span></div><div id="ovFeed">--</div></div>
+      </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-          <div class="card">
-            <div class="card-head"><div class="card-title">Recent Users</div><button class="btn btn-ghost btn-sm" onclick="showPage('page-users')">View All</button></div>
-            <div class="tbl-wrap">
-              <table>
-                <thead><tr><th>Name</th><th>Mobile</th><th>Plan</th><th>Status</th><th>Joined</th></tr></thead>
-                <tbody id="recent-users-body"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Loading...</td></tr></tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-head"><div class="card-title">Recent Audit</div><button class="btn btn-ghost btn-sm" onclick="showPage('page-audit')">View All</button></div>
-            <div class="tbl-wrap">
-              <table>
-                <thead><tr><th>Action</th><th>Target</th><th>Time</th></tr></thead>
-                <tbody id="recent-audit-body"><tr><td colspan="3" style="text-align:center;color:var(--muted);padding:24px">Loading...</td></tr></tbody>
-              </table>
-            </div>
-          </div>
+      <!-- ANALYTICS -->
+      <div class="page" id="page-analytics">
+        <div class="pHead"><div class="pTitle">Signups + Revenue</div><div class="pSub">Business growth metrics</div></div>
+        <div class="sGrid">
+          <div class="sCard cOrg"><div class="sLbl">Last 24h</div><div class="sVal cO" id="an-24h">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">Last 7d</div><div class="sVal cO" id="an-7d">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">Last 30d</div><div class="sVal cO" id="an-30d">--</div></div>
+          <div class="sCard cGrn"><div class="sLbl">All Time</div><div class="sVal cG" id="an-all">--</div></div>
+          <div class="sCard cGrn"><div class="sLbl">Paid Users</div><div class="sVal cG" id="an-paid">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">MRR (INR)</div><div class="sVal cO" id="an-mrr">--</div></div>
+        </div>
+        <div class="card"><div class="cHead">Daily Signups - 30 Days</div><div class="chartWrap chartWrapLg"><canvas id="sigChart"></canvas></div></div>
+        <div class="card"><div class="cHead">Monthly Revenue - 12 Months</div><div class="chartWrap chartWrapLg"><canvas id="revChart"></canvas></div></div>
+        <div class="card">
+          <div class="cHead">Revenue by Referral Code</div>
+          <div class="tWrap"><table><thead><tr><th>Code</th><th>Users</th><th>Paid</th><th>Revenue INR</th><th>Conv %</th></tr></thead>
+          <tbody id="revByRef"><tr class="tLoad"><td colspan="5"><span class="spin"></span></td></tr></tbody></table></div>
         </div>
       </div>
 
-      <!-- ── USERS ── -->
+      <!-- RETENTION -->
+      <div class="page" id="page-retention">
+        <div class="pHead"><div class="pTitle">Retention + DAU</div><div class="pSub">Engagement and cohort analysis</div></div>
+        <div class="card"><div class="cHead">Daily Active Users - 30 Days</div><div class="chartWrap chartWrapLg"><canvas id="dauChart"></canvas></div></div>
+        <div class="grid2">
+          <div class="card"><div class="cHead">Trading Style</div><div class="chartWrap"><canvas id="styleChart"></canvas></div></div>
+          <div class="card"><div class="cHead">Experience Level</div><div class="chartWrap"><canvas id="expChart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="cHead">Cohort Retention (Weekly)</div>
+          <div class="tWrap"><table><thead><tr><th>Cohort</th><th>Size</th><th>Wk2 Ret</th><th>Wk3 Ret</th><th>Wk4 Ret</th></tr></thead>
+          <tbody id="retTable"><tr class="tLoad"><td colspan="5"><span class="spin"></span></td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY -->
+      <div class="page" id="page-activity">
+        <div class="pHead"><div class="pTitle">Live Activity</div><div class="pSub">Real-time events</div></div>
+        <div class="sGrid">
+          <div class="sCard cGrn"><div class="sLbl">Online Now</div><div class="sVal cG" id="act-on">--</div><div class="sSub">last 10 min</div></div>
+          <div class="sCard cOrg"><div class="sLbl">Signups Today</div><div class="sVal cO" id="act-sig">--</div></div>
+          <div class="sCard cGrn"><div class="sLbl">Upgrades Today</div><div class="sVal cG" id="act-up">--</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="cHead">Hourly Logins Today <button class="btn btnG btnSm" onclick="loadActivity()">Refresh</button></div><div class="chartWrap"><canvas id="hrChart"></canvas></div></div>
+          <div class="card"><div class="cHead">Online Users <span id="actOnBadge" class="badge bG">0</span></div><div id="onlineList" style="max-height:200px;overflow-y:auto">--</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="cHead">Recent Signups (24h)</div><div id="sigList">--</div></div>
+          <div class="card"><div class="cHead">Recent Upgrades (24h)</div><div id="upList">--</div></div>
+        </div>
+        <div style="margin-top:.5rem"><button class="btn btnG" onclick="loadActivity()">Refresh</button> <span id="actTs" style="font-family:var(--fm);font-size:.46rem;color:var(--tx3)">--</span></div>
+      </div>
+
+      <!-- USERS -->
       <div class="page" id="page-users">
-        <div class="search-row">
-          <input class="inp" style="width:220px" type="text" id="u-search" placeholder="Search name / mobile..." oninput="debounceSearch()"/>
-          <select class="inp inp-sm" id="u-plan" onchange="loadUsers()">
-            <option value="">All Plans</option>
-            <option value="FREE">FREE</option>
-            <option value="PAID">PAID</option>
-            <option value="TRIAL">TRIAL</option>
-          </select>
-          <select class="inp inp-sm" id="u-status" onchange="loadUsers()">
-            <option value="">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-          <select class="inp inp-sm" id="u-sort" onchange="loadUsers()">
-            <option value="created_at">Newest First</option>
-            <option value="last_login_at">Last Login</option>
-            <option value="name">Name A-Z</option>
-          </select>
-          <div style="margin-left:auto;display:flex;gap:8px">
-            <button class="btn btn-red btn-sm" id="btn-bulk-deact" disabled onclick="bulkAction('deactivate')" title="Deactivate selected">⊘ Deactivate</button>
-            <button class="btn btn-green btn-sm" id="btn-bulk-act" disabled onclick="bulkAction('activate')" title="Activate selected">✓ Activate</button>
-            <button class="btn btn-ghost btn-sm" id="btn-bulk-logout" disabled onclick="bulkAction('force_logout')">⏏ Logout All</button>
-          </div>
+        <div class="pHead"><div class="pTitle">All Users</div><div class="pSub">Search, Filter, Manage</div></div>
+        <div class="fBar">
+          <input id="uSrc" class="fSrc" placeholder="Name, mobile, email..." oninput="debU()">
+          <select id="uPlan" class="fSel" onchange="loadUsers(1)"><option value="">All Plans</option><option>FREE</option><option>PAID</option><option>TRIAL</option><option>SUSPENDED</option></select>
+          <select id="uStat" class="fSel" onchange="loadUsers(1)"><option value="">Status</option><option value="active">Active</option><option value="inactive">Inactive</option></select>
+          <select id="uFlag" class="fSel" onchange="loadUsers(1)"><option value="">All</option><option value="true">Flagged</option></select>
+          <select id="uSort" class="fSel" onchange="loadUsers(1)"><option value="created_at">Joined</option><option value="last_login_at">Login</option><option value="name">Name</option></select>
+          <select id="uDir" class="fSel" onchange="loadUsers(1)"><option value="desc">Newest</option><option value="asc">Oldest</option></select>
         </div>
-
-        <div class="card">
-          <div class="tbl-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th><input type="checkbox" id="chk-all" onchange="toggleAllChecks()"/></th>
-                  <th>User</th><th>Mobile</th><th>Plan</th><th>Status</th>
-                  <th>Devices</th><th>Angel</th><th>Last Login</th><th>Logins</th><th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="users-body">
-                <tr><td colspan="10" style="text-align:center;color:var(--muted);padding:32px">Loading...</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="pagination">
-            <span id="pg-info">—</span>
-            <div class="pg-btns" id="pg-btns"></div>
-          </div>
+        <div id="bulkBar" class="bulkBar">
+          <span id="bulkCnt" style="font-family:var(--fm);font-size:.49rem;color:var(--tx2)">0 selected</span>
+          <button class="btn btnS btnSm" onclick="bulkDo('activate')">Activate</button>
+          <button class="btn btnG btnSm" onclick="bulkDo('deactivate')">Deactivate</button>
+          <button class="btn btnG btnSm" onclick="bulkDo('force_logout')">Force Logout</button>
+          <button class="btn btnG btnSm" onclick="openBulkPlan()">Set Plan</button>
+          <button class="btn btnD btnSm" onclick="clearSel()">Clear</button>
+        </div>
+        <div class="tWrap"><table>
+          <thead><tr><th><input type="checkbox" id="selAll" onchange="togAll()"></th><th>ID</th><th>Name</th><th>Mobile</th><th>Plan</th><th>Status</th><th>Flag</th><th>Last Login</th><th>Logins</th><th>Referral</th><th>Joined</th><th>Action</th></tr></thead>
+          <tbody id="uBody"><tr class="tLoad"><td colspan="12"><span class="spin"></span></td></tr></tbody>
+        </table></div>
+        <div class="pag">
+          <button id="uPrev" class="pBtn" onclick="loadUsers(uPage-1)">Prev</button>
+          <span id="uInfo" class="pInfo">--</span>
+          <button id="uNext" class="pBtn" onclick="loadUsers(uPage+1)">Next</button>
         </div>
       </div>
 
-      <!-- ── FLAGGED ── -->
-      <div class="page" id="page-flagged">
-        <div class="card">
-          <div class="card-head"><div class="card-title">⚑ Flagged Users</div></div>
-          <div class="tbl-wrap">
-            <table>
-              <thead><tr><th>User</th><th>Mobile</th><th>Plan</th><th>Flag Reason</th><th>Actions</th></tr></thead>
-              <tbody id="flagged-body"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">Loading...</td></tr></tbody>
-            </table>
+      <!-- SUBSCRIPTIONS -->
+      <div class="page" id="page-subscriptions">
+        <div class="pHead"><div class="pTitle">Subscription Management</div><div class="pSub">History, Manual Payments, Plan Grants</div></div>
+        <div class="sGrid">
+          <div class="sCard cGrn"><div class="sLbl">Total Revenue</div><div class="sVal cG" id="sub-rev">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">Upgrades</div><div class="sVal cO" id="sub-up">--</div></div>
+          <div class="sCard cRed"><div class="sLbl">Downgrades</div><div class="sVal cR" id="sub-dn">--</div></div>
+          <div class="sCard cCyn"><div class="sLbl">Avg Order</div><div class="sVal cC" id="sub-avg">--</div></div>
+        </div>
+        <div class="card" style="margin-bottom:.85rem">
+          <div class="cHead2">Manual Payment / Plan Grant</div>
+          <div class="grid2">
+            <div>
+              <label class="mLbl">User ID *</label><input id="mpUid" class="mIn" type="number" placeholder="User ID">
+              <label class="mLbl">Plan</label><select id="mpPlan" class="mIn"><option>PAID</option><option>TRIAL</option><option>FREE</option><option>SUSPENDED</option></select>
+              <label class="mLbl">Amount (INR)</label><input id="mpAmt" class="mIn" type="number" min="0" step="0.01" value="0">
+            </div>
+            <div>
+              <label class="mLbl">Payment Reference</label><input id="mpRef" class="mIn" placeholder="UPI/bank/manual">
+              <label class="mLbl">Reason *</label><input id="mpReason" class="mIn" placeholder="e.g. Influencer deal">
+              <label class="mLbl">Expires After Days</label><input id="mpDays" class="mIn" type="number" min="1" placeholder="Optional">
+            </div>
           </div>
+          <button class="btn btnP" onclick="submitManualPayment()">Record Payment and Grant Plan</button>
+        </div>
+        <div class="fBar">
+          <select id="subType" class="fSel" onchange="loadSubs()"><option value="">All</option><option value="upgrade">Upgrades</option><option value="downgrade">Downgrades</option><option value="manual">Manual</option></select>
+          <button class="btn btnG btnSm" onclick="loadSubs()">Refresh</button>
+        </div>
+        <div class="tWrap"><table>
+          <thead><tr><th>Date</th><th>User</th><th>Mobile</th><th>From</th><th>To</th><th>INR</th><th>Ref</th><th>Reason</th><th>By</th></tr></thead>
+          <tbody id="subBody"><tr class="tLoad"><td colspan="9"><span class="spin"></span></td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- REFERRALS -->
+      <div class="page" id="page-referrals">
+        <div class="pHead"><div class="pTitle">Referral Tracking</div><div class="pSub">Track codes, set discounts, calculate commissions</div></div>
+        <div class="card" style="margin-bottom:.85rem">
+          <div class="cHead2">Create / Update Referral Code</div>
+          <div class="grid3">
+            <div>
+              <label class="mLbl">Code *</label><input id="rcCode" class="mIn" placeholder="e.g. AMIT20" style="text-transform:uppercase">
+              <label class="mLbl">Owner Name</label><input id="rcName" class="mIn" placeholder="Partner name">
+            </div>
+            <div>
+              <label class="mLbl">Owner Mobile</label><input id="rcMob" class="mIn" placeholder="For payout contact">
+              <label class="mLbl">Discount % (user saves)</label><input id="rcDisc" class="mIn" type="number" min="0" max="100" step="0.5" placeholder="e.g. 10">
+            </div>
+            <div>
+              <label class="mLbl">Commission % (owner earns)</label><input id="rcComm" class="mIn" type="number" min="0" max="100" step="0.5" placeholder="e.g. 15">
+              <label class="mLbl">Notes</label><input id="rcNotes" class="mIn" placeholder="Internal notes">
+            </div>
+          </div>
+          <button class="btn btnP" onclick="saveRef()">Save Referral Code</button>
+        </div>
+        <div class="card">
+          <div class="cHead">All Referral Codes <button class="btn btnG btnSm" onclick="loadReferrals()">Refresh</button></div>
+          <div id="refList"><span class="spin"></span></div>
+        </div>
+        <div class="card" id="refDetail" style="display:none">
+          <div class="cHead2" id="refDetailTitle">Code Detail</div>
+          <div id="refDetailBody">--</div>
         </div>
       </div>
 
-      <!-- ── AUDIT LOG ── -->
-      <div class="page" id="page-audit">
-        <div class="card">
-          <div class="card-head"><div class="card-title">Audit Log</div></div>
-          <div class="tbl-wrap">
-            <table>
-              <thead><tr><th>Action</th><th>Admin</th><th>Target User</th><th>IP</th><th>Result</th><th>Time</th></tr></thead>
-              <tbody id="audit-body"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading...</td></tr></tbody>
-            </table>
-          </div>
-          <div class="pagination">
-            <span id="audit-pg-info">—</span>
-            <div class="pg-btns" id="audit-pg-btns"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── ANNOUNCEMENTS ── -->
+      <!-- ANNOUNCEMENTS -->
       <div class="page" id="page-announce">
-        <div class="card" style="margin-bottom:20px">
-          <div class="card-head"><div class="card-title">New Announcement</div></div>
-          <div class="card-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-              <input class="inp" type="text" id="an-title" placeholder="Announcement title"/>
-              <select class="inp" id="an-type">
-                <option value="info">ℹ Info</option>
-                <option value="warning">⚠ Warning</option>
-                <option value="critical">🚨 Critical</option>
-              </select>
-              <select class="inp" id="an-target">
-                <option value="all">All Users</option>
-                <option value="paid">PAID Only</option>
-                <option value="free">FREE Only</option>
-              </select>
-              <input class="inp" type="datetime-local" id="an-expires" placeholder="Expires (optional)"/>
-            </div>
-            <textarea class="inp" id="an-body" rows="3" style="width:100%;resize:vertical;margin-bottom:12px" placeholder="Announcement message..."></textarea>
-            <button class="btn btn-amber" onclick="createAnnouncement()">Publish Announcement</button>
+        <div class="pHead"><div class="pTitle">Announcements</div><div class="pSub">Post notices to Jobber Pro app users</div></div>
+        <div class="card" style="margin-bottom:1rem">
+          <div class="cHead2">New Announcement</div>
+          <label class="mLbl">Title</label><input id="aTitle" class="mIn" placeholder="Title" maxlength="255">
+          <label class="mLbl">Body</label><textarea id="aBody" class="mTa" placeholder="Message..." maxlength="5000"></textarea>
+          <label class="mLbl">Type</label>
+          <div style="margin-bottom:.65rem">
+            <span id="tp-info" class="tpPill tpActive" onclick="setAT('info')">Info</span>
+            <span id="tp-warning" class="tpPill" onclick="setAT('warning')">Warning</span>
+            <span id="tp-critical" class="tpPill" onclick="setAT('critical')">Critical</span>
           </div>
+          <label class="mLbl">Target</label>
+          <select id="aTarget" class="fSel" style="margin-bottom:.65rem;display:block"><option value="all">All Users</option><option value="paid">Paid Only</option><option value="free">Free Only</option></select>
+          <label class="mLbl">Expires At (optional)</label>
+          <input id="aExp" class="mIn" type="datetime-local">
+          <button class="btn btnP" style="margin-top:.2rem" onclick="postAnn()">Post Announcement</button>
         </div>
-
         <div class="card">
-          <div class="card-head"><div class="card-title">Active Announcements</div></div>
-          <div class="tbl-wrap">
-            <table>
-              <thead><tr><th>Title</th><th>Type</th><th>Target</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
-              <tbody id="announce-body"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">Loading...</td></tr></tbody>
-            </table>
-          </div>
+          <div class="cHead">All Announcements <button class="btn btnG btnSm" onclick="loadAnns()">Refresh</button></div>
+          <div id="annList"><span class="spin"></span></div>
         </div>
       </div>
 
+      <!-- HEALTH -->
+      <div class="page" id="page-health">
+        <div class="pHead"><div class="pTitle">System Health</div><div class="pSub">Database, memory, connections</div></div>
+        <div class="sGrid">
+          <div class="sCard cGrn"><div class="sLbl">Status</div><div id="h-status" class="sVal" style="font-size:1rem;padding-top:.25rem">--</div></div>
+          <div class="sCard cCyn"><div class="sLbl">DB Latency</div><div class="sVal cC" id="h-lat">--</div><div class="sSub">ms</div></div>
+          <div class="sCard cOrg"><div class="sLbl">Uptime</div><div class="sVal cO" id="h-up">--</div></div>
+          <div class="sCard cPur"><div class="sLbl">Node</div><div id="h-node" class="sVal cP" style="font-size:.85rem;padding-top:.3rem">--</div></div>
+          <div class="sCard cCyn"><div class="sLbl">Pool Total</div><div class="sVal cC" id="h-pt">--</div></div>
+          <div class="sCard cGrn"><div class="sLbl">Pool Idle</div><div class="sVal cG" id="h-pi">--</div></div>
+          <div class="sCard cYel"><div class="sLbl">Pool Waiting</div><div class="sVal cY" id="h-pw">--</div></div>
+          <div class="sCard cOrg"><div class="sLbl">DB Size</div><div id="h-dbsz" class="sVal cO" style="font-size:.85rem;padding-top:.3rem">--</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="cHead">Table Row Counts</div><div id="h-tables">--</div></div>
+          <div class="card"><div class="cHead">Memory Usage</div><div id="h-memory">--</div></div>
+        </div>
+        <div style="margin-top:.6rem">
+          <button class="btn btnP" onclick="loadHealth()">Refresh</button>
+          <span id="hTs" style="font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-left:.6rem">--</span>
+        </div>
+      </div>
 
-      <!-- ── EXPORT DATA ── -->
+      <!-- AUDIT -->
+      <div class="page" id="page-audit">
+        <div class="pHead"><div class="pTitle">Audit Log</div><div class="pSub">Every admin action logged automatically</div></div>
+        <div style="margin-bottom:.75rem"><button class="btn btnG btnSm" onclick="loadAudit(1)">Refresh</button></div>
+        <div class="tWrap"><table>
+          <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Target</th><th>OK</th><th>IP</th></tr></thead>
+          <tbody id="audBody"><tr class="tLoad"><td colspan="6"><span class="spin"></span></td></tr></tbody>
+        </table></div>
+        <div class="pag">
+          <button id="aPrev" class="pBtn" onclick="loadAudit(audPage-1)">Prev</button>
+          <span id="aInfo" class="pInfo">--</span>
+          <button id="aNext" class="pBtn" onclick="loadAudit(audPage+1)">Next</button>
+        </div>
+      </div>
+
+      <!-- EXPORT -->
       <div class="page" id="page-export">
-
-        <!-- Quick export cards -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px">
-          <div class="card" style="border-top:2px solid var(--green)">
-            <div class="card-body" style="text-align:center;padding:24px 16px">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--green);margin-bottom:6px">USERS</div>
-              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">All user accounts</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <button class="btn btn-green btn-sm" onclick="quickExport('users','csv')">↓ CSV</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('users','xlsx')">↓ Excel</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('users','json')">↓ JSON</button>
-              </div>
-            </div>
-          </div>
-          <div class="card" style="border-top:2px solid var(--amber)">
-            <div class="card-body" style="text-align:center;padding:24px 16px">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--amber);margin-bottom:6px">SUBSCRIPTIONS</div>
-              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">Plan change history</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <button class="btn btn-amber btn-sm" onclick="quickExport('subscriptions','csv')">↓ CSV</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('subscriptions','xlsx')">↓ Excel</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('subscriptions','json')">↓ JSON</button>
-              </div>
-            </div>
-          </div>
-          <div class="card" style="border-top:2px solid var(--blue)">
-            <div class="card-body" style="text-align:center;padding:24px 16px">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--blue);margin-bottom:6px">DEVICES</div>
-              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">Trusted device list</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <button class="btn btn-blue btn-sm" onclick="quickExport('devices','csv')">↓ CSV</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('devices','xlsx')">↓ Excel</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('devices','json')">↓ JSON</button>
-              </div>
-            </div>
-          </div>
-          <div class="card" style="border-top:2px solid var(--red)">
-            <div class="card-body" style="text-align:center;padding:24px 16px">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--red);margin-bottom:6px">AUDIT LOG</div>
-              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:16px">Admin action log</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <button class="btn btn-red btn-sm" onclick="quickExport('audit','csv')">↓ CSV</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('audit','xlsx')">↓ Excel</button>
-                <button class="btn btn-ghost btn-sm" onclick="quickExport('audit','json')">↓ JSON</button>
-              </div>
-            </div>
-          </div>
+        <div class="pHead"><div class="pTitle">Export Data</div><div class="pSub">CSV, Excel, JSON</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem">
+          <div class="card"><div class="cHead">Users</div><div style="font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-bottom:.55rem">All records with activity + devices</div><div style="display:flex;gap:.35rem"><button class="btn btnG btnSm" onclick="doExp('users','csv')">CSV</button><button class="btn btnG btnSm" onclick="doExp('users','xlsx')">Excel</button><button class="btn btnG btnSm" onclick="doExp('users','json')">JSON</button></div></div>
+          <div class="card"><div class="cHead">Subscriptions</div><div style="font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-bottom:.55rem">Plan history with amounts</div><div style="display:flex;gap:.35rem"><button class="btn btnG btnSm" onclick="doExp('subscriptions','csv')">CSV</button><button class="btn btnG btnSm" onclick="doExp('subscriptions','xlsx')">Excel</button><button class="btn btnG btnSm" onclick="doExp('subscriptions','json')">JSON</button></div></div>
+          <div class="card"><div class="cHead">Devices</div><div style="font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-bottom:.55rem">Trusted device records</div><div style="display:flex;gap:.35rem"><button class="btn btnG btnSm" onclick="doExp('devices','csv')">CSV</button><button class="btn btnG btnSm" onclick="doExp('devices','xlsx')">Excel</button><button class="btn btnG btnSm" onclick="doExp('devices','json')">JSON</button></div></div>
+          <div class="card"><div class="cHead">Audit Log</div><div style="font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-bottom:.55rem">Full admin audit trail</div><div style="display:flex;gap:.35rem"><button class="btn btnG btnSm" onclick="doExp('audit','csv')">CSV</button><button class="btn btnG btnSm" onclick="doExp('audit','xlsx')">Excel</button><button class="btn btnG btnSm" onclick="doExp('audit','json')">JSON</button></div></div>
+          <div class="card"><div class="cHead">Full Snapshot</div><div style="font-family:var(--fm);font-size:.46rem;color:var(--tx3);margin-bottom:.55rem">All data combined</div><button class="btn btnP btnSm" onclick="doExp('summary','json')">Download JSON</button></div>
         </div>
-
-        <!-- Advanced filtered export -->
-        <div class="card">
-          <div class="card-head">
-            <div class="card-title">Advanced Export — With Filters</div>
-            <button class="btn btn-amber btn-sm" onclick="runAdvancedExport()">↓ Export Now</button>
-          </div>
-          <div class="card-body">
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px">
-              <div>
-                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Dataset</div>
-                <select class="inp" style="width:100%" id="exp-type">
-                  <option value="users">Users</option>
-                  <option value="subscriptions">Subscriptions</option>
-                  <option value="devices">Devices</option>
-                  <option value="audit">Audit Log</option>
-                  <option value="summary">Full Summary (JSON)</option>
-                </select>
-              </div>
-              <div>
-                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Format</div>
-                <select class="inp" style="width:100%" id="exp-format">
-                  <option value="csv">CSV (Excel-compatible)</option>
-                  <option value="xlsx">Excel (.xls)</option>
-                  <option value="json">JSON</option>
-                </select>
-              </div>
-              <div>
-                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Plan Filter</div>
-                <select class="inp" style="width:100%" id="exp-plan">
-                  <option value="">All Plans</option>
-                  <option value="PAID">PAID</option>
-                  <option value="FREE">FREE</option>
-                  <option value="TRIAL">TRIAL</option>
-                  <option value="SUSPENDED">SUSPENDED</option>
-                </select>
-              </div>
-              <div>
-                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Status Filter</div>
-                <select class="inp" style="width:100%" id="exp-status">
-                  <option value="">All Status</option>
-                  <option value="active">Active Only</option>
-                  <option value="inactive">Inactive Only</option>
-                </select>
-              </div>
-              <div>
-                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">From Date</div>
-                <input class="inp" type="date" id="exp-from" style="width:100%"/>
-              </div>
-              <div>
-                <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">To Date</div>
-                <input class="inp" type="date" id="exp-to" style="width:100%"/>
-              </div>
-            </div>
-
-            <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
-              <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:4px">ℹ WHAT IS EXPORTED</div>
-              <div id="exp-info" style="font-size:12px;color:var(--text)">
-                Users: ID, Name, Mobile, Plan, Status, Flagged, Joined, Last Login, Total Logins, Last IP, Devices count, Angel Creds status, Admin Notes
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Export log (recent exports this session) -->
-        <div class="card">
-          <div class="card-head"><div class="card-title">Export History (This Session)</div></div>
-          <div class="tbl-wrap">
-            <table>
-              <thead><tr><th>Dataset</th><th>Format</th><th>Filters</th><th>Time</th><th></th></tr></thead>
-              <tbody id="export-log-body">
-                <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px;font-family:'IBM Plex Mono',monospace;font-size:12px">No exports yet this session</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
       </div>
-    </div><!-- /content -->
-  </div><!-- /main -->
-</div><!-- /shell -->
 
-<!-- ── USER DETAIL MODAL ── -->
-<div class="modal-bg" id="modal-user">
-  <div class="modal" style="width:700px">
-    <div class="modal-head">
-      <div class="modal-title" id="modal-uname">USER DETAIL</div>
-      <button class="modal-close" onclick="closeModal('modal-user')">✕</button>
-    </div>
-    <div class="modal-body" id="modal-ubody">Loading...</div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-user')">Close</button>
-    </div>
+    </main>
   </div>
 </div>
 
-<!-- ── ACTION MODAL ── -->
-<div class="modal-bg" id="modal-action">
-  <div class="modal" style="width:420px">
-    <div class="modal-head">
-      <div class="modal-title" id="action-title">ACTION</div>
-      <button class="modal-close" onclick="closeModal('modal-action')">✕</button>
-    </div>
-    <div class="modal-body" id="action-body"></div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-action')">Cancel</button>
-      <button class="btn btn-amber" id="action-confirm" onclick="executeAction()">Confirm</button>
-    </div>
+<!-- DRAWER -->
+<div id="dOvl" class="dOvl" onclick="closeDr()"></div>
+<div id="drawer" class="drawer">
+  <div class="dHead">
+    <div id="dAva" class="dAva">?</div>
+    <div><div id="dName" class="dName">User</div><div id="dSub2" class="dSub2">--</div></div>
+    <div class="dClose" onclick="closeDr()">X</div>
   </div>
+  <div class="dTabs">
+    <div class="dTab active" onclick="swTab('profile',this)">Profile</div>
+    <div class="dTab" onclick="swTab('devices',this)">Devices</div>
+    <div class="dTab" onclick="swTab('history',this)">History</div>
+    <div class="dTab" onclick="swTab('actions',this)">Actions</div>
+  </div>
+  <div id="dp-profile" class="dPanel active"></div>
+  <div id="dp-devices" class="dPanel"></div>
+  <div id="dp-history" class="dPanel"></div>
+  <div id="dp-actions" class="dPanel"></div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+<!-- MODALS -->
+<div id="planMod" class="mOvl"><div class="modal"><div class="mTitle">Change Plan</div>
+  <label class="mLbl">Plan</label><select id="mPlan" class="mIn"><option>FREE</option><option>PAID</option><option>TRIAL</option><option>SUSPENDED</option></select>
+  <label class="mLbl">Reason</label><input id="mReason" class="mIn" placeholder="Reason">
+  <label class="mLbl">Amount INR</label><input id="mAmt" class="mIn" type="number" min="0" step="0.01" value="0">
+  <label class="mLbl">Payment Ref</label><input id="mRef" class="mIn" placeholder="UPI/Razorpay ID">
+  <div class="mActs"><button class="btn btnG" onclick="closeMod('planMod')">Cancel</button><button class="btn btnP" onclick="submitPlan()">Save</button></div>
+</div></div>
+<div id="mpinMod" class="mOvl"><div class="modal"><div class="mTitle">Reset MPIN</div>
+  <label class="mLbl">New MPIN (4-6 digits)</label><input id="mMpin" class="mIn" type="text" maxlength="6">
+  <div class="mActs"><button class="btn btnG" onclick="closeMod('mpinMod')">Cancel</button><button class="btn btnD" onclick="submitMpin()">Reset</button></div>
+</div></div>
+<div id="notesMod" class="mOvl"><div class="modal"><div class="mTitle">Admin Notes</div>
+  <textarea id="mNotes" class="mTa" style="min-height:90px"></textarea>
+  <div class="mActs"><button class="btn btnG" onclick="closeMod('notesMod')">Cancel</button><button class="btn btnP" onclick="submitNotes()">Save</button></div>
+</div></div>
+<div id="bpMod" class="mOvl"><div class="modal"><div class="mTitle">Bulk Set Plan</div>
+  <select id="bpSel" class="mIn"><option>FREE</option><option>PAID</option><option>TRIAL</option></select>
+  <div class="mActs"><button class="btn btnG" onclick="closeMod('bpMod')">Cancel</button><button class="btn btnP" onclick="bulkDo('set_plan')">Apply</button></div>
+</div></div>
+
+<div id="toasts"></div>
 
 <script>
-// ══════════════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════════════
-const API    = '/api/admin';
-const PUBAPI = '/api/admin';
-let TOKEN    = localStorage.getItem('admin_token') || '';
-let ADMIN    = JSON.parse(localStorage.getItem('admin_info') || 'null');
-let currentPage = 1;
-let pendingAction = null;
-let selectedUsers = new Set();
-let searchTimer   = null;
+'use strict';
+let tok=sessionStorage.getItem('ol_admin_token')||'';
+let adm=sessionStorage.getItem('ol_admin_name')||'Admin';
+let uPage=1,audPage=1,curId=null,curNotes='',selIds=new Set(),annType='info',dbt=null;
+let charts={};
 
-// ══════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  updateClock();
-  setInterval(updateClock, 1000);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fdt=iso=>iso?new Date(iso).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'--';
+const fds=iso=>iso?new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'}):'--';
+const fmoney=n=>n?'\u20b9'+Number(n).toLocaleString('en-IN'):'\u20b90';
+const pb=p=>{const m={FREE:'bC',PAID:'bO',TRIAL:'bY',SUSPENDED:'bR'};return'<span class="badge '+( m[p]||'bX')+'">'+esc(p||'--')+'</span>';};
+const sb=a=>a?'<span class="badge bG">Active</span>':'<span class="badge bR">Inactive</span>';
+function toast(m,t){const e=document.createElement('div');e.className='toast '+(t==='ok'?'tOk':t==='err'?'tErr':'tInf');e.textContent=m;document.getElementById('toasts').appendChild(e);setTimeout(()=>e.remove(),3500);}
+async function req(path,opts){
+  opts=opts||{};
+  const r=await fetch(path,Object.assign({},opts,{headers:Object.assign({'Content-Type':'application/json','Authorization':'Bearer '+tok},opts.headers||{})}));
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(d.error||d.message||'HTTP '+r.status);
+  return d;
+}
+const closeMod=id=>document.getElementById(id).classList.remove('open');
 
-  if (TOKEN && ADMIN) {
-    showShell();
-  }
+Chart.defaults.color='rgba(125,168,212,.7)';
+Chart.defaults.borderColor='rgba(99,155,255,.08)';
+Chart.defaults.font.family='JetBrains Mono, monospace';
+Chart.defaults.font.size=10;
+
+function mkChart(id,type,labels,datasets,opts){
+  const el=document.getElementById(id);if(!el)return;
+  if(charts[id])charts[id].destroy();
+  charts[id]=new Chart(el,{type:type,data:{labels:labels,datasets:datasets},options:Object.assign({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:datasets.length>1,labels:{boxWidth:10,padding:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{color:'rgba(99,155,255,.05)'},ticks:{maxRotation:45}},y:{grid:{color:'rgba(99,155,255,.05)'}}}},opts||{})});
+}
+function mkDoughnut(id,labels,data,colors){
+  const el=document.getElementById(id);if(!el)return;
+  if(charts[id])charts[id].destroy();
+  charts[id]=new Chart(el,{type:'doughnut',data:{labels:labels,datasets:[{data:data,backgroundColor:colors,borderWidth:1,borderColor:'rgba(99,155,255,.1)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:10,padding:8}}}}});
+}
+
+async function doLogin(){
+  const mob=document.getElementById('lMob').value.trim();
+  const pin=document.getElementById('lPin').value.trim();
+  const btn=document.getElementById('lBtn'),err=document.getElementById('lErr');
+  err.textContent='';
+  if(!mob||!pin){err.textContent='Mobile and MPIN required';return;}
+  btn.disabled=true;btn.textContent='Signing in...';
+  try{
+    const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,mpin:pin})});
+    const d=await r.json();
+    if(!d.success)throw new Error(d.message||'Invalid credentials');
+    tok=d.token;adm=d.admin&&d.admin.name||'Admin';
+    sessionStorage.setItem('ol_admin_token',tok);sessionStorage.setItem('ol_admin_name',adm);
+    document.getElementById('aChip').textContent=adm;
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    initApp();
+  }catch(e){err.textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent='Sign In to Admin Panel';}
+}
+function doLogout(){fetch('/api/admin/logout',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok}}).catch(function(){});sessionStorage.clear();location.reload();}
+
+function nav(name,btn){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.sBtn').forEach(function(b){b.classList.remove('active');});
+  var pg=document.getElementById('page-'+name);if(pg)pg.classList.add('active');
+  if(btn)btn.classList.add('active');
+  var map={overview:loadOverview,analytics:loadAnalytics,retention:loadRetention,activity:loadActivity,users:function(){loadUsers(1);},subscriptions:loadSubs,referrals:loadReferrals,announce:loadAnns,health:loadHealth,audit:function(){loadAudit(1);}};
+  if(map[name])map[name]();
+}
+
+async function initApp(){
+  document.getElementById('aChip').textContent=adm;
+  loadOverview();
+  try{const h=await req('/api/admin/health');const dot=document.getElementById('dbDot');dot.className='dot '+(h.status==='healthy'?'dotOn':'dotOff');dot.title='DB '+(h.checks&&h.checks.database&&h.checks.database.latency_ms||'?')+'ms';}catch(e){}
+  setInterval(async function(){try{const d=await req('/api/admin/analytics/activity');document.getElementById('onlineBadge').textContent=d.onlineCount||0;}catch(e){}},60000);
+}
+
+async function loadOverview(){
+  try{
+    const results=await Promise.all([req('/api/admin/stats'),req('/api/admin/analytics/signups'),req('/api/admin/analytics/revenue'),req('/api/admin/analytics/activity')]);
+    const stats=results[0],sig=results[1],rev=results[2],act=results[3];
+    const g=function(id){return document.getElementById(id);};
+    const u=stats.users,d=stats.activity,r=stats.revenue;
+    g('ov-total').textContent=u.total;g('ov-active').textContent=u.active;
+    g('ov-trend').textContent='\u2191 '+u.new_7d+' this week';
+    g('ov-paid').textContent=u.paid;g('ov-mrr').innerHTML='MRR '+fmoney(rev.mrr&&rev.mrr.mrr_inr||0);
+    g('ov-free').textContent=u.free;g('ov-dau').textContent=d.dau;g('ov-wau').textContent=d.wau;g('ov-mau').textContent=d.mau;
+    g('ov-flagged').textContent=u.flagged;g('ov-devs').textContent=stats.devices.trusted;
+    g('ov-upgrades').textContent=r.upgrades_30d;g('ov-new7').textContent=u.new_7d;g('ov-new30').textContent=u.new_30d;
+    g('ovTs').textContent='Updated: '+new Date().toLocaleTimeString('en-IN');
+    mkChart('ovSig','bar',sig.daily.map(function(x){return x.date&&x.date.slice(5,10)||'';}),
+      [{label:'Signups',data:sig.daily.map(function(x){return +x.signups||0;}),backgroundColor:'rgba(249,115,22,.4)',borderColor:'rgba(249,115,22,.8)',borderWidth:1,borderRadius:3}]);
+    mkChart('ovRev','line',rev.daily.map(function(x){return x.date&&x.date.slice(5,10)||'';}),
+      [{label:'Revenue',data:rev.daily.map(function(x){return +x.revenue||0;}),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.1)',fill:true,tension:.4,pointRadius:2}]);
+    g('ovOnline').textContent=(act.onlineCount||0)+' online';g('onlineBadge').textContent=act.onlineCount||0;
+    var items=(act.recentUpgrades||[]).map(function(x){return '<div class="row"><span class="dot dotOn"></span><span style="font-family:var(--fm);font-size:.51rem;flex:1">'+esc(x.name)+' upgraded '+pb(x.plan_from)+' to '+pb(x.plan_to)+'</span><span class="tMute" style="font-size:.43rem">'+fdt(x.created_at)+'</span></div>';})
+      .concat((act.recentSignups||[]).map(function(x){return '<div class="row"><span class="dot" style="background:var(--cyn)"></span><span style="font-family:var(--fm);font-size:.51rem;flex:1">New: '+esc(x.name)+' ('+esc(x.mobile)+') '+pb(x.plan)+'</span><span class="tMute" style="font-size:.43rem">'+fdt(x.created_at)+'</span></div>';})).slice(0,10);
+    g('ovFeed').innerHTML=items.join('')||'<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">No recent activity</div>';
+  }catch(e){toast('Overview: '+e.message,'err');}
+}
+
+async function loadAnalytics(){
+  try{
+    const results=await Promise.all([req('/api/admin/analytics/signups'),req('/api/admin/analytics/revenue')]);
+    const sig=results[0],rev=results[1],t=sig.totals,g=function(id){return document.getElementById(id);};
+    g('an-24h').textContent=t.last_24h||0;g('an-7d').textContent=t.last_7d||0;g('an-30d').textContent=t.last_30d||0;g('an-all').textContent=t.all_time||0;
+    g('an-paid').textContent=rev.mrr&&rev.mrr.paid_users||0;g('an-mrr').textContent=(+( rev.mrr&&rev.mrr.mrr_inr)||0).toLocaleString('en-IN');
+    mkChart('sigChart','bar',sig.daily.map(function(x){return x.date&&x.date.slice(5,10)||'';}),
+      [{label:'Total',data:sig.daily.map(function(x){return +x.signups||0;}),backgroundColor:'rgba(249,115,22,.5)',borderColor:'rgba(249,115,22,.9)',borderWidth:1,borderRadius:3},
+       {label:'Paid',data:sig.daily.map(function(x){return +x.paid_signups||0;}),backgroundColor:'rgba(16,185,129,.5)',borderColor:'rgba(16,185,129,.9)',borderWidth:1,borderRadius:3}]);
+    mkChart('revChart','bar',rev.monthly.map(function(x){return x.month&&x.month.slice(0,7)||'';}),
+      [{label:'Revenue',data:rev.monthly.map(function(x){return +x.revenue||0;}),backgroundColor:'rgba(16,185,129,.4)',borderColor:'rgba(16,185,129,.8)',borderWidth:1,borderRadius:3,yAxisID:'y'},
+       {label:'Upgrades',data:rev.monthly.map(function(x){return +x.upgrades||0;}),type:'line',borderColor:'rgba(249,115,22,.9)',backgroundColor:'transparent',pointRadius:4,tension:.3,yAxisID:'y1'}],
+      {scales:{y:{position:'left',ticks:{callback:function(v){return '\u20b9'+v.toLocaleString('en-IN');}}},y1:{position:'right',grid:{drawOnChartArea:false}}}});
+    var tb=document.getElementById('revByRef');
+    tb.innerHTML=(rev.byReferral||[]).length?(rev.byReferral||[]).map(function(r){var conv=r.total_users>0?Math.round(r.paid_users*100/r.total_users):0;return'<tr><td><span class="badge bO">'+esc(r.referral_code)+'</span></td><td>'+r.total_users+'</td><td>'+r.paid_users+'</td><td style="color:var(--grn)">'+(+r.total_revenue||0).toLocaleString('en-IN')+'</td><td>'+conv+'%</td></tr>';}).join(''):'<tr class="tLoad"><td colspan="5">No referral revenue data</td></tr>';
+  }catch(e){toast('Analytics: '+e.message,'err');}
+}
+
+async function loadRetention(){
+  try{
+    const d=await req('/api/admin/analytics/overview');
+    mkChart('dauChart','line',d.dau.map(function(r){return r.date&&r.date.slice(5,10)||'';}),
+      [{label:'DAU',data:d.dau.map(function(r){return +r.active_users||0;}),borderColor:'rgba(34,211,238,.9)',backgroundColor:'rgba(34,211,238,.08)',fill:true,tension:.4,pointRadius:2}]);
+    var C=['#f97316','#10b981','#22d3ee','#a855f7','#f59e0b','#ef4444'];
+    mkDoughnut('styleChart',d.tradingStyles.map(function(r){return r.trading_style||'?';}),d.tradingStyles.map(function(r){return +r.users||0;}),C);
+    mkDoughnut('expChart',d.experience.map(function(r){return r.experience||'?';}),d.experience.map(function(r){return +r.users||0;}),C);
+    document.getElementById('retTable').innerHTML=d.retention.map(function(r){
+      var w2=r.cohort_size>0?Math.round(r.retained_w2*100/r.cohort_size):0;
+      var w3=r.cohort_size>0?Math.round(r.retained_w3*100/r.cohort_size):0;
+      var w4=r.cohort_size>0?Math.round(r.retained_w4*100/r.cohort_size):0;
+      function bar(v,t){return'<div class="healthBar"><div class="healthFill '+(v>=t?'hGrn':v>=t/2?'hYel':'hRed')+'" style="width:'+v+'%"></div></div> '+v+'%';}
+      return'<tr><td>Wk '+r.cohort_week+'</td><td>'+r.cohort_size+'</td><td>'+bar(w2,60)+'</td><td>'+bar(w3,40)+'</td><td>'+bar(w4,30)+'</td></tr>';
+    }).join('')||'<tr class="tLoad"><td colspan="5">No cohort data yet</td></tr>';
+  }catch(e){toast('Retention: '+e.message,'err');}
+}
+
+async function loadActivity(){
+  try{
+    const d=await req('/api/admin/analytics/activity');
+    document.getElementById('act-on').textContent=d.onlineCount||0;
+    document.getElementById('act-sig').textContent=(d.recentSignups||[]).length;
+    document.getElementById('act-up').textContent=(d.recentUpgrades||[]).length;
+    document.getElementById('actOnBadge').textContent=d.onlineCount||0;
+    document.getElementById('onlineBadge').textContent=d.onlineCount||0;
+    document.getElementById('actTs').textContent='Updated: '+new Date().toLocaleTimeString('en-IN');
+    var hrs=Array.from({length:24},function(_,i){return i;});
+    var lMap={};(d.hourlyLogins||[]).forEach(function(r){lMap[r.hour]=+r.logins||0;});
+    mkChart('hrChart','bar',hrs.map(function(h){return h+':00';}),
+      [{label:'Logins',data:hrs.map(function(h){return lMap[h]||0;}),backgroundColor:'rgba(249,115,22,.4)',borderColor:'rgba(249,115,22,.8)',borderWidth:1,borderRadius:3}]);
+    document.getElementById('onlineList').innerHTML=(d.online||[]).length
+      ?(d.online||[]).map(function(u){return'<div class="row"><span class="dot dotOn"></span><div style="flex:1;min-width:0"><div style="font-family:var(--fm);font-size:.52rem;color:var(--tx)">'+esc(u.name)+' <span class="tMute">'+esc(u.mobile)+'</span></div><div class="tMute" style="font-size:.43rem">'+esc(u.last_device||'?')+' - '+esc(u.last_login_ip||'?')+'</div></div>'+pb(u.plan)+'</div>';}).join('')
+      :'<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">No users online in last 10 min</div>';
+    document.getElementById('sigList').innerHTML=(d.recentSignups||[]).slice(0,8).map(function(u){return'<div class="row"><div style="flex:1;min-width:0"><div style="font-family:var(--fm);font-size:.52rem;color:var(--tx)">'+esc(u.name)+' <span class="tMute">'+esc(u.mobile)+'</span></div><div class="tMute" style="font-size:.42rem">'+(u.referral_code?'Ref:'+u.referral_code+' | ':'')+esc(u.experience||'?')+'</div></div><span class="tMute" style="font-size:.42rem">'+fdt(u.created_at)+'</span></div>';}).join('')||'<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">None</div>';
+    document.getElementById('upList').innerHTML=(d.recentUpgrades||[]).slice(0,8).map(function(u){return'<div class="row"><div style="flex:1;min-width:0"><div style="font-family:var(--fm);font-size:.52rem;color:var(--tx)">'+esc(u.name)+' <span class="tMute">'+esc(u.mobile)+'</span></div><div style="font-size:.42rem">'+pb(u.plan_from)+'to'+pb(u.plan_to)+'</div></div><span style="color:var(--grn);font-family:var(--fm);font-size:.46rem">'+(u.amount?'\u20b9'+u.amount:'--')+'</span></div>';}).join('')||'<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">None</div>';
+  }catch(e){toast('Activity: '+e.message,'err');}
+}
+
+function debU(){clearTimeout(dbt);dbt=setTimeout(function(){loadUsers(1);},350);}
+async function loadUsers(pg){
+  pg=pg||1;uPage=pg;
+  var qs=new URLSearchParams({page:pg,limit:50,sort:document.getElementById('uSort').value||'created_at',dir:document.getElementById('uDir').value||'desc'});
+  var src=document.getElementById('uSrc').value;if(src)qs.set('search',src);
+  var pl=document.getElementById('uPlan').value;if(pl)qs.set('plan',pl);
+  var st=document.getElementById('uStat').value;if(st)qs.set('status',st);
+  var fl=document.getElementById('uFlag').value;if(fl)qs.set('flagged',fl);
+  var tb=document.getElementById('uBody');
+  tb.innerHTML='<tr class="tLoad"><td colspan="12"><span class="spin"></span></td></tr>';
+  try{
+    const d=await req('/api/admin/users?'+qs.toString());
+    var tot=d.pagination&&d.pagination.total||0,pgs=d.pagination&&d.pagination.pages||1;
+    document.getElementById('uInfo').textContent='Page '+pg+'/'+pgs+' - '+tot+' users';
+    document.getElementById('uPrev').disabled=pg<=1;document.getElementById('uNext').disabled=pg>=pgs;
+    tb.innerHTML=(d.users||[]).map(function(u){return'<tr><td><input type="checkbox" class="ucb" value="'+u.id+'" onchange="togSel('+u.id+')"></td><td class="tMute">'+u.id+'</td><td class="tName">'+esc(u.name)+'</td><td>'+esc(u.mobile)+'</td><td>'+pb(u.plan)+'</td><td>'+sb(u.is_active)+'</td><td>'+(u.flagged?'<span class="badge bR">Flagged</span>':'--')+'</td><td class="tMute">'+fdt(u.last_login_at)+'</td><td class="tMute">'+(u.total_logins||0)+'</td><td>'+(u.referral_code?'<span class="badge bP">'+esc(u.referral_code)+'</span>':'--')+'</td><td class="tMute">'+fds(u.created_at)+'</td><td><button class="btn btnG btnSm" onclick="openDr('+u.id+')">View</button></td></tr>';}).join('')||'<tr class="tLoad"><td colspan="12">No users found</td></tr>';
+  }catch(e){tb.innerHTML='<tr class="tLoad"><td colspan="12">Error: '+esc(e.message)+'</td></tr>';toast(e.message,'err');}
+}
+function togAll(){var c=document.getElementById('selAll').checked;document.querySelectorAll('.ucb').forEach(function(cb){cb.checked=c;c?selIds.add(+cb.value):selIds.delete(+cb.value);});updBulk();}
+function togSel(id){var cb=document.querySelector('.ucb[value="'+id+'"]');cb&&cb.checked?selIds.add(id):selIds.delete(id);updBulk();}
+function updBulk(){document.getElementById('bulkBar').style.display=selIds.size?'flex':'none';document.getElementById('bulkCnt').textContent=selIds.size+' selected';}
+function clearSel(){selIds.clear();document.querySelectorAll('.ucb').forEach(function(cb){cb.checked=false;});document.getElementById('selAll').checked=false;updBulk();}
+function openBulkPlan(){document.getElementById('bpMod').classList.add('open');}
+async function bulkDo(action){
+  var ids=[...selIds];if(!ids.length){toast('No users selected','err');return;}
+  var body={userIds:ids,action:action};
+  if(action==='set_plan'){body.payload={plan:document.getElementById('bpSel').value};closeMod('bpMod');}
+  try{const d=await req('/api/admin/users/bulk-action',{method:'POST',body:JSON.stringify(body)});toast(d.message||'Done','ok');clearSel();loadUsers(uPage);}catch(e){toast(e.message,'err');}
+}
+
+async function loadSubs(){
+  var type=document.getElementById('subType').value||'';
+  var tb=document.getElementById('subBody');
+  tb.innerHTML='<tr class="tLoad"><td colspan="9"><span class="spin"></span></td></tr>';
+  try{
+    const d=await req('/api/admin/subscriptions'+(type?'?type='+type:''));
+    var t=d.totals||{};
+    document.getElementById('sub-rev').textContent=(+t.total_revenue||0).toLocaleString('en-IN');
+    document.getElementById('sub-up').textContent=t.upgrades||0;document.getElementById('sub-dn').textContent=t.downgrades||0;
+    document.getElementById('sub-avg').textContent=(+t.avg_amount||0).toFixed(0);
+    tb.innerHTML=(d.subscriptions||[]).map(function(s){return'<tr><td class="tMute">'+fdt(s.created_at)+'</td><td class="tName">'+esc(s.name)+'</td><td>'+esc(s.mobile)+'</td><td>'+pb(s.plan_from)+'</td><td>'+pb(s.plan_to)+'</td><td style="color:var(--grn);font-weight:700">'+(s.amount?'\u20b9'+Number(s.amount).toLocaleString('en-IN'):'--')+'</td><td class="tMute" style="max-width:100px;overflow:hidden;text-overflow:ellipsis">'+esc(s.payment_ref||'--')+'</td><td class="tMute" style="max-width:130px;overflow:hidden;text-overflow:ellipsis">'+esc(s.reason||'--')+'</td><td class="tMute">'+esc(s.changed_by_name||'--')+'</td></tr>';}).join('')||'<tr class="tLoad"><td colspan="9">No records</td></tr>';
+  }catch(e){tb.innerHTML='<tr class="tLoad"><td colspan="9">Error: '+esc(e.message)+'</td></tr>';toast(e.message,'err');}
+}
+async function submitManualPayment(){
+  var uid=document.getElementById('mpUid').value,reason=document.getElementById('mpReason').value;
+  if(!uid||!reason){toast('User ID and Reason required','err');return;}
+  try{
+    const d=await req('/api/admin/subscriptions/manual',{method:'POST',body:JSON.stringify({user_id:+uid,plan:document.getElementById('mpPlan').value,amount:parseFloat(document.getElementById('mpAmt').value)||0,payment_ref:document.getElementById('mpRef').value,reason:reason,expires_days:+document.getElementById('mpDays').value||null})});
+    toast(d.message||'Payment recorded','ok');
+    ['mpUid','mpAmt','mpRef','mpReason','mpDays'].forEach(function(id){document.getElementById(id).value='';});
+    loadSubs();
+  }catch(e){toast(e.message,'err');}
+}
+
+async function loadReferrals(){
+  document.getElementById('refList').innerHTML='<span class="spin"></span>';
+  try{
+    const d=await req('/api/admin/referrals');
+    var mgdMap={};(d.managed||[]).forEach(function(m){mgdMap[m.code]=m;});
+    var all=d.codes||[];
+    if(!all.length){document.getElementById('refList').innerHTML='<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">No referral codes found yet. Create one above.</div>';return;}
+    document.getElementById('refList').innerHTML=all.map(function(r){
+      var mgd=mgdMap[r.code]||{};
+      var conv=r.total_users>0?Math.round(r.paid_users*100/r.total_users):0;
+      var commOwed=mgd.commission_pct>0?(+r.total_revenue||0)*(mgd.commission_pct/100):0;
+      return'<div class="refBox" onclick="loadRefDetail(\''+esc(r.code)+'\')"><div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap"><span class="badge bO" style="font-size:.55rem;padding:.15rem .55rem">'+esc(r.code)+'</span>'+(mgd.owner_name?'<span style="font-family:var(--fm);font-size:.5rem;color:var(--tx2)">'+esc(mgd.owner_name)+'</span>':'')+(mgd.discount_pct>0?'<span class="badge bC">'+mgd.discount_pct+'% discount</span>':'')+(mgd.commission_pct>0?'<span class="badge bP">'+mgd.commission_pct+'% commission</span>':'')+'<span style="margin-left:auto;font-family:var(--fm);font-size:.45rem;color:var(--acc)">View detail</span></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem;margin-top:.5rem"><div><div class="sLbl">Users</div><div style="font-family:var(--fd);font-size:1.1rem;color:var(--tx)">'+r.total_users+'</div></div><div><div class="sLbl">Paid</div><div style="font-family:var(--fd);font-size:1.1rem;color:var(--grn)">'+r.paid_users+'</div></div><div><div class="sLbl">Conv</div><div style="font-family:var(--fd);font-size:1.1rem;color:var(--acc)">'+conv+'%</div></div><div><div class="sLbl">Revenue</div><div style="font-family:var(--fd);font-size:1.1rem;color:var(--cyn)">'+(+r.total_revenue||0).toLocaleString('en-IN')+'</div></div><div><div class="sLbl">Last Used</div><div style="font-family:var(--fm);font-size:.47rem;color:var(--tx2);margin-top:.2rem">'+fds(r.last_used)+'</div></div></div>'+(commOwed>0?'<div style="font-family:var(--fm);font-size:.46rem;color:var(--pur);margin-top:.35rem">Commission owed: \u20b9'+commOwed.toLocaleString('en-IN')+' to '+esc(mgd.owner_name||'owner')+(mgd.owner_mobile?' | '+esc(mgd.owner_mobile):'')+'</div>':'')+'</div>';
+    }).join('');
+  }catch(e){document.getElementById('refList').innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.52rem">Error: '+esc(e.message)+'</div>';}
+}
+async function loadRefDetail(code){
+  var box=document.getElementById('refDetail');
+  box.style.display='block';
+  document.getElementById('refDetailTitle').textContent='Code: '+code;
+  document.getElementById('refDetailBody').innerHTML='<span class="spin"></span>';
+  try{
+    const d=await req('/api/admin/referrals/'+encodeURIComponent(code));
+    var s=d.stats||{};
+    var totalPaid=(d.users||[]).reduce(function(a,u){return a+(+u.total_paid||0);},0);
+    var cfgComm=d.config&&d.config.commission_pct||0;
+    document.getElementById('refDetailBody').innerHTML=
+      '<div class="sGrid" style="margin-bottom:.7rem">'
+      +'<div class="sCard cOrg"><div class="sLbl">Total Users</div><div class="sVal cO">'+(s.total_users||0)+'</div></div>'
+      +'<div class="sCard cGrn"><div class="sLbl">Paid</div><div class="sVal cG">'+(s.paid_users||0)+'</div></div>'
+      +'<div class="sCard cCyn"><div class="sLbl">Free</div><div class="sVal cC">'+(s.free_users||0)+'</div></div>'
+      +'<div class="sCard cOrg"><div class="sLbl">Conversion</div><div class="sVal cO">'+(s.conversion_rate||0)+'%</div></div>'
+      +'</div>'
+      +(d.config?'<div class="card" style="margin-bottom:.7rem"><div class="cHead">Configuration</div>'
+        +dr('Owner',d.config.owner_name||'--')
+        +dr('Contact',d.config.owner_mobile||'--')
+        +dr('User Discount',d.config.discount_pct+'%')
+        +dr('Commission',d.config.commission_pct+'%')
+        +dr('Status',d.config.is_active?'<span class="badge bG">Active</span>':'<span class="badge bR">Inactive</span>')
+        +(cfgComm>0?dr('Commission Owed','\u20b9'+(totalPaid*(cfgComm/100)).toLocaleString('en-IN')):'')
+        +'</div>':'<div style="font-family:var(--fm);font-size:.5rem;color:var(--tx3);margin-bottom:.6rem">No config yet. Create one using the form above.</div>')
+      +'<div class="tWrap"><table><thead><tr><th>User</th><th>Mobile</th><th>Plan</th><th>Joined</th><th>Last Login</th><th>Paid INR</th></tr></thead><tbody>'
+      +(d.users||[]).map(function(u){return'<tr><td class="tName">'+esc(u.name)+'</td><td>'+esc(u.mobile)+'</td><td>'+pb(u.plan)+'</td><td class="tMute">'+fds(u.created_at)+'</td><td class="tMute">'+fdt(u.last_login_at)+'</td><td style="color:var(--grn)">'+(u.total_paid>0?'\u20b9'+Number(u.total_paid).toLocaleString('en-IN'):'--')+'</td></tr>';}).join('')+'</tbody></table></div>';
+  }catch(e){document.getElementById('refDetailBody').innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.52rem">Error: '+esc(e.message)+'</div>';}
+}
+async function saveRef(){
+  var code=(document.getElementById('rcCode').value||'').trim().toUpperCase();
+  if(!code){toast('Code is required','err');return;}
+  try{
+    await req('/api/admin/referrals',{method:'POST',body:JSON.stringify({code:code,owner_name:document.getElementById('rcName').value||null,owner_mobile:document.getElementById('rcMob').value||null,discount_pct:parseFloat(document.getElementById('rcDisc').value)||0,commission_pct:parseFloat(document.getElementById('rcComm').value)||0,notes:document.getElementById('rcNotes').value||null})});
+    toast('Code '+code+' saved!','ok');
+    ['rcCode','rcName','rcMob','rcDisc','rcComm','rcNotes'].forEach(function(id){document.getElementById(id).value='';});
+    loadReferrals();
+  }catch(e){toast(e.message,'err');}
+}
+
+function setAT(t){annType=t;['info','warning','critical'].forEach(function(x){var el=document.getElementById('tp-'+x);if(el)el.classList.toggle('tpActive',x===t);});}
+async function postAnn(){
+  var title=document.getElementById('aTitle').value.trim(),body=document.getElementById('aBody').value.trim();
+  if(!title||!body){toast('Title and body required','err');return;}
+  try{
+    await req('/api/admin/announcements',{method:'POST',body:JSON.stringify({title:title,body:body,type:annType,target:document.getElementById('aTarget').value,expires_at:document.getElementById('aExp').value?new Date(document.getElementById('aExp').value).toISOString():null})});
+    toast('Announcement posted!','ok');document.getElementById('aTitle').value='';document.getElementById('aBody').value='';document.getElementById('aExp').value='';loadAnns();
+  }catch(e){toast(e.message,'err');}
+}
+async function loadAnns(){
+  var list=document.getElementById('annList');list.innerHTML='<span class="spin"></span>';
+  try{
+    const d=await req('/api/admin/announcements');
+    var tc={info:'bC',warning:'bY',critical:'bR'};
+    list.innerHTML=(d.announcements||[]).map(function(a){return'<div style="background:var(--bg3);border:1px solid var(--bo);border-radius:8px;padding:.6rem .85rem;margin-bottom:.38rem;display:flex;align-items:flex-start;gap:.6rem"><span class="badge '+(tc[a.type]||'bX')+'">'+esc(a.type)+'</span><div style="flex:1;min-width:0"><div style="font-family:var(--fr);font-size:.88rem;font-weight:700;color:var(--tx)">'+esc(a.title)+'</div><div style="font-family:var(--fm);font-size:.47rem;color:var(--tx2);margin:.18rem 0">'+esc(a.body)+'</div><div style="font-family:var(--fm);font-size:.42rem;color:var(--tx3)">'+a.target+' - '+fds(a.created_at)+(a.expires_at?' - Exp: '+fds(a.expires_at):'')+'</div></div><div style="display:flex;flex-direction:column;gap:.28rem;align-items:flex-end;flex-shrink:0">'+(a.is_active?'<span class="badge bG">Active</span>':'<span class="badge bX">Inactive</span>')+'<button class="btn btnG btnSm" onclick="togAnn('+a.id+','+a.is_active+')">'+(a.is_active?'Deactivate':'Activate')+'</button></div></div>';}).join('')||'<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3)">No announcements</div>';
+  }catch(e){list.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.52rem">Error: '+esc(e.message)+'</div>';}
+}
+async function togAnn(id,cur){try{await req('/api/admin/announcements/'+id,{method:'PATCH',body:JSON.stringify({is_active:!cur})});toast(cur?'Deactivated':'Activated','ok');loadAnns();}catch(e){toast(e.message,'err');}}
+
+async function loadHealth(){
+  try{
+    const d=await req('/api/admin/health');
+    var g=function(id){return document.getElementById(id);};
+    var statusEl=g('h-status');statusEl.innerHTML=d.status==='healthy'?'<span style="color:var(--grn)">Healthy</span>':'<span style="color:var(--yel)">Degraded</span>';
+    g('h-lat').textContent=d.checks&&d.checks.database&&d.checks.database.latency_ms||'--';
+    g('h-up').textContent=Math.round((d.uptime_ms||0)/3600000)+'h';
+    g('h-node').textContent=d.node_version||'--';
+    var pool=d.checks&&d.checks.pool||{};
+    g('h-pt').textContent=pool.total||0;g('h-pi').textContent=pool.idle||0;g('h-pw').textContent=pool.waiting||0;
+    g('h-dbsz').textContent=d.checks&&d.checks.storage&&d.checks.storage.db_size||'--';
+    document.getElementById('hTs').textContent='Updated: '+new Date().toLocaleTimeString('en-IN');
+    var tc=d.checks&&d.checks.tables||{};
+    g('h-tables').innerHTML=Object.entries(tc).map(function(e){return'<div class="dRow"><span class="dKey">'+e[0]+'</span><span class="dVal">'+Number(e[1]).toLocaleString('en-IN')+'</span></div>';}).join('');
+    var mem=d.memory||{};var mb=function(b){return Math.round((b||0)/1024/1024);};
+    g('h-memory').innerHTML=[['rss',mem.rss],['heapUsed',mem.heapUsed],['heapTotal',mem.heapTotal],['external',mem.external]].map(function(e){return'<div class="dRow"><span class="dKey">'+e[0]+'</span><span class="dVal">'+mb(e[1])+' MB</span></div>';}).join('');
+    document.getElementById('dbDot').className='dot '+(d.status==='healthy'?'dotOn':'dotOff');
+  }catch(e){toast('Health: '+e.message,'err');}
+}
+
+async function loadAudit(pg){
+  pg=pg||1;audPage=pg;
+  var tb=document.getElementById('audBody');
+  tb.innerHTML='<tr class="tLoad"><td colspan="6"><span class="spin"></span></td></tr>';
+  try{
+    const d=await req('/api/admin/audit?page='+pg+'&limit=50');
+    document.getElementById('aInfo').textContent='Page '+pg;
+    document.getElementById('aPrev').disabled=pg<=1;
+    document.getElementById('aNext').disabled=(d.logs||[]).length<50;
+    var ac={ADMIN_LOGIN:'bG',TOGGLE_USER_STATUS:'bY',CHANGE_USER_PLAN:'bO',RESET_USER_MPIN:'bR',FORCE_LOGOUT:'bR',FLAG_USER:'bR',BULK_ACTION:'bC',MANUAL_PAYMENT:'bG',CREATE_REFERRAL_CODE:'bP',UPDATE_REFERRAL_CODE:'bP'};
+    tb.innerHTML=(d.logs||[]).map(function(l){return'<tr><td class="tMute">'+fdt(l.created_at)+'</td><td class="tName">'+esc(l.admin_name||'--')+'</td><td><span class="badge '+(ac[l.action]||'bX')+'">'+esc(l.action)+'</span></td><td class="tMute">'+(l.target_name?esc(l.target_name)+' ('+esc(l.target_mobile||'')+'  )':'--')+'</td><td>'+(l.success!==false?'<span class="badge bG">OK</span>':'<span class="badge bR">Fail</span>')+'</td><td class="tMute">'+esc(l.ip_address||'--')+'</td></tr>';}).join('')||'<tr class="tLoad"><td colspan="6">No logs</td></tr>';
+  }catch(e){tb.innerHTML='<tr class="tLoad"><td colspan="6">Error: '+esc(e.message)+'</td></tr>';toast(e.message,'err');}
+}
+
+function doExp(type,format){
+  fetch('/api/admin/export/'+type+'?format='+format,{headers:{'Authorization':'Bearer '+tok}})
+    .then(function(r){var cd=r.headers.get('content-disposition')||'';var fn=(cd.match(/filename="([^"]+)"/)&&cd.match(/filename="([^"]+")/ )[1])||type+'.'+format;return r.blob().then(function(blob){return{blob:blob,fn:fn};});})
+    .then(function(x){var url=URL.createObjectURL(x.blob);var a=document.createElement('a');a.href=url;a.download=x.fn;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);a.remove();},1000);toast('Download started','ok');})
+    .catch(function(e){toast('Export failed: '+e.message,'err');});
+}
+
+async function openDr(uid){
+  curId=uid;
+  document.getElementById('dOvl').classList.add('open');document.getElementById('drawer').classList.add('open');
+  document.getElementById('dName').textContent='Loading...';
+  document.querySelectorAll('.dTab').forEach(function(t,i){t.classList.toggle('active',i===0);});
+  document.querySelectorAll('.dPanel').forEach(function(p,i){p.classList.toggle('active',i===0);});
+  document.getElementById('dp-profile').innerHTML='<span class="spin" style="display:block;margin:1.5rem auto"></span>';
+  try{
+    const d=await req('/api/admin/users/'+uid);var u=d.user;curNotes=u.notes||'';
+    document.getElementById('dAva').textContent=(u.name||'?')[0].toUpperCase();
+    document.getElementById('dName').textContent=u.name;
+    document.getElementById('dSub2').innerHTML='ID:'+u.id+' &nbsp; '+pb(u.plan)+' &nbsp; '+sb(u.is_active);
+    document.getElementById('dp-profile').innerHTML=
+      '<div class="dSec">Identity</div>'+dr('Name',esc(u.name))+dr('Mobile',esc(u.mobile))+dr('Email',u.email?esc(u.email):'--')
+      +dr('Referral Used',u.referral_code?'<span class="badge bP">'+esc(u.referral_code)+'</span>':'--')
+      +dr('Angel Code',u.angel_client_code||'--')+dr('Experience',u.experience||'--')+dr('Trading Style',u.trading_style||'--')
+      +'<div class="dSec">Account</div>'+dr('Plan',pb(u.plan))+dr('Status',sb(u.is_active))
+      +dr('Flagged',u.flagged?'<span class="badge bR">Yes - '+esc(u.flag_reason||'')+'</span>':'<span class="badge bX">No</span>')
+      +dr('Joined',fdt(u.created_at))
+      +'<div class="dSec">Activity</div>'+dr('Total Logins',u.total_logins||0)+dr('Last Login',fdt(u.last_login_at))
+      +dr('Last IP',u.last_login_ip||'--')+dr('Last Device',u.last_device||'--')+dr('Failed Logins',u.failed_logins||0)
+      +'<div class="dSec">Admin Notes</div><div style="font-family:var(--fm);font-size:.51rem;color:var(--tx2);padding:.45rem;background:var(--bg3);border-radius:6px;min-height:32px;white-space:pre-wrap">'+esc(u.notes||'No notes')+'</div>';
+    var devs=d.devices||[];
+    document.getElementById('dp-devices').innerHTML=devs.length?devs.map(function(dv){return'<div class="row"><div class="dot '+(dv.is_trusted?'dotOn':'dotOff')+'"></div><div style="flex:1;min-width:0"><div style="font-family:var(--fm);font-size:.52rem;color:var(--tx)">'+esc(dv.device_name||'Unknown')+'</div><div class="tMute" style="font-size:.43rem">'+esc(dv.platform||'?')+' - '+esc(dv.ip_address||'--')+' - '+fdt(dv.last_seen_at)+'</div></div>'+(dv.is_trusted?'<span class="badge bG">Trusted</span>':'<span class="badge bX">Untrusted</span>')+'</div>';}).join(''):'<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">No devices</div>';
+    var hist=d.subHistory||[];
+    document.getElementById('dp-history').innerHTML=hist.length?'<table style="width:100%;border-collapse:collapse;font-family:var(--fm);font-size:.49rem"><thead><tr style="border-bottom:1px solid var(--bo)"><th style="padding:.28rem;color:var(--tx3);text-align:left">Date</th><th>From</th><th>To</th><th style="text-align:left;padding:.28rem">Reason</th><th style="text-align:right;padding:.28rem">INR</th></tr></thead><tbody>'+hist.map(function(h){return'<tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:.28rem;color:var(--tx3)">'+fds(h.created_at)+'</td><td style="padding:.28rem">'+pb(h.plan_from)+'</td><td style="padding:.28rem">'+pb(h.plan_to)+'</td><td style="padding:.28rem;color:var(--tx2)">'+esc(h.reason||'--')+'</td><td style="padding:.28rem;text-align:right;color:var(--acc)">'+(h.amount?'\u20b9'+Number(h.amount).toLocaleString('en-IN'):'--')+'</td></tr>';}).join('')+'</tbody></table>':'<div style="font-family:var(--fm);font-size:.52rem;color:var(--tx3);padding:.5rem">No history</div>';
+    document.getElementById('dp-actions').innerHTML='<div class="dSec">Quick Actions</div><div class="actGrid"><button class="btn btnG" onclick="actStatus('+u.id+','+u.is_active+')">'+(u.is_active?'Deactivate':'Activate')+'</button><button class="btn btnG" onclick="openPlanMod('+u.id+',\''+u.plan+'\')">Change Plan</button><button class="btn btnG" onclick="openMpinMod('+u.id+')">Reset MPIN</button><button class="btn btnG" onclick="actForceLogout('+u.id+')">Force Logout</button><button class="btn btnG" onclick="openNotesMod('+u.id+')">Edit Notes</button><button class="btn '+(u.flagged?'btnS':'btnD')+'" onclick="actFlag('+u.id+','+u.flagged+')">'+(u.flagged?'Remove Flag':'Flag User')+'</button></div>';
+  }catch(e){document.getElementById('dp-profile').innerHTML='<div style="padding:1rem;color:var(--red);font-family:var(--fm);font-size:.52rem">Error: '+esc(e.message)+'</div>';toast(e.message,'err');}
+}
+function dr(k,v){return'<div class="dRow"><span class="dKey">'+k+'</span><span class="dVal">'+v+'</span></div>';}
+function closeDr(){document.getElementById('dOvl').classList.remove('open');document.getElementById('drawer').classList.remove('open');curId=null;}
+function swTab(name,el){document.querySelectorAll('.dTab').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.dPanel').forEach(function(p){p.classList.remove('active');});el.classList.add('active');document.getElementById('dp-'+name).classList.add('active');}
+async function actStatus(uid,cur){try{const d=await req('/api/admin/users/'+uid+'/status',{method:'PATCH',body:JSON.stringify({is_active:!cur})});toast(d.message||'Done','ok');closeDr();loadUsers(uPage);}catch(e){toast(e.message,'err');}}
+function openPlanMod(uid,plan){curId=uid;document.getElementById('mPlan').value=plan||'FREE';document.getElementById('mReason').value='';document.getElementById('mAmt').value=0;document.getElementById('mRef').value='';document.getElementById('planMod').classList.add('open');}
+async function submitPlan(){try{const d=await req('/api/admin/users/'+curId+'/plan',{method:'PATCH',body:JSON.stringify({plan:document.getElementById('mPlan').value,reason:document.getElementById('mReason').value,amount:parseFloat(document.getElementById('mAmt').value)||0,payment_ref:document.getElementById('mRef').value||null})});toast(d.message||'Done','ok');closeMod('planMod');closeDr();loadUsers(uPage);}catch(e){toast(e.message,'err');}}
+function openMpinMod(uid){curId=uid;document.getElementById('mMpin').value='';document.getElementById('mpinMod').classList.add('open');}
+async function submitMpin(){try{const d=await req('/api/admin/users/'+curId+'/reset-mpin',{method:'POST',body:JSON.stringify({new_mpin:document.getElementById('mMpin').value})});toast(d.message||'Done','ok');closeMod('mpinMod');}catch(e){toast(e.message,'err');}}
+async function actForceLogout(uid){try{const d=await req('/api/admin/users/'+uid+'/force-logout',{method:'POST',body:'{}'});toast(d.message||'Done','ok');}catch(e){toast(e.message,'err');}}
+function openNotesMod(uid){curId=uid;document.getElementById('mNotes').value=curNotes;document.getElementById('notesMod').classList.add('open');}
+async function submitNotes(){try{await req('/api/admin/users/'+curId+'/notes',{method:'PATCH',body:JSON.stringify({notes:document.getElementById('mNotes').value})});toast('Notes saved','ok');closeMod('notesMod');openDr(curId);}catch(e){toast(e.message,'err');}}
+async function actFlag(uid,cur){var reason=cur?'':(prompt('Flag reason:')||'');try{await req('/api/admin/users/'+uid+'/flag',{method:'PATCH',body:JSON.stringify({flagged:!cur,flag_reason:reason})});toast(cur?'Flag removed':'Flagged','ok');openDr(uid);loadUsers(uPage);}catch(e){toast(e.message,'err');}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  var mob=document.getElementById('lMob'),pin=document.getElementById('lPin');
+  if(mob)mob.addEventListener('keydown',function(e){if(e.key==='Enter'&&pin)pin.focus();});
+  if(pin)pin.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 });
 
-function updateClock() {
-  const now = new Date();
-  document.getElementById('topbar-time').textContent =
-    now.toLocaleDateString('en-IN') + '  ' + now.toLocaleTimeString('en-IN');
-}
-
-// ══════════════════════════════════════════════════════════
-// LOGIN
-// ══════════════════════════════════════════════════════════
-async function doAdminLogin() {
-  const mobile = document.getElementById('lg-mobile').value.trim();
-  const mpin   = document.getElementById('lg-mpin').value.trim();
-  const btn    = document.getElementById('btn-lg');
-  const msg    = document.getElementById('msg-login');
-
-  if (!mobile || mpin.length < 4) { msg.textContent = 'Enter mobile and 4-digit MPIN'; return; }
-
-  btn.disabled = true; btn.textContent = 'Verifying...';
-
-  try {
-    const res  = await fetch(`${PUBAPI}/login`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ mobile, mpin }),
-    });
-    const data = await res.json();
-
-    if (data.token) {
-      TOKEN = data.token;
-      ADMIN = data.admin;
-      localStorage.setItem('admin_token', TOKEN);
-      localStorage.setItem('admin_info', JSON.stringify(ADMIN));
-      showShell();
-    } else {
-      msg.textContent = data.error || 'Login failed';
-    }
-  } catch(e) {
-    msg.textContent = 'Connection error';
-  }
-  btn.disabled = false; btn.textContent = 'Login to Admin →';
-}
-
-function showShell() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('shell').style.display = 'grid';
-
-  const name = ADMIN?.name || 'Admin';
-  document.getElementById('sb-name').textContent = name;
-  document.getElementById('sb-av').textContent   = name.charAt(0).toUpperCase();
-
-  loadDashboard();
-  loadUsers();
-  loadFlagged();
-  loadAudit();
-  loadAnnouncements();
-}
-
-function adminLogout() {
-  localStorage.removeItem('admin_token');
-  localStorage.removeItem('admin_info');
-  TOKEN = ''; ADMIN = null;
-  location.reload();
-}
-
-// ══════════════════════════════════════════════════════════
-// API HELPER
-// ══════════════════════════════════════════════════════════
-async function api(path, opts = {}) {
-  const res = await fetch(`${API}${path}`, {
-    ...opts,
-    headers: {
-      'Content-Type':  'application/json',
-      'Authorization': `Bearer ${TOKEN}`,
-      ...(opts.headers || {}),
-    },
-    body: opts.body ? JSON.stringify(opts.body) : undefined,
-  });
-  if (res.status === 401) { adminLogout(); return null; }
-  return res.json();
-}
-
-// ══════════════════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════════════════
-const PAGE_TITLES = {
-  'page-dash':'DASHBOARD','page-users':'ALL USERS','page-flagged':'FLAGGED USERS',
-  'page-audit':'AUDIT LOG','page-announce':'ANNOUNCEMENTS','page-export':'EXPORT DATA',
-};
-
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelector(`[data-page="${id}"]`)?.classList.add('active');
-  document.getElementById('topbar-title').textContent = PAGE_TITLES[id] || 'ADMIN';
-}
-
-// ══════════════════════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════════════════════
-async function loadDashboard() {
-  const data = await api('/stats');
-  if (!data) return;
-
-  const u = data.users, a = data.activity, r = data.revenue;
-  document.getElementById('s-total').textContent   = u.total;
-  document.getElementById('s-new7').textContent    = `+${u.new_7d} this week`;
-  document.getElementById('s-paid').textContent    = u.paid;
-  document.getElementById('s-active').textContent  = `${u.active} active accounts`;
-  document.getElementById('s-dau').textContent     = a.dau;
-  document.getElementById('s-mau').textContent     = `${a.mau} monthly`;
-  document.getElementById('s-flagged').textContent = u.flagged;
-
-  // Recent users
-  const ur = await api('/users?limit=5&sort=created_at');
-  if (ur?.users) {
-    document.getElementById('recent-users-body').innerHTML = ur.users.map(u => `
-      <tr onclick="openUser(${u.id})">
-        <td>${esc(u.name||'—')}</td>
-        <td class="td-mono">${esc(u.mobile)}</td>
-        <td>${planBadge(u.plan)}</td>
-        <td>${statusBadge(u.is_active)}</td>
-        <td class="td-mono" style="color:var(--muted)">${fmtDate(u.created_at)}</td>
-      </tr>
-    `).join('');
-  }
-
-  // Recent audit
-  const ar = await api('/audit?limit=8');
-  if (ar?.logs) {
-    document.getElementById('recent-audit-body').innerHTML = ar.logs.slice(0,8).map(l => `
-      <tr>
-        <td><span class="badge badge-muted">${esc(l.action)}</span></td>
-        <td class="td-mono" style="color:var(--muted)">${esc(l.target_name||'—')}</td>
-        <td class="td-mono" style="color:var(--muted)">${fmtDate(l.created_at)}</td>
-      </tr>
-    `).join('');
-  }
-}
-
-// ══════════════════════════════════════════════════════════
-// USERS LIST
-// ══════════════════════════════════════════════════════════
-async function loadUsers(page = 1) {
-  currentPage = page;
-  const search = document.getElementById('u-search')?.value || '';
-  const plan   = document.getElementById('u-plan')?.value   || '';
-  const status = document.getElementById('u-status')?.value || '';
-  const sort   = document.getElementById('u-sort')?.value   || 'created_at';
-
-  const qs = new URLSearchParams({ page, limit: 20, search, plan, status, sort }).toString();
-  const data = await api(`/users?${qs}`);
-  if (!data) return;
-
-  selectedUsers.clear();
-  document.getElementById('chk-all').checked = false;
-  updateBulkButtons();
-
-  const tbody = document.getElementById('users-body');
-  if (!data.users.length) {
-    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:32px">No users found</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = data.users.map(u => `
-    <tr>
-      <td><input type="checkbox" class="row-chk" value="${u.id}" onchange="toggleCheck(${u.id})"/></td>
-      <td>
-        <div style="display:flex;align-items:center;gap:8px">
-          ${u.flagged ? '<span title="Flagged" style="color:var(--red)">⚑</span>' : ''}
-          <span style="font-weight:600;cursor:pointer;color:var(--text)" onclick="openUser(${u.id})">${esc(u.name||'—')}</span>
-        </div>
-      </td>
-      <td class="td-mono">${esc(u.mobile)}</td>
-      <td>${planBadge(u.plan)}</td>
-      <td>${statusBadge(u.is_active)}</td>
-      <td class="td-mono" style="color:${u.trusted_devices>0?'var(--green)':'var(--muted)'}">
-        ${u.trusted_devices} device${u.trusted_devices!=1?'s':''}
-      </td>
-      <td>${u.has_angel_credentials
-        ? '<span class="badge badge-green">✓ Set</span>'
-        : '<span class="badge badge-muted">—</span>'}</td>
-      <td class="td-mono" style="color:var(--muted)">${u.last_login_at ? fmtDate(u.last_login_at) : '—'}</td>
-      <td class="td-mono" style="color:var(--muted)">${u.total_logins||0}</td>
-      <td>
-        <div style="display:flex;gap:6px">
-          <button class="btn btn-ghost btn-sm" onclick="openUser(${u.id})">View</button>
-          <button class="btn btn-${u.is_active?'red':'green'} btn-sm"
-            onclick="quickToggle(${u.id},${!u.is_active},'${esc(u.name||u.mobile)}')">
-            ${u.is_active ? 'Deact' : 'Act'}
-          </button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-
-  renderPagination(data.pagination, 'pg-info', 'pg-btns', loadUsers);
-}
-
-function debounceSearch() {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => loadUsers(1), 400);
-}
-
-// ══════════════════════════════════════════════════════════
-// CHECKBOXES & BULK
-// ══════════════════════════════════════════════════════════
-function toggleCheck(uid) {
-  if (selectedUsers.has(uid)) selectedUsers.delete(uid);
-  else selectedUsers.add(uid);
-  updateBulkButtons();
-}
-
-function toggleAllChecks() {
-  const all = document.getElementById('chk-all').checked;
-  document.querySelectorAll('.row-chk').forEach(c => {
-    c.checked = all;
-    const uid = parseInt(c.value);
-    if (all) selectedUsers.add(uid);
-    else selectedUsers.delete(uid);
-  });
-  updateBulkButtons();
-}
-
-function updateBulkButtons() {
-  const n = selectedUsers.size;
-  ['btn-bulk-deact','btn-bulk-act','btn-bulk-logout'].forEach(id => {
-    document.getElementById(id).disabled = n === 0;
-  });
-}
-
-async function bulkAction(action) {
-  if (!selectedUsers.size) return;
-  const userIds = [...selectedUsers];
-  const labels  = {activate:'Activate', deactivate:'Deactivate', force_logout:'Force Logout'};
-  if (!confirm(`${labels[action]} ${userIds.length} selected user(s)?`)) return;
-
-  const data = await api('/users/bulk-action', {
-    method: 'POST', body: { userIds, action },
-  });
-  if (data?.success) { toast(data.message, 'ok'); loadUsers(currentPage); }
-  else toast(data?.error || 'Failed', 'err');
-}
-
-// ══════════════════════════════════════════════════════════
-// FLAGGED
-// ══════════════════════════════════════════════════════════
-async function loadFlagged() {
-  const data = await api('/users?flagged=true&limit=100');
-  if (!data) return;
-
-  document.getElementById('flagged-body').innerHTML = data.users.length
-    ? data.users.map(u => `
-        <tr>
-          <td style="font-weight:600;cursor:pointer" onclick="openUser(${u.id})">${esc(u.name||'—')}</td>
-          <td class="td-mono">${esc(u.mobile)}</td>
-          <td>${planBadge(u.plan)}</td>
-          <td style="color:var(--red);font-size:12px">${esc(u.flag_reason||'—')}</td>
-          <td>
-            <button class="btn btn-ghost btn-sm" onclick="unflagUser(${u.id})">Clear Flag</button>
-          </td>
-        </tr>`)
-      .join('')
-    : `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">No flagged users</td></tr>`;
-}
-
-async function unflagUser(uid) {
-  const data = await api(`/users/${uid}/flag`, { method:'PATCH', body:{flagged:false,flag_reason:null} });
-  if (data?.success) { toast('Flag cleared','ok'); loadFlagged(); loadUsers(currentPage); }
-}
-
-// ══════════════════════════════════════════════════════════
-// USER DETAIL MODAL
-// ══════════════════════════════════════════════════════════
-async function openUser(uid) {
-  document.getElementById('modal-uname').textContent = 'LOADING...';
-  document.getElementById('modal-ubody').innerHTML   = '<div style="text-align:center;padding:40px;color:var(--muted)">Loading user details...</div>';
-  openModal('modal-user');
-
-  const data = await api(`/users/${uid}`);
-  if (!data) return;
-
-  const u  = data.user;
-  document.getElementById('modal-uname').textContent = (u.name || u.mobile).toUpperCase();
-
-  document.getElementById('modal-ubody').innerHTML = `
-    <!-- Actions -->
-    <div class="action-row">
-      <button class="btn btn-${u.is_active?'red':'green'} btn-sm"
-        onclick="closeModal('modal-user');quickToggle(${u.id},${!u.is_active},'${esc(u.name||u.mobile)}')">
-        ${u.is_active ? '⊘ Deactivate' : '✓ Activate'}
-      </button>
-      <button class="btn btn-amber btn-sm" onclick="showChangePlan(${u.id},'${u.plan}')">
-        ↑ Change Plan
-      </button>
-      <button class="btn btn-ghost btn-sm" onclick="showResetMpin(${u.id})">
-        ⌘ Reset MPIN
-      </button>
-      <button class="btn btn-ghost btn-sm" onclick="forceLogout(${u.id})">
-        ⏏ Force Logout
-      </button>
-      <button class="btn btn-${u.flagged?'amber':'red'} btn-sm"
-        onclick="showFlagUser(${u.id},${u.flagged})">
-        ⚑ ${u.flagged ? 'Unflag' : 'Flag User'}
-      </button>
-    </div>
-
-    <!-- Details -->
-    <div class="detail-grid" style="margin-bottom:20px">
-      <div class="detail-item"><div class="detail-label">Mobile</div><div class="detail-val mono">${esc(u.mobile)}</div></div>
-      <div class="detail-item"><div class="detail-label">Name</div><div class="detail-val">${esc(u.name||'—')}</div></div>
-      <div class="detail-item"><div class="detail-label">Plan</div><div class="detail-val">${planBadge(u.plan)}</div></div>
-      <div class="detail-item"><div class="detail-label">Status</div><div class="detail-val">${statusBadge(u.is_active)}</div></div>
-      <div class="detail-item"><div class="detail-label">Total Logins</div><div class="detail-val mono">${u.total_logins||0}</div></div>
-      <div class="detail-item"><div class="detail-label">Last Login</div><div class="detail-val mono">${u.last_login_at?fmtDate(u.last_login_at):'—'}</div></div>
-      <div class="detail-item"><div class="detail-label">Last IP</div><div class="detail-val mono">${esc(u.last_login_ip||'—')}</div></div>
-      <div class="detail-item"><div class="detail-label">Angel Creds</div><div class="detail-val">${u.has_angel_creds?'<span class="badge badge-green">Set</span>':'<span class="badge badge-muted">Not set</span>'}</div></div>
-      <div class="detail-item"><div class="detail-label">Joined</div><div class="detail-val mono">${fmtDate(u.created_at)}</div></div>
-      <div class="detail-item"><div class="detail-label">Failed Logins</div><div class="detail-val mono" style="color:${(u.failed_logins||0)>5?'var(--red)':'inherit'}">${u.failed_logins||0}</div></div>
-    </div>
-
-    <!-- Notes -->
-    <div style="margin-bottom:20px">
-      <div class="detail-label" style="margin-bottom:6px">Admin Notes</div>
-      <textarea class="inp" id="user-notes-${u.id}" rows="2" style="width:100%;resize:vertical"
-        placeholder="Private notes about this user...">${esc(u.notes||'')}</textarea>
-      <button class="btn btn-ghost btn-sm" style="margin-top:6px"
-        onclick="saveNotes(${u.id})">Save Notes</button>
-    </div>
-
-    <!-- Devices -->
-    ${data.devices.length ? `
-    <div style="margin-bottom:20px">
-      <div class="detail-label" style="margin-bottom:8px">Trusted Devices (${data.devices.length})</div>
-      <table style="width:100%;font-size:12px">
-        <thead><tr style="background:var(--surface2)">
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Device</th>
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Platform</th>
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Last Seen</th>
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Status</th>
-          <th style="padding:8px 10px"></th>
-        </tr></thead>
-        <tbody>
-        ${data.devices.map(d => `
-          <tr style="border-bottom:1px solid var(--border)">
-            <td style="padding:8px 10px">${esc(d.device_name||'Unknown')}</td>
-            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${esc(d.platform||'—')}</td>
-            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${fmtDate(d.last_seen_at)}</td>
-            <td style="padding:8px 10px">${d.is_trusted?'<span class="badge badge-green">Trusted</span>':'<span class="badge badge-muted">Pending</span>'}</td>
-            <td style="padding:8px 10px"><button class="btn btn-red btn-sm" onclick="revokeDevice(${u.id},${d.id})">Revoke</button></td>
-          </tr>
-        `).join('')}
-        </tbody>
-      </table>
-    </div>` : ''}
-
-    <!-- Subscription History -->
-    ${data.subHistory.length ? `
-    <div style="margin-bottom:20px">
-      <div class="detail-label" style="margin-bottom:8px">Subscription History</div>
-      <table style="width:100%;font-size:12px">
-        <thead><tr style="background:var(--surface2)">
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Change</th>
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">By</th>
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Amount</th>
-          <th style="padding:8px 10px;text-align:left;color:var(--muted)">Date</th>
-        </tr></thead>
-        <tbody>
-        ${data.subHistory.map(s => `
-          <tr style="border-bottom:1px solid var(--border)">
-            <td style="padding:8px 10px">${planBadge(s.plan_from)} → ${planBadge(s.plan_to)}</td>
-            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${esc(s.changed_by_name||'system')}</td>
-            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--green)">${s.amount?'₹'+s.amount:'—'}</td>
-            <td style="padding:8px 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${fmtDate(s.created_at)}</td>
-          </tr>
-        `).join('')}
-        </tbody>
-      </table>
-    </div>` : ''}
-
-    <!-- Recent Admin Actions on this user -->
-    ${data.auditTrail.length ? `
-    <div>
-      <div class="detail-label" style="margin-bottom:8px">Admin Actions on This User</div>
-      ${data.auditTrail.slice(0,8).map(a => `
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span class="badge badge-muted">${esc(a.action)}</span>
-          <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">${fmtDate(a.created_at)}</span>
-        </div>
-      `).join('')}
-    </div>` : ''}
-  `;
-}
-
-// ══════════════════════════════════════════════════════════
-// QUICK ACTIONS
-// ══════════════════════════════════════════════════════════
-async function quickToggle(uid, newState, name) {
-  if (!confirm(`${newState?'Activate':'Deactivate'} user "${name}"?`)) return;
-  const data = await api(`/users/${uid}/status`, { method:'PATCH', body:{is_active:newState} });
-  if (data?.success) { toast(data.message,'ok'); loadUsers(currentPage); loadFlagged(); }
-  else toast(data?.error||'Failed','err');
-}
-
-async function forceLogout(uid) {
-  const data = await api(`/users/${uid}/force-logout`, { method:'POST' });
-  if (data?.success) toast('User logged out from all devices','ok');
-  else toast(data?.error||'Failed','err');
-}
-
-async function revokeDevice(uid, deviceId) {
-  if (!confirm('Revoke this device?')) return;
-  const data = await api(`/users/${uid}/devices/${deviceId}`, { method:'DELETE' });
-  if (data?.success) { toast('Device revoked','ok'); openUser(uid); }
-  else toast(data?.error||'Failed','err');
-}
-
-async function saveNotes(uid) {
-  const notes = document.getElementById(`user-notes-${uid}`)?.value || '';
-  const data = await api(`/users/${uid}/notes`, { method:'PATCH', body:{notes} });
-  if (data?.success) toast('Notes saved','ok');
-}
-
-// ── Change Plan ──
-function showChangePlan(uid, currentPlan) {
-  closeModal('modal-user');
-  document.getElementById('action-title').textContent = 'CHANGE PLAN';
-  document.getElementById('action-body').innerHTML = `
-    <div style="margin-bottom:14px">
-      <div class="detail-label" style="margin-bottom:6px">Current Plan</div>
-      ${planBadge(currentPlan)}
-    </div>
-    <div style="margin-bottom:14px">
-      <div class="detail-label" style="margin-bottom:6px">New Plan</div>
-      <select class="inp" id="new-plan" style="width:100%">
-        <option value="FREE">FREE</option>
-        <option value="PAID">PAID</option>
-        <option value="TRIAL">TRIAL</option>
-        <option value="SUSPENDED">SUSPENDED</option>
-      </select>
-    </div>
-    <div style="margin-bottom:14px">
-      <div class="detail-label" style="margin-bottom:6px">Amount (optional)</div>
-      <input class="inp" type="number" id="plan-amount" placeholder="e.g. 999" style="width:100%"/>
-    </div>
-    <div style="margin-bottom:14px">
-      <div class="detail-label" style="margin-bottom:6px">Payment Reference (optional)</div>
-      <input class="inp" id="plan-payref" placeholder="UPI ref / txn ID" style="width:100%"/>
-    </div>
-    <div>
-      <div class="detail-label" style="margin-bottom:6px">Reason</div>
-      <input class="inp" id="plan-reason" placeholder="e.g. Paid via UPI" style="width:100%"/>
-    </div>
-  `;
-  pendingAction = async () => {
-    const data = await api(`/users/${uid}/plan`, {
-      method:'PATCH',
-      body:{
-        plan:       document.getElementById('new-plan').value,
-        reason:     document.getElementById('plan-reason').value,
-        amount:     document.getElementById('plan-amount').value || null,
-        payment_ref:document.getElementById('plan-payref').value || null,
-      }
-    });
-    if (data?.success) { toast(data.message,'ok'); loadUsers(currentPage); }
-    else toast(data?.error||'Failed','err');
-  };
-  openModal('modal-action');
-}
-
-// ── Reset MPIN ──
-function showResetMpin(uid) {
-  closeModal('modal-user');
-  document.getElementById('action-title').textContent = 'RESET MPIN';
-  document.getElementById('action-body').innerHTML = `
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">
-      Enter a new temporary MPIN for the user. They will be logged out of all devices and must re-login with this MPIN.
-    </p>
-    <div class="detail-label" style="margin-bottom:6px">New MPIN (4 digits)</div>
-    <input class="inp" id="new-mpin" type="text" maxlength="4" inputmode="numeric" placeholder="••••" style="width:100%;letter-spacing:0.3em;font-size:20px;text-align:center"/>
-  `;
-  pendingAction = async () => {
-    const mpin = document.getElementById('new-mpin').value;
-    if (mpin.length !== 4) { toast('Enter 4-digit MPIN','err'); return; }
-    const data = await api(`/users/${uid}/reset-mpin`, { method:'POST', body:{new_mpin:mpin} });
-    if (data?.success) toast(data.message,'ok');
-    else toast(data?.error||'Failed','err');
-  };
-  openModal('modal-action');
-}
-
-// ── Flag ──
-function showFlagUser(uid, isFlagged) {
-  closeModal('modal-user');
-  if (isFlagged) {
-    pendingAction = async () => {
-      await api(`/users/${uid}/flag`, { method:'PATCH', body:{flagged:false,flag_reason:null} });
-      toast('Flag cleared','ok'); loadUsers(currentPage); loadFlagged();
-    };
-    document.getElementById('action-title').textContent = 'CLEAR FLAG';
-    document.getElementById('action-body').innerHTML = '<p style="color:var(--muted);font-size:13px">Remove the flag from this user?</p>';
-  } else {
-    document.getElementById('action-title').textContent = 'FLAG USER';
-    document.getElementById('action-body').innerHTML = `
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Flag this user for review. This will appear on the flagged users list.</p>
-      <div class="detail-label" style="margin-bottom:6px">Reason</div>
-      <input class="inp" id="flag-reason" placeholder="e.g. Suspicious activity" style="width:100%"/>
-    `;
-    pendingAction = async () => {
-      const reason = document.getElementById('flag-reason').value;
-      const data = await api(`/users/${uid}/flag`, { method:'PATCH', body:{flagged:true,flag_reason:reason} });
-      if (data?.success) { toast('User flagged','ok'); loadUsers(currentPage); loadFlagged(); }
-    };
-  }
-  openModal('modal-action');
-}
-
-function executeAction() {
-  if (pendingAction) { pendingAction(); closeModal('modal-action'); }
-}
-
-// ══════════════════════════════════════════════════════════
-// AUDIT
-// ══════════════════════════════════════════════════════════
-let auditPage = 1;
-async function loadAudit(page = 1) {
-  auditPage = page;
-  const data = await api(`/audit?page=${page}`);
-  if (!data) return;
-
-  document.getElementById('audit-body').innerHTML = data.logs.length
-    ? data.logs.map(l => `
-        <tr>
-          <td><span class="badge badge-muted">${esc(l.action)}</span></td>
-          <td class="td-mono" style="color:var(--muted)">${esc(l.admin_name||'—')}</td>
-          <td class="td-mono" style="color:var(--muted)">${l.target_name?`${esc(l.target_name)} (${esc(l.target_mobile||'')})` :'—'}</td>
-          <td class="td-mono" style="color:var(--muted)">${esc(l.ip_address||'—')}</td>
-          <td>${l.success?'<span class="badge badge-green">OK</span>':'<span class="badge badge-red">FAIL</span>'}</td>
-          <td class="td-mono" style="color:var(--muted)">${fmtDate(l.created_at)}</td>
-        </tr>
-      `).join('')
-    : `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">No audit logs</td></tr>`;
-}
-
-// ══════════════════════════════════════════════════════════
-// ANNOUNCEMENTS
-// ══════════════════════════════════════════════════════════
-async function loadAnnouncements() {
-  const data = await api('/announcements');
-  if (!data) return;
-
-  const typeBadge = t => ({info:'badge-blue',warning:'badge-amber',critical:'badge-red'}[t]||'badge-muted');
-  document.getElementById('announce-body').innerHTML = data.announcements.length
-    ? data.announcements.map(a => `
-        <tr>
-          <td style="font-weight:600">${esc(a.title)}</td>
-          <td><span class="badge ${typeBadge(a.type)}">${a.type}</span></td>
-          <td><span class="badge badge-muted">${a.target}</span></td>
-          <td class="td-mono" style="color:var(--muted)">${a.expires_at?fmtDate(a.expires_at):'Never'}</td>
-          <td>${a.is_active?'<span class="badge badge-green">Active</span>':'<span class="badge badge-muted">Off</span>'}</td>
-          <td>
-            <button class="btn btn-ghost btn-sm" onclick="toggleAnnouncement(${a.id},${!a.is_active})">
-              ${a.is_active ? 'Disable' : 'Enable'}
-            </button>
-          </td>
-        </tr>
-      `).join('')
-    : `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">No announcements</td></tr>`;
-}
-
-async function createAnnouncement() {
-  const title = document.getElementById('an-title').value.trim();
-  const body  = document.getElementById('an-body').value.trim();
-  if (!title || !body) { toast('Title and message required','err'); return; }
-
-  const data = await api('/announcements', {
-    method:'POST',
-    body:{
-      title,
-      body,
-      type:      document.getElementById('an-type').value,
-      target:    document.getElementById('an-target').value,
-      expires_at:document.getElementById('an-expires').value || null,
-    }
-  });
-  if (data?.success) {
-    toast('Announcement published','ok');
-    document.getElementById('an-title').value = '';
-    document.getElementById('an-body').value  = '';
-    loadAnnouncements();
-  } else toast(data?.error||'Failed','err');
-}
-
-async function toggleAnnouncement(id, active) {
-  await api(`/announcements/${id}`, { method:'PATCH', body:{is_active:active} });
-  toast(active?'Enabled':'Disabled','ok');
-  loadAnnouncements();
-}
-
-// ══════════════════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════════════════
-function openModal(id)  { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); pendingAction=null; }
-
-function toast(msg, type='ok') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className   = `toast ${type} show`;
-  setTimeout(() => el.classList.remove('show'), 3000);
-}
-
-function planBadge(plan) {
-  const map = { PAID:'badge-green', FREE:'badge-muted', TRIAL:'badge-blue', SUSPENDED:'badge-red' };
-  return `<span class="badge ${map[plan]||'badge-muted'}">${plan||'—'}</span>`;
-}
-
-function statusBadge(active) {
-  return active
-    ? `<span class="badge badge-green"><span class="dot dot-green"></span>Active</span>`
-    : `<span class="badge badge-red">Inactive</span>`;
-}
-
-function fmtDate(d) {
-  if (!d) return '—';
-  return new Date(d).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-}
-
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function renderPagination(pg, infoId, btnsId, loadFn) {
-  document.getElementById(infoId).textContent =
-    `Showing ${((pg.page-1)*pg.limit)+1}–${Math.min(pg.page*pg.limit,pg.total)} of ${pg.total}`;
-
-  const wrap = document.getElementById(btnsId);
-  wrap.innerHTML = '';
-
-  const prev = document.createElement('button');
-  prev.className = 'pg-btn'; prev.textContent = '←';
-  prev.disabled = pg.page <= 1;
-  prev.onclick  = () => loadFn(pg.page - 1);
-  wrap.appendChild(prev);
-
-  const start = Math.max(1, pg.page - 2);
-  const end   = Math.min(pg.pages, pg.page + 2);
-  for (let i = start; i <= end; i++) {
-    const b = document.createElement('button');
-    b.className = `pg-btn${i===pg.page?' current':''}`;
-    b.textContent = i;
-    b.onclick = () => loadFn(i);
-    wrap.appendChild(b);
-  }
-
-  const next = document.createElement('button');
-  next.className = 'pg-btn'; next.textContent = '→';
-  next.disabled = pg.page >= pg.pages;
-  next.onclick  = () => loadFn(pg.page + 1);
-  wrap.appendChild(next);
-}
-
-
-// ══════════════════════════════════════════════════════════
-// EXPORT
-// ══════════════════════════════════════════════════════════
-const exportLogEntries = [];
-
-const EXP_INFO = {
-  users:         'User ID, Name, Mobile, Plan, Status, Flagged, Flag Reason, Joined, Last Login, Total Logins, Last IP, Last Device, Failed Logins, Trusted Devices, Angel Creds, Angel Client Code, Admin Notes',
-  subscriptions: 'ID, User Name, Mobile, From Plan, To Plan, Reason, Amount (INR), Payment Ref, Changed By, Changed At',
-  devices:       'Device ID, User Name, Mobile, Plan, Device Name, Platform, IP Address, Trusted, Verified At, Last Seen, Trust Expires, First Seen',
-  audit:         'Log ID, Action, Admin, Target User, Target Mobile, Success, Admin IP, Timestamp',
-  summary:       'Full JSON snapshot: platform stats + all users + all subscription history',
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-  const expType = document.getElementById('exp-type');
-  if (expType) expType.addEventListener('change', () => {
-    const el = document.getElementById('exp-info');
-    if (el) el.textContent = EXP_INFO[expType.value] || '';
-  });
-});
-
-function quickExport(type, format) {
-  const url = buildExportUrl(type, format, {});
-  doDownload(url, type, format);
-}
-
-function runAdvancedExport() {
-  const type   = document.getElementById('exp-type').value;
-  const format = type === 'summary' ? 'json' : document.getElementById('exp-format').value;
-  const filters = {
-    plan:   document.getElementById('exp-plan').value,
-    status: document.getElementById('exp-status').value,
-    from:   document.getElementById('exp-from').value,
-    to:     document.getElementById('exp-to').value,
-  };
-  doDownload(buildExportUrl(type, format, filters), type, format, filters);
-}
-
-function buildExportUrl(type, format, filters) {
-  const params = new URLSearchParams({ format });
-  if (filters && filters.plan)   params.set('plan', filters.plan);
-  if (filters && filters.status) params.set('status', filters.status);
-  if (filters && filters.from)   params.set('from', filters.from);
-  if (filters && filters.to)     params.set('to', filters.to);
-  return API + '/export/' + type + '?' + params.toString();
-}
-
-function doDownload(url, type, format, filters) {
-  fetch(url, { headers: { 'Authorization': 'Bearer ' + TOKEN } })
-    .then(function(r) {
-      if (!r.ok) { toast('Export failed', 'err'); return null; }
-      return r.blob();
-    })
-    .then(function(blob) {
-      if (!blob) return;
-      var ext  = format === 'xlsx' ? 'xls' : format;
-      var name = 'jobber_pro_' + type + '_' + new Date().toISOString().slice(0,10) + '.' + ext;
-      var link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = name;
-      link.click();
-      URL.revokeObjectURL(link.href);
-
-      var filterStr = filters ? Object.entries(filters).filter(function(e){ return e[1]; }).map(function(e){ return e[0]+':'+e[1]; }).join(', ') : 'none';
-      exportLogEntries.unshift({ type: type, format: format, filters: filterStr || 'none', time: new Date().toLocaleTimeString('en-IN'), url: url });
-      renderExportLog();
-      toast(type + ' exported as ' + format.toUpperCase(), 'ok');
-    })
-    .catch(function() { toast('Export failed', 'err'); });
-}
-
-function renderExportLog() {
-  var tbody = document.getElementById('export-log-body');
-  if (!tbody || !exportLogEntries.length) return;
-  tbody.innerHTML = exportLogEntries.map(function(e) {
-    return '<tr>' +
-      '<td><span class="badge badge-muted">' + esc(e.type.toUpperCase()) + '</span></td>' +
-      '<td class="td-mono" style="color:var(--amber)">' + esc(e.format.toUpperCase()) + '</td>' +
-      '<td class="td-mono" style="color:var(--muted);font-size:11px">' + esc(e.filters) + '</td>' +
-      '<td class="td-mono" style="color:var(--muted)">' + esc(e.time) + '</td>' +
-      '<td><button class="btn btn-ghost btn-sm" onclick="doDownload('' + e.url + '','' + e.type + '','' + e.format + '',{})">↓ Again</button></td>' +
-      '</tr>';
-  }).join('');
-}
-
-// Close modals on bg click
-document.querySelectorAll('.modal-bg').forEach(bg => {
-  bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('show'); });
-});
-</script>
+if(tok){document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';initApp();}
+<\/script>
 </body>
 </html>

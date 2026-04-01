@@ -386,6 +386,48 @@ button:active{transform:scale(.98)!important}
   #landing{min-height:auto;padding:24px 20px;}
   .phase-cards{grid-template-columns:repeat(4,1fr);}
 }
+
+/* ═══ MOBILE — setup.html ═══ */
+@media(max-width:768px){
+  html{font-size:14px}
+  * {-webkit-text-size-adjust:100%}
+  
+  /* Center content */
+  .container,.wrap,.card,.verify-card{
+    padding:1.2rem 1rem !important;
+    max-width:95vw !important;
+    width:95vw !important;
+  }
+  
+  /* Typography */
+  h1,.title{font-size:1.2rem !important}
+  h2,.subtitle{font-size:.85rem !important}
+  p,.body-text{font-size:.7rem !important}
+  
+  /* Buttons */
+  .btn,.button,[class*="btn"]{
+    font-size:.7rem !important;
+    padding:.55rem 1rem !important;
+    width:100% !important;
+  }
+  
+  /* Progress bars */
+  .progress-fill{height:3px !important}
+  
+  /* Ticker */
+  .ticker,[class*="ticker"]{font-size:.58rem !important}
+  
+  /* Status icons */
+  .status-icon{font-size:2rem !important}
+  
+  /* Error messages */
+  .err,[class*="err"]{font-size:.65rem !important;padding:.4rem .6rem !important}
+}
+
+@media(max-width:480px){
+  html{font-size:13px}
+  .container,.wrap,.card,.verify-card{padding:1rem .8rem !important}
+}
 </style>
 </head>
 <body>
