@@ -27,7 +27,7 @@ const PLANS = {
 };
 
 // ── Middleware: verify JWT (reuse your existing auth middleware) ──────────────
-const authMiddleware = require('../middleware/auth'); // adjust path
+const { authenticateToken } = require('../middleware/auth');
 
 // ── Helper: call Cashfree API ────────────────────────────────────────────────
 async function cashfreeRequest(method, path, body = null) {
