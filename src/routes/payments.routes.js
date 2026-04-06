@@ -5,7 +5,7 @@
 const express = require('express');
 const router  = express.Router();
 const crypto  = require('crypto');
-const { pool } = require('../db'); // adjust path if needed
+const pool = require('../db/pool'); // adjust path if needed
 
 // ── ENV vars needed (add to Railway) ────────────────────────────────────────
 // CASHFREE_APP_ID     = your production App ID
