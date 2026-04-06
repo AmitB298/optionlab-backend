@@ -19,7 +19,7 @@ const PLANS = {
   elite: { amount: 3499, name: 'OptionsLab Elite', months: 1 },
 };
 
-const { authenticateToken } = require('../middleware/auth');
+const { auth: authenticateToken } = require('../middleware/auth');
 
 async function cashfreeRequest(method, path, body = null) {
   const url  = `${CF_BASE}${path}`;
