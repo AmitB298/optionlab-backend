@@ -1,99 +1,102 @@
-/**
- * routes/admin.auth.js  [FIXED v2.1]
- *
- * FIXES:
- *  1. Shared pool from ../db/pool — no more standalone new Pool()
- *  2. JWT_SECRET fallback 'optionlab-secret-2024' removed — throws on startup
- *     if env var not set (matches admin.middleware.js behaviour)
- */
-
 'use strict';
 
-const bcrypt = require('bcryptjs');
-const jwt    = require('jsonwebtoken');
-const crypto = require('crypto');
-require('dotenv').config();
+/**
+ * routes/admin.auth.js
+ * Exports: adminLogin, adminLogout, adminLoginLimiter
+ * Used in src/index.js:
+ *   const { adminLogin, adminLogout, adminLoginLimiter } = require('./routes/admin.auth');
+ */
 
-const pool                  = require('../db/pool');
-const { adminLoginLimiter } = require('../lib/rateLimit');
+const bcrypt     = require('bcryptjs');
+const jwt        = require('jsonwebtoken');
+const rateLimit  = require('express-rate-limit');
+const pool       = require('../db/pool');
 
-// Fail hard at startup if JWT_SECRET is missing
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('[admin.auth] JWT_SECRET environment variable is not set.');
-}
-
-const DUMMY_HASH = '$2a$12$invalidhashpaddingtomatchbcryptlengthXXXXXXXXXXXXXXXXXXX';
+// ─── Rate limiter: max 10 login attempts per 15 min per IP ───────────────────
+const adminLoginLimiter = rateLimit({
+  windowMs : 15 * 60 * 1000,
+  max      : 10,
+  message  : { success: false, message: 'Too many login attempts. Try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders  : false,
+});
 
 // ─── POST /api/admin/login ────────────────────────────────────────────────────
 async function adminLogin(req, res) {
-  const mobile = typeof req.body?.mobile === 'string' ? req.body.mobile.trim() : '';
-  const mpin   = typeof req.body?.mpin   === 'string' ? req.body.mpin.trim()   : '';
-
-  if (!mobile || !mpin) {
-    return res.status(400).json({ success: false, message: 'mobile and mpin required' });
-  }
-
   try {
+    const { email, password } = req.body || {};
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password required.' });
+    }
+
+    // Fetch admin by email
     const { rows } = await pool.query(
-      `SELECT id, name, mobile, mpin_hash, is_active FROM admins WHERE mobile = $1`,
-      [mobile]
+      `SELECT id, name, email, password_hash, role, is_active
+       FROM admins WHERE email = $1 LIMIT 1`,
+      [email.trim().toLowerCase()]
     );
 
-    const hashToCompare = rows.length ? rows[0].mpin_hash : DUMMY_HASH;
-    const mpinValid     = await bcrypt.compare(mpin, hashToCompare);
-
-    if (!rows.length || !mpinValid || !rows[0].is_active) {
-      if (rows.length) {
-        pool.query(
-          `INSERT INTO admin_audit_log (admin_id, action, ip_address, user_agent, success)
-           VALUES ($1, 'ADMIN_LOGIN_FAILED', $2, $3, false)`,
-          [rows[0].id, req.ip, (req.headers['user-agent'] || '').slice(0, 500)]
-        ).catch(console.error);
-      }
-      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    if (!rows.length) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
     }
 
     const admin = rows[0];
-    const jti   = crypto.randomUUID();
+
+    if (!admin.is_active) {
+      return res.status(403).json({ success: false, message: 'Admin account is disabled.' });
+    }
+
+    const match = await bcrypt.compare(password, admin.password_hash);
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    // Sign JWT — same secret as user JWTs, but payload has adminId
     const token = jwt.sign(
-      { adminId: admin.id, mobile: admin.mobile, name: admin.name, role: 'admin', jti },
-      JWT_SECRET,
-      { expiresIn: '12h', algorithm: 'HS256' }
+      { adminId: admin.id, role: admin.role || 'admin' },
+      process.env.JWT_SECRET,
+      { expiresIn: '8h' }
     );
 
+    // Audit log (best-effort)
     pool.query(
-      `INSERT INTO admin_audit_log (admin_id, action, ip_address, user_agent, success)
-       VALUES ($1, 'ADMIN_LOGIN', $2, $3, true)`,
-      [admin.id, req.ip, (req.headers['user-agent'] || '').slice(0, 500)]
-    ).catch(console.error);
+      `INSERT INTO admin_audit_log (admin_id, action, ip_address, success)
+       VALUES ($1, 'LOGIN', $2, true)`,
+      [admin.id, req.ip]
+    ).catch(() => {});
 
     return res.json({
       success: true,
       token,
-      admin: { id: admin.id, name: admin.name, mobile: admin.mobile },
+      admin: { id: admin.id, name: admin.name, email: admin.email, role: admin.role },
     });
   } catch (err) {
-    console.error('[AdminAuth] Login error:', err.message);
-    return res.status(500).json({ success: false, message: 'Login service unavailable' });
+    console.error('[adminLogin]', err.message);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 }
 
 // ─── POST /api/admin/logout ───────────────────────────────────────────────────
 async function adminLogout(req, res) {
-  const header = req.headers['authorization'];
-  if (typeof header === 'string' && header.startsWith('Bearer ')) {
-    const token = header.slice(7).trim();
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      pool.query(
-        `INSERT INTO admin_audit_log (admin_id, action, ip_address, success)
-         VALUES ($1, 'ADMIN_LOGOUT', $2, true)`,
-        [decoded.adminId, req.ip]
-      ).catch(console.error);
-    } catch (_) { /* expired token — fine */ }
-  }
-  return res.json({ success: true });
+  // JWT is stateless — client drops token.
+  // Audit log if token present (best-effort).
+  try {
+    const auth = req.headers.authorization || '';
+    if (auth.startsWith('Bearer ')) {
+      const token = auth.slice(7);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (decoded?.adminId) {
+        pool.query(
+          `INSERT INTO admin_audit_log (admin_id, action, ip_address, success)
+           VALUES ($1, 'LOGOUT', $2, true)`,
+          [decoded.adminId, req.ip]
+        ).catch(() => {});
+      }
+    }
+  } catch (_) {}
+
+  return res.json({ success: true, message: 'Logged out.' });
 }
 
 module.exports = { adminLogin, adminLogout, adminLoginLimiter };
