@@ -1205,27 +1205,16 @@ async function requestDownload(){
 /* ── UPGRADE ── */
 async function upgradePlan(period){
   try{
-    const priceMap = {monthly:'price_monthly', quarterly:'price_quarterly', annual:'price_annual'};
-    const res = await apiFetch('/api/payments/create-order',{method:'POST',body:JSON.stringify({period})});
+    const planMap = {monthly:'pro', quarterly:'elite'};
+    const plan = planMap[period] || period;
+    const res = await apiFetch('/api/payments/create-order',{method:'POST',body:JSON.stringify({plan})});
     const d = await res.json();
-    if(!d.success) throw new Error(d.message);
-    const opts = {
-      key: d.keyId,
-      amount: d.order.amount,
-      currency: 'INR',
-      name: 'OptionsLab',
-      description: 'Jobber Pro '+period,
-      order_id: d.order.id,
-      handler: async function(resp){
-        const vres = await apiFetch('/api/payments/verify',{method:'POST',body:JSON.stringify(resp)});
-        const vd = await vres.json();
-        if(vd.success){ alert('Payment successful! Your plan has been upgraded.'); window.location.reload(); }
-        else alert('Payment verification failed. Contact support.');
-      },
-      prefill:{ name: document.getElementById('settingName').value },
-      theme:{ color:'#ff9933' }
-    };
-    new Razorpay(opts).open();
+    if(d.error) throw new Error(d.error);
+    const cashfree = Cashfree({mode: 'sandbox'});
+    cashfree.checkout({
+      paymentSessionId: d.payment_session_id,
+      returnUrl: 'https://optionslab.in/payment-status?order_id='+d.order_id,
+    });
   } catch(e){ alert('Payment failed: '+e.message); }
 }
 
@@ -1323,6 +1312,7 @@ function showToast(msg, type='success'){
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
+
 
 
 
