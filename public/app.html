@@ -1076,11 +1076,11 @@ input,select,textarea{font-family:inherit}
 
 <script>
 /* ── CONSTANTS ── */
-const TOKEN_KEY = 'ol_access_token';
+const TOKEN_KEY = 'OptionsLab_token';
 const API = '';
 
 /* ── UTILS ── */
-function getToken(){return sessionStorage.getItem(TOKEN_KEY)||localStorage.getItem(TOKEN_KEY)}
+function getToken(){return sessionStorage.getItem('OptionsLab_token')||sessionStorage.getItem('ol_access_token')||localStorage.getItem('ol_token')||localStorage.getItem('ol_access_token')}
 async function apiFetch(url, opts={}){
   const tok = getToken();
   const headers = {'Content-Type':'application/json', ...(tok?{Authorization:'Bearer '+tok}:{}), ...(opts.headers||{})};
@@ -1281,7 +1281,7 @@ function copyReferral(){
 async function doLogout(){
   if(!confirm('Sign out of OptionsLab?')) return;
   try{ await apiFetch('/api/auth/logout',{method:'POST'}); } catch(e){}
-  ['ol_access_token','ol_refresh_token','ol_token','OptionsLab_token'].forEach(k=>{
+  ['ol_access_token','ol_refresh_token','ol_token','OptionsLab_token','OptionsLab_user'].forEach(k=>{
     sessionStorage.removeItem(k); localStorage.removeItem(k);
   });
   window.location.replace('/register.html');
