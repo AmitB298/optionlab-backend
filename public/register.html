@@ -684,7 +684,7 @@ async function apiFetch(url,opts={}){
 }
 const TOKEN_KEY='OptionsLab_token',USER_KEY='OptionsLab_user';
 function saveSession(token,user){try{localStorage.setItem(TOKEN_KEY,token);localStorage.setItem(USER_KEY,JSON.stringify(user));}catch(e){}}
-(function checkExistingSession(){try{const p=new URLSearchParams(window.location.search);const hasVerify=sessionStorage.getItem('ol_verify_token');const isLoggedIn=sessionStorage.getItem(TOKEN_KEY)||localStorage.getItem('ol_token');if(isLoggedIn&&!hasVerify&&!p.get('email_token'))window.location.replace('/app');}catch(e){}})();
+(function checkExistingSession(){try{const p=new URLSearchParams(window.location.search);const hasVerify=sessionStorage.getItem('ol_verify_token');const isLoggedIn=sessionStorage.getItem(TOKEN_KEY)||localStorage.getItem('ol_token');if(isLoggedIn&&!hasVerify&&!p.get('email_token'))window.location.replace('/app?tok='+d.token);}catch(e){}})();
 
 /* ════ TICKER ════ */
 let _n=22513,_v=14.23,_p=1.08;
@@ -1002,6 +1002,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 </nav>
 </body>
 </html>
+
 
 
 
