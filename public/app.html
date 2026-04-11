@@ -1083,8 +1083,8 @@ const API = '';
 function getToken(){return sessionStorage.getItem('OptionsLab_token')||sessionStorage.getItem('ol_access_token')||localStorage.getItem('ol_token')||localStorage.getItem('ol_access_token')}
 async function apiFetch(url, opts={}){
   const tok = getToken();
-  const headers = {'Content-Type':'application/json', ...(tok?{Authorization:'Bearer '+tok}:{}), ...(opts.headers||{})};
-  const res = await fetch(API+url, {...opts, headers});
+  const headers = {'Content-Type':'application/json', ...(opts.headers||{})}; if(tok) headers['Authorization'] = 'Bearer '+tok;
+  const res = await fetch(API+url, {...opts, headers, credentials:'include'});
   if(res.status===401){ window.location.replace('/register.html'); throw new Error('Unauthorized'); }
   return res;
 }
@@ -1323,3 +1323,4 @@ function showToast(msg, type='success'){
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
+
