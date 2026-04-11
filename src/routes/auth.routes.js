@@ -48,7 +48,7 @@ const TOKEN_EXPIRES = '7d';
 const COOKIE_OPTS = {
   httpOnly:  true,
   secure:    true,
-  sameSite:  'none',
+  sameSite:  'lax',
   maxAge:    7 * 24 * 60 * 60 * 1000, // 7 days in ms
   path:      '/',
 };
@@ -296,4 +296,5 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
+
 
