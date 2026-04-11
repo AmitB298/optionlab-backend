@@ -539,7 +539,7 @@ input,select,textarea{font-family:inherit}
   .rh-stats{grid-template-columns:1fr 1fr 1fr}
 }
 </style>
-</head>
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script></head>
 <body>
 
 <!-- LOAD SCREEN -->
@@ -977,7 +977,7 @@ input,select,textarea{font-family:inherit}
             </div>
             <div class="field-row">
               <div class="field-label">Email Address</div>
-              <input class="field-input" type="email" id="settingEmail" placeholder="your@email.com">
+              <input class="field-input" type="email" id="settingEmail" readonly style="opacity:0.6;cursor:not-allowed" placeholder="your@email.com">
             </div>
             <div class="field-row">
               <div class="field-label">Mobile Number</div>
@@ -1036,7 +1036,7 @@ input,select,textarea{font-family:inherit}
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.85rem">
               <div class="field-row" style="margin:0">
                 <div class="field-label">Client ID</div>
-                <input class="field-input" type="text" id="angelClientId" placeholder="Your Angel One Client ID">
+                <input class="field-input" type="text" id="angelClientId" readonly style="opacity:0.6;cursor:not-allowed" readonly placeholder="Your Angel One Client ID">
               </div>
               <div class="field-row" style="margin:0">
                 <div class="field-label">Trading Style</div>
@@ -1323,6 +1323,9 @@ function showToast(msg, type='success'){
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
+
+
+
 
 
 
