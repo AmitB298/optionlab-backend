@@ -19,7 +19,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="dns-prefetch" href=''>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="prefetch" href="index.html" as="document">
 <style>
@@ -367,97 +366,6 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
   input[type=text],input[type=tel],input[type=email],input[type=password]{min-height:48px;}}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
-
-/* ═══════════════════════════════════════════════
-   MOBILE RESPONSIVE — register.html enhanced
-   Fix tiny fonts and improve mobile layout
-═══════════════════════════════════════════════ */
-
-@media(max-width:768px){
-  html{font-size:14px}
-
-  /* Ensure minimum readable font sizes */
-  * { -webkit-text-size-adjust: 100%; }
-
-  /* Step progress bar */
-  .stepbar{padding:.5rem .75rem !important;overflow-x:auto;scrollbar-width:none}
-  .stepbar::-webkit-scrollbar{display:none}
-  .sc{font-size:10px !important;width:22px !important;height:22px !important;min-width:22px !important}
-  .sl{font-size:10px !important;max-width:50px !important;text-align:center}
-  .sline{width:20px !important}
-
-  /* Form container */
-  .regForm,.loginForm,.fform{padding:1rem .8rem !important}
-  .fh1{font-size:1.1rem !important}
-  .fh2{font-size:.8rem !important}
-  .fsub,.ffoot{font-size:.65rem !important}
-
-  /* Inputs */
-  input[type=text],input[type=email],input[type=tel],input[type=password],
-  input[type=number],.finput{
-    font-size:16px !important; /* prevent zoom on iOS */
-    padding:.55rem .75rem !important;
-    border-radius:8px !important;
-  }
-  .flabel{font-size:.65rem !important;margin-bottom:.3rem !important}
-  .fhint{font-size:.6rem !important}
-
-  /* MPIN boxes */
-  .mpin-box,.box,.rMpinBox{
-    width:44px !important;
-    height:52px !important;
-    font-size:1.3rem !important;
-  }
-
-  /* Buttons */
-  .fbtn,.btn-primary{
-    font-size:.72rem !important;
-    padding:.6rem 1.2rem !important;
-    width:100% !important;
-  }
-  .flink{font-size:.62rem !important}
-
-  /* Tabs */
-  .tabs{padding:0 !important}
-  .tab{font-size:.65rem !important;padding:.5rem .75rem !important}
-
-  /* Error messages */
-  .ferr,.err{font-size:.62rem !important;padding:.4rem .6rem !important}
-
-  /* Step content */
-  .rStep{padding:1rem !important}
-  .step-title{font-size:.85rem !important}
-  .step-sub{font-size:.62rem !important}
-
-  /* Experience/style selector */
-  .exp-grid,.style-grid{grid-template-columns:1fr 1fr !important;gap:.5rem !important}
-  .exp-card,.style-card,.sel-card{padding:.6rem !important}
-  .sel-card-title{font-size:.65rem !important}
-  .sel-card-desc{font-size:.58rem !important}
-
-  /* Magic wait screen */
-  .magic-wait{padding:1.5rem .75rem !important}
-  .mail-ring{width:64px !important;height:64px !important;font-size:1.8rem !important}
-
-  /* OTP / verification box */
-  .ig{flex-wrap:wrap;gap:.3rem}
-  .ig input{flex:1;min-width:120px}
-
-  /* Bottom nav if any */
-  nav.site-nav{display:none}
-}
-
-@media(max-width:480px){
-  html{font-size:13px}
-  .mpin-box,.box,.rMpinBox{width:40px !important;height:48px !important;font-size:1.2rem !important}
-  .fh1{font-size:1rem !important}
-  .exp-grid,.style-grid{grid-template-columns:1fr 1fr !important}
-}
-
-/* iOS input zoom prevention */
-@media screen and (-webkit-min-device-pixel-ratio:0){
-  select,textarea,input{font-size:16px !important}
-}
 </style>
 </head>
 <body>
@@ -776,18 +684,7 @@ async function apiFetch(url,opts={}){
 }
 const TOKEN_KEY='OptionsLab_token',USER_KEY='OptionsLab_user';
 function saveSession(token,user){try{sessionStorage.setItem(TOKEN_KEY,token);sessionStorage.setItem(USER_KEY,JSON.stringify(user));}catch(e){}}
-(function checkExistingSession(){
-  try {
-    const p = new URLSearchParams(window.location.search);
-    const hasVerifyToken = sessionStorage.getItem('ol_verify_token');
-    const hasEmailToken  = p.get('email_token');
-    const isLoggedIn     = sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem('ol_token');
-    // Only redirect away if logged in AND no pending verification
-    if (isLoggedIn && !hasVerifyToken && !hasEmailToken) {
-      window.location.replace('/index.html');
-    }
-  } catch(e) {}
-})();
+(function checkExistingSession(){try{const p=new URLSearchParams(window.location.search);const hasVerify=sessionStorage.getItem('ol_verify_token');const isLoggedIn=sessionStorage.getItem(TOKEN_KEY)||localStorage.getItem('ol_token');if(isLoggedIn&&!hasVerify&&!p.get('email_token'))window.location.replace('/index.html');}catch(e){}})();
 
 /* ════ TICKER ════ */
 let _n=22513,_v=14.23,_p=1.08;
@@ -880,7 +777,7 @@ async function doLogin(){
     saveSession(data.token,data.user);
     document.getElementById('loginForm').style.display='none';
     document.getElementById('loginOk').classList.add('show');
-    startRedirect('regFill','regCd',2500,'/index.html');
+    startRedirect('loginFill','loginCd',1800,'index.html');
   }catch(e){
     let msg=e.message||'Connection failed';
     if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach OptionsLab server. Check your internet and try again.';
@@ -978,23 +875,7 @@ async function resendMagicLink(){
 }
 
 /* Handle return from /verify.html */
-(function checkVerifyReturn(){
-  try {
-    const tok   = sessionStorage.getItem('ol_verify_token');
-    const email = sessionStorage.getItem('ol_verify_email');
-    if (tok && email) {
-      sessionStorage.removeItem('ol_verify_token');
-      sessionStorage.removeItem('ol_verify_email');
-      _rd.email       = email;
-      _rd.email_token = tok;
-      // Small delay to ensure DOM is ready
-      setTimeout(function() {
-        switchTab('register');
-        advanceToStep2();
-      }, 100);
-    }
-  } catch(e) {}
-})();
+(function checkVerifyReturn(){try{const tok=sessionStorage.getItem('ol_verify_token');const email=sessionStorage.getItem('ol_verify_email');if(tok&&email){sessionStorage.removeItem('ol_verify_token');sessionStorage.removeItem('ol_verify_email');_rd.email=email;_rd.email_token=tok;setTimeout(function(){switchTab('register');advanceToStep2();},100);}}catch(e){}})();
 
 /* STEP 2 -> 3 */
 function toStep3(){
@@ -1103,7 +984,7 @@ async function doRegister(){
     if(msg)msg.textContent='Account created. Taking you to your dashboard\u2026';
     document.getElementById('regForm').style.display='none';
     document.getElementById('regOk').classList.add('show');
-    startRedirect('regFill','regCd',2500,'/index.html');
+    startRedirect('regFill','regCd',2500,'index.html');
   }catch(e){
     let errMsg=e.message||'Connection failed';
     if(errMsg==='Failed to fetch'||errMsg.includes('fetch'))errMsg='Cannot reach server. Check your internet and try again.';
@@ -1112,19 +993,7 @@ async function doRegister(){
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginForm').classList.contains('on'))doLogin();});
-(function(){
-  const p = new URLSearchParams(window.location.search);
-  if (p.get('tab') === 'register') switchTab('register');
-  // If coming from verify.html via sessionStorage, checkVerifyReturn above handles it
-  // If coming with direct email_token in URL (legacy support)
-  const emailToken = p.get('email_token');
-  if (emailToken) {
-    _rd.email_token = emailToken;
-    _rd.email = p.get('email') || '';
-    switchTab('register');
-    if (_rd.email) advanceToStep2();
-  }
-})();
+(function(){const p=new URLSearchParams(window.location.search);if(p.get('tab')==='register')switchTab('register');})();
 </script>
 <nav aria-label="Site navigation" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">
   <a href="https://OptionsLab.in">OptionsLab Home</a>

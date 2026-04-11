@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OptionsLab — Project Roadmap</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#030912;color:#dde8ff;font-family:'Segoe UI',system-ui,sans-serif;padding:2rem;-webkit-font-smoothing:antialiased}
+h1{font-size:1.6rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.3rem}
+h1 span{color:#ff9933}
+.sub{font-size:.9rem;color:#7a9cc5;margin-bottom:2.5rem;font-weight:300}
+
+.phase{margin-bottom:2rem;border:1px solid rgba(99,155,255,.1);border-radius:16px;overflow:hidden}
+.phase-header{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.4rem;cursor:pointer;
+  transition:background .2s;
+}
+.phase-header:hover{background:rgba(255,255,255,.02)}
+.phase-num{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:800;flex-shrink:0;
+}
+.phase-title{font-size:1rem;font-weight:700;flex:1}
+.phase-status{
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:.22rem .7rem;border-radius:20px;white-space:nowrap;
+}
+.st-done{background:rgba(0,230,118,.1);color:#00e676;border:1px solid rgba(0,230,118,.25)}
+.st-partial{background:rgba(255,153,51,.1);color:#ff9933;border:1px solid rgba(255,153,51,.25)}
+.st-todo{background:rgba(99,155,255,.08);color:#7a9cc5;border:1px solid rgba(99,155,255,.2)}
+.st-next{background:rgba(255,214,0,.1);color:#ffd600;border:1px solid rgba(255,214,0,.25)}
+
+.phase-body{padding:0 1.4rem 1.2rem}
+.items{display:flex;flex-direction:column;gap:.4rem;margin-top:.6rem}
+.item{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.6rem .85rem;border-radius:9px;
+  font-size:.88rem;
+}
+.item.done{background:rgba(0,230,118,.04);border:1px solid rgba(0,230,118,.1)}
+.item.partial{background:rgba(255,153,51,.04);border:1px solid rgba(255,153,51,.1)}
+.item.todo{background:rgba(99,155,255,.03);border:1px solid rgba(99,155,255,.08)}
+.item.blocker{background:rgba(255,61,113,.04);border:1px solid rgba(255,61,113,.15)}
+.item-ico{font-size:1rem;flex-shrink:0;margin-top:.05rem}
+.item-main{flex:1}
+.item-title{font-weight:600;margin-bottom:.15rem;color:#dde8ff}
+.item-desc{font-size:.8rem;color:#7a9cc5;font-weight:300;line-height:1.5}
+.item-tag{
+  font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:.14rem .45rem;border-radius:3px;margin-left:auto;flex-shrink:0;margin-top:.05rem;
+}
+.tag-done{background:rgba(0,230,118,.1);color:#00e676}
+.tag-partial{background:rgba(255,153,51,.1);color:#ff9933}
+.tag-todo{background:rgba(99,155,255,.08);color:#7a9cc5}
+.tag-blocker{background:rgba(255,61,113,.1);color:#ff3d71}
+.tag-next{background:rgba(255,214,0,.1);color:#ffd600}
+
+.progress-wrap{padding:.75rem 1.4rem;background:rgba(0,0,0,.2);border-top:1px solid rgba(99,155,255,.06)}
+.progress-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
+.progress-lbl{font-size:.7rem;color:#3d5880;letter-spacing:.06em;text-transform:uppercase}
+.progress-pct{font-size:.75rem;font-weight:700}
+.pbar{height:4px;background:rgba(99,155,255,.08);border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:2px;transition:width .6s}
+
+.overall{
+  background:linear-gradient(135deg,rgba(255,153,51,.08),rgba(168,85,247,.05));
+  border:1px solid rgba(255,153,51,.18);border-radius:16px;
+  padding:1.4rem 1.6rem;margin-bottom:2rem;
+}
+.ov-title{font-size:1.1rem;font-weight:800;margin-bottom:.6rem;color:#dde8ff}
+.ov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.ov-stat{text-align:center;padding:.75rem;background:rgba(0,0,0,.2);border-radius:10px}
+.ov-num{font-size:1.8rem;font-weight:800;line-height:1}
+.ov-lbl{font-size:.65rem;color:#3d5880;text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+
+.next-steps{
+  background:rgba(255,214,0,.05);border:1px solid rgba(255,214,0,.18);
+  border-radius:16px;padding:1.4rem 1.6rem;margin-top:1.5rem;
+}
+.ns-title{font-size:1rem;font-weight:800;color:#ffd600;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.ns-item{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.04);
+  font-size:.88rem;
+}
+.ns-item:last-child{border-bottom:none}
+.ns-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(255,214,0,.15);color:#ffd600;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:800;flex-shrink:0;margin-top:.05rem;
+}
+.ns-main{flex:1}
+.ns-cmd{
+  font-family:'Consolas',monospace;font-size:.75rem;
+  background:rgba(0,0,0,.3);color:#22d3ee;
+  padding:.2rem .5rem;border-radius:4px;
+  display:inline-block;margin-top:.25rem;
+}
+
+@media(max-width:640px){.ov-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<h1>Options<span>Lab</span> — Project Roadmap</h1>
+<p class="sub">Complete path from start to production-ready · Updated April 2026</p>
+
+<!-- OVERALL PROGRESS -->
+<div class="overall">
+  <div class="ov-title">Overall Project Status</div>
+  <div class="ov-grid">
+    <div class="ov-stat">
+      <div class="ov-num" style="color:#00e676">72%</div>
+      <div class="ov-lbl">Complete</div>
+    </div>
+    <div class="ov-stat">
+      <div class="ov-num" style="color:#ff9933">4</div>
+      <div class="ov-lbl">In Progress</div>
+    </div>
+    <div class="ov-stat">
+      <div class="ov-num" style="color:#ffd600">6</div>
+      <div class="ov-lbl">Next Up</div>
+    </div>
+    <div class="ov-stat">
+      <div class="ov-num" style="color:#ff3d71">3</div>
+      <div class="ov-lbl">Blockers</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num" style="background:rgba(0,230,118,.15);color:#00e676">1</div>
+    <div class="phase-title">Backend Infrastructure</div>
+    <div class="phase-status st-done">✓ Complete</div>
+  </div>
+  <div class="phase-body">
+    <div class="items">
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Node.js / Express server</div><div class="item-desc">Running on Railway · v2.1.0 · All routes operational</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">PostgreSQL database</div><div class="item-desc">29 tables · migrations running · pool connected</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Auth system — dual token + magic link</div><div class="item-desc">httpOnly cookies · bcrypt · JWT · rate limiting · brute force protection</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Razorpay payments</div><div class="item-desc">Create order · verify HMAC · webhook · idempotency · ₹1,499 / ₹3,999 / ₹11,999</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Email magic link (Resend)</div><div class="item-desc">send-magic-link · check-verified · verify-token — all working</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">User routes — profile, devices, broker</div><div class="item-desc">/api/user/me · /api/user/profile · /api/user/angel-credentials</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Admin panel + routes</div><div class="item-desc">Stats · users · audit · announcements · health monitor · referral tracking</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Plan expiry cron</div><div class="item-desc">Hourly job · downgrades expired plans · subscription_history logged</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Sentry error monitoring</div><div class="item-desc">Activate by setting SENTRY_DSN env var in Railway</div></div><span class="item-tag tag-done">DONE</span></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span class="progress-lbl">Phase progress</span><span class="progress-pct" style="color:#00e676">100%</span></div>
+    <div class="pbar"><div class="pbar-fill" style="width:100%;background:linear-gradient(90deg,#00e676,#22d3ee)"></div></div>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num" style="background:rgba(0,230,118,.15);color:#00e676">2</div>
+    <div class="phase-title">Deployment & DevOps</div>
+    <div class="phase-status st-partial">⚡ Mostly Done</div>
+  </div>
+  <div class="phase-body">
+    <div class="items">
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Railway deployment — live</div><div class="item-desc">web-production-8a8e1.up.railway.app · health check passing</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">GitHub repo connected</div><div class="item-desc">github.com/AmitB298/optionlab-backend · auto-deploy on push</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Domain optionslab.in connected</div><div class="item-desc">Railway custom domain · SSL active</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Razorpay keys set in Railway</div><div class="item-desc">RAZORPAY_KEY_ID · RAZORPAY_KEY_SECRET · both configured</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Admin account created in DB</div><div class="item-desc">Amit Banerjee · 9811199900 · MPIN set</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item partial"><span class="item-ico">⚠️</span><div class="item-main"><div class="item-title">DOWNLOAD_URL not set</div><div class="item-desc">Users cannot download Jobber Pro yet. Need to upload .exe to S3/GitHub Releases and set env var</div></div><span class="item-tag tag-blocker">BLOCKER</span></div>
+      <div class="item partial"><span class="item-ico">⚠️</span><div class="item-main"><div class="item-title">RESEND_API_KEY — verify working</div><div class="item-desc">Magic link emails must be sending. Test by registering a new account</div></div><span class="item-tag tag-partial">VERIFY</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Razorpay webhook URL configured</div><div class="item-desc">Set in Razorpay dashboard: https://optionslab.in/api/payments/webhook · select payment.captured</div></div><span class="item-tag tag-todo">TODO</span></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span class="progress-lbl">Phase progress</span><span class="progress-pct" style="color:#ff9933">75%</span></div>
+    <div class="pbar"><div class="pbar-fill" style="width:75%;background:linear-gradient(90deg,#ff9933,#ffd600)"></div></div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num" style="background:rgba(255,153,51,.15);color:#ff9933">3</div>
+    <div class="phase-title">Frontend — Landing Page (optionslab.in)</div>
+    <div class="phase-status st-partial">⚡ In Progress</div>
+  </div>
+  <div class="phase-body">
+    <div class="items">
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Landing page deployed</div><div class="item-desc">index.html live at optionslab.in — hero, features, pricing, about, FAQ all present</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">register.html — sign up + login</div><div class="item-desc">Magic link + MPIN login · 5-step registration · working API calls</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">verify.html — magic link verification</div><div class="item-desc">Token verification · redirect flow working</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">admin.html — admin panel</div><div class="item-desc">User management · analytics · health monitor · announcements · audit log</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item blocker"><span class="item-ico">🔴</span><div class="item-main"><div class="item-title">Sign In button broken</div><div class="item-desc">goLogin() goes to #signin which doesn't exist. Fix: change to /register.html</div></div><span class="item-tag tag-blocker">FIX NOW</span></div>
+      <div class="item partial"><span class="item-ico">⚠️</span><div class="item-main"><div class="item-title">app.html — user dashboard</div><div class="item-desc">Premium version built and ready. Needs to be pushed to GitHub to replace old version</div></div><span class="item-tag tag-next">PUSH NOW</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Blank space on About section</div><div class="item-desc">CSS fix needed — reveal animation or padding issue causing empty space</div></div><span class="item-tag tag-todo">TODO</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Jobber Pro demo page linked</div><div class="item-desc">jobber_demo.html built. Add "Live Demo" link from landing page nav</div></div><span class="item-tag tag-todo">TODO</span></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span class="progress-lbl">Phase progress</span><span class="progress-pct" style="color:#ff9933">65%</span></div>
+    <div class="pbar"><div class="pbar-fill" style="width:65%;background:linear-gradient(90deg,#ff9933,#ffd600)"></div></div>
+  </div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num" style="background:rgba(255,214,0,.15);color:#ffd600">4</div>
+    <div class="phase-title">Jobber Pro Desktop App Integration</div>
+    <div class="phase-status st-partial">⚡ Partial</div>
+  </div>
+  <div class="phase-body">
+    <div class="items">
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Jobber heartbeat endpoint</div><div class="item-desc">/api/jobber/heartbeat · writes to app_sessions · tracks online users</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Angel One credentials route</div><div class="item-desc">/api/user/angel-credentials · encrypted · stored in DB</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item done"><span class="item-ico">✅</span><div class="item-main"><div class="item-title">Licence validation endpoint</div><div class="item-desc">/api/user/license · checks plan · returns valid/expired/FREE</div></div><span class="item-tag tag-done">DONE</span></div>
+      <div class="item blocker"><span class="item-ico">🔴</span><div class="item-main"><div class="item-title">Jobber Pro .exe not hosted</div><div class="item-desc">DOWNLOAD_URL env var not set. Upload installer to GitHub Releases or S3. This blocks ALL users from downloading</div></div><span class="item-tag tag-blocker">BLOCKER</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Jobber Pro calls backend on startup</div><div class="item-desc">Desktop app should call /api/jobber/heartbeat with JWT on every launch to validate licence</div></div><span class="item-tag tag-todo">TODO</span></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span class="progress-lbl">Phase progress</span><span class="progress-pct" style="color:#ffd600">60%</span></div>
+    <div class="pbar"><div class="pbar-fill" style="width:60%;background:linear-gradient(90deg,#ffd600,#ff9933)"></div></div>
+  </div>
+</div>
+
+<!-- PHASE 5 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num" style="background:rgba(99,155,255,.15);color:#7a9cc5">5</div>
+    <div class="phase-title">Testing & Quality</div>
+    <div class="phase-status st-todo">Pending</div>
+  </div>
+  <div class="phase-body">
+    <div class="items">
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">End-to-end user flow test</div><div class="item-desc">Register → verify email → login → download → upgrade plan → all steps working</div></div><span class="item-tag tag-todo">TODO</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Payment flow test</div><div class="item-desc">Create order → Razorpay checkout → webhook fires → plan upgrades in DB</div></div><span class="item-tag tag-todo">TODO</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Mobile browser test</div><div class="item-desc">Test all pages on actual mobile devices — not local files</div></div><span class="item-tag tag-todo">TODO</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Admin panel test</div><div class="item-desc">Login as admin · view users · change plan · force logout · all working</div></div><span class="item-tag tag-todo">TODO</span></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span class="progress-lbl">Phase progress</span><span class="progress-pct" style="color:#7a9cc5">0%</span></div>
+    <div class="pbar"><div class="pbar-fill" style="width:0%;background:linear-gradient(90deg,#7a9cc5,#22d3ee)"></div></div>
+  </div>
+</div>
+
+<!-- PHASE 6 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num" style="background:rgba(168,85,247,.15);color:#a855f7">6</div>
+    <div class="phase-title">Launch & Growth</div>
+    <div class="phase-status st-todo">Not Started</div>
+  </div>
+  <div class="phase-body">
+    <div class="items">
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">First real user registration</div><div class="item-desc">Get one real trader to register, download, and use Jobber Pro</div></div><span class="item-tag tag-todo">TODO</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">First paid subscription</div><div class="item-desc">One user upgrades to Pro. Verify payment flows to your Razorpay account</div></div><span class="item-tag tag-todo">TODO</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Blog content — SEO</div><div class="item-desc">5 articles on F&O trading, OI analysis, FII flows — drives organic traffic</div></div><span class="item-tag tag-todo">TODO</span></div>
+      <div class="item todo"><span class="item-ico">⬜</span><div class="item-main"><div class="item-title">Social media presence</div><div class="item-desc">Twitter/X + Telegram community for F&O traders</div></div><span class="item-tag tag-todo">TODO</span></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span class="progress-lbl">Phase progress</span><span class="progress-pct" style="color:#a855f7">0%</span></div>
+    <div class="pbar"><div class="pbar-fill" style="width:0%;background:linear-gradient(90deg,#a855f7,#7c3aed)"></div></div>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="next-steps">
+  <div class="ns-title">⚡ Do These Right Now — In Order</div>
+
+  <div class="ns-item">
+    <div class="ns-num">1</div>
+    <div class="ns-main">
+      <strong style="color:#dde8ff">Fix Sign In button</strong> — one line change in index.html
+      <div class="ns-cmd">git add public/index.html && git commit -m "fix: signin redirect" && git push</div>
+    </div>
+  </div>
+
+  <div class="ns-item">
+    <div class="ns-num">2</div>
+    <div class="ns-main">
+      <strong style="color:#dde8ff">Push new app.html</strong> — premium user dashboard
+      <div class="ns-cmd">git add public/app.html && git commit -m "feat: premium dashboard" && git push</div>
+    </div>
+  </div>
+
+  <div class="ns-item">
+    <div class="ns-num">3</div>
+    <div class="ns-main">
+      <strong style="color:#dde8ff">Upload Jobber Pro .exe to GitHub Releases</strong>
+      <div class="ns-cmd">Go to github.com/AmitB298/optionlab-backend → Releases → New Release → Upload .exe</div>
+    </div>
+  </div>
+
+  <div class="ns-item">
+    <div class="ns-num">4</div>
+    <div class="ns-main">
+      <strong style="color:#dde8ff">Set DOWNLOAD_URL in Railway</strong>
+      <div class="ns-cmd">Railway → Variables → DOWNLOAD_URL = https://github.com/.../releases/download/v1.0/JobberPro.exe</div>
+    </div>
+  </div>
+
+  <div class="ns-item">
+    <div class="ns-num">5</div>
+    <div class="ns-main">
+      <strong style="color:#dde8ff">Set Razorpay webhook in Razorpay dashboard</strong>
+      <div class="ns-cmd">razorpay.com → Settings → Webhooks → URL: https://optionslab.in/api/payments/webhook</div>
+    </div>
+  </div>
+
+  <div class="ns-item">
+    <div class="ns-num">6</div>
+    <div class="ns-main">
+      <strong style="color:#dde8ff">Do full end-to-end test on live site</strong>
+      <div class="ns-cmd">Register → verify email → login → download Jobber Pro → upgrade to Pro</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
