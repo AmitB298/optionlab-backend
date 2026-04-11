@@ -683,7 +683,7 @@ async function apiFetch(url,opts={}){
   }
 }
 const TOKEN_KEY='OptionsLab_token',USER_KEY='OptionsLab_user';
-function saveSession(token,user){try{sessionStorage.setItem(TOKEN_KEY,token);sessionStorage.setItem(USER_KEY,JSON.stringify(user));}catch(e){}}
+function saveSession(token,user){try{localStorage.setItem(TOKEN_KEY,token);localStorage.setItem(USER_KEY,JSON.stringify(user));}catch(e){}}
 (function checkExistingSession(){try{const p=new URLSearchParams(window.location.search);const hasVerify=sessionStorage.getItem('ol_verify_token');const isLoggedIn=sessionStorage.getItem(TOKEN_KEY)||localStorage.getItem('ol_token');if(isLoggedIn&&!hasVerify&&!p.get('email_token'))window.location.replace('/app');}catch(e){}})();
 
 /* ════ TICKER ════ */
@@ -1002,5 +1002,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 </nav>
 </body>
 </html>
+
+
 
 
