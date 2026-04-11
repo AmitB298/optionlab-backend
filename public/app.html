@@ -1120,8 +1120,6 @@ function updateTime(){
 setInterval(updateTime,1000);
 updateTime();
 
-/* ── NAV ── */
-document.getElementById('site-top-nav').innerHTML=`<nav style="position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(5,10,24,0.95);backdrop-filter:blur(32px);border-bottom:1px solid rgba(255,153,51,0.14);box-shadow:0 2px 24px rgba(0,0,0,0.5);"><div style="display:flex;align-items:center;gap:1.5rem;"><div onclick="window.location.href='/'" style="display:flex;align-items:center;gap:.4rem;cursor:pointer;"><div style="width:32px;height:32px;background:linear-gradient(135deg,#ff9933,#e05a00);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;color:#fff;">OL</div><div style="font-size:1.05rem;font-weight:700;color:#fff;">Options<em style="color:#ff9933;font-style:normal;">Lab</em></div></div><div style="display:flex;gap:.25rem;"><a href="/" style="padding:.3rem .7rem;font-size:.75rem;color:rgba(255,255,255,0.6);text-decoration:none;">Home</a><a href="/#pricing" style="padding:.3rem .7rem;font-size:.75rem;color:rgba(255,255,255,0.6);text-decoration:none;">Pricing</a></div></div><div style="display:flex;align-items:center;gap:.75rem;"><span id="topNavName" style="font-size:.75rem;color:rgba(255,255,255,0.7);"></span><button onclick="doSignOut()" style="padding:.32rem .85rem;border-radius:6px;border:1px solid rgba(255,153,51,0.4);background:transparent;color:#ff9933;font-size:.72rem;cursor:pointer;font-weight:600;">Sign Out</button></div></nav>`;
 /* ── LOAD USER ── */
 async function loadUser(){
   try{
@@ -1331,6 +1329,7 @@ function showToast(msg, type='success'){
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
+
 
 
 
