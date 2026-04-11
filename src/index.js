@@ -102,13 +102,12 @@ try {
 app.use(express.static(path.join(__dirname,'..','public')));
 app.use('/blog', express.static(path.join(__dirname,'..','public','blog')));
 app.get('/blog/*',(req,res)=>res.sendFile(path.join(__dirname,'..','public','blog','index.html')));
-app.get('/admin',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','admin.html')));
-app.get('/app',     (req,res)=>res.sendFile(path.join(__dirname,'..','public','app.html')));
-app.get('/profile', (req,res)=>res.sendFile(path.join(__dirname,'..','public','profile.html')));
-app.get('/verify',  (req,res)=>res.sendFile(path.join(__dirname,'..','public','verify.html')));
-app.get('/setup',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','setup.html')));
-// Root serves index.html (via express.static above)
-app.get('/register',(req,res)=>res.sendFile(path.join(__dirname,'..','public','register.html')));
+app.get('/admin',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','admin.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
+app.get('/app',     (req,res)=>res.sendFile(path.join(__dirname,'..','public','app.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
+app.get('/profile', (req,res)=>res.sendFile(path.join(__dirname,'..','public','profile.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
+app.get('/verify',  (req,res)=>res.sendFile(path.join(__dirname,'..','public','verify.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
+app.get('/setup',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','setup.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
+app.get('/register',(req,res)=>res.sendFile(path.join(__dirname,'..','public','register.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
 
 // Bug #1: Sentry error handler after routes
 monitoring.errorHandler(app);
@@ -125,7 +124,6 @@ async function start() {
     const pool = new Pool({connectionString:process.env.DATABASE_URL});
     const client = await pool.connect();
     await client.query(`CREATE TABLE IF NOT EXISTS migrations_log (id SERIAL PRIMARY KEY, migration VARCHAR(255) UNIQUE NOT NULL, ran_at TIMESTAMPTZ DEFAULT NOW())`);
-    // Bug #7: correct order — 007 before 008
     const migs = [
       {id:'m01_role',    sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(20) DEFAULT 'user'`},
       {id:'m02_email',   sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(255)`},
@@ -135,7 +133,6 @@ async function start() {
       {id:'m06_angel',   sql:`CREATE TABLE IF NOT EXISTS angel_credentials (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, api_key TEXT, client_code VARCHAR(50), mpin TEXT, totp_secret TEXT, updated_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m07_email_otp',sql:`CREATE TABLE IF NOT EXISTS email_otps (id SERIAL PRIMARY KEY, email VARCHAR(255) NOT NULL, otp_hash VARCHAR(255) NOT NULL, purpose VARCHAR(50) DEFAULT 'registration', expires_at TIMESTAMPTZ NOT NULL, used BOOLEAN DEFAULT false, attempts INT DEFAULT 0, created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m08_email_ver',sql:`CREATE TABLE IF NOT EXISTS email_verifications (id SERIAL PRIMARY KEY, email VARCHAR(254) NOT NULL, token CHAR(64) NOT NULL UNIQUE, expires_at TIMESTAMPTZ NOT NULL, verified BOOLEAN DEFAULT false, used BOOLEAN DEFAULT false, created_at TIMESTAMPTZ DEFAULT NOW())`},
-      // Bug #8: download_log with proper FK constraint
       {id:'m09_dl_log',  sql:`CREATE TABLE IF NOT EXISTS download_log (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, version VARCHAR(20), ip_address VARCHAR(45), created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m10_admin',   sql:`CREATE TABLE IF NOT EXISTS admin_audit_log (id SERIAL PRIMARY KEY, admin_id INTEGER, action VARCHAR(100) NOT NULL, target_user_id INTEGER, payload JSONB, success BOOLEAN DEFAULT true, ip_address VARCHAR(50), created_at TIMESTAMPTZ DEFAULT NOW())`},
     ];
