@@ -1306,7 +1306,7 @@ function showToast(msg, type='success'){
 /* ── AUTH CHECK & INIT ── */
 (function init(){
   const tok = getToken();
-  if(!tok){ window.location.replace('/register.html'); return; }
+  if(!tok){ console.error('NO TOKEN FOUND', Object.keys(localStorage)); window.location.replace('/register.html'); return; }
 
   // Handle URL tab param
   const p = new URLSearchParams(window.location.search);
@@ -1323,6 +1323,7 @@ function showToast(msg, type='success'){
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
+
 
 
 
