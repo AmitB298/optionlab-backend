@@ -777,7 +777,7 @@ async function doLogin(){
     saveSession(data.token,data.user);
     document.getElementById('loginForm').style.display='none';
     document.getElementById('loginOk').classList.add('show');
-    startRedirect('loginFill','loginCd',1800,'/app');
+    startRedirect('loginFill','loginCd',1800,'/app.html');
   }catch(e){
     let msg=e.message||'Connection failed';
     if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach OptionsLab server. Check your internet and try again.';
@@ -984,7 +984,7 @@ async function doRegister(){
     if(msg)msg.textContent='Account created. Taking you to your dashboard\u2026';
     document.getElementById('regForm').style.display='none';
     document.getElementById('regOk').classList.add('show');
-    startRedirect('regFill','regCd',2500,'/app');
+    startRedirect('regFill','regCd',2500,'/app.html');
   }catch(e){
     let errMsg=e.message||'Connection failed';
     if(errMsg==='Failed to fetch'||errMsg.includes('fetch'))errMsg='Cannot reach server. Check your internet and try again.';
@@ -1002,4 +1002,5 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 </nav>
 </body>
 </html>
+
 
