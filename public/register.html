@@ -684,7 +684,7 @@ async function apiFetch(url,opts={}){
 }
 const TOKEN_KEY='OptionsLab_token',USER_KEY='OptionsLab_user';
 function saveSession(token,user){try{sessionStorage.setItem(TOKEN_KEY,token);sessionStorage.setItem(USER_KEY,JSON.stringify(user));}catch(e){}}
-(function checkExistingSession(){try{const p=new URLSearchParams(window.location.search);const hasVerify=sessionStorage.getItem('ol_verify_token');const isLoggedIn=sessionStorage.getItem(TOKEN_KEY)||localStorage.getItem('ol_token');if(isLoggedIn&&!hasVerify&&!p.get('email_token'))window.location.replace('/index.html');}catch(e){}})();
+(function checkExistingSession(){try{const p=new URLSearchParams(window.location.search);const hasVerify=sessionStorage.getItem('ol_verify_token');const isLoggedIn=sessionStorage.getItem(TOKEN_KEY)||localStorage.getItem('ol_token');if(isLoggedIn&&!hasVerify&&!p.get('email_token'))window.location.replace('/app');}catch(e){}})();
 
 /* ════ TICKER ════ */
 let _n=22513,_v=14.23,_p=1.08;
@@ -777,7 +777,7 @@ async function doLogin(){
     saveSession(data.token,data.user);
     document.getElementById('loginForm').style.display='none';
     document.getElementById('loginOk').classList.add('show');
-    startRedirect('loginFill','loginCd',1800,'index.html');
+    startRedirect('loginFill','loginCd',1800,'/app');
   }catch(e){
     let msg=e.message||'Connection failed';
     if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach OptionsLab server. Check your internet and try again.';
@@ -984,7 +984,7 @@ async function doRegister(){
     if(msg)msg.textContent='Account created. Taking you to your dashboard\u2026';
     document.getElementById('regForm').style.display='none';
     document.getElementById('regOk').classList.add('show');
-    startRedirect('regFill','regCd',2500,'index.html');
+    startRedirect('regFill','regCd',2500,'/app');
   }catch(e){
     let errMsg=e.message||'Connection failed';
     if(errMsg==='Failed to fetch'||errMsg.includes('fetch'))errMsg='Cannot reach server. Check your internet and try again.';
