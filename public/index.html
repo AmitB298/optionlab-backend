@@ -2478,22 +2478,29 @@ window.suToggleBreakdown=function(){
 <script>
 (function(){
   const tok=localStorage.getItem('OptionsLab_token')||localStorage.getItem('ol_token');
-  if(tok){
-    fetch('/api/user/me',{headers:{Authorization:'Bearer '+tok}})
-      .then(r=>r.json()).then(d=>{
-        if(d.user||d.id){
-          const u=d.user||d;
-          document.getElementById('nav-auth-out').style.display='none';
-          const ni=document.getElementById('nav-auth-in');
-          ni.style.display='flex';
-          const chip=document.getElementById('nav-username-chip');
-          if(chip) chip.textContent=(u.name||'').split(' ')[0];
-          const ava=document.getElementById('nav-ava-chip');
-          if(ava) ava.textContent=((u.name||'U')[0]).toUpperCase();
-        }
-      }).catch(()=>{});
-  }
+  if(!tok) return;
+  fetch('/api/user/me',{headers:{Authorization:'Bearer '+tok}})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||(!d.user&&!d.id)) return;
+      const u=d.user||d;
+      const out=document.getElementById('nav-auth-out');
+      const inn=document.getElementById('nav-auth-in');
+      if(out) out.style.display='none';
+      if(inn) inn.style.display='flex';
+      const chip=document.getElementById('nav-username-chip');
+      if(chip) chip.textContent=(u.name||'').split(' ')[0];
+      const ava=document.getElementById('nav-ava-chip');
+      if(ava) ava.textContent=((u.name||'U')[0]).toUpperCase();
+    }).catch(function(){});
 })();
+function doLogout(){
+  localStorage.removeItem('OptionsLab_token');
+  localStorage.removeItem('ol_token');
+  localStorage.removeItem('OptionsLab_user');
+  sessionStorage.clear();
+  fetch('/api/auth/logout',{method:'POST',credentials:'include'}).catch(function(){}).finally(function(){window.location.href='/';});
+}
 </script></body>
 </html>
 
