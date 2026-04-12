@@ -452,6 +452,36 @@ router.post('/jobber-register', registerLimiter, async (req, res) => {
     return res.status(500).json({ error: 'Registration failed. Please try again.' });
   }
 });
+
+// ── GET /api/auth/subscription — Jobber Pro plan status ──────────────────
+router.get('/subscription', async (req, res) => {
+  try {
+    let token = req.cookies?.ol_tok;
+    if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+      token = req.headers.authorization.slice(7);
+    }
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    let payload;
+    try { payload = jwt.verify(token, JWT_SECRET); }
+    catch { return res.status(401).json({ error: 'Invalid token' }); }
+    const { rows } = await pool.query(
+      'SELECT plan, plan_expires_at, is_active FROM users WHERE id = $1',
+      [payload.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'User not found' });
+    const user = rows[0];
+    let status = 'active';
+    if (user.plan_expires_at && new Date(user.plan_expires_at) < new Date()) status = 'expired';
+    if (!user.is_active) status = 'expired';
+    const daysRemaining = user.plan_expires_at
+      ? Math.max(0, Math.ceil((new Date(user.plan_expires_at) - new Date()) / 86400000))
+      : 0;
+    return res.json({ success: true, status, plan: user.plan, daysRemaining, endDate: user.plan_expires_at });
+  } catch (e) {
+    console.error('[auth] subscription:', e.message);
+    return res.status(500).json({ error: 'Failed' });
+  }
+});
 module.exports = router;
 
 

@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 /**
  * routes/jobber.routes.js
@@ -99,4 +99,14 @@ router.get('/sessions', verifyToken, async (req, res) => {
   }
 });
 
+
+// ── GET /api/app/status — Jobber Pro health check ────────────────────────
+router.get('/status', (req, res) => {
+  return res.json({
+    status: 'ok',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+    market: 'NSE',
+  });
+});
 module.exports = router;
