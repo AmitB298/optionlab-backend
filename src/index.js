@@ -48,7 +48,7 @@ let monitoring = { init:()=>{}, errorHandler:()=>{}, status:()=>({enabled:false}
 try { monitoring = require('./monitoring/sentry'); monitoring.init(app); } catch(e) {}
 
 // Health
-try { app.use('/api/jobber', require('./routes/jobber.routes')); console.log('[boot] jobber routes OK'); } catch(e) { console.error('[boot] jobber routes:', e.message); }
+
 app.get('/api/app/status', (req, res) => res.json({ status: 'ok', version: '1.0.0', market: 'NSE', timestamp: new Date().toISOString() }));
 app.get('/health', (req, res) => res.json({
   status:'ok', service:'OptionLab API', version:'2.2.0',
