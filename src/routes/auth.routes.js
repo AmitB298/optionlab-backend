@@ -339,6 +339,119 @@ router.get('/verify', async (req, res) => {
   }
 });
 
+
+// ── POST /api/auth/jobber-login — Jobber Pro desktop app ─────────────────
+// Accepts: { mobile, mpin } — same as login-mpin but no cookie dependency
+router.post('/jobber-login', loginLimiter, async (req, res) => {
+  try {
+    const mobile = (req.body.mobile || '').trim();
+    const mpin   = (req.body.mpin   || '').trim();
+
+    if (!isValidMobile(mobile)) return res.status(400).json({ error: 'Invalid mobile number' });
+    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be 4-6 digits' });
+
+    const { rows } = await pool.query(
+      `SELECT id, name, mobile, email, mpin_hash, plan, is_active, is_admin, plan_expires_at
+       FROM users WHERE mobile = $1`,
+      [mobile]
+    );
+
+    if (!rows.length) return res.status(401).json({ error: 'Mobile not registered' });
+    const user = rows[0];
+    if (!user.is_active) return res.status(403).json({ error: 'Account suspended. Contact support.' });
+
+    const match = await bcrypt.compare(mpin, user.mpin_hash);
+    if (!match) return res.status(401).json({ error: 'Incorrect MPIN' });
+
+    // Plan expiry check
+    let plan = user.plan || 'TRIAL';
+    if (user.plan_expires_at && new Date(user.plan_expires_at) < new Date()) {
+      plan = 'EXPIRED';
+    }
+
+    const token = jwt.sign(
+      { id: user.id, mobile: user.mobile, email: user.email, plan, isAdmin: user.is_admin },
+      JWT_SECRET,
+      { expiresIn: TOKEN_EXPIRES }
+    );
+
+    updateActivity(user.id, req.ip, req.headers['user-agent']?.slice(0, 100));
+
+    return res.json({
+      success: true,
+      token,
+      user: {
+        id:          user.id,
+        name:        user.name,
+        mobile:      user.mobile,
+        email:       user.email,
+        plan,
+        is_admin:    user.is_admin,
+        plan_expires_at: user.plan_expires_at,
+      },
+    });
+  } catch (e) {
+    console.error('[auth] jobber-login:', e.message);
+    return res.status(500).json({ error: 'Login failed. Please try again.' });
+  }
+});
+
+// ── POST /api/auth/jobber-register — Jobber Pro new account ──────────────
+// Accepts: { name, mobile, mpin } — no email verification required
+router.post('/jobber-register', registerLimiter, async (req, res) => {
+  try {
+    const name   = (req.body.name   || '').trim();
+    const mobile = (req.body.mobile || '').trim();
+    const mpin   = (req.body.mpin   || '').trim();
+    const email  = (req.body.email  || '').trim().toLowerCase();
+
+    if (!isValidName(name))     return res.status(400).json({ error: 'Name must be 2-100 characters' });
+    if (!isValidMobile(mobile)) return res.status(400).json({ error: 'Invalid mobile number (10 digits, starts 6-9)' });
+    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be 4-6 digits' });
+
+    // Duplicate check
+    const checkQuery = email
+      ? `SELECT id FROM users WHERE mobile = $1 OR email = $2`
+      : `SELECT id FROM users WHERE mobile = $1`;
+    const checkParams = email ? [mobile, email] : [mobile];
+    const { rows: existing } = await pool.query(checkQuery, checkParams);
+    if (existing.length) return res.status(409).json({ error: 'Account already exists with this mobile or email' });
+
+    const mpinHash = await bcrypt.hash(mpin, SALT_ROUNDS);
+    const plan_expires_at = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 day trial
+
+    const { rows: [newUser] } = await pool.query(`
+      INSERT INTO users (name, mobile, email, mpin_hash, plan, is_active, role, plan_expires_at, created_at)
+      VALUES ($1, $2, $3, $4, 'TRIAL', true, 'user', $5, NOW())
+      RETURNING id, name, mobile, email, plan, plan_expires_at
+    `, [name, mobile, email || null, mpinHash, plan_expires_at]);
+
+    const token = jwt.sign(
+      { id: newUser.id, mobile: newUser.mobile, email: newUser.email, plan: 'TRIAL', isAdmin: false },
+      JWT_SECRET,
+      { expiresIn: TOKEN_EXPIRES }
+    );
+
+    updateActivity(newUser.id, req.ip, req.headers['user-agent']?.slice(0, 100));
+
+    return res.status(201).json({
+      success: true,
+      token,
+      user: {
+        id:          newUser.id,
+        name:        newUser.name,
+        mobile:      newUser.mobile,
+        email:       newUser.email,
+        plan:        'TRIAL',
+        is_admin:    false,
+        plan_expires_at: newUser.plan_expires_at,
+      },
+    });
+  } catch (e) {
+    console.error('[auth] jobber-register:', e.message);
+    return res.status(500).json({ error: 'Registration failed. Please try again.' });
+  }
+});
 module.exports = router;
 
 
