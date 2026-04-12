@@ -15,11 +15,9 @@
 
 const express      = require('express');
 const router       = express.Router();
-const { Pool }     = require('pg');
 const jwt          = require('jsonwebtoken');
-require('dotenv').config();
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = require('../db/pool');
 
 // ── Lightweight JWT check (no DB hit for speed) ───────────────────────────────
 function verifyToken(req, res, next) {
@@ -30,7 +28,7 @@ function verifyToken(req, res, next) {
   try {
     const decoded = jwt.verify(
       header.slice(7),
-      process.env.JWT_SECRET || 'optionlab-secret-2024'
+      process.env.JWT_SECRET
     );
     req.user = decoded;          // { id, mobile, plan, iat, exp }
     next();
