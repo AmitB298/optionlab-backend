@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 // Bug #5: JWT_SECRET guard — server refuses to start without it
 if (!process.env.JWT_SECRET) {
@@ -21,7 +21,7 @@ app.use(cors({
   origin: (origin, cb) => {
     if (!origin) return cb(null, true); // mobile apps / desktop
     const allowed = ['https://optionslab.in','https://www.optionslab.in',
-      'https://web-production-8a8e1.up.railway.app',
+      'https://www.optionslab.in',
       ...(process.env.ALLOWED_ORIGINS||'').split(',').filter(Boolean)];
     if (allowed.some(o => origin.startsWith(o)) || process.env.NODE_ENV!=='production')
       return cb(null, true);
@@ -48,6 +48,8 @@ let monitoring = { init:()=>{}, errorHandler:()=>{}, status:()=>({enabled:false}
 try { monitoring = require('./monitoring/sentry'); monitoring.init(app); } catch(e) {}
 
 // Health
+try { app.use('/api/jobber', require('./routes/jobber.routes')); console.log('[boot] jobber routes OK'); } catch(e) { console.error('[boot] jobber routes:', e.message); }
+app.get('/api/app/status', (req, res) => res.json({ status: 'ok', version: '1.0.0', market: 'NSE', timestamp: new Date().toISOString() }));
 app.get('/health', (req, res) => res.json({
   status:'ok', service:'OptionLab API', version:'2.2.0',
   uptime: Math.round(process.uptime()),
