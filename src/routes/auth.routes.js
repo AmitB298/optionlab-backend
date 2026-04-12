@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 /**
  * auth.routes.js v7.0 — httpOnly cookie auth
  *
@@ -293,6 +293,50 @@ router.get('/validate', (req, res) => {
 router.post('/logout', (req, res) => {
   res.clearCookie('ol_tok', { path: '/' });
   return res.json({ success: true });
+});
+
+
+// ── GET /api/auth/verify — Jobber Pro desktop app alias ──────────────────
+router.get('/verify', async (req, res) => {
+  let token = req.cookies?.ol_tok;
+  if (!token) {
+    const h = req.headers['authorization'];
+    if (h?.startsWith('Bearer ')) token = h.slice(7);
+  }
+  if (!token) return res.status(401).json({ valid: false, error: 'Not authenticated' });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    // DB se latest plan aur status fetch karo
+    const { rows } = await pool.query(
+      `SELECT id, name, mobile, email, plan, is_active, plan_expires_at, is_admin
+       FROM users WHERE id = $1`,
+      [decoded.id]
+    );
+
+    if (!rows.length) return res.status(404).json({ valid: false, error: 'User not found' });
+    const user = rows[0];
+
+    if (!user.is_active) return res.status(403).json({ valid: false, error: 'Account suspended' });
+
+    return res.json({
+      valid:   true,
+      plan:    user.plan,
+      expires: user.plan_expires_at,
+      isAdmin: user.is_admin,
+      user: {
+        id:     user.id,
+        name:   user.name,
+        mobile: user.mobile,
+        email:  user.email,
+        plan:   user.plan,
+      }
+    });
+  } catch {
+    res.clearCookie('ol_tok');
+    return res.status(401).json({ valid: false, error: 'Token expired' });
+  }
 });
 
 module.exports = router;
