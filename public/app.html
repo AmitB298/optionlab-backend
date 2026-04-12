@@ -563,7 +563,7 @@ input,select,textarea{font-family:inherit}
   </div>
   <div style="display:flex;align-items:center;gap:.75rem;">
     <div style="font-size:.75rem;color:rgba(255,255,255,0.7);">👋 <span id="topNavName">Trader</span></div>
-    <button onclick="doSignOut()" style="padding:.32rem .85rem;border-radius:6px;border:1px solid rgba(255,153,51,0.4);background:transparent;color:#ff9933;font-size:.72rem;cursor:pointer;font-weight:600;">Sign Out</button>
+    <button onclick="localStorage.removeItem(String.fromCharCode(79,112,116,105,111,110,115,76,97,98,95,116,111,107,101,110));localStorage.removeItem(String.fromCharCode(111,108,95,116,111,107,101,110));sessionStorage.clear();window.location.replace('/register.html')" style="padding:.32rem .85rem;border-radius:6px;border:1px solid rgba(255,153,51,0.4);background:transparent;color:#ff9933;font-size:.72rem;cursor:pointer;font-weight:600;">Sign Out</button>
   </div>
 </nav>
 <div class="layout">
