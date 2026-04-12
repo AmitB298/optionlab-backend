@@ -1446,7 +1446,7 @@ window.addEventListener('load', function(){
 });
 
 // ── Clock ──
-function tickClock(){var now=new Date(),ist=new Date(now.getTime()+5.5*3600000);var h=ist.getUTCHours(),m=ist.getUTCMinutes(),s=ist.getUTCSeconds();var ts=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' IST';var t=h*60+m,open=t>=9*60+15&&t<15*60+30;var ns=document.getElementById('navMarketStatus');if(ns){ns.textContent=open?'NSE Open':'NSE Closed';ns.style.color=open?'var(--nav-green)':'var(--red)';}var sc=document.getElementById('smClock');if(sc)sc.textContent=ts;updateKillZones(h,m);}
+function tickClock(){var now=new Date(),ist=new Date(now.getTime()+5.5*3600000);var h=ist.getUTCHours(),m=ist.getUTCMinutes(),s=ist.getUTCSeconds();var ts=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' IST';var t=h*60+m,open=t>=9*60+15&&t<15*60+30;var sc=document.getElementById('smClock');if(sc)sc.textContent=ts;updateKillZones(h,m);}
 tickClock();setInterval(tickClock,1000);
 
 // ── Scroll top ──
