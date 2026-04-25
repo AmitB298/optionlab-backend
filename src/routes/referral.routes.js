@@ -5,7 +5,6 @@ const pool    = require('../db/pool');
 const { auth: authenticateToken } = require('../middleware/auth');
 const { getReferralStats, redeemWallet } = require('../services/referral.service');
 
-// GET /api/referral/stats
 router.get('/stats', authenticateToken, async (req, res) => {
   try {
     const stats = await getReferralStats(req.user.id);
@@ -16,7 +15,6 @@ router.get('/stats', authenticateToken, async (req, res) => {
   }
 });
 
-// POST /api/referral/redeem
 router.post('/redeem', authenticateToken, async (req, res) => {
   try {
     const result = await redeemWallet(req.user.id);
@@ -27,7 +25,6 @@ router.post('/redeem', authenticateToken, async (req, res) => {
   }
 });
 
-// POST /api/referral/track-click
 router.post('/track-click', async (req, res) => {
   try {
     const { referral_code } = req.body;
@@ -42,7 +39,6 @@ router.post('/track-click', async (req, res) => {
   }
 });
 
-// GET /api/referral/leaderboard
 router.get('/leaderboard', async (req, res) => {
   try {
     const { rows } = await pool.query(`
