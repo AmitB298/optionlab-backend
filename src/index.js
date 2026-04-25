@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 // Bug #5: JWT_SECRET guard — server refuses to start without it
 if (!process.env.JWT_SECRET) {
@@ -48,7 +48,6 @@ let monitoring = { init:()=>{}, errorHandler:()=>{}, status:()=>({enabled:false}
 try { monitoring = require('./monitoring/sentry'); monitoring.init(app); } catch(e) {}
 
 // Health
-
 app.get('/api/app/status', (req, res) => res.json({ status: 'ok', version: '1.0.0', market: 'NSE', timestamp: new Date().toISOString() }));
 app.get('/health', (req, res) => res.json({
   status:'ok', service:'OptionLab API', version:'2.2.0',
@@ -83,7 +82,9 @@ try { app.use('/api/email',  require('./routes/email.routes'));   console.log('[
 try { app.use('/api/user',   require('./routes/user.routes'));    console.log('[boot] user.routes OK'); } catch(e) { console.error('[boot] user.routes FAILED:', e.message); }
 try { app.use('/api/device', require('./routes/device.routes')); } catch(e) {}
 try { app.use('/api/jobber', require('./routes/jobber.routes')); console.log('[boot] jobber OK'); } catch(e) { console.error('[boot] jobber FAILED:', e.message); }
-// Bug #6: dead require removed — angel module does not exist
+
+// Referral ← NEW
+try { app.use('/api/referral', require('./routes/referral.routes')); console.log('[boot] referral OK'); } catch(e) { console.error('[boot] referral FAILED:', e.message); }
 
 // Blog
 try {
@@ -162,9 +163,16 @@ async function start() {
     console.log('[boot] cron OK');
   } catch(e) { console.warn('[boot] cron skipped:',e.message); }
 
+  // Referral cron — daily 2 AM reward release ← NEW
+  try {
+    const { startReferralCron } = require('./cron/referral.cron');
+    startReferralCron();
+    console.log('[boot] referral cron OK');
+  } catch(e) { console.warn('[boot] referral cron skipped:', e.message); }
+
   app.listen(PORT, ()=>{
     console.log(`\nOptionLab API v2.2.0 on port ${PORT}`);
-    console.log('Routes: /api/payments /api/download /api/user /api/auth /api/admin\n');
+    console.log('Routes: /api/payments /api/download /api/user /api/auth /api/admin /api/referral\n');
   });
 }
 
