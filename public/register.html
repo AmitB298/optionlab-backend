@@ -2,6 +2,9 @@
 <html lang="en" dir="ltr" itemscope itemtype="https://schema.org/WebPage">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Login / Register | OptionsLab — NSE Options Analytics</title>
@@ -386,7 +389,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
       <div class="feat"><div class="feat-ico">⚡</div><div class="feat-body"><div class="feat-title">Live Signal Engine</div><div class="feat-desc">VPIN, FII flow, OI velocity — updated every 2 seconds</div></div></div>
       <div class="feat"><div class="feat-ico">𝛅</div><div class="feat-body"><div class="feat-title">Full Greeks Suite</div><div class="feat-desc">Delta, Gamma, Vega, Theta + GEX dealer positioning maps</div></div></div>
       <div class="feat"><div class="feat-ico">🎯</div><div class="feat-body"><div class="feat-title">Smart Money Footprint</div><div class="feat-desc">FII vs retail divergence, operator phase detection</div></div></div>
-      <div class="feat"><div class="feat-ico">🔗</div><div class="feat-body"><div class="feat-title">Angel One Integration</div><div class="feat-desc">SmartAPI WebSocket for live option chain feed</div></div></div>
+      <div class="feat"><div class="feat-ico">🔗</div><div class="feat-body"><div class="feat-title">Fyers Integration</div><div class="feat-desc">Fyers API for live option chain feed</div></div></div>
     </div>
     <div class="live-strip"><div class="live-dot"></div><div class="live-text"><strong>1,000+ traders</strong> connected to OptionsLab live</div></div>
     <div class="ticker-strip">
@@ -400,7 +403,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
     <div class="mobile-topbar" aria-hidden="true"><div class="m-mark">OL</div><span class="m-name">Option<b>Lab</b></span></div>
     <div class="mobile-pills" aria-hidden="true">
       <div class="mpill">⚡ Live Signals</div><div class="mpill">𝛅 Greeks</div>
-      <div class="mpill">🎯 Smart Money</div><div class="mpill">🔗 Angel One</div>
+      <div class="mpill">🎯 Smart Money</div><div class="mpill">🔗 Fyers</div>
     </div>
 
     <div class="tabs" role="tablist">
@@ -530,22 +533,22 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
         <button class="btn-main" onclick="toStep3()">Continue &rarr;</button>
       </div>
 
-      <!-- STEP 3: Angel One Client ID + Checkbox -->
+      <!-- STEP 3: Fyers Client ID + Checkbox -->
       <div id="rStep3" style="display:none">
         <div class="form-head">
           <div class="form-eyebrow">Step 3 of 5</div>
           <div class="form-title">Broker setup</div>
-          <div class="form-sub">Connect your Angel One account to unlock live data feeds.</div>
+          <div class="form-sub">Connect your Fyers account to unlock live data feeds.</div>
         </div>
         <div class="ig">
-          <label class="il" for="rClientId">Angel One Client ID <span class="req">*</span></label>
+          <label class="il" for="rClientId">Fyers Client ID <span class="req">*</span></label>
           <input type="text" id="rClientId" placeholder="e.g. SBH3321" maxlength="10"
             autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
-            aria-label="Angel One Client ID"
+            aria-label="Fyers Client ID"
             oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'');updateCkPreview()">
           <div class="notice notice-or" style="margin-top:8px;">
             <span class="notice-icon">&#128274;</span>
-            <span><strong>This is permanent and cannot be changed</strong> after registration. Before entering: open Angel One app &rarr; tap Profile &rarr; copy Client ID exactly.</span>
+            <span><strong>This is permanent and cannot be changed</strong> after registration. Before entering: open Fyers app &rarr; tap Profile &rarr; copy Client ID exactly.</span>
           </div>
         </div>
         <div class="ck-row" id="ckAngelRow" onclick="toggleCheck('ckAngel','ckAngelRow')" role="checkbox" aria-checked="false" tabindex="0"
@@ -553,7 +556,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
           <input type="checkbox" id="ckAngel" aria-hidden="true">
           <div class="ck-box"><span class="ck-check">&#10003;</span></div>
           <label class="ck-label" onclick="event.stopPropagation()">
-            I have opened the Angel One app and confirmed that <strong id="ckClientIdPreview">my Client ID</strong> is correct. I understand this <strong>cannot be changed later</strong>.
+            I have opened the Fyers app and confirmed that <strong id="ckClientIdPreview">my Client ID</strong> is correct. I understand this <strong>cannot be changed later</strong>.
           </label>
         </div>
         <div class="spacer"></div>
@@ -635,12 +638,12 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 5">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 6">
         </div>
-        <div class="mp-warn">&#9888; Keep this MPIN different from your Angel One trading PIN</div>
+        <div class="mp-warn">&#9888; Keep this MPIN different from your Fyers trading PIN</div>
         <div class="sumcard" style="margin-top:clamp(10px,2vw,16px);">
           <div class="sumrow"><span class="sumlbl">Email</span><span class="sumval" id="sumEmail">&mdash;</span></div>
           <div class="sumrow"><span class="sumlbl">Mobile</span><span class="sumval" id="sumMob">&mdash;</span></div>
           <div class="sumrow"><span class="sumlbl">Name</span><span class="sumval" id="sumName">&mdash;</span></div>
-          <div class="sumrow"><span class="sumlbl">Angel One ID</span><span class="sumval-angel" id="sumAngel">&mdash;</span></div>
+          <div class="sumrow"><span class="sumlbl">Fyers Client ID</span><span class="sumval-angel" id="sumAngel">&mdash;</span></div>
           <div class="sumrow"><span class="sumlbl">Experience</span><span class="sumval" id="sumExp">&mdash;</span></div>
           <div class="sumrow"><span class="sumlbl">Style</span><span class="sumval" id="sumStyle">&mdash;</span></div>
           <div class="sumrow"><span class="sumlbl">Plan</span><span class="sumval" style="color:var(--gn)">Free</span></div>
@@ -734,7 +737,7 @@ function clearBoxes(id){document.querySelectorAll('#'+id+' .mpb').forEach(b=>{b.
 
 /* ════ HELPERS ════ */
 function validateAngelId(raw){
-  if(!raw||!raw.trim())return{ok:false,error:'Angel One Client ID is required'};
+  if(!raw||!raw.trim())return{ok:false,error:'Fyers Client ID is required'};
   const v=raw.trim().toUpperCase();
   if(!/^[A-Z0-9]{6,10}$/.test(v))return{ok:false,error:'Client ID must be 6-10 letters/numbers only (e.g. SBH3321)'};
   return{ok:true,value:v};
@@ -904,7 +907,7 @@ function toStep4(){
   const ar=validateAngelId(document.getElementById('rClientId').value.trim());
   const ck=document.getElementById('ckAngel');
   if(!ar.ok){document.getElementById('rClientId').classList.add('field-error');return showErr('regErr',ar.error);}
-  if(!ck.checked)return showErr('regErr','Please confirm you have verified your Client ID in the Angel One app');
+  if(!ck.checked)return showErr('regErr','Please confirm you have verified your Client ID in the Fyers app');
   document.getElementById('rClientId').classList.remove('field-error');
   document.getElementById('rClientId').classList.add('field-locked');
   document.getElementById('rClientId').readOnly=true;
@@ -961,7 +964,7 @@ async function doRegister(){
   if(mpin.length!==6)return showErr('regErr','Enter a complete 6-digit MPIN');
   if(mpin!==conf)return showErr('regErr','MPINs do not match — please re-enter');
   if(!_rd.email_token)return showErr('regErr','Email verification expired — please start again');
-  if(!_rd.angelId)return showErr('regErr','Angel One Client ID missing — please go back');
+  if(!_rd.angelId)return showErr('regErr','Fyers Client ID missing — please go back');
   _rd.mpin=mpin;
   const btn=document.getElementById('regBtn');btn.disabled=true;btn.innerHTML='<div class="spin"></div> Creating account&hellip;';
   try{
@@ -1002,10 +1005,3 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 </nav>
 </body>
 </html>
-
-
-
-
-
-
-
