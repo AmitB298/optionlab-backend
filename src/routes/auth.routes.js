@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 /**
  * auth.routes.js v7.0 — httpOnly cookie auth
  *
@@ -14,6 +14,7 @@ const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
 const pool     = require('../db/pool');
 const { createLimiter } = require('../lib/rateLimit');
+const { processSignupReward } = require('../services/referral.service'); // ← REFERRAL HOOK
 
 const router = express.Router();
 
@@ -215,6 +216,12 @@ router.post('/register', registerLimiter, async (req, res) => {
     const token = signToken(newUser);
     setCookie(res, token);
     updateActivity(newUser.id, req.ip, req.headers['user-agent']?.slice(0, 100));
+
+    // ── REFERRAL HOOK ─────────────────────────────────────────────────────
+    if (referralCode) {
+      processSignupReward(newUser.id, referralCode).catch(console.error);
+    }
+    // ─────────────────────────────────────────────────────────────────────
 
     return res.status(201).json({
       success: true,
@@ -482,6 +489,5 @@ router.get('/subscription', async (req, res) => {
     return res.status(500).json({ error: 'Failed' });
   }
 });
+
 module.exports = router;
-
-
