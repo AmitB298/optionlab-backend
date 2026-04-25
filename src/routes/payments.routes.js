@@ -6,6 +6,7 @@ const express = require('express');
 const router  = express.Router();
 const crypto  = require('crypto');
 const pool    = require('../db/pool');
+const { processUpgradeReward } = require('../services/referral.service'); // ← REFERRAL HOOK
 
 const CF_APP_ID  = process.env.CASHFREE_APP_ID;
 const CF_SECRET  = process.env.CASHFREE_SECRET_KEY;
@@ -128,6 +129,17 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         [order.plan, expiresAt, order.user_id]
       );
       console.log(`[webhook] ✅ User ${order.user_id} → ${order.plan} until ${expiresAt}`);
+
+      // ── REFERRAL HOOK ───────────────────────────────────────────────────
+      // Check if this is renewal (user already had this plan before) or fresh upgrade
+      const { rows: prevOrders } = await pool.query(
+        `SELECT id FROM payment_orders
+         WHERE user_id = $1 AND plan = $2 AND status = 'PAID' AND order_id != $3`,
+        [order.user_id, order.plan, orderId]
+      );
+      const isRenewal = prevOrders.length > 0;
+      processUpgradeReward(order.user_id, orderId, isRenewal).catch(console.error);
+      // ───────────────────────────────────────────────────────────────────
     }
 
     if (type === 'PAYMENT_FAILED_WEBHOOK') {
