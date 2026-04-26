@@ -241,17 +241,90 @@ nav{position:sticky;top:0;z-index:100;
 .sk-w40{width:40%;}
 .sk-w80{width:80%;}
 
+/* ── UTIL ── */
+.full-width{grid-column:1/-1;}
+.mt20{margin-top:20px;}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:600px){
+  nav{padding:0 14px;}
+  .brand-name{font-size:16px;}
+  .sign-out-btn{padding:5px 10px;font-size:12px;}
+  .nav-plan{font-size:10px;padding:3px 8px;}
+
+  .page{padding:20px 14px 60px;}
+
+  .profile-hero{gap:12px;flex-wrap:wrap;}
+  .avatar{width:68px;height:68px;font-size:24px;}
+  .hero-name{font-size:clamp(18px,5vw,24px);}
+  .hero-email{font-size:12px;}
+  .hero-actions{width:100%;margin-left:0;flex-wrap:wrap;}
+  .btn-edit,.btn-secondary{flex:1;text-align:center;padding:8px 12px;font-size:12px;}
+
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px;}
+  .stat-card{padding:12px 14px;}
+  .stat-value{font-size:18px;}
+
+  .grid-2{grid-template-columns:1fr;gap:12px;}
+
+  .section{padding:16px;}
+  .section-title{font-size:13px;}
+  .field-label{min-width:90px;font-size:11px;}
+  .field-value{font-size:13px;}
+
+  .modal{padding:20px 16px;border-radius:16px;}
+  .modal-title{font-size:17px;}
+  .mpin-digit{width:44px;height:52px;font-size:20px;}
+  .mpin-inputs{gap:8px;}
+  .modal-actions{flex-direction:column;}
+  .modal-actions .btn-save,.modal-actions .btn-cancel{width:100%;}
+
+  .danger-section{padding:16px;}
+  .danger-item{flex-direction:column;align-items:flex-start;gap:10px;}
+  .btn-danger{width:100%;text-align:center;}
+
+  .toast-wrap{top:12px;right:12px;left:12px;}
+  .toast{max-width:100%;font-size:12px;}
+
+  /* Broker section */
+  .broker-status{flex-wrap:wrap;gap:8px;}
+  .broker-info{min-width:0;}
+  .broker-id{font-size:10px;word-break:break-all;}
+
+  /* Security items */
+  .security-item{gap:8px;}
+  .sec-title{font-size:12px;}
+  .sec-sub{font-size:10px;}
+
+  /* Device items */
+  .device-name{font-size:12px;}
+  .device-meta{font-size:10px;}
+}
+
+@media(max-width:380px){
+  .stats-row{grid-template-columns:1fr;}
+  .hero-badges{gap:5px;}
+  .badge{font-size:10px;padding:2px 7px;}
+  .mpin-digit{width:38px;height:46px;font-size:18px;}
+}
+
+@media(hover:none) and (pointer:coarse){
+  .btn-edit,.btn-secondary,.btn-save,.btn-cancel,.btn-danger{min-height:44px;}
+  .edit-link,.sec-action,.device-revoke{min-height:36px;display:inline-flex;align-items:center;}
+  input,select{font-size:16px !important;}
+}
+
 /* ── REFERRAL ── */
 .ref-section{background:linear-gradient(155deg,rgba(249,115,22,.06) 0%,rgba(9,13,21,.9) 100%);
   border:1px solid rgba(249,115,22,.2);border-radius:18px;padding:24px;margin-bottom:20px;}
 .ref-hero{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap;}
-.ref-code-box{flex:1;min-width:200px;background:rgba(0,0,0,.3);border:1px solid rgba(249,115,22,.25);
+.ref-code-box{flex:1;min-width:0;background:rgba(0,0,0,.3);border:1px solid rgba(249,115,22,.25);
   border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .ref-code-label{font-size:11px;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;}
 .ref-code-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--or);letter-spacing:.12em;}
 .ref-copy-btn{padding:8px 16px;background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);
   color:var(--or);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;
-  white-space:nowrap;font-family:'Outfit',sans-serif;}
+  white-space:nowrap;font-family:'Outfit',sans-serif;flex-shrink:0;}
 .ref-copy-btn:hover{background:rgba(249,115,22,.25);}
 .ref-wallet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;}
 .ref-wallet-card{background:rgba(0,0,0,.25);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;text-align:center;}
@@ -262,7 +335,7 @@ nav{position:sticky;top:0;z-index:100;
 .ref-wallet-val.pu{color:var(--pu);}
 .ref-tier{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;
   font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);color:var(--or);}
+  background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);color:var(--or);white-space:nowrap;}
 .ref-tier.bronze{background:rgba(180,100,40,.1);border-color:rgba(180,100,40,.25);color:#cd7f32;}
 .ref-tier.silver{background:rgba(180,180,180,.08);border-color:rgba(180,180,180,.2);color:#c0c0c0;}
 .ref-tier.gold{background:rgba(255,200,0,.1);border-color:rgba(255,200,0,.25);color:#ffd700;}
@@ -273,19 +346,19 @@ nav{position:sticky;top:0;z-index:100;
 .ref-redeem-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 .ref-milestone{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);
   border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
-.ref-milestone-text{font-size:12px;color:var(--tx2);flex:1;}
+.ref-milestone-text{font-size:12px;color:var(--tx2);flex:1;min-width:0;}
 .ref-milestone-text b{color:var(--pu);}
 .ref-progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:6px;overflow:hidden;}
 .ref-progress-fill{height:100%;background:linear-gradient(90deg,var(--pu),#a78bfa);border-radius:2px;transition:width .6s ease;}
 .ref-events{margin-top:4px;}
 .ref-event-item{display:flex;align-items:center;justify-content:space-between;
-  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;}
+  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;gap:8px;}
 .ref-event-item:last-child{border-bottom:none;}
-.ref-event-type{color:var(--tx2);}
-.ref-event-amt{font-family:'JetBrains Mono',monospace;font-weight:600;}
+.ref-event-type{color:var(--tx2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ref-event-amt{font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap;}
 .ref-event-amt.gn{color:var(--gn);}
 .ref-event-amt.pending{color:var(--tx3);}
-.ref-event-status{font-size:10px;padding:2px 7px;border-radius:10px;}
+.ref-event-status{font-size:10px;padding:2px 7px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
 .ref-event-status.credited{background:rgba(16,185,129,.1);color:var(--gn);}
 .ref-event-status.pending{background:rgba(249,115,22,.08);color:var(--or);}
 .ref-share-row{display:flex;gap:8px;margin-top:16px;}
@@ -302,15 +375,25 @@ nav{position:sticky;top:0;z-index:100;
 .ref-how-title{font-size:11px;font-weight:700;color:var(--tx);margin-bottom:3px;}
 .ref-how-desc{font-size:10px;color:var(--tx3);line-height:1.4;}
 
-/* ── UTIL ── */
-.full-width{grid-column:1/-1;}
-.mt20{margin-top:20px;}
-
-@media(max-width:500px){
-  .profile-hero{gap:16px;}
-  .hero-actions{width:100%;margin-left:0;}
-  .stats-row{grid-template-columns:1fr 1fr;}
+@media(max-width:600px){
+  .ref-section{padding:16px;border-radius:14px;}
+  .ref-code-val{font-size:16px;letter-spacing:.08em;}
+  .ref-wallet-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  .ref-wallet-card{padding:12px;}
+  .ref-wallet-val{font-size:17px;}
+  .ref-wallet-label{font-size:9px;}
+  .ref-how{grid-template-columns:1fr;gap:8px;}
+  .ref-how-step{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;}
+  .ref-how-icon{font-size:18px;margin-bottom:0;flex-shrink:0;}
+  .ref-milestone{flex-direction:column;gap:8px;align-items:flex-start;}
+  .ref-redeem-btn{font-size:13px;padding:11px;}
+  .ref-share-btn{font-size:11px;padding:8px 6px;}
+  .ref-copy-btn{padding:8px 10px;font-size:11px;}
 }
+@media(hover:none) and (pointer:coarse){
+  .ref-redeem-btn,.ref-copy-btn,.ref-share-btn{min-height:44px;}
+}
+
 </style>
 </head>
 <body>
@@ -558,7 +641,6 @@ nav{position:sticky;top:0;z-index:100;
 
   </div><!-- /grid-2 -->
 
-
   <!-- REFERRAL SECTION -->
   <div class="ref-section mt20" id="referralSection">
     <div class="section-head" style="margin-bottom:16px;">
@@ -609,18 +691,15 @@ nav{position:sticky;top:0;z-index:100;
     <div class="ref-how">
       <div class="ref-how-step">
         <div class="ref-how-icon">🔗</div>
-        <div class="ref-how-title">Share Code</div>
-        <div class="ref-how-desc">Friend registers with your code</div>
+        <div><div class="ref-how-title">Share Code</div><div class="ref-how-desc">Friend registers with your code</div></div>
       </div>
       <div class="ref-how-step">
         <div class="ref-how-icon">💰</div>
-        <div class="ref-how-title">Earn ₹10–₹150</div>
-        <div class="ref-how-desc">Signup ₹10 · Upgrade ₹150 · Renew ₹75</div>
+        <div><div class="ref-how-title">Earn ₹10–₹150</div><div class="ref-how-desc">Signup ₹10 · Upgrade ₹150 · Renew ₹75</div></div>
       </div>
       <div class="ref-how-step">
         <div class="ref-how-icon">🏆</div>
-        <div class="ref-how-title">Get Free Pro</div>
-        <div class="ref-how-desc">Redeem wallet for Pro subscription</div>
+        <div><div class="ref-how-title">Get Free Pro</div><div class="ref-how-desc">Redeem wallet for Pro subscription</div></div>
       </div>
     </div>
     <div class="ref-share-row">
@@ -634,6 +713,7 @@ nav{position:sticky;top:0;z-index:100;
       </div>
     </div>
   </div>
+
 
   <!-- DANGER ZONE -->
   <div class="danger-section mt20">
@@ -984,22 +1064,14 @@ async function loadReferral() {
     if (!res.ok) return;
     const d = await res.json();
     refData = d;
-
-    // Code
     document.getElementById('refCode').textContent = d.referral_code || '—';
-
-    // Tier badge
     const tierEl = document.getElementById('refTierBadge');
     tierEl.textContent = d.tier === 'none' ? 'No Tier' : d.tier.charAt(0).toUpperCase() + d.tier.slice(1);
     tierEl.className = 'ref-tier ' + (d.tier === 'none' ? '' : d.tier);
-
-    // Wallet
     document.getElementById('refBalance').textContent = '₹' + (d.balance_inr || 0).toLocaleString('en-IN');
     document.getElementById('refPending').textContent = '₹' + (d.pending_inr || 0).toLocaleString('en-IN');
     document.getElementById('refLifetime').textContent = '₹' + (d.lifetime_earned_inr || 0).toLocaleString('en-IN');
     document.getElementById('refConversions').textContent = d.total_conversions || 0;
-
-    // Redeem button
     const redeemBtn = document.getElementById('refRedeemBtn');
     if (d.can_redeem) {
       redeemBtn.disabled = false;
@@ -1009,8 +1081,6 @@ async function loadReferral() {
       redeemBtn.disabled = true;
       redeemBtn.textContent = '🎁 Need ₹' + needed.toLocaleString('en-IN') + ' more to redeem';
     }
-
-    // Milestone
     if (d.next_milestone) {
       const m = d.next_milestone;
       const pct = Math.min(100, Math.round((d.total_conversions / m.threshold) * 100));
@@ -1021,29 +1091,16 @@ async function loadReferral() {
       document.getElementById('refMilestoneBonus').textContent = pct + '%';
       document.getElementById('refMilestone').style.display = 'flex';
     }
-
-    // Events
     if (d.recent_events && d.recent_events.length) {
-      const evMap = {
-        signup_completed: '👤 Friend Signup',
-        plan_upgraded: '⬆️ Friend Upgraded',
-        plan_renewed: '🔄 Friend Renewed',
-        milestone_bonus: '🏆 Milestone Bonus',
-        wallet_redeemed: '🎉 Wallet Redeemed',
-      };
+      const evMap = {signup_completed:'👤 Friend Signup',plan_upgraded:'⬆️ Friend Upgraded',plan_renewed:'🔄 Friend Renewed',milestone_bonus:'🏆 Milestone Bonus',wallet_redeemed:'🎉 Wallet Redeemed'};
       document.getElementById('refEvents').innerHTML = d.recent_events.map(e => `
         <div class="ref-event-item">
           <span class="ref-event-type">${evMap[e.type] || e.type}</span>
-          <span class="ref-event-amt ${e.status === 'credited' ? 'gn' : 'pending'}">
-            ${e.amount_inr > 0 ? '+' : ''}₹${Math.abs(e.amount_inr)}
-          </span>
+          <span class="ref-event-amt ${e.status === 'credited' ? 'gn' : 'pending'}">${e.amount_inr > 0 ? '+' : ''}₹${Math.abs(e.amount_inr)}</span>
           <span class="ref-event-status ${e.status}">${e.status}</span>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
-  } catch(e) {
-    console.error('[referral] load error:', e);
-  }
+  } catch(e) { console.error('[referral] load error:', e); }
 }
 
 function copyRefCode() {
@@ -1051,41 +1108,26 @@ function copyRefCode() {
   if (!code || code === '—' || code === 'Loading…') return;
   navigator.clipboard.writeText(code).then(() => toast('Referral code copied!', 'ok'));
 }
-
 function shareWhatsApp() {
   const code = document.getElementById('refCode').textContent;
   if (!code || code === '—') return;
   const msg = encodeURIComponent('🚀 Join OptionsLab — India ka best options trading platform!\n\nMere referral code se register karo: *' + code + '*\n\nhttps://optionslab.in/register.html?ref=' + code);
   window.open('https://wa.me/?text=' + msg, '_blank');
 }
-
 function shareLink() {
   const code = document.getElementById('refCode').textContent;
   if (!code || code === '—') return;
-  const url = 'https://optionslab.in/register.html?ref=' + code;
-  navigator.clipboard.writeText(url).then(() => toast('Referral link copied!', 'ok'));
+  navigator.clipboard.writeText('https://optionslab.in/register.html?ref=' + code).then(() => toast('Referral link copied!', 'ok'));
 }
-
 async function redeemWallet() {
   const btn = document.getElementById('refRedeemBtn');
-  btn.disabled = true;
-  btn.textContent = 'Redeeming…';
+  btn.disabled = true; btn.textContent = 'Redeeming…';
   try {
     const res = await fetch(API + '/api/referral/redeem', { method: 'POST', headers: authHeaders() });
     const data = await res.json();
-    if (res.ok) {
-      toast('🎉 1 Month Pro added to your account!', 'ok');
-      await loadReferral();
-      await loadProfile();
-loadReferral();
-    } else {
-      toast(data.error || 'Redeem failed', 'err');
-      btn.disabled = false;
-    }
-  } catch {
-    toast('Request failed. Try again.', 'err');
-    btn.disabled = false;
-  }
+    if (res.ok) { toast('🎉 1 Month Pro added to your account!', 'ok'); await loadReferral(); await loadProfile(); }
+    else { toast(data.error || 'Redeem failed', 'err'); btn.disabled = false; }
+  } catch { toast('Request failed. Try again.', 'err'); btn.disabled = false; }
 }
 
 setupMpinInputs('currentMpinInputs');
