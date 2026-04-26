@@ -1144,6 +1144,11 @@ async function loadUser(){
 
     // Plan expiry
     if(u.plan_expires_at && plan!=='FREE'){
+      const expCheck = new Date(u.plan_expires_at);
+      if(expCheck < new Date()){
+        var b=document.getElementById('planExpiredBanner');
+        if(b) b.style.display='flex';
+      }
       const exp = new Date(u.plan_expires_at);
       const days = Math.max(0,Math.ceil((exp-Date.now())/(1000*60*60*24)));
       document.getElementById('sbExpiry').style.display='block';
