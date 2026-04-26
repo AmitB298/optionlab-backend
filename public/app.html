@@ -1327,5 +1327,16 @@ function showToast(msg, type='success'){
 })();
 </script>
 
+<div id="planExpiredBanner" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);backdrop-filter:blur(10px);align-items:center;justify-content:center;flex-direction:column;gap:1rem;">
+  <div style="text-align:center;max-width:420px;padding:2rem;">
+    <div style="font-size:3rem;margin-bottom:1rem;">⏰</div>
+    <div style="font-family:var(--font-d);font-size:2rem;color:#fff;margin-bottom:.5rem;">Plan Expired</div>
+    <div style="font-family:var(--font-b);font-size:.9rem;color:#9ca3af;line-height:1.7;margin-bottom:2rem;">Your plan has expired. Renew now to continue accessing live data, analytics and signals.</div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <button onclick="showTab('subscription');document.getElementById('planExpiredBanner').style.display='none'" style="padding:.8rem 2rem;border:none;border-radius:10px;background:linear-gradient(135deg,#ff9933,#e05a00);color:#fff;font-family:var(--font-r);font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(255,153,51,.4);">🚀 Renew Plan</button>
+      <button onclick="doLogout()" style="padding:.8rem 1.5rem;border:1px solid #374151;border-radius:10px;background:transparent;color:#9ca3af;font-family:var(--font-m);cursor:pointer;">Sign Out</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
