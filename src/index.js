@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 // Bug #5: JWT_SECRET guard — server refuses to start without it
 if (!process.env.JWT_SECRET) {
@@ -48,6 +48,7 @@ let monitoring = { init:()=>{}, errorHandler:()=>{}, status:()=>({enabled:false}
 try { monitoring = require('./monitoring/sentry'); monitoring.init(app); } catch(e) {}
 
 // Health
+
 app.get('/api/app/status', (req, res) => res.json({ status: 'ok', version: '1.0.0', market: 'NSE', timestamp: new Date().toISOString() }));
 app.get('/health', (req, res) => res.json({
   status:'ok', service:'OptionLab API', version:'2.2.0',
@@ -82,9 +83,7 @@ try { app.use('/api/email',  require('./routes/email.routes'));   console.log('[
 try { app.use('/api/user',   require('./routes/user.routes'));    console.log('[boot] user.routes OK'); } catch(e) { console.error('[boot] user.routes FAILED:', e.message); }
 try { app.use('/api/device', require('./routes/device.routes')); } catch(e) {}
 try { app.use('/api/jobber', require('./routes/jobber.routes')); console.log('[boot] jobber OK'); } catch(e) { console.error('[boot] jobber FAILED:', e.message); }
-
-// Referral ← NEW
-try { app.use('/api/referral', require('./routes/referral.routes')); console.log('[boot] referral OK'); } catch(e) { console.error('[boot] referral FAILED:', e.message); }
+// Bug #6: dead require removed — angel module does not exist
 
 // Blog
 try {
@@ -138,9 +137,9 @@ async function start() {
       {id:'m08_email_ver',sql:`CREATE TABLE IF NOT EXISTS email_verifications (id SERIAL PRIMARY KEY, email VARCHAR(254) NOT NULL, token CHAR(64) NOT NULL UNIQUE, expires_at TIMESTAMPTZ NOT NULL, verified BOOLEAN DEFAULT false, used BOOLEAN DEFAULT false, created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m09_dl_log',  sql:`CREATE TABLE IF NOT EXISTS download_log (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, version VARCHAR(20), ip_address VARCHAR(45), created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m10_admin',   sql:`CREATE TABLE IF NOT EXISTS admin_audit_log (id SERIAL PRIMARY KEY, admin_id INTEGER, action VARCHAR(100) NOT NULL, target_user_id INTEGER, payload JSONB, success BOOLEAN DEFAULT true, ip_address VARCHAR(50), created_at TIMESTAMPTZ DEFAULT NOW())`},
-      {id:'m11_payments', sql:CREATE TABLE IF NOT EXISTS payment_orders (id SERIAL PRIMARY KEY, order_id VARCHAR(100) UNIQUE NOT NULL, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, plan VARCHAR(50), amount NUMERIC(10,2), status VARCHAR(20) DEFAULT 'PENDING', cf_payment_id VARCHAR(100), paid_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())},
-      {id:'m12_devices', sql:CREATE TABLE IF NOT EXISTS trusted_devices (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, device_name VARCHAR(255), platform VARCHAR(50), ip_address VARCHAR(45), is_trusted BOOLEAN DEFAULT true, last_seen_at TIMESTAMPTZ, verified_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())},
-      {id:'m13_announcements', sql:CREATE TABLE IF NOT EXISTS admin_announcements (id SERIAL PRIMARY KEY, title VARCHAR(255), body TEXT, type VARCHAR(50) DEFAULT 'info', target VARCHAR(20) DEFAULT 'all', is_active BOOLEAN DEFAULT true, expires_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())},
+      {id:'m11_payments',sql:`CREATE TABLE IF NOT EXISTS payment_orders (id SERIAL PRIMARY KEY, order_id VARCHAR(100) UNIQUE NOT NULL, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, plan VARCHAR(50), amount NUMERIC(10,2), status VARCHAR(20) DEFAULT 'PENDING', cf_payment_id VARCHAR(100), paid_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m12_devices', sql:`CREATE TABLE IF NOT EXISTS trusted_devices (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, device_name VARCHAR(255), platform VARCHAR(50), ip_address VARCHAR(45), is_trusted BOOLEAN DEFAULT true, last_seen_at TIMESTAMPTZ, verified_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m13_announce',sql:`CREATE TABLE IF NOT EXISTS admin_announcements (id SERIAL PRIMARY KEY, title VARCHAR(255), body TEXT, type VARCHAR(50) DEFAULT 'info', target VARCHAR(20) DEFAULT 'all', is_active BOOLEAN DEFAULT true, expires_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
     ];
     for (const m of migs) {
       const {rows} = await client.query('SELECT id FROM migrations_log WHERE migration=$1',[m.id]);
@@ -166,16 +165,9 @@ async function start() {
     console.log('[boot] cron OK');
   } catch(e) { console.warn('[boot] cron skipped:',e.message); }
 
-  // Referral cron — daily 2 AM reward release ← NEW
-  try {
-    const { startReferralCron } = require('./cron/referral.cron');
-    startReferralCron();
-    console.log('[boot] referral cron OK');
-  } catch(e) { console.warn('[boot] referral cron skipped:', e.message); }
-
   app.listen(PORT, ()=>{
     console.log(`\nOptionLab API v2.2.0 on port ${PORT}`);
-    console.log('Routes: /api/payments /api/download /api/user /api/auth /api/admin /api/referral\n');
+    console.log('Routes: /api/payments /api/download /api/user /api/auth /api/admin\n');
   });
 }
 
