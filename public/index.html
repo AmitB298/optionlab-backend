@@ -246,7 +246,14 @@ footer{position:relative;z-index:10;background:var(--bg);border-top:1px solid va
   .nav-cta,.btn-signin-nav{min-height:40px;}
   .ham-btn{min-height:40px;min-width:40px;}
   input,select,textarea{font-size:16px!important;}
-}</style>
+}
+@media(max-width:768px){
+  /* Remove excessive bottom padding from hero and grid sections */
+  #page-home > section:first-child{min-height:auto!important;padding-bottom:2rem!important;}
+  #page-home > section:nth-child(2){padding:1.5rem 1rem!important;}
+  #page-home > section:nth-child(3){padding:1.5rem 1rem 2rem!important;}
+}
+</style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <!-- v1775969042350 --></head>
 
@@ -341,7 +348,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
 
 <!-- HOME -->
 <div class="page active" id="page-home">
-<section style="position:relative;min-height:80vh;padding:2.5rem 2.5rem 4rem;display:flex;align-items:flex-start;background:var(--bg);">
+<section style="position:relative;min-height:clamp(400px,80vh,900px);padding:clamp(1.5rem,4vw,2.5rem) clamp(1rem,4vw,2.5rem) clamp(2rem,4vw,4rem);display:flex;align-items:flex-start;background:var(--bg);">
   <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,153,51,.09) 0%,transparent 65%);pointer-events:none;"></div>
   <div style="position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(255,153,51,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,153,51,.04) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;opacity:.5;"></div>
   <div style="position:relative;z-index:2;width:100%;display:flex;gap:2.5rem;align-items:flex-start;max-width:1360px;margin:0 auto;">
@@ -399,7 +406,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     </div>
   </div>
 </section>
-<section style="padding:3rem 2.5rem;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+<section style="padding:2.5rem 2rem 2rem;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
   <div style="text-align:center;margin-bottom:1.8rem;"><div class="sec-lbl" style="justify-content:center;">Explore the platform</div><div style="font-family:var(--font-d);font-size:clamp(1.6rem,3.5vw,2.4rem);letter-spacing:.04em;">EVERYTHING IN ONE PLACE</div></div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;max-width:1100px;margin:0 auto;">
     <div onclick="showPage('terminal')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;" onmouseover="this.style.borderColor='var(--borderH)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--saffron),var(--cyan));"></div><div style="font-size:1.4rem;margin-bottom:.6rem;">&#128202;</div><div style="font-family:var(--font-r);font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:.28rem;">Options Terminal</div><div style="font-family:var(--font-b);font-size:.72rem;color:var(--text2);line-height:1.5;font-weight:300;">Live chain, OI scanner, IV skew, Greeks</div><div style="font-family:var(--font-m);font-size:.5rem;color:var(--saffron);margin-top:.5rem;">Open &rarr;</div></div>
@@ -423,8 +430,8 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
     </div>
   </div>
 </section>
-<section style="padding:3rem 2.5rem;max-width:900px;margin:0 auto;">
-  <div style="display:flex;align-items:center;gap:2rem;background:var(--card);border:1px solid var(--borderH);border-radius:14px;padding:1.8rem;position:relative;overflow:hidden;" class="reveal">
+<section style="padding:2rem 2rem 2.5rem;max-width:900px;margin:0 auto;">
+  <div style="display:flex;align-items:center;gap:2rem;background:var(--card);border:1px solid var(--borderH);border-radius:14px;padding:1.8rem;position:relative;overflow:hidden;" class="reveal visible">
     <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--saffron),var(--cyan));"></div>
     <div style="width:80px;height:80px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--bg3),var(--bg2));display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:1.8rem;color:var(--saffron);border:2px solid var(--borderH);">AB</div>
     <div>
