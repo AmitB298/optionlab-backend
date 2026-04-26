@@ -1,1433 +1,1256 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" itemscope itemtype="https://schema.org/HowTo">
+<html lang="hi" dir="ltr" id="htmlRoot">
 <head>
-<!-- ═══ CRITICAL META ═══ -->
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-<!-- ═══ TITLE & DESCRIPTION ═══ -->
-<title>Angel One SmartAPI Broker Setup Guide | OptionLab — NSE Options Platform</title>
-<meta name="description" content="Step-by-step Angel One SmartAPI broker setup guide for OptionLab. Connect your demat account, configure API keys, whitelist IP and start live NSE Nifty 50 options analytics in 15 minutes.">
-<meta name="keywords" content="Angel One SmartAPI setup, OptionLab setup guide, NSE broker API, Nifty options live data, SmartAPI IP whitelist, options analytics setup India">
-<meta name="author" content="OptionLab">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<meta name="theme-color" content="#fb923c">
-<meta name="color-scheme" content="dark">
-<meta name="format-detection" content="telephone=no">
-
-<!-- ═══ CANONICAL ═══ -->
-<link rel="canonical" href="https://optionlab.in/setup.html">
-
-<!-- ═══ OPEN GRAPH ═══ -->
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="OptionLab">
-<meta property="og:title" content="Angel One SmartAPI Setup Guide — Connect to OptionLab in 15 Minutes">
-<meta property="og:description" content="Step-by-step guide to connect your Angel One broker account with OptionLab for live NSE Nifty 50 options analytics.">
-<meta property="og:url" content="https://optionlab.in/setup.html">
-<meta property="og:image" content="https://optionlab.in/og-setup.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OptionLab Angel One SmartAPI Setup Guide">
-<meta property="og:locale" content="en_IN">
-<meta property="article:publisher" content="https://optionlab.in">
-
-<!-- ═══ TWITTER ═══ -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="How to Set Up Angel One SmartAPI for OptionLab">
-<meta name="twitter:description" content="Complete step-by-step setup guide for connecting Angel One broker to OptionLab NSE options analytics platform.">
-<meta name="twitter:image" content="https://optionlab.in/og-setup.png">
-
-<!-- ═══ GEO / LOCAL ═══ -->
-<meta name="geo.region" content="IN">
-<meta name="geo.country" content="India">
-<meta name="language" content="English">
-
-<!-- ═══ PWA ═══ -->
-<meta name="application-name" content="OptionLab">
-<meta name="apple-mobile-web-app-title" content="OptionLab Setup">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-
-<!-- ═══ PRECONNECT ═══ -->
+<title>Fyers Setup Guide | OptionLab</title>
+<meta name="description" content="Step-by-step Fyers API broker setup guide for OptionLab — Hindi & English.">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="dns-prefetch" href="https://smartapi.angelbroking.com">
-<link rel="dns-prefetch" href="https://ipapi.co">
-
-<link rel="sitemap" type="application/xml" href="/sitemap.xml" title="Sitemap">
-
-<!-- ═══ FONTS ═══ -->
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
-
-<!-- ═══ STRUCTURED DATA — HowTo + BreadcrumbList ═══ -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "HowTo",
-      "name": "How to Set Up Angel One SmartAPI for OptionLab",
-      "description": "Connect your Angel One broker account to OptionLab NSE options analytics platform in 4 phases: account setup, IP whitelisting, API key configuration, and OptionLab connection.",
-      "totalTime": "PT15M",
-      "estimatedCost": {"@type":"MonetaryAmount","currency":"INR","value":"0"},
-      "tool": [
-        {"@type":"HowToTool","name":"Angel One Demat Account"},
-        {"@type":"HowToTool","name":"SmartAPI Developer Portal"},
-        {"@type":"HowToTool","name":"OptionLab Platform"}
-      ],
-      "step": [
-        {
-          "@type": "HowToSection",
-          "name": "Phase 1: Angel One Account Setup",
-          "position": 1,
-          "itemListElement": [
-            {"@type":"HowToStep","position":1,"name":"Open Demat Account","text":"Open an Angel One demat account at angelone.in/open-demat-account if you don't have one."},
-            {"@type":"HowToStep","position":2,"name":"Enable SmartAPI","text":"Login to the Angel One app, go to Profile → SmartAPI and enable the API access."},
-            {"@type":"HowToStep","position":3,"name":"Set TOTP","text":"Set up your Time-based One Time Password (TOTP) via authenticator app for API authentication."}
-          ]
-        },
-        {
-          "@type": "HowToSection",
-          "name": "Phase 2: Detect Your IP Address",
-          "position": 2,
-          "itemListElement": [
-            {"@type":"HowToStep","position":4,"name":"Detect Public IP","text":"Use the built-in IP detector tool on this page to find your public IP address for Angel One API whitelisting."},
-            {"@type":"HowToStep","position":5,"name":"Copy IP Address","text":"Copy your detected public IP address to clipboard for use in the next step."}
-          ]
-        },
-        {
-          "@type": "HowToSection",
-          "name": "Phase 3: Create SmartAPI App",
-          "position": 3,
-          "itemListElement": [
-            {"@type":"HowToStep","position":6,"name":"Visit SmartAPI Portal","text":"Go to smartapi.angelbroking.com and login with your Angel One credentials."},
-            {"@type":"HowToStep","position":7,"name":"Create New App","text":"Click '+ADD APP', set app name as OptionLab, paste your IP as Primary Static IP, and save."},
-            {"@type":"HowToStep","position":8,"name":"Copy API Key","text":"Copy the API Key shown after creating your app."}
-          ]
-        },
-        {
-          "@type": "HowToSection",
-          "name": "Phase 4: Connect OptionLab",
-          "position": 4,
-          "itemListElement": [
-            {"@type":"HowToStep","position":9,"name":"Enter Credentials in OptionLab","text":"Open OptionLab, navigate to Broker Connect, and enter your Angel One Client ID, API Key, password and TOTP."},
-            {"@type":"HowToStep","position":10,"name":"Verify Live Data","text":"Confirm the live Nifty 50 options chain is streaming successfully in the OptionLab terminal."}
-          ]
-        }
-      ]
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {"@type":"ListItem","position":1,"name":"Home","item":"https://optionlab.in"},
-        {"@type":"ListItem","position":2,"name":"Broker Setup Guide","item":"https://optionlab.in/setup.html"}
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Which broker is supported by OptionLab?",
-          "acceptedAnswer": {"@type":"Answer","text":"OptionLab currently supports Angel One via the SmartAPI. Support for other brokers including Zerodha Kite, Upstox and Fyers is planned."}
-        },
-        {
-          "@type": "Question",
-          "name": "Do I need a paid Angel One account to use SmartAPI?",
-          "acceptedAnswer": {"@type":"Answer","text":"No. SmartAPI access is free for all Angel One demat account holders. You only need to enable it in your profile settings."}
-        },
-        {
-          "@type": "Question",
-          "name": "What happens if my IP address changes?",
-          "acceptedAnswer": {"@type":"Answer","text":"If your ISP assigns a dynamic IP, you will need to re-whitelist your new IP in the SmartAPI portal and re-run the IP detector tool on this page. Consider asking your ISP for a static IP."}
-        },
-        {
-          "@type": "Question",
-          "name": "How long does the OptionLab setup take?",
-          "acceptedAnswer": {"@type":"Answer","text":"The complete setup including Angel One account activation (if new) takes about 15 minutes. If your account is already active, you can configure SmartAPI and connect OptionLab in under 5 minutes."}
-        }
-      ]
-    }
-  ]
-}
-
-/* === LANGUAGE SWITCH === */
-let LANG = 'hi';
-
-const UI_TEXT = {
-  hi: {
-    landBadge:"OPTIONLAB SETUP GUIDE",
-    landH1:'Zero se <span class="accent">Live</span><br>Trading Data',
-    landSub:"Fyers broker account kholna, API setup karna, aur OptionLab se connect karna — sab kuch step-by-step, sirf 30 minute mein.",
-    reqToggle:"▼ Shuru karne se pehle kya chahiye?",
-    reqToggleOpen:"▲ Shuru karne se pehle kya chahiye?",
-    beginBtn:"Setup Shuru Karo →",
-    beginHint:"~30 min · Bilkul Free · Koi card nahi",
-    backBtn:"← Wapas",
-    allPhases:"SAARI PHASES",
-    waitTitle:"⌛ Intezaar ke dauran ye karo:",
-    waitItems:["Google Authenticator ya Authy install karo phone pe","Fyers app download karo Play Store / App Store se","Client ID SMS ka wait karo — turant save kar lena","API portal ke liye ek alag email + password soch lo"],
-    compTitle:"Ho Gaya!",
-    compSub:"Tera Fyers account OptionLab se connect ho gaya. Ab live options data, analytics, aur signals sab available hain!",
-    compBtn:"🚀 OptionLab Dashboard Kholna Hai",
-    doneBtn:"✓ Done — Aage Bado →",
-    completedBtn:"🎉 Setup Complete!",
-    prevBtn:"← Pichhe",
-    nextLabel:"AAGE",
-    waitTag:"⌛ Intezaar",
-    ipTag:"🌐 IP Detect",
-    stepLabel:"Step",of:"/",
-    detectBtn:"🔍 IP Dhundho",redetectBtn:"🔄 Dobara Detect Karo",retryBtn:"🔄 Dobara Try Karo",
-    copyBtn:"📋 IP Copy Karo",copiedBtn:"✅ Copy ho gaya!",
-    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
-    ipProgStart:"Sab sources ko query kar raha hoon…",ipProgChecking:"se check kar raha hoon…",
-    ipProgConsensus:"Consensus calculate kar raha hoon…",ipProgMeta:"ISP metadata fetch kar raha hoon…",ipProgDone:"Ho gaya!",
-    ipErrAll:"❌ Sab sources fail ho gaye. Internet connection check karo.",
-    dynWarn:"⚡ <strong>Dynamic IP mil gayi.</strong> ISP restart ke baad badal sakti hai. Re-detect karo agar API band ho.",
-    ipNext:"📋 <strong>Aage:</strong> IP copy karo → Fyers API Portal → Create App → Allowed IPs mein paste karo → Save → API Key copy karo.",
-    ipFallback:'Manual: Browser mein jao → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → copy karo → Fyers portal mein paste karo.',
-    openAction:"kholna hai ↗",important:"Important:",proTip:"Pro tip:"
-  },
-  en: {
-    landBadge:"OPTIONLAB SETUP GUIDE",
-    landH1:'Zero to <span class="accent">Live</span><br>Trading Data',
-    landSub:"Open a Fyers broker account, set up the API, and connect to OptionLab — step by step, in just 30 minutes.",
-    reqToggle:"▼ What do you need before starting?",
-    reqToggleOpen:"▲ What do you need before starting?",
-    beginBtn:"Start Setup →",
-    beginHint:"~30 min · Completely Free · No card required",
-    backBtn:"← Back",
-    allPhases:"ALL PHASES",
-    waitTitle:"⌛ While you wait:",
-    waitItems:["Install Google Authenticator or Authy on your phone","Download the Fyers app from Play Store / App Store","Wait for the Client ID SMS — save it immediately","Think of a separate email + password for the API portal"],
-    compTitle:"All Done!",
-    compSub:"Your Fyers account is now connected to OptionLab. Live options data, analytics, and signals are all available!",
-    compBtn:"🚀 Open OptionLab Dashboard",
-    doneBtn:"✓ Done — Continue →",
-    completedBtn:"🎉 Setup Complete!",
-    prevBtn:"← Back",
-    nextLabel:"NEXT",
-    waitTag:"⌛ Waiting",
-    ipTag:"🌐 IP Detect",
-    stepLabel:"Step",of:"/",
-    detectBtn:"🔍 Detect My IP",redetectBtn:"🔄 Re-detect",retryBtn:"🔄 Try Again",
-    copyBtn:"📋 Copy IP",copiedBtn:"✅ Copied!",
-    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
-    ipProgStart:"Querying all sources…",ipProgChecking:"checking…",
-    ipProgConsensus:"Calculating consensus…",ipProgMeta:"Fetching ISP metadata…",ipProgDone:"Done!",
-    ipErrAll:"❌ All sources failed. Please check your internet connection.",
-    dynWarn:"⚡ <strong>Dynamic IP detected.</strong> It may change after an ISP restart. Re-detect if the API stops working.",
-    ipNext:"📋 <strong>Next:</strong> Copy IP → Fyers API Portal → Create App → Paste in Allowed IPs → Save → Copy API Key.",
-    ipFallback:'Manual: Open browser → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → Copy the number → Paste in Fyers portal.',
-    openAction:"Open ↗",important:"Important:",proTip:"Pro tip:"
-  }
-};
-
-const PHASES_EN = [
-  {id:"account",num:"01",title:"Open Account",sub:"Trading foundation",time:"15 min",ico:"🏦",color:"var(--indigo)",steps:[
-    {id:"visit",title:"Visit Fyers Website",time:"1 min",ico:"🌐",text:"Go to fyers.in and click <strong>Open Free Account</strong>. Fyers is SEBI-registered and supports NSE/BSE/MCX — zero brokerage on equity delivery.",action:{label:"fyers.in",url:"https://fyers.in"},tip:"Use a desktop browser — Chrome or Edge works best."},
-    {id:"mobile",title:"Verify Mobile Number",time:"1 min",ico:"📱",text:"Enter your <strong>Aadhaar-linked mobile number</strong>. You will receive an OTP for verification.",warn:"Use the same number linked to your Aadhaar — the OTP will only come there."},
-    {id:"pan",title:"Verify PAN Card",time:"2 min",ico:"🪪",text:"Enter your PAN number. Fyers <strong>instantly verifies with NSDL</strong> and auto-fills your name and date of birth.",tip:"PAN must be active and KYC-compliant."},
-    {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",ico:"✅",text:"Enter your Aadhaar number — an OTP is sent to your linked mobile for <strong>instant identity verification</strong>. No physical document upload needed.",warn:"If the Aadhaar OTP fails, document-based KYC will be required — adding 2–3 working days."},
-    {id:"bank",title:"Link Bank Account",time:"2 min",ico:"🏦",text:"Enter your savings account number and IFSC code. Fyers does a <strong>penny-drop</strong> to confirm ownership.",tip:"Use your primary savings account. Joint accounts may slow down verification."},
-    {id:"ipv",title:"Video KYC (IPV)",time:"2 min",ico:"📷",text:"In a live video, <strong>show your PAN card to the camera</strong> and say a few words. Fully online, under 2 minutes.",tip:"Good lighting + plain background = instant pass."},
-    {id:"wait",title:"Account Activation",time:"1–4 hours",ico:"⏳",text:"Submitted! On working days, most accounts are <strong>activated within 1–4 hours</strong>. Your Client ID will arrive via SMS — something like FY12345.",warn:"If submitted on a weekend or holiday, activation carries over to the next working day.",isWait:true}
-  ]},
-  {id:"mpin",num:"02",title:"Set MPIN",sub:"Secure trading PIN",time:"3 min",ico:"🔐",color:"var(--amber)",steps:[
-    {id:"app",title:"Download Fyers App",time:"2 min",ico:"📲",text:"Download the Fyers app from the <strong>Play Store or App Store</strong>. Log in with your Client ID and registered mobile.",action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.fyers.android"},tip:"Prefer desktop? Use trade.fyers.in instead."},
-    {id:"setmpin",title:"Create Your MPIN",time:"1 min",ico:"🔑",text:"On first login, you will be prompted to create a <strong>4-digit MPIN</strong> — this authorizes every API connection and trade.",warn:"NEVER use the same password for OptionLab and your MPIN. Always keep them separate.",tip:"Avoid obvious PINs: 1234, 0000, or your birth year."}
-  ]},
-  {id:"api",num:"03",title:"API App Setup",sub:"Developer access unlock",time:"5 min",ico:"⚙️",color:"var(--green)",steps:[
-    {id:"portal",title:"Register on API Portal",time:"2 min",ico:"🔒",text:"Go to <strong>myapi.fyers.in</strong> and register with your email. This is the developer portal — completely separate from your trading account.",action:{label:"myapi.fyers.in",url:"https://myapi.fyers.in"},warn:"Use a COMPLETELY DIFFERENT password here — never reuse your trading credentials."},
-    {id:"totp",title:"Enable TOTP",time:"2 min",ico:"🔐",text:"In the Fyers API portal, go to <strong>Security settings</strong> and enable TOTP. Scan the QR code with Google Authenticator.",warn:"The 32-character Secret Key is shown ONLY ONCE — copy and store it in a safe place right now!",tip:"Install Google Authenticator or Authy on your phone before this step."},
-    {id:"ipdetect",title:"Detect IP & Create App",time:"2 min",ico:"🌐",text:"Use the IP detector below to find your exact <strong>public IP</strong>, then create a new app in the Fyers API portal and whitelist your IP.",tip:"After creating the app, your API Key and Secret will be generated instantly.",isIPDetect:true}
-  ]},
-  {id:"connect",num:"04",title:"Connect OptionLab",sub:"Go live in 2 minutes",time:"2 min",ico:"🚀",color:"var(--saffron)",steps:[
-    {id:"open",title:"Open OptionLab Setup",time:"30 sec",ico:"💻",text:"In the OptionLab app, go to <strong>Settings → Broker Setup</strong>. Select Fyers. Your IP will be auto-detected.",tip:"One-time setup per device — future logins will be fully automatic."},
-    {id:"creds",title:"Enter Credentials",time:"1 min",ico:"🗝️",text:"Enter your Client ID, MPIN, TOTP 32-char Secret Key, and API Key. <strong>Everything stays only on your device</strong> — OptionLab servers never see it.",warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP."},
-    {id:"test",title:"Test & Go Live",time:"30 sec",ico:"⚡",text:"Click <strong>Test Connection</strong>. OptionLab will authenticate with the Fyers API. Nifty 50 data will begin streaming within seconds.",tip:"If it fails, recheck your IP registration or TOTP secret. Need help? support@optionlab.in"}
-  ]}
-];
-
-const REQS_EN = [
-  {ico:"📋",label:"PAN Card",desc:"Active & KYC-verified",color:"#818cf8"},
-  {ico:"🪪",label:"Aadhaar Card",desc:"Must have linked mobile",color:"#34d399"},
-  {ico:"🏦",label:"Bank Account",desc:"Savings + IFSC ready",color:"#f59e0b"},
-  {ico:"📱",label:"Mobile Number",desc:"Aadhaar-linked SIM",color:"#ec4899"},
-  {ico:"💻",label:"Windows/Mac",desc:"For the OptionLab app",color:"#60a5fa"},
-  {ico:"📷",label:"Webcam",desc:"For Video KYC",color:"#fb923c"}
-];
-
-function T(){ return UI_TEXT[LANG]; }
-
-function setLang(lang){
-  LANG = lang;
-  document.getElementById('htmlRoot').setAttribute('lang', lang);
-  document.getElementById('btnEN').classList.toggle('active', lang==='en');
-  document.getElementById('btnHI').classList.toggle('active', lang==='hi');
-  if(lang==='en'){ PHASES.length=0; PHASES_EN.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_EN.forEach(r=>REQUIREMENTS.push(r)); }
-  else { PHASES.length=0; PHASES_HI.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_HI.forEach(r=>REQUIREMENTS.push(r)); }
-  updateStaticText();
-  initLanding();
-  const guide=document.getElementById('guide');
-  if(guide && guide.classList.contains('show')) renderAll();
-}
-
-function updateStaticText(){
-  const t=T();
-  const badge=document.querySelector('.land-badge'); if(badge) badge.textContent=t.landBadge;
-  const h1=document.querySelector('.land-h1'); if(h1) h1.innerHTML=t.landH1;
-  const sub=document.querySelector('.land-sub'); if(sub) sub.textContent=t.landSub;
-  const reqBtn=document.getElementById('reqToggleBtn'); if(reqBtn) reqBtn.textContent=reqOpen?t.reqToggleOpen:t.reqToggle;
-  const beginBtn=document.querySelector('.btn-begin'); if(beginBtn) beginBtn.textContent=t.beginBtn;
-  const hint=document.querySelector('.begin-hint'); if(hint) hint.textContent=t.beginHint;
-  const compTitle=document.querySelector('.comp-title'); if(compTitle) compTitle.textContent=t.compTitle;
-  const compSub=document.querySelector('.comp-sub'); if(compSub) compSub.textContent=t.compSub;
-  const compBtn=document.querySelector('.btn-dash'); if(compBtn) compBtn.textContent=t.compBtn;
-  const backBtn=document.querySelector('.btn-back'); if(backBtn) backBtn.textContent=t.backBtn;
-  const pslbl=document.querySelector('.ps-lbl'); if(pslbl) pslbl.textContent=t.allPhases;
-}
-</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'DM Sans','Segoe UI',sans-serif;background:#040507;color:#e2e8f0;overflow-x:hidden}
-::-webkit-scrollbar{width:5px;height:5px}
+/* ═══ RESET ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#040507;color:#e2e8f0;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:#040507}
-::-webkit-scrollbar-thumb{background:#1e293b;border-radius:3px}
-a:hover{opacity:.85}
-button:active{transform:scale(.98)!important}
+::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+img{max-width:100%;display:block}
 
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
-@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-20px)}}
-@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-40px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes fadeInDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
-@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
-@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+/* ═══ CSS VARIABLES — matches optionslab ═══ */
+:root{
+  --bg:#040507;
+  --bg2:#080c12;
+  --bg3:#0d1117;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --text1:#f1f5f9;
+  --text2:#94a3b8;
+  --text3:#475569;
+  --text4:#2d3748;
 
-/* ── ANIMATED BG ── */
+  /* optionslab brand colors */
+  --saffron:#fb923c;
+  --saffron-d:#ea580c;
+  --indigo:#818cf8;
+  --green:#34d399;
+  --red:#ff3d71;
+  --amber:#f59e0b;
+
+  --r-sm:8px;
+  --r-md:12px;
+  --r-lg:16px;
+  --r-xl:22px;
+  --nav-h:56px;
+  --ticker-h:32px;
+  --font-m:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+
+/* ═══ ANIMATED BG ═══ */
 #animBg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-#animBg .base{position:absolute;inset:0;background:#040507}
-#animBg .orb1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(129,140,248,.06) 0%,transparent 70%);top:-200px;left:-100px;animation:drift1 20s ease-in-out infinite}
-#animBg .orb2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,.05) 0%,transparent 70%);bottom:-100px;right:-50px;animation:drift2 25s ease-in-out infinite}
-#animBg .orb3{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(52,211,153,.04) 0%,transparent 70%);top:40%;right:20%;animation:drift3 18s ease-in-out infinite}
-#animBg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55}
+.orb1{width:55vw;height:55vw;max-width:700px;max-height:700px;
+  background:radial-gradient(circle,rgba(251,146,60,.08) 0%,transparent 70%);
+  top:-20%;left:-15%;animation:drift1 22s ease-in-out infinite}
+.orb2{width:45vw;height:45vw;max-width:560px;max-height:560px;
+  background:radial-gradient(circle,rgba(129,140,248,.06) 0%,transparent 70%);
+  bottom:-15%;right:-10%;animation:drift2 28s ease-in-out infinite}
+.orb3{width:35vw;height:35vw;max-width:420px;max-height:420px;
+  background:radial-gradient(circle,rgba(52,211,153,.05) 0%,transparent 70%);
+  top:45%;right:15%;animation:drift3 20s ease-in-out infinite}
+.grid-bg{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+  background-size:52px 52px}
 
-/* ── SCREENS ── */
-.screen{display:none;position:relative;z-index:1}
-.screen.show{display:flex}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(5vw,4vw)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-4vw,-3vw)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(3vw,-5vw)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes slideR{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* ── LANDING ── */
-#landing{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;animation:fadeIn .6s ease}
-.land-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);border-radius:50px;padding:6px 18px;font-size:11px;color:#fb923c;letter-spacing:.1em;font-weight:700;margin-bottom:28px}
-.pulse-dot{width:6px;height:6px;background:#fb923c;border-radius:50%;animation:pulse 2s infinite;display:inline-block}
-#landing h1{font-size:clamp(32px,6vw,58px);font-weight:900;margin:0 0 16px;line-height:1.05;letter-spacing:-.03em;background:linear-gradient(135deg,#fff 0%,#94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-#landing .sub{font-size:17px;color:#64748b;margin:0 auto 40px;line-height:1.7;max-width:520px}
-.phase-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px;max-width:700px;width:100%}
-.pc{padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.03);text-align:center;transition:transform .2s}
-.pc:hover{transform:translateY(-2px)}
-.pc-icon{font-size:22px;margin-bottom:8px}
-.pc-num{font-size:11px;font-weight:700;letter-spacing:.06em;margin-bottom:4px}
-.pc-title{font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px;line-height:1.2}
-.pc-time{font-size:11px;color:#475569}
-.req-toggle{background:none;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 20px;color:#94a3b8;font-size:13px;cursor:pointer;margin-bottom:0;font-family:'DM Sans',sans-serif;transition:border-color .2s}
-.req-toggle:hover{border-color:rgba(255,255,255,.16)}
-.req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:16px;animation:fadeInDown .3s ease;max-width:700px;width:100%}
-.req-card{padding:12px;border-radius:10px;text-align:center}
-.req-icon{font-size:22px;margin-bottom:6px}
-.req-label{font-size:13px;font-weight:600;color:#e2e8f0}
-.req-desc{font-size:11px;color:#64748b;margin-top:2px}
-.btn-begin{padding:16px 48px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#fb923c,#ea580c);color:#fff;font-size:17px;font-weight:800;letter-spacing:-.01em;box-shadow:0 8px 32px rgba(249,115,22,.4);transition:all .2s ease;margin-top:32px;font-family:'DM Sans',sans-serif}
-.btn-begin:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,115,22,.5)}
-.begin-hint{margin-top:14px;font-size:12px;color:#334155}
-
-/* ── TOP BAR ── */
-#topbar{position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(4,5,7,.88);backdrop-filter:blur(16px)}
-#topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;height:56px}
-.btn-back-top{background:none;border:none;color:#475569;cursor:pointer;font-size:13px;padding:4px 8px;border-radius:6px;font-family:'DM Sans',sans-serif;transition:color .2s}
-.btn-back-top:hover{color:#94a3b8}
-.phase-tabs{flex:1;display:flex;gap:0}
-.ptab{flex:1;cursor:pointer;position:relative}
-.ptab-bar{height:3px;transition:all .4s ease;border-radius:2px}
-.ptab-info{padding:8px 8px 4px;display:flex;align-items:center;gap:6px}
-.ptab-icon{font-size:14px}
-.ptab-num{font-size:10px;font-weight:700;letter-spacing:.05em}
-.ptab-title{font-size:11px;font-weight:400;color:#64748b;white-space:nowrap;transition:all .2s}
-.ptab-check{margin-left:auto;font-size:12px}
-.prog-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.prog-txt{font-size:12px;color:#475569}
-.prog-bar{width:80px;height:4px;background:rgba(255,255,255,.06);border-radius:2px}
-.prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#818cf8,#fb923c);transition:width .4s ease}
-.prog-pct{font-size:12px;font-weight:700;color:#fb923c}
-
-/* ── GUIDE LAYOUT ── */
-#guide{flex-direction:column}
-#guide-layout{flex:1;display:flex;max-width:1200px;margin:0 auto;width:100%;padding:24px 20px 60px;gap:24;position:relative;z-index:1}
-
-/* LEFT SIDEBAR */
-#sidebar{width:220px;flex-shrink:0;position:sticky;top:80px;align-self:flex-start;display:flex;flex-direction:column;gap:4px}
-.step-item{padding:10px 14px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s ease}
-.step-icon-wrap{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s ease;border-width:1.5px;border-style:solid}
-.step-label{font-size:12px;font-weight:400;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .2s}
-.step-time{font-size:10px;color:#334155}
-#phase-switcher{margin-top:20px;padding:14px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)}
-.ps-label{font-size:10px;color:#334155;font-weight:700;letter-spacing:.06em;margin-bottom:10px}
-.ps-phase{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:all .2s}
-.ps-picon{font-size:14px}
-.ps-info{flex:1;min-width:0}
-.ps-title{font-size:11px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .2s}
-.ps-mini-bar{height:2px;background:rgba(255,255,255,.04);border-radius:1px;margin-top:3px}
-.ps-mini-fill{height:100%;border-radius:1px;transition:width .4s}
-.ps-cnt{font-size:10px;font-weight:700;flex-shrink:0;transition:color .2s}
-
-/* MAIN CONTENT */
-#content{flex:1;min-width:0}
-.phase-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;animation:fadeIn .3s ease}
-.ph-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.ph-num{font-size:11px;font-weight:700;letter-spacing:.08em}
-.ph-title{font-size:18px;font-weight:800;color:#f1f5f9;line-height:1}
-.ph-step-ctr{margin-left:auto;font-size:12px;color:#475569}
-
-/* STEP CARD */
-.step-card{border-radius:20px;overflow:hidden;transition:all .3s ease;animation:slideIn .3s ease}
-.step-card-topbar{height:4px;transition:background .3s ease}
-.step-card-head{padding:24px 28px 20px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.sch-left{display:flex;align-items:center;gap:10px}
-.sch-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.sch-title{font-size:20px;font-weight:800;margin:0;color:#f1f5f9;letter-spacing:-.02em}
-.sch-tags{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
-.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:50px;font-size:11px;font-weight:600}
-.done-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all .3s}
-.step-card-body{padding:24px 28px}
-.step-content{font-size:15px;color:#94a3b8;line-height:1.8;margin:0 0 20px}
-.action-link{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:20px;transition:all .2s ease}
-.warn-box{padding:12px 16px;border-radius:10px;margin-bottom:14px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);font-size:13px;color:#fca5a5;line-height:1.7;display:flex;gap:10px}
-.tip-box{padding:12px 16px;border-radius:10px;margin-bottom:20px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);font-size:13px;color:#a5b4fc;line-height:1.7;display:flex;gap:10px}
-.wait-box{padding:16px 20px;border-radius:12px;margin-bottom:4px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2)}
-.wait-title{font-size:13px;font-weight:700;color:#fcd34d;margin-bottom:10px}
-.wait-item{display:flex;gap:10px;font-size:13px;color:#94a3b8;align-items:flex-start;margin-bottom:8px}
-.wait-arrow{color:#f59e0b;flex-shrink:0;margin-top:1px}
-.ip-confirmed{margin-top:12px;padding:12px 16px;border-radius:10px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);font-size:13px;color:#86efac;display:none}
-
-/* STEP ACTIONS */
-.step-actions{display:flex;gap:10px;margin-top:28px}
-.btn-prev-step{padding:12px 20px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#94a3b8;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
-.btn-prev-step:hover{background:rgba(255,255,255,.07);color:#e2e8f0}
-.btn-mark-done{flex:1;padding:14px;border-radius:12px;border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:-.01em;transition:all .2s ease;font-family:'DM Sans',sans-serif}
-.btn-mark-done:hover{transform:translateY(-1px)}
-
-/* NEXT PREVIEW */
-.next-preview{margin-top:14px;padding:12px 18px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:12px}
-.np-label{font-size:10px;color:#334155;font-weight:700;letter-spacing:.06em;flex-shrink:0}
-.np-text{font-size:13px;color:#64748b}
-
-/* IP DETECTOR */
-.ip-widget{margin-top:24px;border-radius:16px;overflow:hidden;border:1px solid rgba(52,211,153,.2);background:linear-gradient(135deg,rgba(52,211,153,.04),rgba(6,95,70,.08))}
-.ip-head{padding:14px 20px;border-bottom:1px solid rgba(52,211,153,.1);display:flex;align-items:center;justify-content:space-between;background:rgba(52,211,153,.06)}
-.ip-head-left{display:flex;align-items:center;gap:10px}
-.ip-head-icon{width:32px;height:32px;border-radius:8px;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);display:flex;align-items:center;justify-content:center;font-size:16px}
-.ip-head-title{font-size:13px;font-weight:700;color:#e2e8f0}
-.ip-head-sub{font-size:11px;color:#64748b}
-.ip-head-right{display:flex;gap:8px;align-items:center}
-.ip-current{font-size:11px;font-family:'JetBrains Mono',monospace;color:#34d399;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);padding:4px 10px;border-radius:6px;display:none}
-.ip-body{padding:18px 20px}
-.btn-detect{padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;transition:all .2s}
-.btn-detect.idle{background:linear-gradient(135deg,#34d399,#10b981);color:#fff}
-.btn-detect.done{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
-.btn-detect:disabled{opacity:.5;cursor:not-allowed}
-
-/* IP states */
-.ip-sources-list{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.ip-src-chip{padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600}
-.ip-running .prog-row{display:flex;justify-content:space-between;margin-bottom:6px}
-.ip-running .prog-msg{font-size:12px;color:#94a3b8}
-.ip-running .prog-pct2{font-size:12px;color:#34d399;font-weight:700}
-.ip-bar-wrap{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:16px}
-.ip-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#34d399,#6ee7b7);transition:width .3s ease;box-shadow:0 0 8px rgba(52,211,153,.5)}
-.ip-src-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.ip-src-card{padding:10px 6px;border-radius:10px;text-align:center;border:1px solid transparent;transition:all .3s}
-.ip-src-name{font-size:10px;color:#64748b;margin-bottom:3px;font-family:'JetBrains Mono',monospace}
-.ip-src-val{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;min-height:16px}
-.ip-result-main{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-.ip-result-addr{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#34d399;letter-spacing:.02em}
-.ip-result-tags{display:flex;gap:6px;flex-wrap:wrap}
-.ip-result-meta{font-size:12px;color:#475569;margin-bottom:12px;font-family:'JetBrains Mono',monospace}
-.btn-copy{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;border:1px solid rgba(52,211,153,.25);background:rgba(52,211,153,.1);color:#34d399;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
-.btn-copy:hover{background:rgba(52,211,153,.18)}
-.dynamic-warn{margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);font-size:12px;color:#fcd34d;line-height:1.6;display:none}
-.expand-btn{margin-top:12px;background:none;border:none;color:#475569;font-size:11px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif}
-.src-breakdown{margin-top:8px;display:none;flex-direction:column;gap:5px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);animation:fadeIn .2s ease}
-.src-row{display:flex;gap:10px;align-items:center;font-size:12px}
-.ip-next-note{margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);font-size:12px;color:#a5b4fc;line-height:1.7}
-.ip-error{padding:12px 14px;border-radius:8px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);font-size:13px;color:#fca5a5;margin-bottom:12px;display:none}
-.ip-fallback{font-size:12px;color:#64748b;line-height:1.8;display:none}
-
-/* COMPLETION */
-#completion{text-align:center;padding:60px 20px;animation:fadeIn .5s ease;display:none}
-.comp-emoji{font-size:72px;margin-bottom:20px;animation:bounce .6s ease}
-.comp-title{font-size:36px;font-weight:900;color:#22c55e;margin:0 0 12px;letter-spacing:-.02em}
-.comp-sub{color:#94a3b8;font-size:16px;margin:0 0 32px;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto}
-.comp-features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin:0 auto 32px}
-.comp-feat{padding:14px 10px;border-radius:12px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18);font-size:13px;color:#34d399;font-weight:600;text-align:center}
-.btn-dashboard{padding:16px 44px;border-radius:14px;background:linear-gradient(135deg,#fb923c,#ea580c);border:none;color:#fff;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 32px rgba(249,115,22,.4);font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-block}
-.btn-dashboard:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,115,22,.5)}
-
-/* ═══ MOBILE-FIRST RESPONSIVE ═══ */
-@media(max-width:760px){
-  .phase-cards{grid-template-columns:repeat(2,1fr);}
-  #guide-layout{flex-direction:column;gap:0;}
-  #sidebar{display:none;}
-  .ip-src-grid{grid-template-columns:repeat(3,1fr);}
-  .step-card-head{flex-direction:column;}
-  .step-card-body{padding:18px 20px;}
-  .sch-title{font-size:17px;}
-  #topbar-inner{padding:0 14px;}
-  .prog-wrap{display:none;}
-  .ptab-title{display:none;}
-  .step-content{font-size:14px;}
-  .action-link{font-size:13px;}
-  .warn-box,.tip-box{font-size:12px;}
+/* ═══════════════════════════════════
+   OPTIONSLAB TOP NAV
+═══════════════════════════════════ */
+#top-nav{
+  position:sticky;top:0;z-index:300;
+  height:var(--nav-h);
+  background:rgba(4,5,7,.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.07);
 }
-@media(max-width:520px){
-  .phase-cards{grid-template-columns:1fr 1fr;}
-  #landing{padding:28px 16px;}
-  #landing h1{font-size:clamp(26px,8vw,44px);}
-  #landing .sub{font-size:15px;}
-  .btn-begin{padding:14px 36px;font-size:15px;}
-  .ph-title{font-size:16px;}
-  .step-card-topbar{height:3px;}
-  .ip-src-grid{grid-template-columns:repeat(2,1fr);}
-  .req-grid{grid-template-columns:repeat(2,1fr);}
-  .ptab{max-width:60px;}
-  .ptab-icon{display:none;}
-}
-@media(max-width:380px){
-  .phase-cards{grid-template-columns:1fr;}
-  #landing{padding:20px 14px;}
-  .step-card-body{padding:16px;}
-}
-@media(hover:none) and (pointer:coarse){
-  .btn-begin{min-height:48px;}
-  .action-link{min-height:44px;display:inline-flex;align-items:center;}
-  .ps-phase{min-height:44px;}
-  .ptab{min-height:44px;}
-  .step-item{min-height:44px;}
-}
-@media(max-width:840px) and (orientation:landscape){
-  #landing{min-height:auto;padding:24px 20px;}
-  .phase-cards{grid-template-columns:repeat(4,1fr);}
+.nav-inner{
+  max-width:1400px;margin:0 auto;
+  padding:0 clamp(12px,3vw,28px);
+  height:100%;display:flex;align-items:center;gap:0;
 }
 
-@media(max-width:768px){
-  html { font-size: 14px; }
-  body { padding: .75rem !important; }
-  [class*="card"], [class*="step"] { padding: 1rem !important; }
-  input, select { font-size: 16px !important; }
-  button { font-size: .7rem !important; }
+/* Logo */
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+  margin-right:28px;flex-shrink:0;text-decoration:none;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0){
-  select, textarea, input { font-size: 16px !important; }
+.nav-logo-box{
+  width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(135deg,var(--saffron),var(--saffron-d));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;color:#fff;letter-spacing:-.02em;
+  box-shadow:0 0 12px rgba(251,146,60,.35);
+}
+.nav-logo-text{
+  font-size:15px;font-weight:800;letter-spacing:-.03em;
+  color:var(--text1);
+}
+.nav-logo-text span{color:var(--saffron)}
+
+/* Desktop nav tabs */
+.nav-tabs{
+  display:flex;align-items:center;gap:2px;flex:1;
+}
+.nav-tab{
+  padding:6px 12px;border-radius:8px;
+  font-size:11.5px;font-weight:500;letter-spacing:.04em;
+  color:var(--text3);cursor:pointer;
+  transition:all .2s;white-space:nowrap;text-transform:uppercase;
+  text-decoration:none;
+}
+.nav-tab:hover{color:var(--text1);background:rgba(255,255,255,.05)}
+.nav-tab.active{
+  color:var(--saffron);font-weight:700;
+  border-bottom:2px solid var(--saffron);border-radius:0;
 }
 
-/* === LANGUAGE TOGGLE === */
+/* Nav right */
+.nav-right{
+  display:flex;align-items:center;gap:10px;margin-left:auto;
+}
+.nav-theme-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;cursor:pointer;transition:all .2s;
+}
+.nav-theme-btn:hover{background:rgba(255,255,255,.1)}
+.nav-signin-btn{
+  padding:7px 16px;border-radius:8px;
+  border:1px solid var(--saffron);
+  color:var(--saffron);font-size:11px;font-weight:700;
+  letter-spacing:.04em;cursor:pointer;transition:all .2s;
+  white-space:nowrap;
+}
+.nav-signin-btn:hover{background:rgba(251,146,60,.1)}
+.nav-cta-btn{
+  padding:7px 16px;border-radius:8px;
+  background:linear-gradient(135deg,var(--saffron),var(--saffron-d));
+  color:#fff;font-size:11px;font-weight:800;
+  letter-spacing:.04em;cursor:pointer;transition:all .2s;
+  box-shadow:0 2px 12px rgba(251,146,60,.3);white-space:nowrap;
+}
+.nav-cta-btn:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(251,146,60,.45)}
+
+/* Hamburger */
+.nav-hamburger{
+  display:none;flex-direction:column;gap:4.5px;
+  width:36px;height:36px;align-items:center;justify-content:center;
+  border-radius:8px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border);cursor:pointer;
+}
+.nav-hamburger span{
+  display:block;width:18px;height:1.5px;
+  background:var(--text2);border-radius:2px;transition:all .3s;
+}
+
+/* Drawer overlay */
+.drawer-overlay{
+  position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  z-index:298;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+
+/* Mobile drawer */
+.mobile-drawer{
+  position:fixed;top:var(--nav-h);left:-100%;width:280px;bottom:0;
+  background:rgba(8,12,18,.97);border-right:1px solid var(--border);
+  z-index:299;transition:left .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;overflow-y:auto;
+}
+.mobile-drawer.open{left:0}
+.drawer-nav{padding:16px 12px;flex:1}
+.drawer-tab{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:10px;
+  font-size:13px;font-weight:500;color:var(--text2);
+  cursor:pointer;transition:all .2s;margin-bottom:2px;
+  text-decoration:none;
+}
+.drawer-tab:hover{background:rgba(255,255,255,.05);color:var(--text1)}
+.drawer-tab.active{background:rgba(251,146,60,.1);color:var(--saffron);font-weight:700}
+.drawer-divider{height:1px;background:var(--border);margin:10px 0}
+.drawer-footer{padding:16px 12px;border-top:1px solid var(--border)}
+.drawer-cta{
+  width:100%;padding:12px;border-radius:10px;
+  background:linear-gradient(135deg,var(--saffron),var(--saffron-d));
+  color:#fff;font-size:13px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 16px rgba(251,146,60,.3);
+}
+
+/* ═══ TICKER ═══ */
+#ticker-bar{
+  height:var(--ticker-h);overflow:hidden;
+  background:rgba(4,5,7,.85);border-bottom:1px solid rgba(255,255,255,.05);
+  position:sticky;top:var(--nav-h);z-index:290;
+}
+.ticker-track{
+  display:flex;align-items:center;height:100%;
+  white-space:nowrap;
+  animation:marquee 35s linear infinite;
+  width:max-content;
+}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:0 24px;font-size:11px;font-family:var(--font-mono);
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.ticker-name{color:var(--text3);font-weight:500}
+.ticker-val{color:var(--text1);font-weight:600}
+.ticker-chg.up{color:#22c55e}
+.ticker-chg.dn{color:var(--red)}
+
+/* ═══ LANGUAGE TOGGLE ═══ */
 .lang-toggle-wrap{display:flex;align-items:center;gap:0;border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden;flex-shrink:0;}
 .lang-btn{padding:5px 13px;font-size:11px;font-weight:700;letter-spacing:.07em;font-family:var(--font-mono);transition:all .2s;color:var(--text3);background:transparent;border:none;cursor:pointer;}
 .lang-btn.active{background:var(--saffron);color:#fff;}
+.lang-btn:first-child{border-radius:20px 0 0 20px;}
+.lang-btn:last-child{border-radius:0 20px 20px 0;}
+
+/* ═══ SCREENS ═══ */
+.screen{display:none;position:relative;z-index:1}
+.screen.show{display:block}
+
+/* ═══ LANDING ═══ */
+#landing{
+  min-height:calc(100vh - var(--nav-h) - var(--ticker-h));
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(32px,6vw,64px) clamp(16px,5vw,40px);text-align:center;
+}
+#landing.show{display:flex;animation:fadeUp .55s ease both}
+
+.land-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.28);
+  border-radius:50px;padding:5px 18px;
+  font-size:11px;font-weight:700;color:var(--saffron);letter-spacing:.12em;
+  margin-bottom:28px;
+}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--saffron);animation:pulse 1.8s infinite;display:inline-block}
+
+.land-h1{
+  font-size:clamp(2.2rem,6.5vw,4.2rem);font-weight:900;line-height:1.06;letter-spacing:-.04em;
+  background:linear-gradient(135deg,#fff 0%,#94a3b8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:16px;
+}
+.land-h1 .accent{
+  background:linear-gradient(135deg,var(--saffron),#f97316);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.land-sub{font-size:clamp(14px,2.5vw,17px);color:var(--text2);line-height:1.75;max-width:520px;margin:0 auto 40px}
+
+/* Phase cards */
+.phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;max-width:700px;margin-bottom:32px}
+.phase-card{
+  padding:clamp(12px,2vw,18px) clamp(8px,1.5vw,14px);border-radius:var(--r-lg);
+  background:rgba(255,255,255,.02);border:1px solid var(--border);
+  text-align:center;transition:transform .2s,border-color .2s;
+}
+.phase-card:hover{transform:translateY(-3px);border-color:var(--border2)}
+.pc-ico{font-size:clamp(18px,3vw,24px);margin-bottom:7px}
+.pc-num{font-size:10px;font-weight:700;letter-spacing:.08em;margin-bottom:3px}
+.pc-name{font-size:clamp(11px,1.5vw,13px);font-weight:600;color:var(--text1);line-height:1.25;margin-bottom:3px}
+.pc-time{font-size:10px;color:var(--text3)}
+
+/* Requirements */
+.req-toggle{padding:8px 20px;border-radius:var(--r-sm);border:1px solid var(--border2);color:var(--text2);font-size:13px;transition:all .2s}
+.req-toggle:hover{border-color:rgba(255,255,255,.2);color:var(--text1)}
+.req-grid{display:none;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:700px;margin-top:16px;animation:fadeUp .3s ease}
+.req-grid.open{display:grid}
+.req-card{padding:12px 10px;border-radius:var(--r-md);background:rgba(255,255,255,.02);border:1px solid var(--border);text-align:center}
+.rc-ico{font-size:20px;margin-bottom:6px}
+.rc-label{font-size:12px;font-weight:600;color:var(--text1)}
+.rc-desc{font-size:11px;color:var(--text3);margin-top:2px}
+
+.btn-begin{
+  margin-top:28px;padding:clamp(13px,2vw,16px) clamp(36px,6vw,56px);border-radius:var(--r-lg);
+  background:linear-gradient(135deg,var(--saffron),var(--saffron-d));
+  color:#fff;font-size:clamp(14px,2vw,17px);font-weight:800;letter-spacing:-.01em;
+  box-shadow:0 8px 32px rgba(249,115,22,.4);transition:all .2s;min-height:52px;
+}
+.btn-begin:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,115,22,.5)}
+.begin-hint{margin-top:12px;font-size:12px;color:var(--text3)}
+
+/* ═══ GUIDE PROGRESS BAR (replaces topbar) ═══ */
+#prog-strip{
+  position:sticky;top:calc(var(--nav-h) + var(--ticker-h));z-index:280;
+  background:rgba(4,5,7,.9);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.ps-inner{
+  max-width:1180px;margin:0 auto;
+  padding:0 clamp(12px,3vw,28px);
+  height:48px;display:flex;align-items:center;gap:12px;
+}
+.btn-back{
+  padding:5px 12px;border-radius:var(--r-sm);
+  color:var(--text3);font-size:12px;font-weight:500;
+  border:1px solid var(--border);transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+.btn-back:hover{color:var(--text1);border-color:var(--border2)}
+.phase-tabs{flex:1;display:flex;gap:0;min-width:0;overflow:hidden}
+.ptab{flex:1;cursor:pointer;padding:5px 4px 4px;border-radius:5px;transition:background .2s;min-width:0}
+.ptab:hover{background:rgba(255,255,255,.04)}
+.ptab-bar{height:3px;border-radius:2px;margin-bottom:5px;transition:background .4s,opacity .4s}
+.ptab-num{font-size:9px;font-weight:700;letter-spacing:.06em}
+.ptab-title{font-size:clamp(9px,1.2vw,11px);color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-area{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.prog-label{font-size:11px;color:var(--text3);white-space:nowrap}
+.prog-bar{width:clamp(48px,8vw,88px);height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--indigo),var(--saffron));transition:width .4s ease}
+.prog-pct{font-size:12px;font-weight:700;color:var(--saffron);min-width:30px;text-align:right}
+
+/* ═══ GUIDE LAYOUT ═══ */
+#guide{display:none}
+#guide.show{display:block}
+#guide-layout{
+  max-width:1180px;margin:0 auto;
+  padding:clamp(16px,3vw,28px) clamp(12px,3vw,28px) 100px;
+  display:flex;gap:clamp(14px,2.5vw,28px);
+}
+
+/* SIDEBAR */
+#sidebar{
+  width:210px;flex-shrink:0;position:sticky;
+  top:calc(var(--nav-h) + var(--ticker-h) + 64px);
+  align-self:flex-start;max-height:calc(100vh - var(--nav-h) - var(--ticker-h) - 80px);
+  overflow-y:auto;overflow-x:hidden;
+}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border)}
+.step-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 10px;border-radius:var(--r-md);
+  cursor:pointer;border:1px solid transparent;border-left:3px solid transparent;
+  transition:all .2s;margin-bottom:2px;
+}
+.si-ico{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;border:1px solid var(--border);background:var(--bg3);transition:all .2s;
+}
+.si-title{font-size:11px;color:var(--text2);line-height:1.3;transition:color .2s}
+.si-time{font-size:9px;color:var(--text4)}
+.phase-sw{margin-top:16px;padding:12px;border-radius:var(--r-lg);background:rgba(255,255,255,.02);border:1px solid var(--border)}
+.ps-lbl{font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--text4);margin-bottom:9px}
+.ps-ph{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:var(--r-sm);cursor:pointer;margin-bottom:2px;transition:background .2s}
+.ps-ph:hover{background:rgba(255,255,255,.03)}
+.ps-info{flex:1;min-width:0}
+.ps-title{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text3)}
+.ps-mini{height:2px;background:var(--border);border-radius:1px;margin-top:3px}
+.ps-mf{height:100%;border-radius:1px;transition:width .35s}
+.ps-cnt{font-size:9px;font-weight:700;color:var(--text3);flex-shrink:0}
+
+/* CONTENT */
+#content{flex:1;min-width:0}
+.ph-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;animation:fadeUp .3s ease}
+.ph-ico{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--bg3);border:1px solid var(--border2);flex-shrink:0}
+.ph-num{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text3)}
+.ph-title{font-size:clamp(15px,2.5vw,19px);font-weight:700;color:var(--text1);line-height:1.1}
+.ph-ctr{margin-left:auto;font-size:11px;color:var(--text3);white-space:nowrap}
+
+/* STEP CARD */
+.step-card{border-radius:var(--r-xl);overflow:hidden;background:rgba(255,255,255,.02);border:1px solid var(--border);animation:slideR .3s ease;transition:border-color .3s}
+.sc-bar{height:4px;transition:background .3s}
+.sc-head{padding:clamp(16px,2.5vw,24px);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.sch-left{display:flex;align-items:center;gap:10px}
+.sch-ico{width:38px;height:38px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--bg3);border:1px solid var(--border2);flex-shrink:0}
+.sch-title{font-size:clamp(15px,2.5vw,19px);font-weight:700;color:var(--text1);line-height:1.2}
+.sch-tags{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:50px;font-size:10px;font-weight:600}
+.done-badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;animation:pop .3s ease}
+.sc-body{padding:clamp(16px,2.5vw,24px)}
+.step-text{font-size:clamp(13px,2vw,15px);color:var(--text2);line-height:1.85;margin-bottom:18px}
+.action-link{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--r-md);font-size:13px;font-weight:600;margin-bottom:16px;border:1px solid;transition:opacity .2s;min-height:42px}
+.action-link:hover{opacity:.8}
+.warn-box{padding:11px 14px;border-radius:var(--r-md);margin-bottom:12px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.22);font-size:clamp(11px,1.8vw,13px);color:#fca5a5;line-height:1.75;display:flex;gap:9px}
+.tip-box{padding:11px 14px;border-radius:var(--r-md);margin-bottom:16px;background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);font-size:clamp(11px,1.8vw,13px);color:#fdba74;line-height:1.75;display:flex;gap:9px}
+.wait-box{padding:clamp(12px,2vw,16px);border-radius:var(--r-md);margin-bottom:6px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2)}
+.wait-title{font-size:12px;font-weight:700;color:#fcd34d;margin-bottom:10px}
+.wait-item{display:flex;gap:9px;font-size:12px;color:var(--text2);margin-bottom:7px;align-items:flex-start}
+.wt-arr{color:var(--amber);flex-shrink:0;margin-top:1px}
+.step-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.btn-prev{padding:12px 20px;border-radius:var(--r-md);background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--text2);font-size:13px;font-weight:500;transition:all .2s;min-height:48px;min-width:80px}
+.btn-prev:hover{background:rgba(255,255,255,.08);color:var(--text1)}
+.btn-done{flex:1;padding:13px;border-radius:var(--r-md);color:#fff;font-size:clamp(13px,2vw,15px);font-weight:800;transition:opacity .2s,transform .15s;min-height:48px;letter-spacing:-.01em}
+.btn-done:hover{opacity:.9;transform:translateY(-1px)}
+.next-prev{margin-top:12px;padding:11px 16px;border-radius:var(--r-md);background:rgba(255,255,255,.02);border:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.np-lbl{font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--text4);flex-shrink:0}
+.np-txt{font-size:12px;color:var(--text3)}
+
+/* ═══ IP DETECTOR ═══ */
+.ip-widget{margin-top:20px;border-radius:var(--r-lg);overflow:hidden;border:1px solid rgba(52,211,153,.25);background:rgba(52,211,153,.03)}
+.ip-head{padding:12px 16px;border-bottom:1px solid rgba(52,211,153,.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.ip-head-left{display:flex;align-items:center;gap:9px}
+.ip-head-ico{width:32px;height:32px;border-radius:var(--r-sm);background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ip-head-title{font-size:12px;font-weight:700;color:var(--text1)}
+.ip-head-sub{font-size:10px;color:var(--text3)}
+.ip-badge{display:none;font-size:10px;font-family:var(--font-mono);color:var(--green);background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25);padding:3px 9px;border-radius:6px}
+.btn-detect{padding:7px 14px;border-radius:var(--r-sm);font-size:11px;font-weight:700;font-family:inherit;transition:all .2s;min-height:34px;white-space:nowrap}
+.btn-detect.idle{background:var(--green);color:#fff}
+.btn-detect.idle:hover{background:#0ea672}
+.btn-detect.done{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+.btn-detect:disabled{opacity:.5;cursor:not-allowed}
+.ip-body{padding:clamp(12px,2vw,16px)}
+.src-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.src-chip{padding:2px 9px;border-radius:50px;font-size:10px;font-weight:500;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text3)}
+.ip-prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ip-prog-msg{font-size:11px;color:var(--text2)}
+.ip-prog-pct{font-size:11px;font-weight:700;color:var(--green)}
+.ip-bar-wrap{height:3px;background:var(--border);border-radius:2px;margin-bottom:14px}
+.ip-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),#6ee7b7);transition:width .3s;box-shadow:0 0 8px rgba(52,211,153,.4)}
+.src-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.src-card{padding:8px 5px;border-radius:var(--r-sm);text-align:center;border:1px solid var(--border);background:var(--bg3);transition:all .3s}
+.src-name{font-size:9px;color:var(--text3);margin-bottom:3px;font-family:var(--font-mono)}
+.src-val{font-size:10px;font-weight:500;font-family:var(--font-mono);color:var(--text4);min-height:14px;word-break:break-all}
+.ip-addr{font-family:var(--font-mono);font-size:clamp(20px,4vw,30px);font-weight:600;color:var(--green);margin-bottom:6px;word-break:break-all}
+.ip-result-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.ip-meta{font-size:11px;color:var(--text3);margin-bottom:12px;font-family:var(--font-mono);word-break:break-word}
+.btn-copy{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-sm);border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.1);color:var(--green);font-size:12px;font-weight:600;transition:opacity .2s;min-height:36px;cursor:pointer;font-family:inherit}
+.btn-copy:hover{opacity:.8}
+.ip-next-note{margin-top:12px;padding:10px 13px;border-radius:var(--r-md);background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.2);font-size:11px;color:#fdba74;line-height:1.7}
+.ip-err-msg{padding:10px 13px;border-radius:var(--r-md);background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);font-size:12px;color:#fca5a5;margin-bottom:10px}
+.ip-fallback{font-size:11px;color:var(--text3);line-height:1.7}
+.ip-fallback a{color:var(--saffron);text-decoration:underline}
+.dyn-warn{display:none;margin-top:10px;padding:9px 12px;border-radius:var(--r-md);background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);font-size:11px;color:#fcd34d;line-height:1.6}
+
+/* ═══ COMPLETION ═══ */
+#completion{text-align:center;padding:clamp(40px,8vw,72px) clamp(16px,5vw,40px);animation:fadeUp .5s ease}
+.comp-emoji{font-size:clamp(48px,8vw,72px);margin-bottom:18px;animation:pop .6s ease;display:block}
+.comp-title{font-size:clamp(24px,5vw,38px);font-weight:900;color:#22c55e;margin:0 0 12px;letter-spacing:-.02em}
+.comp-sub{color:var(--text2);font-size:clamp(13px,2vw,16px);margin:0 auto 28px;line-height:1.7;max-width:420px}
+.comp-feats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:360px;margin:0 auto 28px}
+.comp-feat{padding:13px 8px;border-radius:var(--r-md);background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);font-size:clamp(11px,1.8vw,13px);color:#4ade80;font-weight:600}
+.btn-dash{display:inline-flex;align-items:center;justify-content:center;padding:clamp(12px,2vw,15px) clamp(32px,5vw,48px);border-radius:var(--r-lg);background:linear-gradient(135deg,var(--saffron),var(--saffron-d));color:#fff;font-size:clamp(13px,2vw,16px);font-weight:800;box-shadow:0 8px 32px rgba(249,115,22,.4);transition:all .2s;min-height:52px}
+.btn-dash:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,115,22,.5)}
+
+/* ═══ MOBILE BOTTOM NAV (phase switcher) ═══ */
+#mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(4,5,7,.93);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:0 0 env(safe-area-inset-bottom,0)}
+.mbn-inner{display:flex;align-items:center;height:56px;padding:0 16px;gap:8px}
+.mbn-phase{flex:1;text-align:center;padding:6px 4px;border-radius:var(--r-sm);cursor:pointer;transition:background .2s}
+.mbn-phase:hover{background:rgba(255,255,255,.04)}
+.mbn-ico{font-size:18px}
+.mbn-name{font-size:9px;color:var(--text3);margin-top:2px}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:840px){
+  #sidebar{display:none}
+  #guide-layout{padding-bottom:100px}
+  .phase-tabs .ptab-title{display:none}
+  .prog-label{display:none}
+  .nav-tabs{display:none}
+  .nav-hamburger{display:flex}
+  .nav-cta-btn{display:none}
+  #mobile-bottom-nav{display:block}
+}
+@media(max-width:600px){
+  .phase-grid{grid-template-columns:repeat(2,1fr)}
+  .req-grid{grid-template-columns:repeat(2,1fr)}
+  .src-grid{grid-template-columns:repeat(3,1fr)}
+  .comp-feats{grid-template-columns:repeat(3,1fr)}
+  .sch-title{font-size:15px}
+}
+@media(max-width:420px){
+  :root{--nav-h:52px;--ticker-h:28px}
+  .phase-grid{grid-template-columns:1fr 1fr}
+  .req-grid{grid-template-columns:1fr 1fr}
+  .src-grid{grid-template-columns:repeat(3,1fr)}
+  .ptab{max-width:64px;overflow:hidden}
+  .ptab-num{font-size:8px}
+  .prog-pct{font-size:11px}
+  .step-actions{flex-direction:column}
+  .btn-done{width:100%}
+  .ip-head{flex-direction:column;align-items:flex-start}
+  .sc-head{flex-direction:column}
+}
+@media(hover:none) and (pointer:coarse){
+  .btn-begin,.btn-done,.btn-dash{min-height:52px}
+  .action-link{min-height:46px}
+  .step-item{min-height:46px}
+  .ps-ph{min-height:40px}
+  .btn-prev{min-height:46px}
+  input,select,textarea{font-size:16px!important}
+}
+@supports (padding-bottom:env(safe-area-inset-bottom)){
+  #guide-layout{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+}
 </style>
 </head>
 <body>
 
-<!-- SKIP TO CONTENT -->
-<a href="#setup-main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999;background:#fb923c;color:#fff;padding:.5rem 1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;" onfocus="this.style.left='0';this.style.width='auto';this.style.height='auto';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';">Skip to main content</a>
-
 <!-- ANIMATED BACKGROUND -->
 <div id="animBg" aria-hidden="true">
-  <div class="base"></div>
-  <div class="orb1"></div>
-  <div class="orb2"></div>
-  <div class="orb3"></div>
-  <div class="grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-bg"></div>
 </div>
 
-<main id="setup-main" role="main">
+<!-- ══════════════════════════════════════
+     OPTIONSLAB NAV BAR
+══════════════════════════════════════ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-nav">
+    <a class="drawer-tab" href="index.html" onclick="closeDrawer()"><span>🏠</span> Home</a>
+    <a class="drawer-tab" href="index.html#terminal" onclick="closeDrawer()"><span>📊</span> Terminal</a>
+    <a class="drawer-tab" href="index.html#analytics" onclick="closeDrawer()"><span>🔬</span> Analytics</a>
+    <a class="drawer-tab" href="index.html#smartmoney" onclick="closeDrawer()"><span>🧠</span> Smart Money</a>
+    <div class="drawer-divider"></div>
+    <a class="drawer-tab" href="index.html#academy" onclick="closeDrawer()"><span>🎓</span> Academy</a>
+    <a class="drawer-tab" href="index.html#pricing" onclick="closeDrawer()"><span>₹</span> Pricing</a>
+    <a class="drawer-tab" href="index.html#why" onclick="closeDrawer()"><span>✦</span> Why Us</a>
+    <a class="drawer-tab" href="index.html#about" onclick="closeDrawer()"><span>👤</span> About</a>
+    <a class="drawer-tab active" href="setup.html" onclick="closeDrawer()"><span>⚙️</span> Setup</a>
+    <a class="drawer-tab" href="https://www.optionslab.in/blog/" target="_blank" onclick="closeDrawer()" style="color:var(--saffron)"><span>✦</span> Blog</a>
+    <div class="drawer-divider"></div>
+  </div>
+  <div class="drawer-footer">
+    <button class="drawer-cta" onclick="window.location.href='register.html'">Get Access →</button>
+  </div>
+</div>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!-- LANDING SCREEN -->
-<!-- ══════════════════════════════════════════════════════ -->
-<div id="landing" class="screen show" style="flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center">
-  <div class="land-badge"><span class="pulse-dot" aria-hidden="true"></span>OPTIONLAB SETUP GUIDE</div>
-  <h1 itemprop="name">From Zero to<br>Live Trading Data</h1>
-  <p class="sub" itemprop="description">Complete walkthrough to open your broker account, setup SmartAPI, and connect OptionLab — all in about 30 minutes.</p>
+<nav id="top-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a class="nav-logo" href="index.html">
+      <div class="nav-logo-box">OL</div>
+      <div class="nav-logo-text"><span>OPTIONS</span>LAB</div>
+    </a>
 
-  <div class="phase-cards" id="landingPhaseCards"></div>
+    <!-- Desktop tabs -->
+    <div class="nav-tabs">
+      <a class="nav-tab" href="index.html">HOME</a>
+      <a class="nav-tab" href="index.html#terminal">TERMINAL</a>
+      <a class="nav-tab" href="index.html#analytics">ANALYTICS</a>
+      <a class="nav-tab" href="index.html#smartmoney">SMART MONEY</a>
+      <a class="nav-tab" href="index.html#academy">ACADEMY</a>
+      <a class="nav-tab" href="index.html#pricing">PRICING</a>
+      <a class="nav-tab" href="index.html#why">WHY US</a>
+      <a class="nav-tab" href="index.html#about">ABOUT</a>
+      <a class="nav-tab active" href="setup.html">SETUP</a>
+      <a class="nav-tab" href="https://www.optionslab.in/blog/" target="_blank">✦ BLOG</a>
+    </div>
 
-  <div style="margin-bottom:32px;display:flex;flex-direction:column;align-items:center;gap:0">
-    <button class="req-toggle" onclick="toggleReqs()">▼ What you'll need before starting</button>
-    <div class="req-grid" id="reqGrid" style="display:none"></div>
+    <!-- Right side -->
+    <div class="nav-right">
+      <div class="lang-toggle-wrap">
+        <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+        <button class="lang-btn active" id="btnHI" onclick="setLang('hi')">HI</button>
+      </div>
+      <div class="nav-theme-btn" title="Toggle theme">🌙</div>
+      <a class="nav-signin-btn" href="register.html">Sign In</a>
+      <button class="nav-hamburger" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- TICKER BAR -->
+<div id="ticker-bar" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<main role="main">
+
+<!-- ══════════════════════════════════════
+     LANDING
+══════════════════════════════════════ -->
+<div id="landing" class="screen show">
+  <div class="land-badge">OPTIONLAB SETUP GUIDE</div>
+  <h1 class="land-h1">Zero se <span class="accent">Live</span><br>Trading Data</h1>
+  <p class="land-sub">Fyers broker account kholna, API setup karna, aur OptionLab se connect karna — sab kuch step-by-step, sirf 30 minute mein.</p>
+
+  <div class="phase-grid" id="phaseGrid"></div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:700px;margin-bottom:4px">
+    <button class="req-toggle" id="reqToggleBtn" onclick="toggleReqs()">▼ Shuru karne se pehle kya chahiye?</button>
+    <div class="req-grid" id="reqGrid"></div>
   </div>
 
-  <button class="btn-begin" onclick="startGuide()">Begin Setup →</button>
-  <div class="begin-hint">~30 min · Free · No credit card</div>
+  <button class="btn-begin" onclick="startGuide()">Setup Shuru Karo →</button>
+  <p class="begin-hint">~30 min · Bilkul Free · Koi card nahi</p>
 </div>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!-- GUIDE SCREEN -->
-<!-- ══════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════
+     GUIDE
+══════════════════════════════════════ -->
 <div id="guide" class="screen">
-  <!-- TOP BAR -->
-  <div id="topbar">
-    <div id="topbar-inner">
-      <button class="btn-back-top" onclick="backToLanding()">← Back</button>
-      <div class="phase-tabs" id="phaseTabs"></div>
-      <div class="prog-wrap">
-        <span class="prog-txt" id="progTxt">0/15</span>
-        <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <!-- PROGRESS STRIP -->
+  <div id="prog-strip">
+    <div class="ps-inner">
+      <button class="btn-back" id="backBtn" onclick="backToLanding()">← Wapas</button>
+      <div class="phase-tabs" id="phaseTabs" role="tablist"></div>
+      <div class="prog-area">
+        <span class="prog-label" id="progLabel">0/15</span>
+        <div class="prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progBarEl">
+          <div class="prog-fill" id="progFill" style="width:0%"></div>
+        </div>
         <span class="prog-pct" id="progPct">0%</span>
       </div>
     </div>
   </div>
 
   <!-- LAYOUT -->
-  <div id="guide-layout" style="display:flex;gap:24px">
-    <div id="sidebar">
+  <div id="guide-layout">
+    <div id="sidebar" role="navigation" aria-label="Steps">
       <div id="stepList"></div>
-      <div id="phase-switcher">
-        <div class="ps-label">ALL PHASES</div>
-        <div id="phaseSwitcher"></div>
+      <div class="phase-sw">
+        <div class="ps-lbl">SAARI PHASES</div>
+        <div id="phaseSw"></div>
       </div>
     </div>
     <div id="content">
-      <div id="completion">
-        <div class="comp-emoji">🎉</div>
-        <div class="comp-title">All Set!</div>
-        <p class="comp-sub">Your broker account is fully connected to OptionLab. Live options data, analytics, and signals are now available.</p>
-        <div class="comp-features">
+      <div id="completion" style="display:none">
+        <span class="comp-emoji">🎉</span>
+        <div class="comp-title">Ho Gaya!</div>
+        <p class="comp-sub">Tera Fyers account OptionLab se connect ho gaya. Ab live options data, analytics, aur signals sab available hain!</p>
+        <div class="comp-feats">
           <div class="comp-feat">📈 Live Data</div>
           <div class="comp-feat">⚡ Options Chain</div>
           <div class="comp-feat">📊 Analytics</div>
         </div>
-        <a href="index.html" class="btn-dashboard">🚀 Open OptionLab Dashboard</a>
+        <a href="index.html" class="btn-dash">🚀 OptionLab Dashboard Kholna Hai</a>
       </div>
       <div id="stepContent"></div>
     </div>
   </div>
+
+  <!-- MOBILE PHASE NAV -->
+  <nav id="mobile-bottom-nav" aria-label="Phase navigation">
+    <div class="mbn-inner" id="mbnInner"></div>
+  </nav>
 </div>
 
+</main>
+
 <script>
-// ═══════════════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════════════
-const PHASES = [
-  {
-    id:"account", num:"01", title:"Open Broker Account", subtitle:"Your trading foundation",
-    time:"15 min", icon:"🏦", color:"#818cf8", dark:"#3730a3",
-    steps:[
-      { id:"visit",  title:"Visit Broker Portal", time:"1 min", icon:"🌐",
-        content:"Head to your broker's website and click Open Free Account. Use a SEBI-registered broker that supports SmartAPI (e.g. Angel One — India's largest retail broker, serving 2 crore+ clients).",
-        action:{ label:"angelone.in", url:"https://www.angelone.in" },
-        tip:"Use Chrome or Edge for best compatibility." },
-      { id:"mobile", title:"Verify Mobile Number", time:"1 min", icon:"📱",
-        content:"Enter your Aadhaar-linked mobile number. An OTP will be sent for verification. This must be the same number registered with your Aadhaar card.",
-        warn:"Use the same number you'll register on OptionLab — this links your identity across both platforms." },
-      { id:"pan",    title:"PAN Card Verification", time:"2 min", icon:"🪪",
-        content:"Enter your PAN number. The broker instantly verifies it with NSDL and auto-fills your name and date of birth.",
-        tip:"PAN must be active and KYC-compliant. Verify status at the Income Tax portal if unsure." },
-      { id:"kyc",    title:"Aadhaar e-KYC", time:"3 min", icon:"✅",
-        content:"Enter Aadhaar number — an OTP is sent to your linked mobile for instant address + identity verification. No physical documents needed.",
-        warn:"If Aadhaar OTP fails, document-based KYC is needed — adds 2–3 working days to activation." },
-      { id:"bank",   title:"Link Bank Account", time:"2 min", icon:"🏦",
-        content:"Add your savings account number and IFSC code. The broker does a penny-drop to confirm ownership — a small amount is credited then debited.",
-        tip:"Use your primary account. Avoid joint accounts as they can slow down verification." },
-      { id:"ipv",    title:"Video Verification (IPV)", time:"2 min", icon:"📷",
-        content:"A quick live video where you show your PAN card to camera and say a few words. Fully online, under 2 minutes.",
-        tip:"Good lighting + plain background = instant pass. Low light = retry." },
-      { id:"wait",   title:"Account Activation", time:"Up to 24 hrs", icon:"⏳",
-        content:"Submitted! Most accounts activate within 1–4 hours on working days. Watch for your Client Code via SMS — it looks like: SBHS331.",
-        warn:"Activations on weekends or holidays carry over to the next working day.", isWait:true },
-    ]
+/* ═══ LANGUAGE STATE ═══ */
+let LANG = 'hi'; // default Hindi
+
+/* ═══ DRAWER ═══ */
+function toggleDrawer(){
+  document.getElementById('mobileDrawer').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+
+/* ═══ TICKER ═══ */
+const TICKERS=[
+  {name:'NIFTY 50',val:'22,513.7',chg:'-0.63%',up:false},
+  {name:'BANKNIFTY',val:'48,240.15',chg:'+0.65%',up:true},
+  {name:'INDIA VIX',val:'14.23',chg:'-2.87%',up:false},
+  {name:'PCR',val:'1.88',chg:'+8%',up:true},
+  {name:'SENSEX',val:'74,086.25',chg:'+0.62%',up:true},
+  {name:'USDINR',val:'83.42',chg:'-0.03%',up:false},
+];
+(function initTicker(){
+  const items=TICKERS.map(t=>`<div class="ticker-item">
+    <span class="ticker-name">${t.name}</span>
+    <span class="ticker-val">${t.val}</span>
+    <span class="ticker-chg ${t.up?'up':'dn'}">${t.chg}</span>
+  </div>`).join('');
+  document.getElementById('tickerTrack').innerHTML=items+items+items;
+})();
+
+/* ═══ BILINGUAL DATA ═══ */
+const PHASES_DATA = {
+  hi: [
+    {id:"account",num:"01",title:"Account Kholna",sub:"Trading foundation",time:"15 min",ico:"🏦",color:"var(--indigo)",
+     steps:[
+      {id:"visit",title:"Fyers Website Kholna",time:"1 min",ico:"🌐",
+       text:"fyers.in par jao aur <strong>Open Free Account</strong> par click karo. Fyers SEBI-registered hai aur NSE/BSE/MCX sab support karta hai — zero brokerage on equity delivery.",
+       action:{label:"fyers.in",url:"https://fyers.in"},tip:"Desktop browser prefer karo — Chrome ya Edge best hai."},
+      {id:"mobile",title:"Mobile Number Verify",time:"1 min",ico:"📱",
+       text:"Apna <strong>Aadhaar-linked mobile number</strong> dalo. OTP verification ke liye aayega.",
+       warn:"Wahi number use karo jo Aadhaar se linked hai — OTP usi par aayega."},
+      {id:"pan",title:"PAN Card Verify Karna",time:"2 min",ico:"🪪",
+       text:"PAN number dalo. Fyers <strong>NSDL se instantly verify</strong> karta hai aur tera naam aur DOB auto-fill ho jaata hai.",
+       tip:"PAN active aur KYC-compliant hona chahiye."},
+      {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",ico:"✅",
+       text:"Aadhaar number dalo — linked mobile par OTP aata hai for <strong>instant identity verify</strong>. Koi physical document upload nahi karna.",
+       warn:"Aadhaar OTP fail ho to document-based KYC lagega — 2-3 working days extra."},
+      {id:"bank",title:"Bank Account Link Karna",time:"2 min",ico:"🏦",
+       text:"Savings account number aur IFSC code dalo. Fyers <strong>penny-drop</strong> karta hai ownership confirm karne ke liye.",
+       tip:"Primary savings account use karo. Joint accounts verification slow kar sakte hain."},
+      {id:"ipv",title:"Video KYC (IPV)",time:"2 min",ico:"📷",
+       text:"Live video mein apna <strong>PAN card camera ko dikhao</strong> aur kuch words bolo. Fully online, 2 minute se kam.",
+       tip:"Achhi roshni + plain background = instant pass."},
+      {id:"wait",title:"Account Activate Hona",time:"1–4 ghante",ico:"⏳",
+       text:"Submit ho gaya! Working days mein zyaadatar accounts <strong>1–4 ghante mein activate</strong> hote hain. Client ID SMS aayegi — kuch aisa: FY12345.",
+       warn:"Weekend ya holiday pe submit hua to next working day activate hoga.",isWait:true},
+    ]},
+    {id:"mpin",num:"02",title:"MPIN Set Karna",sub:"Secure trading PIN",time:"3 min",ico:"🔐",color:"var(--amber)",
+     steps:[
+      {id:"app",title:"Fyers App Download Karna",time:"2 min",ico:"📲",
+       text:"Fyers app <strong>Play Store ya App Store</strong> se download karo. Client ID aur registered mobile se login karo.",
+       action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.fyers.android"},
+       tip:"Desktop prefer karo? trade.fyers.in use karo."},
+      {id:"setmpin",title:"MPIN Banana",time:"1 min",ico:"🔑",
+       text:"First login par <strong>4-digit MPIN</strong> banane ko bolega — yahi har API connection aur trade ko authorize karta hai.",
+       warn:"OptionLab ka password aur MPIN KABHI ek mat rakhna. Dono hamesha alag-alag rakhna.",
+       tip:"Obvious PINs mat rakho: 1234, 0000, ya birth year."},
+    ]},
+    {id:"api",num:"03",title:"API App Setup",sub:"Developer access unlock",time:"5 min",ico:"⚙️",color:"var(--green)",
+     steps:[
+      {id:"portal",title:"API Portal Par Register Karna",time:"2 min",ico:"🔒",
+       text:"<strong>myapi.fyers.in</strong> par jao aur apni email se register karo. Yeh developer portal hai — trading account se bilkul alag.",
+       action:{label:"myapi.fyers.in",url:"https://myapi.fyers.in"},
+       warn:"Yahan BILKUL ALAG password rakho — trading credentials kabhi reuse mat karo."},
+      {id:"totp",title:"TOTP Enable Karna",time:"2 min",ico:"🔐",
+       text:"Fyers API portal mein <strong>Security settings</strong> mein jao aur TOTP enable karo. Google Authenticator se QR code scan karo.",
+       warn:"32-character Secret Key sirf EK BAAR dikhta hai — abhi copy karke safe jagah par rakho!",
+       tip:"Pehle Google Authenticator ya Authy install kar lo phone pe."},
+      {id:"ipdetect",title:"IP Detect Karna & App Banana",time:"2 min",ico:"🌐",
+       text:"Neeche diya IP detector se apna exact <strong>public IP</strong> pata karo, phir Fyers API portal mein naya app create karo aur IP whitelist karo.",
+       tip:"App create karne ke baad API Key aur Secret turant milega.",isIPDetect:true},
+    ]},
+    {id:"connect",num:"04",title:"OptionLab Connect",sub:"2 minute mein live",time:"2 min",ico:"🚀",color:"var(--saffron)",
+     steps:[
+      {id:"open",title:"OptionLab Setup Kholna",time:"30 sec",ico:"💻",
+       text:"OptionLab app mein <strong>Settings → Broker Setup</strong> par jao. Fyers select karo. Tera IP auto-detect hoga.",
+       tip:"Ek baar setup karo per device — baad mein login automatic hoga."},
+      {id:"creds",title:"Credentials Dalna",time:"1 min",ico:"🗝️",
+       text:"Client ID, MPIN, TOTP 32-char Secret Key, aur API Key dalo. <strong>Sab kuch sirf teri device par rehta hai</strong> — OptionLab servers ko kuch nahi pata.",
+       warn:"TOTP Secret = 32-char code (jaise 6HFALJZR3PYW…), NOT the 6-digit rotating OTP."},
+      {id:"test",title:"Test Karo & Live Jao",time:"30 sec",ico:"⚡",
+       text:"<strong>Test Connection</strong> dabao. OptionLab Fyers API se authenticate karega. Nifty 50 data seconds mein stream hone lagega.",
+       tip:"Fail ho to IP registration ya TOTP secret dobara check karo. Help? support@optionlab.in"},
+    ]},
+  ],
+  en: [
+    {id:"account",num:"01",title:"Open Account",sub:"Trading foundation",time:"15 min",ico:"🏦",color:"var(--indigo)",
+     steps:[
+      {id:"visit",title:"Visit Fyers Website",time:"1 min",ico:"🌐",
+       text:"Go to fyers.in and click <strong>Open Free Account</strong>. Fyers is SEBI-registered and supports NSE/BSE/MCX — zero brokerage on equity delivery.",
+       action:{label:"fyers.in",url:"https://fyers.in"},tip:"Use a desktop browser — Chrome or Edge works best."},
+      {id:"mobile",title:"Verify Mobile Number",time:"1 min",ico:"📱",
+       text:"Enter your <strong>Aadhaar-linked mobile number</strong>. You will receive an OTP for verification.",
+       warn:"Use the same number linked to your Aadhaar — the OTP will only come there."},
+      {id:"pan",title:"Verify PAN Card",time:"2 min",ico:"🪪",
+       text:"Enter your PAN number. Fyers <strong>instantly verifies with NSDL</strong> and auto-fills your name and date of birth.",
+       tip:"PAN must be active and KYC-compliant."},
+      {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",ico:"✅",
+       text:"Enter your Aadhaar number — an OTP is sent to your linked mobile for <strong>instant identity verification</strong>. No physical document upload needed.",
+       warn:"If the Aadhaar OTP fails, document-based KYC will be required — adding 2–3 working days."},
+      {id:"bank",title:"Link Bank Account",time:"2 min",ico:"🏦",
+       text:"Enter your savings account number and IFSC code. Fyers does a <strong>penny-drop</strong> to confirm ownership.",
+       tip:"Use your primary savings account. Joint accounts may slow down verification."},
+      {id:"ipv",title:"Video KYC (IPV)",time:"2 min",ico:"📷",
+       text:"In a live video, <strong>show your PAN card to the camera</strong> and say a few words. Fully online, under 2 minutes.",
+       tip:"Good lighting + plain background = instant pass."},
+      {id:"wait",title:"Account Activation",time:"1–4 hours",ico:"⏳",
+       text:"Submitted! On working days, most accounts are <strong>activated within 1–4 hours</strong>. Your Client ID will arrive via SMS — something like FY12345.",
+       warn:"If submitted on a weekend or holiday, activation carries over to the next working day.",isWait:true},
+    ]},
+    {id:"mpin",num:"02",title:"Set MPIN",sub:"Secure trading PIN",time:"3 min",ico:"🔐",color:"var(--amber)",
+     steps:[
+      {id:"app",title:"Download Fyers App",time:"2 min",ico:"📲",
+       text:"Download the Fyers app from the <strong>Play Store or App Store</strong>. Log in with your Client ID and registered mobile.",
+       action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.fyers.android"},
+       tip:"Prefer desktop? Use trade.fyers.in instead."},
+      {id:"setmpin",title:"Create Your MPIN",time:"1 min",ico:"🔑",
+       text:"On first login, you will be prompted to create a <strong>4-digit MPIN</strong> — this authorizes every API connection and trade.",
+       warn:"NEVER use the same password for OptionLab and your MPIN. Always keep them separate.",
+       tip:"Avoid obvious PINs: 1234, 0000, or your birth year."},
+    ]},
+    {id:"api",num:"03",title:"API App Setup",sub:"Developer access unlock",time:"5 min",ico:"⚙️",color:"var(--green)",
+     steps:[
+      {id:"portal",title:"Register on API Portal",time:"2 min",ico:"🔒",
+       text:"Go to <strong>myapi.fyers.in</strong> and register with your email. This is the developer portal — completely separate from your trading account.",
+       action:{label:"myapi.fyers.in",url:"https://myapi.fyers.in"},
+       warn:"Use a COMPLETELY DIFFERENT password here — never reuse your trading credentials."},
+      {id:"totp",title:"Enable TOTP",time:"2 min",ico:"🔐",
+       text:"In the Fyers API portal, go to <strong>Security settings</strong> and enable TOTP. Scan the QR code with Google Authenticator.",
+       warn:"The 32-character Secret Key is shown ONLY ONCE — copy and store it in a safe place right now!",
+       tip:"Install Google Authenticator or Authy on your phone before this step."},
+      {id:"ipdetect",title:"Detect IP & Create App",time:"2 min",ico:"🌐",
+       text:"Use the IP detector below to find your exact <strong>public IP</strong>, then create a new app in the Fyers API portal and whitelist your IP.",
+       tip:"After creating the app, your API Key and Secret will be generated instantly.",isIPDetect:true},
+    ]},
+    {id:"connect",num:"04",title:"Connect OptionLab",sub:"Go live in 2 minutes",time:"2 min",ico:"🚀",color:"var(--saffron)",
+     steps:[
+      {id:"open",title:"Open OptionLab Setup",time:"30 sec",ico:"💻",
+       text:"In the OptionLab app, go to <strong>Settings → Broker Setup</strong>. Select Fyers. Your IP will be auto-detected.",
+       tip:"One-time setup per device — future logins will be fully automatic."},
+      {id:"creds",title:"Enter Credentials",time:"1 min",ico:"🗝️",
+       text:"Enter your Client ID, MPIN, TOTP 32-char Secret Key, and API Key. <strong>Everything stays only on your device</strong> — OptionLab servers never see it.",
+       warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP."},
+      {id:"test",title:"Test & Go Live",time:"30 sec",ico:"⚡",
+       text:"Click <strong>Test Connection</strong>. OptionLab will authenticate with the Fyers API. Nifty 50 data will begin streaming within seconds.",
+       tip:"If it fails, recheck your IP registration or TOTP secret. Need help? support@optionlab.in"},
+    ]},
+  ]
+};
+
+const REQUIREMENTS_DATA = {
+  hi: [
+    {ico:"📋",label:"PAN Card",desc:"Active & KYC verified",color:"#818cf8"},
+    {ico:"🪪",label:"Aadhaar Card",desc:"Mobile linked hona chahiye",color:"#34d399"},
+    {ico:"🏦",label:"Bank Account",desc:"Savings + IFSC ready",color:"#f59e0b"},
+    {ico:"📱",label:"Mobile Number",desc:"Aadhaar-linked SIM",color:"#ec4899"},
+    {ico:"💻",label:"Windows/Mac",desc:"OptionLab app ke liye",color:"#60a5fa"},
+    {ico:"📷",label:"Webcam",desc:"Video KYC ke liye",color:"#fb923c"},
+  ],
+  en: [
+    {ico:"📋",label:"PAN Card",desc:"Active & KYC-verified",color:"#818cf8"},
+    {ico:"🪪",label:"Aadhaar Card",desc:"Must have linked mobile",color:"#34d399"},
+    {ico:"🏦",label:"Bank Account",desc:"Savings + IFSC ready",color:"#f59e0b"},
+    {ico:"📱",label:"Mobile Number",desc:"Aadhaar-linked SIM",color:"#ec4899"},
+    {ico:"💻",label:"Windows/Mac",desc:"For the OptionLab app",color:"#60a5fa"},
+    {ico:"📷",label:"Webcam",desc:"For Video KYC",color:"#fb923c"},
+  ]
+};
+
+const UI_TEXT = {
+  hi: {
+    landBadge: "OPTIONLAB SETUP GUIDE",
+    landH1: 'Zero se <span class="accent">Live</span><br>Trading Data',
+    landSub: "Fyers broker account kholna, API setup karna, aur OptionLab se connect karna — sab kuch step-by-step, sirf 30 minute mein.",
+    reqToggle: "▼ Shuru karne se pehle kya chahiye?",
+    reqToggleOpen: "▲ Shuru karne se pehle kya chahiye?",
+    beginBtn: "Setup Shuru Karo →",
+    beginHint: "~30 min · Bilkul Free · Koi card nahi",
+    backBtn: "← Wapas",
+    allPhases: "SAARI PHASES",
+    waitTitle: "⌛ Intezaar ke dauran ye karo:",
+    waitItems: [
+      "Google Authenticator ya Authy install karo phone pe",
+      "Fyers app download karo Play Store / App Store se",
+      "Client ID SMS ka wait karo — turant save kar lena",
+      "API portal ke liye ek alag email + password soch lo"
+    ],
+    compTitle: "Ho Gaya!",
+    compSub: "Tera Fyers account OptionLab se connect ho gaya. Ab live options data, analytics, aur signals sab available hain!",
+    compBtn: "🚀 OptionLab Dashboard Kholna Hai",
+    doneBtn: "✓ Done — Aage Bado →",
+    completedBtn: "🎉 Setup Complete!",
+    prevBtn: "← Pichhe",
+    nextLabel: "AAGE",
+    waitTag: "⌛ Intezaar",
+    ipTag: "🌐 IP Detect",
+    stepLabel: "Step",
+    of: "/",
+    detectBtn: "🔍 IP Dhundho",
+    redetectBtn: "🔄 Dobara Detect Karo",
+    retryBtn: "🔄 Dobara Try Karo",
+    copyBtn: "📋 IP Copy Karo",
+    copiedBtn: "✅ Copy ho gaya!",
+    ipTitle: "Live IP Detection Engine",
+    ipSub: "5 sources · Consensus · Auto-verified",
+    ipSources: "Sources:",
+    ipProgStart: "Sab sources ko query kar raha hoon…",
+    ipProgChecking: "se check kar raha hoon…",
+    ipProgConsensus: "Consensus calculate kar raha hoon…",
+    ipProgMeta: "ISP metadata fetch kar raha hoon…",
+    ipProgDone: "Ho gaya!",
+    ipErrAll: "❌ Sab sources fail ho gaye. Internet connection check karo.",
+    dynWarn: "⚡ <strong>Dynamic IP mil gayi.</strong> ISP restart ke baad badal sakti hai. Agar API kaam karna band kare to re-detect karo ya ISP se static IP maango (₹200–500/month).",
+    ipNext: "📋 <strong>Aage kya karna hai:</strong> IP copy karo → Fyers API Portal → Create App → \"Allowed IPs\" field mein paste karo → Save karo → API Key + Secret copy karo.",
+    ipFallback: 'Manual fallback: Browser mein jao → <a href="https://api.ipify.org" target="_blank" rel="noreferrer">api.ipify.org</a> → Number copy karo → Fyers portal mein paste karo.',
+    openAction: "kholna hai ↗",
+    important: "Important:",
+    proTip: "Pro tip:",
   },
-  {
-    id:"mpin", num:"02", title:"Set Trading MPIN", subtitle:"Your secure trading PIN",
-    time:"3 min", icon:"🔐", color:"#fbbf24", dark:"#92400e",
-    steps:[
-      { id:"app",     title:"Download Broker App", time:"2 min", icon:"📲",
-        content:"Get your broker's app from Play Store or App Store. Log in using your Client Code and the mobile number used during registration.",
-        action:{ label:"Play Store", url:"https://play.google.com/store/apps/details?id=com.angel.one" },
-        tip:"Prefer desktop? Use trade.angelone.in instead." },
-      { id:"setmpin", title:"Create Your MPIN", time:"1 min", icon:"🔑",
-        content:"First login prompts you to create a 4-digit MPIN — your trading PIN used to authorize every API connection and trade.",
-        warn:"⚠️ Critical: Do NOT use the same MPIN as your OptionLab login password. Keep these completely separate.",
-        tip:"Avoid obvious PINs like 1234, 0000, or your birth year." },
-    ]
-  },
-  {
-    id:"smartapi", num:"03", title:"SmartAPI Setup", subtitle:"Unlock API access",
-    time:"5 min", icon:"⚙️", color:"#34d399", dark:"#065f46",
-    steps:[
-      { id:"register", title:"Register SmartAPI Account", time:"2 min", icon:"🔒",
-        content:"Visit smartapi.angelone.in and register with your email. This is a developer portal — entirely separate from your trading account.",
-        action:{ label:"smartapi.angelone.in", url:"https://smartapi.angelone.in" },
-        warn:"Use a completely different password here — never reuse your trading credentials." },
-      { id:"totp",     title:"Enable TOTP Authentication", time:"2 min", icon:"🔐",
-        content:"Navigate to the Enable TOTP page. Enter your Client Code and MPIN, then scan the QR code with Google Authenticator.",
-        action:{ label:"Enable TOTP", url:"https://smartapi.angelbroking.com/enable-totp" },
-        warn:"🚨 The 32-character Secret Key shown after QR scan is displayed ONLY ONCE. Copy and store it securely right now.",
-        tip:"Install Google Authenticator on your phone before this step." },
-      { id:"ipdetect", title:"Detect IP & Create App", time:"2 min", icon:"🌐",
-        content:"Use the live IP detector below to find your exact public IP, then create your OptionLab app in the SmartAPI portal.",
-        tip:"Your API Key generates instantly after creating the app — click the eye icon to reveal it.", isIPDetect:true },
-    ]
-  },
-  {
-    id:"connect", num:"04", title:"Connect to OptionLab", subtitle:"Go live in 2 minutes",
-    time:"2 min", icon:"🚀", color:"#fb923c", dark:"#9a3412",
-    steps:[
-      { id:"open",  title:"Open OptionLab Setup", time:"30 sec", icon:"💻",
-        content:"In the OptionLab desktop app, navigate to Settings → Broker Setup. Your IP is auto-detected — compare it with what you registered.",
-        tip:"This is a one-time setup per device — future logins are fully automatic." },
-      { id:"creds", title:"Enter Credentials", time:"1 min", icon:"🗝️",
-        content:"Input your Broker Client Code, MPIN, TOTP 32-char Secret Key, and API Key. Every field stays on your local device — OptionLab servers never see this data.",
-        warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP." },
-      { id:"test",  title:"Test & Go Live", time:"30 sec", icon:"⚡",
-        content:"Hit Test Connection. OptionLab authenticates with the broker API and confirms live data access. Nifty 50 data will stream within seconds.",
-        tip:"If test fails, revisit IP registration or TOTP secret. Contact support@optionlab.in for help." },
-    ]
-  },
+  en: {
+    landBadge: "OPTIONLAB SETUP GUIDE",
+    landH1: 'Zero to <span class="accent">Live</span><br>Trading Data',
+    landSub: "Open a Fyers broker account, set up the API, and connect to OptionLab — step by step, in just 30 minutes.",
+    reqToggle: "▼ What do you need before starting?",
+    reqToggleOpen: "▲ What do you need before starting?",
+    beginBtn: "Start Setup →",
+    beginHint: "~30 min · Completely Free · No card required",
+    backBtn: "← Back",
+    allPhases: "ALL PHASES",
+    waitTitle: "⌛ While you wait:",
+    waitItems: [
+      "Install Google Authenticator or Authy on your phone",
+      "Download the Fyers app from Play Store / App Store",
+      "Wait for the Client ID SMS — save it immediately",
+      "Think of a separate email + password for the API portal"
+    ],
+    compTitle: "All Done!",
+    compSub: "Your Fyers account is now connected to OptionLab. Live options data, analytics, and signals are all available!",
+    compBtn: "🚀 Open OptionLab Dashboard",
+    doneBtn: "✓ Done — Continue →",
+    completedBtn: "🎉 Setup Complete!",
+    prevBtn: "← Back",
+    nextLabel: "NEXT",
+    waitTag: "⌛ Waiting",
+    ipTag: "🌐 IP Detect",
+    stepLabel: "Step",
+    of: "/",
+    detectBtn: "🔍 Detect My IP",
+    redetectBtn: "🔄 Re-detect",
+    retryBtn: "🔄 Try Again",
+    copyBtn: "📋 Copy IP",
+    copiedBtn: "✅ Copied!",
+    ipTitle: "Live IP Detection Engine",
+    ipSub: "5 sources · Consensus · Auto-verified",
+    ipSources: "Sources:",
+    ipProgStart: "Querying all sources…",
+    ipProgChecking: "checking…",
+    ipProgConsensus: "Calculating consensus…",
+    ipProgMeta: "Fetching ISP metadata…",
+    ipProgDone: "Done!",
+    ipErrAll: "❌ All sources failed. Please check your internet connection.",
+    dynWarn: "⚡ <strong>Dynamic IP detected.</strong> It may change after an ISP restart. If the API stops working, re-detect or ask your ISP for a static IP (₹200–500/month).",
+    ipNext: "📋 <strong>Next:</strong> Copy IP → Fyers API Portal → Create App → Paste in \"Allowed IPs\" → Save → Copy API Key + Secret.",
+    ipFallback: 'Manual fallback: Open your browser → <a href="https://api.ipify.org" target="_blank" rel="noreferrer">api.ipify.org</a> → Copy the number → Paste in the Fyers portal.',
+    openAction: "Open ↗",
+    important: "Important:",
+    proTip: "Pro tip:",
+  }
+};
+
+/* Convenience getter */
+function T(){ return UI_TEXT[LANG]; }
+let PHASES = PHASES_DATA[LANG];
+let REQUIREMENTS = REQUIREMENTS_DATA[LANG];
+
+const IP_SOURCES=[
+  {name:"ipify",url:"https://api.ipify.org?format=json",parse:d=>d.ip},
+  {name:"ipapi",url:"https://ipapi.co/json/",parse:d=>d.ip},
+  {name:"ipinfo",url:"https://ipinfo.io/json",parse:d=>d.ip},
+  {name:"myip",url:"https://api.myip.com",parse:d=>d.ip},
+  {name:"seeip",url:"https://api.seeip.org/jsonip",parse:d=>d.ip},
 ];
 
-const REQUIREMENTS = [
-  { icon:"📋", label:"PAN Card",     desc:"Active & KYC-verified",  color:"#818cf8" },
-  { icon:"🪪", label:"Aadhaar",      desc:"Mobile number linked",   color:"#34d399" },
-  { icon:"🏦", label:"Bank Account", desc:"Savings + IFSC ready",   color:"#fbbf24" },
-  { icon:"📱", label:"Mobile",       desc:"Aadhaar-linked SIM",     color:"#f472b6" },
-  { icon:"💻", label:"Windows/Mac",  desc:"For OptionLab app",      color:"#60a5fa" },
-  { icon:"📷", label:"Webcam",       desc:"For video KYC",          color:"#fb923c" },
-];
+/* ═══ STATE ═══ */
+let aPhase=0,aStep=0,doneMap={},detIP="",ipRunning=false;
+const TOTAL=PHASES_DATA.hi.reduce((a,p)=>a+p.steps.length,0);
+const key=(pi,si)=>`${pi}-${si}`;
+const isDone=k=>!!doneMap[k];
+const doneCount=()=>Object.keys(doneMap).length;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const PRIVATE=[/^10\./,/^192\.168\./,/^172\.(1[6-9]|2\d|3[01])\./,/^127\./,/^169\.254\./];
+function isPublicIP(ip){if(!ip||typeof ip!=='string')return false;const p=ip.trim().split('.');return p.length===4&&p.every(x=>/^\d+$/.test(x)&&+x>=0&&+x<=255)&&!PRIVATE.some(r=>r.test(ip))}
 
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-let activePhase = 0;
-let activeStep  = 0;
-let done        = {};
-let detectedIP  = "";
+/* ═══ LANGUAGE SWITCH ═══ */
+function setLang(lang){
+  LANG=lang;
+  PHASES=PHASES_DATA[lang];
+  REQUIREMENTS=REQUIREMENTS_DATA[lang];
+  document.getElementById('htmlRoot').setAttribute('lang',lang);
+  // Update toggle buttons
+  document.getElementById('btnEN').classList.toggle('active',lang==='en');
+  document.getElementById('btnHI').classList.toggle('active',lang==='hi');
+  // Re-render landing
+  initLanding();
+  updateLandingText();
+  // Re-render guide if open
+  const guide=document.getElementById('guide');
+  if(guide&&guide.classList.contains('show')) renderAll();
+}
 
-const TOTAL_STEPS = PHASES.reduce((a, p) => a + p.steps.length, 0);
-function stepKey(pi, si){ return `${pi}-${si}`; }
-function isDone(k){ return !!done[k]; }
-function doneCount(){ return Object.keys(done).length; }
+function updateLandingText(){
+  const t=T();
+  const badge=document.querySelector('.land-badge');if(badge)badge.textContent=t.landBadge;
+  const h1=document.querySelector('.land-h1');if(h1)h1.innerHTML=t.landH1;
+  const sub=document.querySelector('.land-sub');if(sub)sub.textContent=t.landSub;
+  const reqBtn=document.getElementById('reqToggleBtn');if(reqBtn)reqBtn.textContent=reqOpen?t.reqToggleOpen:t.reqToggle;
+  const beginBtn=document.querySelector('.btn-begin');if(beginBtn)beginBtn.textContent=t.beginBtn;
+  const hint=document.querySelector('.begin-hint');if(hint)hint.textContent=t.beginHint;
+  // completion section
+  const compTitle=document.querySelector('.comp-title');if(compTitle)compTitle.textContent=t.compTitle;
+  const compSub=document.querySelector('.comp-sub');if(compSub)compSub.textContent=t.compSub;
+  const compBtn=document.querySelector('.btn-dash');if(compBtn)compBtn.textContent=t.compBtn;
+}
 
-// ═══════════════════════════════════════════════════════
-// LANDING INIT
-// ═══════════════════════════════════════════════════════
+/* ═══ LANDING ═══ */
 function initLanding(){
-  // Phase cards
-  const pc = document.getElementById('landingPhaseCards');
-  pc.innerHTML = PHASES.map(p=>`
-    <div class="pc" style="border:1px solid ${p.color}25">
-      <div class="pc-icon">${p.icon}</div>
+  document.getElementById('phaseGrid').innerHTML=PHASES.map(p=>`
+    <div class="phase-card" style="border:1px solid ${p.color}25">
+      <div class="pc-ico">${p.ico}</div>
       <div class="pc-num" style="color:${p.color}">${p.num}</div>
-      <div class="pc-title">${p.title}</div>
+      <div class="pc-name">${p.title}</div>
       <div class="pc-time">${p.time}</div>
     </div>`).join('');
-
-  // Requirements
-  const rg = document.getElementById('reqGrid');
-  rg.innerHTML = REQUIREMENTS.map(r=>`
-    <div class="req-card" style="background:${r.color}08;border:1px solid ${r.color}20">
-      <div class="req-icon">${r.icon}</div>
-      <div class="req-label">${r.label}</div>
-      <div class="req-desc">${r.desc}</div>
+  document.getElementById('reqGrid').innerHTML=REQUIREMENTS.map(r=>`
+    <div class="req-card" style="border:1px solid ${r.color}20">
+      <div class="rc-ico">${r.ico}</div>
+      <div class="rc-label">${r.label}</div>
+      <div class="rc-desc">${r.desc}</div>
     </div>`).join('');
 }
 
+let reqOpen=false;
 function toggleReqs(){
-  const g = document.getElementById('reqGrid');
-  const btn = document.querySelector('.req-toggle');
-  const open = g.style.display !== 'none';
-  g.style.display = open ? 'none' : 'grid';
-  btn.textContent = (open ? '▼' : '▲') + ' What you\'ll need before starting';
+  reqOpen=!reqOpen;
+  document.getElementById('reqGrid').classList.toggle('open',reqOpen);
+  document.getElementById('reqToggleBtn').textContent=reqOpen?T().reqToggleOpen:T().reqToggle;
 }
 
-// ═══════════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════════
+/* ═══ NAV ═══ */
 function startGuide(){
   document.getElementById('landing').classList.remove('show');
   document.getElementById('guide').classList.add('show');
-  document.getElementById('guide').style.minHeight = '100vh';
-  renderAll();
+  renderAll();window.scrollTo(0,0);
 }
-
 function backToLanding(){
   document.getElementById('guide').classList.remove('show');
   document.getElementById('landing').classList.add('show');
+  window.scrollTo(0,0);
 }
-
-function goPhase(pi){
-  activePhase = pi;
-  activeStep  = 0;
-  renderAll();
-}
-
-function goStep(si){
-  activeStep = si;
-  renderAll();
-  scrollToContent();
-}
-
+function goPhase(pi){aPhase=pi;aStep=0;renderAll();scrollTop()}
+function goStep(si){aStep=si;renderAll();scrollTop()}
 function markDone(){
-  done[stepKey(activePhase, activeStep)] = true;
-  const phase = PHASES[activePhase];
-  if(activeStep < phase.steps.length - 1){
-    activeStep++;
-  } else if(activePhase < PHASES.length - 1){
-    activePhase++;
-    activeStep = 0;
-  }
-  renderAll();
-  scrollToContent();
+  doneMap[key(aPhase,aStep)]=true;
+  const phase=PHASES[aPhase];
+  if(aStep<phase.steps.length-1){aStep++;}
+  else if(aPhase<PHASES.length-1){aPhase++;aStep=0;}
+  renderAll();scrollTop();
 }
-
 function goBack(){
-  if(activeStep > 0){
-    activeStep--;
-  } else if(activePhase > 0){
-    activePhase--;
-    activeStep = PHASES[activePhase].steps.length - 1;
-  }
-  renderAll();
-  scrollToContent();
+  if(aStep>0){aStep--;}
+  else if(aPhase>0){aPhase--;aStep=PHASES[aPhase].steps.length-1;}
+  renderAll();scrollTop();
+}
+function scrollTop(){
+  const el=document.getElementById('content');
+  if(el){const y=el.getBoundingClientRect().top+window.scrollY-120;window.scrollTo({top:Math.max(0,y),behavior:'smooth'});}
 }
 
-function scrollToContent(){
-  document.getElementById('content').scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-// ═══════════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════════
-function renderAll(){
-  renderTopBar();
-  renderSidebar();
-  renderStepContent();
-  renderCompletion();
-}
+/* ═══ RENDER ═══ */
+function renderAll(){renderTopBar();renderSidebar();renderMobileNav();renderStep()}
 
 function renderTopBar(){
-  const dc = doneCount();
-  const pct = Math.round((dc / TOTAL_STEPS) * 100);
-  document.getElementById('progTxt').textContent = `${dc}/${TOTAL_STEPS}`;
-  document.getElementById('progFill').style.width = pct + '%';
-  document.getElementById('progPct').textContent = pct + '%';
-
-  const tabs = document.getElementById('phaseTabs');
-  tabs.innerHTML = PHASES.map((p, pi)=>{
-    const allDone = p.steps.every((_,si)=>isDone(stepKey(pi,si)));
-    const isAct = pi === activePhase;
-    const barBg = allDone ? p.color : isAct ? `linear-gradient(90deg,${p.color},${p.color}40)` : 'rgba(255,255,255,0.06)';
-    const borderR = pi===0?'2px 0 0 2px':pi===PHASES.length-1?'0 2px 2px 0':'0';
-    return `<div class="ptab" onclick="goPhase(${pi})">
-      <div class="ptab-bar" style="background:${barBg};border-radius:${borderR}"></div>
-      <div class="ptab-info">
-        <span class="ptab-icon">${p.icon}</span>
-        <div>
-          <div class="ptab-num" style="color:${isAct?p.color:'#475569'}">${p.num}</div>
-          <div class="ptab-title" style="color:${isAct?'#e2e8f0':'#64748b'};font-weight:${isAct?700:400}">${p.title}</div>
-        </div>
-        ${allDone?`<span class="ptab-check" style="color:${p.color}">✓</span>`:''}
-      </div>
+  const dc=doneCount();const pct=Math.round(dc/TOTAL*100);
+  document.getElementById('progLabel').textContent=`${dc}/${TOTAL}`;
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+  const pb=document.getElementById('progBarEl');if(pb)pb.setAttribute('aria-valuenow',pct);
+  const backEl=document.querySelector('.btn-back');if(backEl)backEl.textContent=T().backBtn;
+  document.getElementById('phaseTabs').innerHTML=PHASES.map((p,pi)=>{
+    const allD=p.steps.every((_,si)=>isDone(key(pi,si)));
+    const isA=pi===aPhase;
+    const barBg=allD?p.color:isA?p.color:'rgba(255,255,255,0.07)';
+    const barOp=allD?1:isA?1:0.35;
+    return `<div class="ptab" onclick="goPhase(${pi})" role="tab" aria-selected="${isA}">
+      <div class="ptab-bar" style="background:${barBg};opacity:${barOp}"></div>
+      <div class="ptab-num" style="color:${isA?p.color:'var(--text3)'}">${p.num}</div>
+      <div class="ptab-title" style="color:${isA?'var(--text1)':'var(--text3)'};font-weight:${isA?700:400}">${p.title}</div>
     </div>`;
   }).join('');
 }
 
 function renderSidebar(){
-  const phase = PHASES[activePhase];
-
-  // Step list
-  document.getElementById('stepList').innerHTML = phase.steps.map((s,si)=>{
-    const d = isDone(stepKey(activePhase, si));
-    const act = si === activeStep;
-    const color = phase.color;
-    return `<div class="step-item" onclick="goStep(${si})" style="
-      background:${act?color+'12':d?'rgba(255,255,255,0.02)':'transparent'};
-      border:1px solid ${act?color+'35':d?'rgba(255,255,255,0.06)':'transparent'};
-      border-left:3px solid ${d||act?color:'rgba(255,255,255,0.06)'};
-      opacity:${d&&!act?'0.7':'1'}">
-      <div class="step-icon-wrap" style="
-        background:${d?color:act?color+'20':'rgba(255,255,255,0.05)'};
-        color:${d?'#fff':act?color:'#475569'};
-        border-color:${d||act?color:'rgba(255,255,255,0.08)'};
-        font-size:${d?'11px':'13px'}">
-        ${d?'✓':s.icon}
+  const phase=PHASES[aPhase];
+  document.getElementById('stepList').innerHTML=phase.steps.map((s,si)=>{
+    const d=isDone(key(aPhase,si));const act=si===aStep;const c=phase.color;
+    return `<div class="step-item" onclick="goStep(${si})"
+      style="background:${act?c.replace('var(','rgba(').replace(')',',0.12)'):'transparent'};
+             border-left-color:${d||act?c:'rgba(255,255,255,.06)'};
+             opacity:${d&&!act?.65:1}">
+      <div class="si-ico" style="background:${d?c:act?c.replace('var(','rgba(').replace(')',',0.15)'):'var(--bg3)'};
+        color:${d?'#fff':act?c:'var(--text3)'};border-color:${d||act?c:'var(--border)'}">
+        ${d?'✓':s.ico}
       </div>
-      <div style="min-width:0">
-        <div class="step-label" style="color:${act?'#e2e8f0':d?'#94a3b8':'#64748b'};font-weight:${act?700:400}">${s.title}</div>
-        <div class="step-time">${s.time}</div>
+      <div>
+        <div class="si-title" style="color:${act?'var(--text1)':d?'var(--text2)':'var(--text3)'};font-weight:${act?600:400}">${s.title}</div>
+        <div class="si-time">${s.time}</div>
       </div>
     </div>`;
   }).join('');
-
-  // Phase switcher
-  document.getElementById('phaseSwitcher').innerHTML = PHASES.map((p,pi)=>{
-    const cnt = p.steps.filter((_,si)=>isDone(stepKey(pi,si))).length;
-    const isAct = pi === activePhase;
-    const fillW = Math.round(cnt/p.steps.length*100);
-    return `<div class="ps-phase" onclick="goPhase(${pi})" style="background:${isAct?p.color+'10':'transparent'}">
-      <span class="ps-picon">${p.icon}</span>
+  document.getElementById('phaseSw').innerHTML=PHASES.map((p,pi)=>{
+    const cnt=p.steps.filter((_,si)=>isDone(key(pi,si))).length;
+    const isA=pi===aPhase;const fw=Math.round(cnt/p.steps.length*100);
+    return `<div class="ps-ph" onclick="goPhase(${pi})" style="background:${isA?'rgba(255,255,255,.04)':'transparent'}">
+      <span style="font-size:13px">${p.ico}</span>
       <div class="ps-info">
-        <div class="ps-title" style="color:${isAct?'#e2e8f0':'#64748b'};font-weight:${isAct?700:400}">${p.title}</div>
-        <div class="ps-mini-bar"><div class="ps-mini-fill" style="width:${fillW}%;background:${p.color}"></div></div>
+        <div class="ps-title" style="color:${isA?'var(--text1)':'var(--text3)'};font-weight:${isA?600:400}">${p.title}</div>
+        <div class="ps-mini"><div class="ps-mf" style="width:${fw}%;background:${p.color}"></div></div>
       </div>
-      <span class="ps-cnt" style="color:${cnt===p.steps.length?p.color:'#334155'}">${cnt}/${p.steps.length}</span>
+      <span class="ps-cnt" style="color:${cnt===p.steps.length?p.color:'var(--text4)'}">${cnt}/${p.steps.length}</span>
+    </div>`;
+  }).join('');
+  const pslbl=document.querySelector('.ps-lbl');if(pslbl)pslbl.textContent=T().allPhases;
+}
+
+function renderMobileNav(){
+  document.getElementById('mbnInner').innerHTML=PHASES.map((p,pi)=>{
+    const isA=pi===aPhase;
+    return `<div class="mbn-phase" onclick="goPhase(${pi})">
+      <div class="mbn-ico">${p.ico}</div>
+      <div class="mbn-name" style="color:${isA?p.color:'var(--text3)'};font-weight:${isA?600:400}">${p.num}</div>
     </div>`;
   }).join('');
 }
 
-function renderStepContent(){
-  const dc = doneCount();
-  const allDone = dc === TOTAL_STEPS;
-  const comp = document.getElementById('completion');
-  const cont = document.getElementById('stepContent');
-
-  if(allDone){
-    comp.style.display = 'block';
-    cont.style.display = 'none';
-    return;
-  }
-  comp.style.display = 'none';
-  cont.style.display = 'block';
-
-  const phase = PHASES[activePhase];
-  const step  = phase.steps[activeStep];
-  const key   = stepKey(activePhase, activeStep);
-  const done_ = isDone(key);
-  const c = phase.color;
-  const dark = phase.dark || c;
-
-  const isFirst = activePhase===0 && activeStep===0;
-  const isLast  = activePhase===PHASES.length-1 && activeStep===phase.steps.length-1;
-  const nextStepInPhase = activeStep < phase.steps.length-1;
-  let nextLabel = '';
-  if(!isLast){
-    if(nextStepInPhase) nextLabel = `${phase.steps[activeStep+1].icon} ${phase.steps[activeStep+1].title}`;
-    else nextLabel = `${PHASES[activePhase+1].icon} ${PHASES[activePhase+1].title} — ${PHASES[activePhase+1].steps[0].title}`;
-  }
-
-  const btnLabel = isLast
-    ? '🎉 Complete Setup!'
-    : !nextStepInPhase
-      ? `✓ Done — ${PHASES[activePhase+1].title} →`
-      : '✓ Mark Done & Continue →';
-
-  const btnBg = done_
-    ? 'linear-gradient(135deg,#22c55e,#16a34a)'
-    : `linear-gradient(135deg,${c},${dark}cc)`;
-
-  cont.innerHTML = `
-    <div class="phase-header">
-      <div class="ph-ico" style="background:${c}15;border:1px solid ${c}35">${phase.icon}</div>
+function renderStep(){
+  const dc=doneCount();const comp=document.getElementById('completion');const cont=document.getElementById('stepContent');
+  if(dc===TOTAL){comp.style.display='block';cont.style.display='none';return;}
+  comp.style.display='none';cont.style.display='block';
+  const phase=PHASES[aPhase];const step=phase.steps[aStep];const k=key(aPhase,aStep);
+  const done_=isDone(k);const c=phase.color;
+  const isFirst=aPhase===0&&aStep===0;const isLast=aPhase===PHASES.length-1&&aStep===phase.steps.length-1;
+  const nextInP=aStep<phase.steps.length-1;
+  let nextLbl='';
+  if(!isLast){if(nextInP)nextLbl=`${phase.steps[aStep+1].ico} ${phase.steps[aStep+1].title}`;
+  else nextLbl=`${PHASES[aPhase+1].ico} ${PHASES[aPhase+1].title} — ${PHASES[aPhase+1].steps[0].title}`;}
+  const btnLbl=isLast?T().completedBtn:T().doneBtn;
+  const btnBg=done_?'#22c55e':c;
+  cont.innerHTML=`
+    <div class="ph-header">
+      <div class="ph-ico" style="border-color:${c}35">${phase.ico}</div>
       <div>
-        <div class="ph-num" style="color:${c}">${phase.num} · ${phase.subtitle.toUpperCase()}</div>
+        <div class="ph-num" style="color:${c}">${phase.num} · ${phase.sub.toUpperCase()}</div>
         <div class="ph-title">${phase.title}</div>
       </div>
-      <div class="ph-step-ctr">Step ${activeStep+1} of ${phase.steps.length}</div>
+      <div class="ph-ctr">${T().stepLabel} ${aStep+1}${T().of}${phase.steps.length}</div>
     </div>
-
-    <div class="step-card" style="background:rgba(255,255,255,0.02);border:1px solid ${done_?c+'35':'rgba(255,255,255,0.07)'};box-shadow:0 0 60px ${c}10">
-      <div class="step-card-topbar" style="background:${done_?c:`linear-gradient(90deg,${c},${c}40)`}"></div>
-
-      <div class="step-card-head">
+    <article class="step-card" style="border-color:${done_?c+'45':'var(--border)'}">
+      <div class="sc-bar" style="background:${done_?c:`linear-gradient(90deg,${c},${c}55)`}"></div>
+      <div class="sc-head">
         <div class="sch-left">
-          <div class="sch-icon" style="background:${c}15;border:1px solid ${c}30">${step.icon}</div>
+          <div class="sch-ico">${step.ico}</div>
           <div>
             <h2 class="sch-title">${step.title}</h2>
             <div class="sch-tags">
-              <span class="tag" style="background:${c}12;border:1px solid ${c}28;color:${c}">⏱ ${step.time}</span>
-              ${step.isWait?`<span class="tag" style="background:#f59e0b12;border:1px solid #f59e0b28;color:#f59e0b">⌛ Waiting</span>`:''}
-              ${step.isIPDetect?`<span class="tag" style="background:#34d39912;border:1px solid #34d39928;color:#34d399">🌐 IP Detect</span>`:''}
+              <span class="tag" style="background:${c}14;border:1px solid ${c}30;color:${c}">⏱ ${step.time}</span>
+              ${step.isWait?`<span class="tag" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fcd34d">${T().waitTag}</span>`:''}
+              ${step.isIPDetect?`<span class="tag" style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#34d399">${T().ipTag}</span>`:''}
             </div>
           </div>
         </div>
-        ${done_?`<div class="done-badge" style="background:linear-gradient(135deg,${c},${c}cc);box-shadow:0 0 16px ${c}50">✓</div>`:''}
+        ${done_?`<div class="done-badge" style="background:${c};color:#fff">✓</div>`:''}
       </div>
-
-      <div class="step-card-body">
-        <p class="step-content">${step.content}</p>
-
-        ${step.action?`<a href="${step.action.url}" target="_blank" rel="noreferrer" class="action-link" style="background:${c}12;border:1px solid ${c}35;color:${c}">🌐 Open ${step.action.label} ↗</a>`:''}
-
-        ${step.warn?`<div class="warn-box"><span style="flex-shrink:0">⚠️</span><span><strong>Important:</strong> ${step.warn}</span></div>`:''}
-        ${step.tip?`<div class="tip-box"><span style="flex-shrink:0">💡</span><span><strong>Pro tip:</strong> ${step.tip}</span></div>`:''}
-
-        ${step.isIPDetect ? renderIPDetector() : ''}
-
+      <div class="sc-body">
+        <p class="step-text">${step.text}</p>
+        ${step.action?`<a href="${step.action.url}" target="_blank" rel="noreferrer noopener" class="action-link" style="background:${c}12;border-color:${c}35;color:${c}">🌐 ${step.action.label} ${T().openAction}</a>`:''}
+        ${step.warn?`<div class="warn-box"><span style="flex-shrink:0">⚠️</span><span><strong>${T().important}</strong> ${step.warn}</span></div>`:''}
+        ${step.tip?`<div class="tip-box"><span style="flex-shrink:0">💡</span><span><strong>${T().proTip}</strong> ${step.tip}</span></div>`:''}
+        ${step.isIPDetect?buildIPDetector():''}
         ${step.isWait?`<div class="wait-box">
-          <div class="wait-title">⌛ While you wait — do these now:</div>
-          ${['Install Google Authenticator on your phone (Play Store / App Store)',
-             'Download the broker app',
-             'Watch for Client Code SMS — save it immediately',
-             'Prepare your API portal email & password idea']
-            .map(i=>`<div class="wait-item"><span class="wait-arrow">→</span>${i}</div>`).join('')}
+          <div class="wait-title">${T().waitTitle}</div>
+          ${T().waitItems.map(i=>`<div class="wait-item"><span class="wt-arr">→</span>${i}</div>`).join('')}
         </div>`:''}
-
         <div class="step-actions">
-          ${!isFirst?`<button class="btn-prev-step" onclick="goBack()">← Back</button>`:''}
-          <button class="btn-mark-done" onclick="markDone()" style="background:${btnBg};box-shadow:0 4px 24px ${c}40">${btnLabel}</button>
+          ${!isFirst?`<button class="btn-prev" onclick="goBack()">${T().prevBtn}</button>`:''}
+          <button class="btn-done" onclick="markDone()" style="background:${btnBg}">${btnLbl}</button>
         </div>
       </div>
-    </div>
-
-    ${!isLast?`<div class="next-preview"><span class="np-label">NEXT</span><span class="np-text">${nextLabel}</span></div>`:''}
+    </article>
+    ${!isLast?`<div class="next-prev"><span class="np-lbl">${T().nextLabel}</span><span class="np-txt">${nextLbl}</span></div>`:''}
   `;
-
-  // Re-init IP detector if needed
-  if(step.isIPDetect) initIPDetector();
+  if(step.isIPDetect)ipRunning=false;
 }
 
-function renderCompletion(){
-  const dc = doneCount();
-  const allDone = dc === TOTAL_STEPS;
-  if(allDone){
-    document.getElementById('completion').style.display = 'block';
-    document.getElementById('stepContent').style.display = 'none';
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// IP DETECTOR
-// ═══════════════════════════════════════════════════════
-function renderIPDetector(){
+/* ═══ IP DETECTOR ═══ */
+function buildIPDetector(){
+  const t=T();
   return `<div class="ip-widget" id="ipWidget">
     <div class="ip-head">
       <div class="ip-head-left">
-        <div class="ip-head-icon">🌐</div>
-        <div>
-          <div class="ip-head-title">Live IP Detection Engine</div>
-          <div class="ip-head-sub">5 sources · Consensus · Auto-verified</div>
-        </div>
+        <div class="ip-head-ico">🌐</div>
+        <div><div class="ip-head-title">${t.ipTitle}</div><div class="ip-head-sub">${t.ipSub}</div></div>
       </div>
-      <div class="ip-head-right">
-        <div class="ip-current" id="ipCurrentDisplay"></div>
-        <button class="btn-detect idle" id="btnDetect" onclick="runDetect()">🔍 Detect My IP</button>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="ip-badge" id="ipBadge"></div>
+        <button class="btn-detect idle" id="btnDetect" onclick="runDetect()">${t.detectBtn}</button>
       </div>
     </div>
     <div class="ip-body" id="ipBody">
-      <div id="ipIdle">
-        <div class="ip-sources-list">
-          <span style="font-size:12px;color:#64748b">Sources queried simultaneously:</span>
-          ${IP_SOURCES.map(s=>`<span class="ip-src-chip" style="background:${s.color}15;border:1px solid ${s.color}30;color:${s.color}">${s.name}</span>`).join('')}
-        </div>
-      </div>
+      <div id="ipIdle"><div class="src-chips"><span style="font-size:11px;color:var(--text3)">${t.ipSources}</span>${IP_SOURCES.map(s=>`<span class="src-chip">${s.name}</span>`).join('')}</div></div>
       <div id="ipRunning" style="display:none">
-        <div class="ip-running">
-          <div class="prog-row"><span class="prog-msg" id="ipPhaseMsg">Starting…</span><span class="prog-pct2" id="ipPct">0%</span></div>
-          <div class="ip-bar-wrap"><div class="ip-bar-fill" id="ipBar" style="width:0%"></div></div>
-        </div>
-        <div class="ip-src-grid" id="ipSrcGrid">
-          ${IP_SOURCES.map(s=>`<div class="ip-src-card" id="ipSrc_${s.name}" style="background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.06)">
-            <div class="ip-src-name">${s.name}</div>
-            <div class="ip-src-val" style="color:#334155">…</div>
-          </div>`).join('')}
-        </div>
+        <div class="ip-prog-row"><span class="ip-prog-msg" id="ipMsg">Starting…</span><span class="ip-prog-pct" id="ipPct">0%</span></div>
+        <div class="ip-bar-wrap"><div class="ip-bar-fill" id="ipBar" style="width:0%"></div></div>
+        <div class="src-grid" id="srcGrid">${IP_SOURCES.map(s=>`<div class="src-card" id="iSrc_${s.name}"><div class="src-name">${s.name}</div><div class="src-val">…</div></div>`).join('')}</div>
       </div>
       <div id="ipResult" style="display:none">
-        <div class="ip-result-main">
-          <div class="ip-result-addr" id="ipAddr"></div>
-          <div class="ip-result-tags" id="ipTags"></div>
-        </div>
-        <div class="ip-result-meta" id="ipMeta"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-copy" onclick="copyIP()" id="btnCopy">📋 Copy IP</button>
-          <button class="expand-btn" onclick="toggleBreakdown()" id="expandBtn"></button>
-        </div>
-        <div class="dynamic-warn" id="dynamicWarn">⚡ <strong>Dynamic IP detected.</strong> Your ISP may change this after router restart. Re-run detector if API stops working. Ask ISP for static IP (₹200–500/month) for a permanent fix.</div>
-        <div class="src-breakdown" id="srcBreakdown"></div>
-        <div class="ip-next-note">📋 <strong>Next:</strong> Copy IP → SmartAPI portal → <em>+ADD APP</em> → App name: OptionLab → Paste IP in "Primary Static IP" → Save → Copy the API Key shown</div>
+        <div class="ip-addr" id="ipAddr"></div>
+        <div class="ip-result-tags" id="ipTags"></div>
+        <div class="ip-meta" id="ipMeta"></div>
+        <button class="btn-copy" onclick="copyIP()" id="btnCopy">${t.copyBtn}</button>
+        <div class="dyn-warn" id="dynWarn">${t.dynWarn}</div>
+        <div class="ip-next-note">${t.ipNext}</div>
       </div>
       <div id="ipError" style="display:none">
-        <div class="ip-error" id="ipErrMsg"></div>
-        <div class="ip-fallback">Manual fallback: Open browser → <a href="https://api.ipify.org" target="_blank" style="color:#fb923c">api.ipify.org</a> → Copy the number → Paste in SmartAPI portal</div>
+        <div class="ip-err-msg" id="ipErrMsg"></div>
+        <div class="ip-fallback">${t.ipFallback}</div>
       </div>
     </div>
-  </div>
-  <div class="ip-confirmed" id="ipConfirmedBox"></div>`;
-}
-
-const IP_SOURCES = [
-  { name:"ipify",  url:"https://api.ipify.org?format=json",  parse:d=>d.ip,  color:"#6366f1" },
-  { name:"ipapi",  url:"https://ipapi.co/json/",             parse:d=>d.ip,  color:"#8b5cf6" },
-  { name:"ipinfo", url:"https://ipinfo.io/json",             parse:d=>d.ip,  color:"#f59e0b" },
-  { name:"myip",   url:"https://api.myip.com",               parse:d=>d.ip,  color:"#10b981" },
-  { name:"seeip",  url:"https://api.seeip.org/jsonip",       parse:d=>d.ip,  color:"#f97316" },
-];
-
-const PRIVATE = [/^10\./,/^192\.168\./,/^172\.(1[6-9]|2\d|3[01])\./,/^127\./,/^169\.254\./];
-function isPublicIP(ip){
-  if(!ip||typeof ip!=='string')return false;
-  const p=ip.trim().split('.');
-  return p.length===4&&p.every(x=>/^\d+$/.test(x)&&+x>=0&&+x<=255)&&!PRIVATE.some(r=>r.test(ip));
-}
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-
-let ipDetectRunning=false;
-let ipBreakdownOpen=false;
-let ipBreakdownData={results:[],errors:[]};
-
-function initIPDetector(){
-  ipDetectRunning=false;
-  ipBreakdownOpen=false;
+  </div>`;
 }
 
 async function runDetect(){
-  if(ipDetectRunning)return;
-  ipDetectRunning=true;
-
-  const btn=document.getElementById('btnDetect');
-  if(!btn)return;
-  btn.disabled=true;
-
-  // Show running
-  document.getElementById('ipIdle').style.display='none';
-  document.getElementById('ipResult').style.display='none';
-  document.getElementById('ipError').style.display='none';
-  document.getElementById('ipRunning').style.display='block';
-
-  const setProgress=(pct,msg)=>{
-    const b=document.getElementById('ipBar');
-    const p=document.getElementById('ipPct');
-    const m=document.getElementById('ipPhaseMsg');
-    if(b)b.style.width=pct+'%';
-    if(p)p.textContent=pct+'%';
-    if(m)m.textContent=msg;
-  };
-
-  const updateSrc=(name,ok,val)=>{
-    const el=document.getElementById('ipSrc_'+name);
-    if(!el)return;
-    const s=IP_SOURCES.find(x=>x.name===name);
-    const c=ok?'rgba(34,197,94,0.1)':'rgba(239,68,68,0.07)';
-    const bc=ok?'rgba(34,197,94,0.25)':'rgba(239,68,68,0.18)';
-    el.style.background=c;el.style.borderColor=bc;
-    el.querySelector('.ip-src-val').style.color=ok?'#22c55e':'#ef4444';
-    el.querySelector('.ip-src-val').textContent=ok?val.slice(0,13):'failed';
-  };
-
-  setProgress(5,'Initializing multi-source query…');
+  if(ipRunning)return;ipRunning=true;
+  const btn=document.getElementById('btnDetect');if(!btn)return;btn.disabled=true;
+  const t=T();
+  const show=id=>{['ipIdle','ipRunning','ipResult','ipError'].forEach(x=>{const el=document.getElementById(x);if(el)el.style.display=x===id?'block':'none';});};
+  const setProg=(pct,msg)=>{const b=document.getElementById('ipBar');const p=document.getElementById('ipPct');const m=document.getElementById('ipMsg');if(b)b.style.width=pct+'%';if(p)p.textContent=pct+'%';if(m)m.textContent=msg;};
+  const setSrc=(name,ok,val)=>{const el=document.getElementById('iSrc_'+name);if(!el)return;el.style.background=ok?'rgba(52,211,153,.1)':'rgba(239,68,68,.07)';el.style.borderColor=ok?'rgba(52,211,153,.3)':'rgba(239,68,68,.2)';el.querySelector('.src-val').style.color=ok?'#22c55e':'#ef4444';el.querySelector('.src-val').textContent=ok?val.slice(0,13):'fail';};
+  show('ipRunning');setProg(5,t.ipProgStart);
   const results=[],errors=[];
-
-  const settled=await Promise.allSettled(IP_SOURCES.map(async (src,i)=>{
-    const t0=Date.now();
-    const ctrl=new AbortController();
-    const t=setTimeout(()=>ctrl.abort(),5000);
-    try{
-      const r=await fetch(src.url,{signal:ctrl.signal});
-      clearTimeout(t);
-      const d=await r.json();
-      const ip=src.parse(d);
-      return {src,ip,ms:Date.now()-t0};
-    }catch(e){clearTimeout(t);throw e;}
+  const settled=await Promise.allSettled(IP_SOURCES.map(async src=>{
+    const ctrl=new AbortController();const tm=setTimeout(()=>ctrl.abort(),5500);
+    try{const r=await fetch(src.url,{signal:ctrl.signal});clearTimeout(tm);const d=await r.json();const ip=src.parse(d);return{src,ip};}
+    catch(e){clearTimeout(tm);throw e;}
   }));
-
   settled.forEach((s,i)=>{
-    const src=IP_SOURCES[i];
-    const pct=15+i*12;
-    setProgress(pct,`Querying ${src.name}…`);
-    if(s.status==='fulfilled'){
-      const {ip,ms}=s.value;
-      if(isPublicIP(ip)){results.push({...src,ip,ms,ok:true});updateSrc(src.name,true,ip);}
-      else{errors.push({...src,error:`Bad IP: ${ip}`});updateSrc(src.name,false,'bad');}
-    }else{
-      const msg=s.reason?.name==='AbortError'?'timeout':(s.reason?.message||'failed');
-      errors.push({...src,error:msg});updateSrc(src.name,false,msg);
-    }
+    const src=IP_SOURCES[i];setProg(15+i*13,`${src.name} ${t.ipProgChecking}`);
+    if(s.status==='fulfilled'&&isPublicIP(s.value.ip)){results.push({...src,ip:s.value.ip,ok:true});setSrc(src.name,true,s.value.ip);}
+    else{const msg=s.reason?.name==='AbortError'?'timeout':(s.reason?.message||'failed');errors.push({...src,error:msg});setSrc(src.name,false,'');}
   });
-
-  if(!results.length){
-    document.getElementById('ipRunning').style.display='none';
-    const err=document.getElementById('ipErrMsg');
-    const fb=document.querySelector('.ip-fallback');
-    if(err){err.textContent='❌ All sources failed. Check internet connection.';err.style.display='block';}
-    if(fb)fb.style.display='block';
-    document.getElementById('ipError').style.display='block';
-    if(btn){btn.disabled=false;btn.textContent='🔄 Retry';}
-    ipDetectRunning=false;
-    return;
-  }
-
-  setProgress(78,'Running consensus algorithm…');await sleep(400);
-  const freq={};results.forEach(r=>(freq[r.ip]=(freq[r.ip]||0)+1));
-  const [bestIP,bestCount]=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
+  if(!results.length){show('ipError');const em=document.getElementById('ipErrMsg');if(em)em.textContent=t.ipErrAll;btn.disabled=false;btn.textContent=t.retryBtn;ipRunning=false;return;}
+  setProg(82,t.ipProgConsensus);await sleep(350);
+  const freq={};results.forEach(r=>freq[r.ip]=(freq[r.ip]||0)+1);
+  const[bestIP,bestCount]=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
   const confidence=Math.round(bestCount/IP_SOURCES.length*100);
-
-  setProgress(88,'Double-verifying result…');await sleep(300);
-  let verified=false;
-  try{
-    const fastest=[...results].sort((a,b)=>a.ms-b.ms)[0];
-    const r2=await fetch(fastest.url,{signal:AbortSignal.timeout(4000)});
-    verified=fastest.parse(await r2.json())===bestIP;
-  }catch{verified=bestCount>=3;}
-
-  setProgress(94,'Fetching ISP metadata…');
+  setProg(91,t.ipProgMeta);
   let geo=null;
-  try{
-    const gr=await fetch(`https://ipapi.co/${bestIP}/json/`,{signal:AbortSignal.timeout(5000)});
-    const gd=await gr.json();
-    geo={isp:gd.org||'',city:gd.city||'',region:gd.region||'',isDynamic:!(gd.org||'').toLowerCase().includes('static')};
-  }catch{}
-
-  setProgress(100,'Complete!');
-  await sleep(200);
-
-  // Store for breakdown
-  ipBreakdownData={results,errors,bestIP};
-  detectedIP=bestIP;
-
-  // Update display badge
-  const cd=document.getElementById('ipCurrentDisplay');
-  if(cd){cd.textContent=bestIP;cd.style.display='block';}
-
-  // Show result
-  document.getElementById('ipRunning').style.display='none';
-  document.getElementById('ipResult').style.display='block';
+  try{const gr=await fetch(`https://ipapi.co/${bestIP}/json/`,{signal:AbortSignal.timeout(4500)});const gd=await gr.json();geo={isp:gd.org||'',city:gd.city||'',region:gd.region||'',isDynamic:!(gd.org||'').toLowerCase().includes('static')};}catch{}
+  setProg(100,t.ipProgDone);await sleep(180);
+  detIP=bestIP;
+  const ib=document.getElementById('ipBadge');if(ib){ib.textContent=bestIP;ib.style.display='block';}
+  show('ipResult');
   document.getElementById('ipAddr').textContent=bestIP;
-
   const tags=document.getElementById('ipTags');
-  if(tags){
-    const chips=[
-      {c:'#34d399',t:`✓ Verified`},
-      {c:'#818cf8',t:`${confidence}% confidence`},
-      {c:'#34d399',t:`🔄 ${bestCount}/${IP_SOURCES.length}`},
-    ];
-    if(geo?.isDynamic)chips.push({c:'#f59e0b',t:'⚡ Dynamic'});
-    tags.innerHTML=chips.map(x=>`<span class="tag" style="background:${x.c}12;border:1px solid ${x.c}28;color:${x.c}">${x.t}</span>`).join('');
-  }
-
-  const meta=document.getElementById('ipMeta');
-  if(meta&&geo)meta.textContent=`${geo.isp}${geo.city?' · '+geo.city:''}${geo.region?' · '+geo.region:''}`;
-
-  if(geo?.isDynamic){
-    const dw=document.getElementById('dynamicWarn');
-    if(dw)dw.style.display='block';
-  }
-
-  // Breakdown toggle label
-  const eb=document.getElementById('expandBtn');
-  if(eb)eb.textContent=`▼ Show source breakdown (${results.length} ok, ${errors.length} failed)`;
-
-  // IP confirmed box
-  const cb=document.getElementById('ipConfirmedBox');
-  if(cb){
-    cb.innerHTML=`✅ IP confirmed: <strong style="font-family:monospace;color:#fb923c;font-size:15px">${bestIP}</strong> — paste this as "Primary Static IP" when creating your SmartAPI app.`;
-    cb.style.display='block';
-  }
-
-  if(btn){btn.className='btn-detect done';btn.disabled=false;btn.textContent='🔄 Re-detect';}
-  ipDetectRunning=false;
+  if(tags)tags.innerHTML=[{c:'#34d399',t:'✓ Verified'},{c:'#818cf8',t:`${confidence}% confidence`},{c:'#34d399',t:`${bestCount}/${IP_SOURCES.length} sources agree`},...(geo?.isDynamic?[{c:'#f59e0b',t:'⚡ Dynamic IP'}]:[])].map(x=>`<span class="tag" style="background:${x.c}14;border:1px solid ${x.c}30;color:${x.c}">${x.t}</span>`).join('');
+  const meta=document.getElementById('ipMeta');if(meta&&geo)meta.textContent=[geo.isp,geo.city,geo.region].filter(Boolean).join(' · ');
+  if(geo?.isDynamic){const dw=document.getElementById('dynWarn');if(dw)dw.style.display='block';}
+  btn.className='btn-detect done';btn.disabled=false;btn.textContent=t.redetectBtn;ipRunning=false;
 }
 
 function copyIP(){
-  if(!detectedIP)return;
-  navigator.clipboard.writeText(detectedIP).then(()=>{
-    const b=document.getElementById('btnCopy');
-    if(b){b.textContent='✅ Copied!';setTimeout(()=>{if(b)b.textContent='📋 Copy IP';},2500);}
-  }).catch(()=>{
-    // fallback
-    const ta=document.createElement('textarea');ta.value=detectedIP;
-    document.body.appendChild(ta);ta.select();document.execCommand('copy');
-    document.body.removeChild(ta);
-    const b=document.getElementById('btnCopy');
-    if(b){b.textContent='✅ Copied!';setTimeout(()=>{if(b)b.textContent='📋 Copy IP';},2500);}
-  });
+  if(!detIP)return;
+  const fallback=()=>{const ta=document.createElement('textarea');ta.value=detIP;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);};
+  const onSuccess=()=>{const b=document.getElementById('btnCopy');if(b){b.textContent=T().copiedBtn;setTimeout(()=>{if(b)b.textContent=T().copyBtn;},2500);}};
+  if(navigator.clipboard){navigator.clipboard.writeText(detIP).then(onSuccess).catch(()=>{fallback();onSuccess();});}else{fallback();onSuccess();}
 }
 
-function toggleBreakdown(){
-  const bd=document.getElementById('srcBreakdown');
-  const eb=document.getElementById('expandBtn');
-  if(!bd||!eb)return;
-  ipBreakdownOpen=!ipBreakdownOpen;
-  if(ipBreakdownOpen){
-    const {results,errors,bestIP}=ipBreakdownData;
-    bd.innerHTML=[
-      ...results.map(r=>`<div class="src-row">
-        <span style="color:#22c55e;width:12px">✓</span>
-        <span style="width:60px;color:${r.color};font-weight:600">${r.name}</span>
-        <span style="font-family:'JetBrains Mono',monospace;color:${r.ip===bestIP?'#fb923c':'#94a3b8'};font-weight:${r.ip===bestIP?700:400}">${r.ip}</span>
-        ${r.ip===bestIP?'<span style="font-size:10px;color:#fb923c;background:rgba(249,115,22,0.1);padding:1px 7px;border-radius:50px">consensus</span>':''}
-        <span style="margin-left:auto;color:#334155;font-size:10px">${r.ms}ms</span>
-      </div>`),
-      ...errors.map(e=>`<div class="src-row">
-        <span style="color:#ef4444;width:12px">✗</span>
-        <span style="width:60px;color:#475569">${e.name}</span>
-        <span style="color:#334155">${e.error}</span>
-      </div>`)
-    ].join('');
-    bd.style.display='flex';
-    eb.textContent='▲ Hide source breakdown';
-  }else{
-    bd.style.display='none';
-    eb.textContent=`▼ Show source breakdown (${ipBreakdownData.results.length} ok, ${ipBreakdownData.errors.length} failed)`;
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
+/* ═══ BOOT ═══ */
 initLanding();
-
-/* === LANGUAGE SWITCH === */
-let LANG = 'hi';
-
-const UI_TEXT = {
-  hi: {
-    landBadge:"OPTIONLAB SETUP GUIDE",
-    landH1:'Zero se <span class="accent">Live</span><br>Trading Data',
-    landSub:"Fyers broker account kholna, API setup karna, aur OptionLab se connect karna — sab kuch step-by-step, sirf 30 minute mein.",
-    reqToggle:"▼ Shuru karne se pehle kya chahiye?",
-    reqToggleOpen:"▲ Shuru karne se pehle kya chahiye?",
-    beginBtn:"Setup Shuru Karo →",
-    beginHint:"~30 min · Bilkul Free · Koi card nahi",
-    backBtn:"← Wapas",
-    allPhases:"SAARI PHASES",
-    waitTitle:"⌛ Intezaar ke dauran ye karo:",
-    waitItems:["Google Authenticator ya Authy install karo phone pe","Fyers app download karo Play Store / App Store se","Client ID SMS ka wait karo — turant save kar lena","API portal ke liye ek alag email + password soch lo"],
-    compTitle:"Ho Gaya!",
-    compSub:"Tera Fyers account OptionLab se connect ho gaya. Ab live options data, analytics, aur signals sab available hain!",
-    compBtn:"🚀 OptionLab Dashboard Kholna Hai",
-    doneBtn:"✓ Done — Aage Bado →",
-    completedBtn:"🎉 Setup Complete!",
-    prevBtn:"← Pichhe",
-    nextLabel:"AAGE",
-    waitTag:"⌛ Intezaar",
-    ipTag:"🌐 IP Detect",
-    stepLabel:"Step",of:"/",
-    detectBtn:"🔍 IP Dhundho",redetectBtn:"🔄 Dobara Detect Karo",retryBtn:"🔄 Dobara Try Karo",
-    copyBtn:"📋 IP Copy Karo",copiedBtn:"✅ Copy ho gaya!",
-    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
-    ipProgStart:"Sab sources ko query kar raha hoon…",ipProgChecking:"se check kar raha hoon…",
-    ipProgConsensus:"Consensus calculate kar raha hoon…",ipProgMeta:"ISP metadata fetch kar raha hoon…",ipProgDone:"Ho gaya!",
-    ipErrAll:"❌ Sab sources fail ho gaye. Internet connection check karo.",
-    dynWarn:"⚡ <strong>Dynamic IP mil gayi.</strong> ISP restart ke baad badal sakti hai. Re-detect karo agar API band ho.",
-    ipNext:"📋 <strong>Aage:</strong> IP copy karo → Fyers API Portal → Create App → Allowed IPs mein paste karo → Save → API Key copy karo.",
-    ipFallback:'Manual: Browser mein jao → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → copy karo → Fyers portal mein paste karo.',
-    openAction:"kholna hai ↗",important:"Important:",proTip:"Pro tip:"
-  },
-  en: {
-    landBadge:"OPTIONLAB SETUP GUIDE",
-    landH1:'Zero to <span class="accent">Live</span><br>Trading Data',
-    landSub:"Open a Fyers broker account, set up the API, and connect to OptionLab — step by step, in just 30 minutes.",
-    reqToggle:"▼ What do you need before starting?",
-    reqToggleOpen:"▲ What do you need before starting?",
-    beginBtn:"Start Setup →",
-    beginHint:"~30 min · Completely Free · No card required",
-    backBtn:"← Back",
-    allPhases:"ALL PHASES",
-    waitTitle:"⌛ While you wait:",
-    waitItems:["Install Google Authenticator or Authy on your phone","Download the Fyers app from Play Store / App Store","Wait for the Client ID SMS — save it immediately","Think of a separate email + password for the API portal"],
-    compTitle:"All Done!",
-    compSub:"Your Fyers account is now connected to OptionLab. Live options data, analytics, and signals are all available!",
-    compBtn:"🚀 Open OptionLab Dashboard",
-    doneBtn:"✓ Done — Continue →",
-    completedBtn:"🎉 Setup Complete!",
-    prevBtn:"← Back",
-    nextLabel:"NEXT",
-    waitTag:"⌛ Waiting",
-    ipTag:"🌐 IP Detect",
-    stepLabel:"Step",of:"/",
-    detectBtn:"🔍 Detect My IP",redetectBtn:"🔄 Re-detect",retryBtn:"🔄 Try Again",
-    copyBtn:"📋 Copy IP",copiedBtn:"✅ Copied!",
-    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
-    ipProgStart:"Querying all sources…",ipProgChecking:"checking…",
-    ipProgConsensus:"Calculating consensus…",ipProgMeta:"Fetching ISP metadata…",ipProgDone:"Done!",
-    ipErrAll:"❌ All sources failed. Please check your internet connection.",
-    dynWarn:"⚡ <strong>Dynamic IP detected.</strong> It may change after an ISP restart. Re-detect if the API stops working.",
-    ipNext:"📋 <strong>Next:</strong> Copy IP → Fyers API Portal → Create App → Paste in Allowed IPs → Save → Copy API Key.",
-    ipFallback:'Manual: Open browser → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → Copy the number → Paste in Fyers portal.',
-    openAction:"Open ↗",important:"Important:",proTip:"Pro tip:"
-  }
-};
-
-const PHASES_EN = [
-  {id:"account",num:"01",title:"Open Account",sub:"Trading foundation",time:"15 min",ico:"🏦",color:"var(--indigo)",steps:[
-    {id:"visit",title:"Visit Fyers Website",time:"1 min",ico:"🌐",text:"Go to fyers.in and click <strong>Open Free Account</strong>. Fyers is SEBI-registered and supports NSE/BSE/MCX — zero brokerage on equity delivery.",action:{label:"fyers.in",url:"https://fyers.in"},tip:"Use a desktop browser — Chrome or Edge works best."},
-    {id:"mobile",title:"Verify Mobile Number",time:"1 min",ico:"📱",text:"Enter your <strong>Aadhaar-linked mobile number</strong>. You will receive an OTP for verification.",warn:"Use the same number linked to your Aadhaar — the OTP will only come there."},
-    {id:"pan",title:"Verify PAN Card",time:"2 min",ico:"🪪",text:"Enter your PAN number. Fyers <strong>instantly verifies with NSDL</strong> and auto-fills your name and date of birth.",tip:"PAN must be active and KYC-compliant."},
-    {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",ico:"✅",text:"Enter your Aadhaar number — an OTP is sent to your linked mobile for <strong>instant identity verification</strong>. No physical document upload needed.",warn:"If the Aadhaar OTP fails, document-based KYC will be required — adding 2–3 working days."},
-    {id:"bank",title:"Link Bank Account",time:"2 min",ico:"🏦",text:"Enter your savings account number and IFSC code. Fyers does a <strong>penny-drop</strong> to confirm ownership.",tip:"Use your primary savings account. Joint accounts may slow down verification."},
-    {id:"ipv",title:"Video KYC (IPV)",time:"2 min",ico:"📷",text:"In a live video, <strong>show your PAN card to the camera</strong> and say a few words. Fully online, under 2 minutes.",tip:"Good lighting + plain background = instant pass."},
-    {id:"wait",title:"Account Activation",time:"1–4 hours",ico:"⏳",text:"Submitted! On working days, most accounts are <strong>activated within 1–4 hours</strong>. Your Client ID will arrive via SMS — something like FY12345.",warn:"If submitted on a weekend or holiday, activation carries over to the next working day.",isWait:true}
-  ]},
-  {id:"mpin",num:"02",title:"Set MPIN",sub:"Secure trading PIN",time:"3 min",ico:"🔐",color:"var(--amber)",steps:[
-    {id:"app",title:"Download Fyers App",time:"2 min",ico:"📲",text:"Download the Fyers app from the <strong>Play Store or App Store</strong>. Log in with your Client ID and registered mobile.",action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.fyers.android"},tip:"Prefer desktop? Use trade.fyers.in instead."},
-    {id:"setmpin",title:"Create Your MPIN",time:"1 min",ico:"🔑",text:"On first login, you will be prompted to create a <strong>4-digit MPIN</strong> — this authorizes every API connection and trade.",warn:"NEVER use the same password for OptionLab and your MPIN. Always keep them separate.",tip:"Avoid obvious PINs: 1234, 0000, or your birth year."}
-  ]},
-  {id:"api",num:"03",title:"API App Setup",sub:"Developer access unlock",time:"5 min",ico:"⚙️",color:"var(--green)",steps:[
-    {id:"portal",title:"Register on API Portal",time:"2 min",ico:"🔒",text:"Go to <strong>myapi.fyers.in</strong> and register with your email. This is the developer portal — completely separate from your trading account.",action:{label:"myapi.fyers.in",url:"https://myapi.fyers.in"},warn:"Use a COMPLETELY DIFFERENT password here — never reuse your trading credentials."},
-    {id:"totp",title:"Enable TOTP",time:"2 min",ico:"🔐",text:"In the Fyers API portal, go to <strong>Security settings</strong> and enable TOTP. Scan the QR code with Google Authenticator.",warn:"The 32-character Secret Key is shown ONLY ONCE — copy and store it in a safe place right now!",tip:"Install Google Authenticator or Authy on your phone before this step."},
-    {id:"ipdetect",title:"Detect IP & Create App",time:"2 min",ico:"🌐",text:"Use the IP detector below to find your exact <strong>public IP</strong>, then create a new app in the Fyers API portal and whitelist your IP.",tip:"After creating the app, your API Key and Secret will be generated instantly.",isIPDetect:true}
-  ]},
-  {id:"connect",num:"04",title:"Connect OptionLab",sub:"Go live in 2 minutes",time:"2 min",ico:"🚀",color:"var(--saffron)",steps:[
-    {id:"open",title:"Open OptionLab Setup",time:"30 sec",ico:"💻",text:"In the OptionLab app, go to <strong>Settings → Broker Setup</strong>. Select Fyers. Your IP will be auto-detected.",tip:"One-time setup per device — future logins will be fully automatic."},
-    {id:"creds",title:"Enter Credentials",time:"1 min",ico:"🗝️",text:"Enter your Client ID, MPIN, TOTP 32-char Secret Key, and API Key. <strong>Everything stays only on your device</strong> — OptionLab servers never see it.",warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP."},
-    {id:"test",title:"Test & Go Live",time:"30 sec",ico:"⚡",text:"Click <strong>Test Connection</strong>. OptionLab will authenticate with the Fyers API. Nifty 50 data will begin streaming within seconds.",tip:"If it fails, recheck your IP registration or TOTP secret. Need help? support@optionlab.in"}
-  ]}
-];
-
-const REQS_EN = [
-  {ico:"📋",label:"PAN Card",desc:"Active & KYC-verified",color:"#818cf8"},
-  {ico:"🪪",label:"Aadhaar Card",desc:"Must have linked mobile",color:"#34d399"},
-  {ico:"🏦",label:"Bank Account",desc:"Savings + IFSC ready",color:"#f59e0b"},
-  {ico:"📱",label:"Mobile Number",desc:"Aadhaar-linked SIM",color:"#ec4899"},
-  {ico:"💻",label:"Windows/Mac",desc:"For the OptionLab app",color:"#60a5fa"},
-  {ico:"📷",label:"Webcam",desc:"For Video KYC",color:"#fb923c"}
-];
-
-function T(){ return UI_TEXT[LANG]; }
-
-function setLang(lang){
-  LANG = lang;
-  document.getElementById('htmlRoot').setAttribute('lang', lang);
-  document.getElementById('btnEN').classList.toggle('active', lang==='en');
-  document.getElementById('btnHI').classList.toggle('active', lang==='hi');
-  if(lang==='en'){ PHASES.length=0; PHASES_EN.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_EN.forEach(r=>REQUIREMENTS.push(r)); }
-  else { PHASES.length=0; PHASES_HI.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_HI.forEach(r=>REQUIREMENTS.push(r)); }
-  updateStaticText();
-  initLanding();
-  const guide=document.getElementById('guide');
-  if(guide && guide.classList.contains('show')) renderAll();
-}
-
-function updateStaticText(){
-  const t=T();
-  const badge=document.querySelector('.land-badge'); if(badge) badge.textContent=t.landBadge;
-  const h1=document.querySelector('.land-h1'); if(h1) h1.innerHTML=t.landH1;
-  const sub=document.querySelector('.land-sub'); if(sub) sub.textContent=t.landSub;
-  const reqBtn=document.getElementById('reqToggleBtn'); if(reqBtn) reqBtn.textContent=reqOpen?t.reqToggleOpen:t.reqToggle;
-  const beginBtn=document.querySelector('.btn-begin'); if(beginBtn) beginBtn.textContent=t.beginBtn;
-  const hint=document.querySelector('.begin-hint'); if(hint) hint.textContent=t.beginHint;
-  const compTitle=document.querySelector('.comp-title'); if(compTitle) compTitle.textContent=t.compTitle;
-  const compSub=document.querySelector('.comp-sub'); if(compSub) compSub.textContent=t.compSub;
-  const compBtn=document.querySelector('.btn-dash'); if(compBtn) compBtn.textContent=t.compBtn;
-  const backBtn=document.querySelector('.btn-back'); if(backBtn) backBtn.textContent=t.backBtn;
-  const pslbl=document.querySelector('.ps-lbl'); if(pslbl) pslbl.textContent=t.allPhases;
-}
+updateLandingText();
 </script>
-
-</main><!-- /main role=main -->
-
-<!-- ═══ SEO: CRAWLABLE INTERNAL LINKS ═══ -->
-<nav aria-label="Site navigation" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">
-  <a href="https://optionlab.in" title="OptionLab — NSE Options Analytics Platform Home">OptionLab Home</a>
-  <a href="https://optionlab.in/register.html" title="Login or Register to OptionLab">Login / Register</a>
-  <a href="https://optionlab.in/setup.html" title="Angel One SmartAPI Broker Setup Guide">Broker Setup Guide</a>
-</nav>
-<link rel="prefetch" href="index.html" as="document">
-<link rel="prefetch" href="register.html" as="document">
 </body>
 </html>
