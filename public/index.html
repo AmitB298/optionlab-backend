@@ -1485,6 +1485,7 @@ buildTicker();
       }
       // Detect new registration — register.html sets ?new=1 on redirect
       var urlParams = new URLSearchParams(window.location.search);
+      var pageParam = urlParams.get('page'); if(pageParam) { setTimeout(function(){ showPage(pageParam); }, 300); }
       if(urlParams.get('new') === '1') {
         // Remove param from URL cleanly
         try { window.history.replaceState({}, '', window.location.pathname); } catch(e2){}
