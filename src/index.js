@@ -108,6 +108,7 @@ app.get('/admin',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','a
 app.get('/app',     (req,res)=>res.sendFile(path.join(__dirname,'..','public','app.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
 app.get('/profile', (req,res)=>res.sendFile(path.join(__dirname,'..','public','profile.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
 app.get('/verify',  (req,res)=>res.sendFile(path.join(__dirname,'..','public','verify.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
+app.get('/payment-status',(req,res)=>res.sendFile(require('path').join(__dirname,'..','public','payment-status.html')));
 app.get('/setup',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','setup.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
 app.get('/register',(req,res)=>res.sendFile(path.join(__dirname,'..','public','register.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
 
