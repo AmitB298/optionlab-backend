@@ -83,6 +83,7 @@ try { app.use('/api/email',  require('./routes/email.routes'));   console.log('[
 try { app.use('/api/user',   require('./routes/user.routes'));    console.log('[boot] user.routes OK'); } catch(e) { console.error('[boot] user.routes FAILED:', e.message); }
 try { app.use('/api/device', require('./routes/device.routes')); } catch(e) {}
 try { app.use('/api/jobber', require('./routes/jobber.routes')); console.log('[boot] jobber OK'); } catch(e) { console.error('[boot] jobber FAILED:', e.message); }
+try { app.use('/api/referral', require('./routes/referral.routes')); console.log('[boot] referral OK'); } catch(e) { console.error('[boot] referral FAILED:', e.message); }
 // Bug #6: dead require removed — angel module does not exist
 
 // Blog
@@ -140,8 +141,11 @@ async function start() {
       {id:'m10_admin',   sql:`CREATE TABLE IF NOT EXISTS admin_audit_log (id SERIAL PRIMARY KEY, admin_id INTEGER, action VARCHAR(100) NOT NULL, target_user_id INTEGER, payload JSONB, success BOOLEAN DEFAULT true, ip_address VARCHAR(50), created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m11_payments',sql:`CREATE TABLE IF NOT EXISTS payment_orders (id SERIAL PRIMARY KEY, order_id VARCHAR(100) UNIQUE NOT NULL, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, plan VARCHAR(50), amount NUMERIC(10,2), status VARCHAR(20) DEFAULT 'PENDING', cf_payment_id VARCHAR(100), paid_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m12_devices', sql:`CREATE TABLE IF NOT EXISTS trusted_devices (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, device_name VARCHAR(255), platform VARCHAR(50), ip_address VARCHAR(45), is_trusted BOOLEAN DEFAULT true, last_seen_at TIMESTAMPTZ, verified_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
-      {id:'m14_ref_wallet',sql:`CREATE TABLE IF NOT EXISTS referral_wallet (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, balance_paise INTEGER DEFAULT 0, total_earned_paise INTEGER DEFAULT 0, total_conversions INTEGER DEFAULT 0, tier VARCHAR(20) DEFAULT 'none', updated_at TIMESTAMPTZ DEFAULT NOW())`},
-      {id:'m15_ref_events', sql:`CREATE TABLE IF NOT EXISTS referral_events (id SERIAL PRIMARY KEY, referrer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, referee_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, event_type VARCHAR(50) NOT NULL, reward_paise INTEGER DEFAULT 0, status VARCHAR(20) DEFAULT 'pending', order_id VARCHAR(100), created_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m14_ref_wallet',sql:`CREATE TABLE IF NOT EXISTS referral_wallet (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, balance_paise INTEGER DEFAULT 0, lifetime_earned INTEGER DEFAULT 0, total_conversions INTEGER DEFAULT 0, tier VARCHAR(20) DEFAULT 'none', updated_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m15_ref_events', sql:`CREATE TABLE IF NOT EXISTS referral_events (id SERIAL PRIMARY KEY, referrer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, referee_id INTEGER REFERENCES users(id) ON DELETE CASCADE, event_type VARCHAR(50) NOT NULL, reward_amount INTEGER DEFAULT 0, status VARCHAR(20) DEFAULT 'pending', order_id VARCHAR(100), release_at TIMESTAMPTZ, credited_at TIMESTAMPTZ, notes TEXT, created_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m16_ref_clicks',sql:`CREATE TABLE IF NOT EXISTS referral_clicks (id SERIAL PRIMARY KEY, referral_code VARCHAR(30) NOT NULL, ip_address VARCHAR(45), user_agent VARCHAR(200), created_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m17_ref_code',  sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by_code VARCHAR(30)`},
+
       {id:'m13_announce',sql:`CREATE TABLE IF NOT EXISTS admin_announcements (id SERIAL PRIMARY KEY, title VARCHAR(255), body TEXT, type VARCHAR(50) DEFAULT 'info', target VARCHAR(20) DEFAULT 'all', is_active BOOLEAN DEFAULT true, expires_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
     ];
     for (const m of migs) {
