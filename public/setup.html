@@ -153,6 +153,143 @@
     }
   ]
 }
+
+/* === LANGUAGE SWITCH === */
+let LANG = 'hi';
+
+const UI_TEXT = {
+  hi: {
+    landBadge:"OPTIONLAB SETUP GUIDE",
+    landH1:'Zero se <span class="accent">Live</span><br>Trading Data',
+    landSub:"Fyers broker account kholna, API setup karna, aur OptionLab se connect karna — sab kuch step-by-step, sirf 30 minute mein.",
+    reqToggle:"▼ Shuru karne se pehle kya chahiye?",
+    reqToggleOpen:"▲ Shuru karne se pehle kya chahiye?",
+    beginBtn:"Setup Shuru Karo →",
+    beginHint:"~30 min · Bilkul Free · Koi card nahi",
+    backBtn:"← Wapas",
+    allPhases:"SAARI PHASES",
+    waitTitle:"⌛ Intezaar ke dauran ye karo:",
+    waitItems:["Google Authenticator ya Authy install karo phone pe","Fyers app download karo Play Store / App Store se","Client ID SMS ka wait karo — turant save kar lena","API portal ke liye ek alag email + password soch lo"],
+    compTitle:"Ho Gaya!",
+    compSub:"Tera Fyers account OptionLab se connect ho gaya. Ab live options data, analytics, aur signals sab available hain!",
+    compBtn:"🚀 OptionLab Dashboard Kholna Hai",
+    doneBtn:"✓ Done — Aage Bado →",
+    completedBtn:"🎉 Setup Complete!",
+    prevBtn:"← Pichhe",
+    nextLabel:"AAGE",
+    waitTag:"⌛ Intezaar",
+    ipTag:"🌐 IP Detect",
+    stepLabel:"Step",of:"/",
+    detectBtn:"🔍 IP Dhundho",redetectBtn:"🔄 Dobara Detect Karo",retryBtn:"🔄 Dobara Try Karo",
+    copyBtn:"📋 IP Copy Karo",copiedBtn:"✅ Copy ho gaya!",
+    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
+    ipProgStart:"Sab sources ko query kar raha hoon…",ipProgChecking:"se check kar raha hoon…",
+    ipProgConsensus:"Consensus calculate kar raha hoon…",ipProgMeta:"ISP metadata fetch kar raha hoon…",ipProgDone:"Ho gaya!",
+    ipErrAll:"❌ Sab sources fail ho gaye. Internet connection check karo.",
+    dynWarn:"⚡ <strong>Dynamic IP mil gayi.</strong> ISP restart ke baad badal sakti hai. Re-detect karo agar API band ho.",
+    ipNext:"📋 <strong>Aage:</strong> IP copy karo → Fyers API Portal → Create App → Allowed IPs mein paste karo → Save → API Key copy karo.",
+    ipFallback:'Manual: Browser mein jao → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → copy karo → Fyers portal mein paste karo.',
+    openAction:"kholna hai ↗",important:"Important:",proTip:"Pro tip:"
+  },
+  en: {
+    landBadge:"OPTIONLAB SETUP GUIDE",
+    landH1:'Zero to <span class="accent">Live</span><br>Trading Data',
+    landSub:"Open a Fyers broker account, set up the API, and connect to OptionLab — step by step, in just 30 minutes.",
+    reqToggle:"▼ What do you need before starting?",
+    reqToggleOpen:"▲ What do you need before starting?",
+    beginBtn:"Start Setup →",
+    beginHint:"~30 min · Completely Free · No card required",
+    backBtn:"← Back",
+    allPhases:"ALL PHASES",
+    waitTitle:"⌛ While you wait:",
+    waitItems:["Install Google Authenticator or Authy on your phone","Download the Fyers app from Play Store / App Store","Wait for the Client ID SMS — save it immediately","Think of a separate email + password for the API portal"],
+    compTitle:"All Done!",
+    compSub:"Your Fyers account is now connected to OptionLab. Live options data, analytics, and signals are all available!",
+    compBtn:"🚀 Open OptionLab Dashboard",
+    doneBtn:"✓ Done — Continue →",
+    completedBtn:"🎉 Setup Complete!",
+    prevBtn:"← Back",
+    nextLabel:"NEXT",
+    waitTag:"⌛ Waiting",
+    ipTag:"🌐 IP Detect",
+    stepLabel:"Step",of:"/",
+    detectBtn:"🔍 Detect My IP",redetectBtn:"🔄 Re-detect",retryBtn:"🔄 Try Again",
+    copyBtn:"📋 Copy IP",copiedBtn:"✅ Copied!",
+    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
+    ipProgStart:"Querying all sources…",ipProgChecking:"checking…",
+    ipProgConsensus:"Calculating consensus…",ipProgMeta:"Fetching ISP metadata…",ipProgDone:"Done!",
+    ipErrAll:"❌ All sources failed. Please check your internet connection.",
+    dynWarn:"⚡ <strong>Dynamic IP detected.</strong> It may change after an ISP restart. Re-detect if the API stops working.",
+    ipNext:"📋 <strong>Next:</strong> Copy IP → Fyers API Portal → Create App → Paste in Allowed IPs → Save → Copy API Key.",
+    ipFallback:'Manual: Open browser → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → Copy the number → Paste in Fyers portal.',
+    openAction:"Open ↗",important:"Important:",proTip:"Pro tip:"
+  }
+};
+
+const PHASES_EN = [
+  {id:"account",num:"01",title:"Open Account",sub:"Trading foundation",time:"15 min",ico:"🏦",color:"var(--indigo)",steps:[
+    {id:"visit",title:"Visit Fyers Website",time:"1 min",ico:"🌐",text:"Go to fyers.in and click <strong>Open Free Account</strong>. Fyers is SEBI-registered and supports NSE/BSE/MCX — zero brokerage on equity delivery.",action:{label:"fyers.in",url:"https://fyers.in"},tip:"Use a desktop browser — Chrome or Edge works best."},
+    {id:"mobile",title:"Verify Mobile Number",time:"1 min",ico:"📱",text:"Enter your <strong>Aadhaar-linked mobile number</strong>. You will receive an OTP for verification.",warn:"Use the same number linked to your Aadhaar — the OTP will only come there."},
+    {id:"pan",title:"Verify PAN Card",time:"2 min",ico:"🪪",text:"Enter your PAN number. Fyers <strong>instantly verifies with NSDL</strong> and auto-fills your name and date of birth.",tip:"PAN must be active and KYC-compliant."},
+    {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",ico:"✅",text:"Enter your Aadhaar number — an OTP is sent to your linked mobile for <strong>instant identity verification</strong>. No physical document upload needed.",warn:"If the Aadhaar OTP fails, document-based KYC will be required — adding 2–3 working days."},
+    {id:"bank",title:"Link Bank Account",time:"2 min",ico:"🏦",text:"Enter your savings account number and IFSC code. Fyers does a <strong>penny-drop</strong> to confirm ownership.",tip:"Use your primary savings account. Joint accounts may slow down verification."},
+    {id:"ipv",title:"Video KYC (IPV)",time:"2 min",ico:"📷",text:"In a live video, <strong>show your PAN card to the camera</strong> and say a few words. Fully online, under 2 minutes.",tip:"Good lighting + plain background = instant pass."},
+    {id:"wait",title:"Account Activation",time:"1–4 hours",ico:"⏳",text:"Submitted! On working days, most accounts are <strong>activated within 1–4 hours</strong>. Your Client ID will arrive via SMS — something like FY12345.",warn:"If submitted on a weekend or holiday, activation carries over to the next working day.",isWait:true}
+  ]},
+  {id:"mpin",num:"02",title:"Set MPIN",sub:"Secure trading PIN",time:"3 min",ico:"🔐",color:"var(--amber)",steps:[
+    {id:"app",title:"Download Fyers App",time:"2 min",ico:"📲",text:"Download the Fyers app from the <strong>Play Store or App Store</strong>. Log in with your Client ID and registered mobile.",action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.fyers.android"},tip:"Prefer desktop? Use trade.fyers.in instead."},
+    {id:"setmpin",title:"Create Your MPIN",time:"1 min",ico:"🔑",text:"On first login, you will be prompted to create a <strong>4-digit MPIN</strong> — this authorizes every API connection and trade.",warn:"NEVER use the same password for OptionLab and your MPIN. Always keep them separate.",tip:"Avoid obvious PINs: 1234, 0000, or your birth year."}
+  ]},
+  {id:"api",num:"03",title:"API App Setup",sub:"Developer access unlock",time:"5 min",ico:"⚙️",color:"var(--green)",steps:[
+    {id:"portal",title:"Register on API Portal",time:"2 min",ico:"🔒",text:"Go to <strong>myapi.fyers.in</strong> and register with your email. This is the developer portal — completely separate from your trading account.",action:{label:"myapi.fyers.in",url:"https://myapi.fyers.in"},warn:"Use a COMPLETELY DIFFERENT password here — never reuse your trading credentials."},
+    {id:"totp",title:"Enable TOTP",time:"2 min",ico:"🔐",text:"In the Fyers API portal, go to <strong>Security settings</strong> and enable TOTP. Scan the QR code with Google Authenticator.",warn:"The 32-character Secret Key is shown ONLY ONCE — copy and store it in a safe place right now!",tip:"Install Google Authenticator or Authy on your phone before this step."},
+    {id:"ipdetect",title:"Detect IP & Create App",time:"2 min",ico:"🌐",text:"Use the IP detector below to find your exact <strong>public IP</strong>, then create a new app in the Fyers API portal and whitelist your IP.",tip:"After creating the app, your API Key and Secret will be generated instantly.",isIPDetect:true}
+  ]},
+  {id:"connect",num:"04",title:"Connect OptionLab",sub:"Go live in 2 minutes",time:"2 min",ico:"🚀",color:"var(--saffron)",steps:[
+    {id:"open",title:"Open OptionLab Setup",time:"30 sec",ico:"💻",text:"In the OptionLab app, go to <strong>Settings → Broker Setup</strong>. Select Fyers. Your IP will be auto-detected.",tip:"One-time setup per device — future logins will be fully automatic."},
+    {id:"creds",title:"Enter Credentials",time:"1 min",ico:"🗝️",text:"Enter your Client ID, MPIN, TOTP 32-char Secret Key, and API Key. <strong>Everything stays only on your device</strong> — OptionLab servers never see it.",warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP."},
+    {id:"test",title:"Test & Go Live",time:"30 sec",ico:"⚡",text:"Click <strong>Test Connection</strong>. OptionLab will authenticate with the Fyers API. Nifty 50 data will begin streaming within seconds.",tip:"If it fails, recheck your IP registration or TOTP secret. Need help? support@optionlab.in"}
+  ]}
+];
+
+const REQS_EN = [
+  {ico:"📋",label:"PAN Card",desc:"Active & KYC-verified",color:"#818cf8"},
+  {ico:"🪪",label:"Aadhaar Card",desc:"Must have linked mobile",color:"#34d399"},
+  {ico:"🏦",label:"Bank Account",desc:"Savings + IFSC ready",color:"#f59e0b"},
+  {ico:"📱",label:"Mobile Number",desc:"Aadhaar-linked SIM",color:"#ec4899"},
+  {ico:"💻",label:"Windows/Mac",desc:"For the OptionLab app",color:"#60a5fa"},
+  {ico:"📷",label:"Webcam",desc:"For Video KYC",color:"#fb923c"}
+];
+
+function T(){ return UI_TEXT[LANG]; }
+
+function setLang(lang){
+  LANG = lang;
+  document.getElementById('htmlRoot').setAttribute('lang', lang);
+  document.getElementById('btnEN').classList.toggle('active', lang==='en');
+  document.getElementById('btnHI').classList.toggle('active', lang==='hi');
+  if(lang==='en'){ PHASES.length=0; PHASES_EN.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_EN.forEach(r=>REQUIREMENTS.push(r)); }
+  else { PHASES.length=0; PHASES_HI.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_HI.forEach(r=>REQUIREMENTS.push(r)); }
+  updateStaticText();
+  initLanding();
+  const guide=document.getElementById('guide');
+  if(guide && guide.classList.contains('show')) renderAll();
+}
+
+function updateStaticText(){
+  const t=T();
+  const badge=document.querySelector('.land-badge'); if(badge) badge.textContent=t.landBadge;
+  const h1=document.querySelector('.land-h1'); if(h1) h1.innerHTML=t.landH1;
+  const sub=document.querySelector('.land-sub'); if(sub) sub.textContent=t.landSub;
+  const reqBtn=document.getElementById('reqToggleBtn'); if(reqBtn) reqBtn.textContent=reqOpen?t.reqToggleOpen:t.reqToggle;
+  const beginBtn=document.querySelector('.btn-begin'); if(beginBtn) beginBtn.textContent=t.beginBtn;
+  const hint=document.querySelector('.begin-hint'); if(hint) hint.textContent=t.beginHint;
+  const compTitle=document.querySelector('.comp-title'); if(compTitle) compTitle.textContent=t.compTitle;
+  const compSub=document.querySelector('.comp-sub'); if(compSub) compSub.textContent=t.compSub;
+  const compBtn=document.querySelector('.btn-dash'); if(compBtn) compBtn.textContent=t.compBtn;
+  const backBtn=document.querySelector('.btn-back'); if(backBtn) backBtn.textContent=t.backBtn;
+  const pslbl=document.querySelector('.ps-lbl'); if(pslbl) pslbl.textContent=t.allPhases;
+}
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -398,6 +535,10 @@ button:active{transform:scale(.98)!important}
   select, textarea, input { font-size: 16px !important; }
 }
 
+/* === LANGUAGE TOGGLE === */
+.lang-toggle-wrap{display:flex;align-items:center;gap:0;border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden;flex-shrink:0;}
+.lang-btn{padding:5px 13px;font-size:11px;font-weight:700;letter-spacing:.07em;font-family:var(--font-mono);transition:all .2s;color:var(--text3);background:transparent;border:none;cursor:pointer;}
+.lang-btn.active{background:var(--saffron);color:#fff;}
 </style>
 </head>
 <body>
@@ -1139,6 +1280,143 @@ function toggleBreakdown(){
 // INIT
 // ═══════════════════════════════════════════════════════
 initLanding();
+
+/* === LANGUAGE SWITCH === */
+let LANG = 'hi';
+
+const UI_TEXT = {
+  hi: {
+    landBadge:"OPTIONLAB SETUP GUIDE",
+    landH1:'Zero se <span class="accent">Live</span><br>Trading Data',
+    landSub:"Fyers broker account kholna, API setup karna, aur OptionLab se connect karna — sab kuch step-by-step, sirf 30 minute mein.",
+    reqToggle:"▼ Shuru karne se pehle kya chahiye?",
+    reqToggleOpen:"▲ Shuru karne se pehle kya chahiye?",
+    beginBtn:"Setup Shuru Karo →",
+    beginHint:"~30 min · Bilkul Free · Koi card nahi",
+    backBtn:"← Wapas",
+    allPhases:"SAARI PHASES",
+    waitTitle:"⌛ Intezaar ke dauran ye karo:",
+    waitItems:["Google Authenticator ya Authy install karo phone pe","Fyers app download karo Play Store / App Store se","Client ID SMS ka wait karo — turant save kar lena","API portal ke liye ek alag email + password soch lo"],
+    compTitle:"Ho Gaya!",
+    compSub:"Tera Fyers account OptionLab se connect ho gaya. Ab live options data, analytics, aur signals sab available hain!",
+    compBtn:"🚀 OptionLab Dashboard Kholna Hai",
+    doneBtn:"✓ Done — Aage Bado →",
+    completedBtn:"🎉 Setup Complete!",
+    prevBtn:"← Pichhe",
+    nextLabel:"AAGE",
+    waitTag:"⌛ Intezaar",
+    ipTag:"🌐 IP Detect",
+    stepLabel:"Step",of:"/",
+    detectBtn:"🔍 IP Dhundho",redetectBtn:"🔄 Dobara Detect Karo",retryBtn:"🔄 Dobara Try Karo",
+    copyBtn:"📋 IP Copy Karo",copiedBtn:"✅ Copy ho gaya!",
+    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
+    ipProgStart:"Sab sources ko query kar raha hoon…",ipProgChecking:"se check kar raha hoon…",
+    ipProgConsensus:"Consensus calculate kar raha hoon…",ipProgMeta:"ISP metadata fetch kar raha hoon…",ipProgDone:"Ho gaya!",
+    ipErrAll:"❌ Sab sources fail ho gaye. Internet connection check karo.",
+    dynWarn:"⚡ <strong>Dynamic IP mil gayi.</strong> ISP restart ke baad badal sakti hai. Re-detect karo agar API band ho.",
+    ipNext:"📋 <strong>Aage:</strong> IP copy karo → Fyers API Portal → Create App → Allowed IPs mein paste karo → Save → API Key copy karo.",
+    ipFallback:'Manual: Browser mein jao → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → copy karo → Fyers portal mein paste karo.',
+    openAction:"kholna hai ↗",important:"Important:",proTip:"Pro tip:"
+  },
+  en: {
+    landBadge:"OPTIONLAB SETUP GUIDE",
+    landH1:'Zero to <span class="accent">Live</span><br>Trading Data',
+    landSub:"Open a Fyers broker account, set up the API, and connect to OptionLab — step by step, in just 30 minutes.",
+    reqToggle:"▼ What do you need before starting?",
+    reqToggleOpen:"▲ What do you need before starting?",
+    beginBtn:"Start Setup →",
+    beginHint:"~30 min · Completely Free · No card required",
+    backBtn:"← Back",
+    allPhases:"ALL PHASES",
+    waitTitle:"⌛ While you wait:",
+    waitItems:["Install Google Authenticator or Authy on your phone","Download the Fyers app from Play Store / App Store","Wait for the Client ID SMS — save it immediately","Think of a separate email + password for the API portal"],
+    compTitle:"All Done!",
+    compSub:"Your Fyers account is now connected to OptionLab. Live options data, analytics, and signals are all available!",
+    compBtn:"🚀 Open OptionLab Dashboard",
+    doneBtn:"✓ Done — Continue →",
+    completedBtn:"🎉 Setup Complete!",
+    prevBtn:"← Back",
+    nextLabel:"NEXT",
+    waitTag:"⌛ Waiting",
+    ipTag:"🌐 IP Detect",
+    stepLabel:"Step",of:"/",
+    detectBtn:"🔍 Detect My IP",redetectBtn:"🔄 Re-detect",retryBtn:"🔄 Try Again",
+    copyBtn:"📋 Copy IP",copiedBtn:"✅ Copied!",
+    ipTitle:"Live IP Detection Engine",ipSub:"5 sources · Consensus · Auto-verified",ipSources:"Sources:",
+    ipProgStart:"Querying all sources…",ipProgChecking:"checking…",
+    ipProgConsensus:"Calculating consensus…",ipProgMeta:"Fetching ISP metadata…",ipProgDone:"Done!",
+    ipErrAll:"❌ All sources failed. Please check your internet connection.",
+    dynWarn:"⚡ <strong>Dynamic IP detected.</strong> It may change after an ISP restart. Re-detect if the API stops working.",
+    ipNext:"📋 <strong>Next:</strong> Copy IP → Fyers API Portal → Create App → Paste in Allowed IPs → Save → Copy API Key.",
+    ipFallback:'Manual: Open browser → <a href="https://api.ipify.org" target="_blank">api.ipify.org</a> → Copy the number → Paste in Fyers portal.',
+    openAction:"Open ↗",important:"Important:",proTip:"Pro tip:"
+  }
+};
+
+const PHASES_EN = [
+  {id:"account",num:"01",title:"Open Account",sub:"Trading foundation",time:"15 min",ico:"🏦",color:"var(--indigo)",steps:[
+    {id:"visit",title:"Visit Fyers Website",time:"1 min",ico:"🌐",text:"Go to fyers.in and click <strong>Open Free Account</strong>. Fyers is SEBI-registered and supports NSE/BSE/MCX — zero brokerage on equity delivery.",action:{label:"fyers.in",url:"https://fyers.in"},tip:"Use a desktop browser — Chrome or Edge works best."},
+    {id:"mobile",title:"Verify Mobile Number",time:"1 min",ico:"📱",text:"Enter your <strong>Aadhaar-linked mobile number</strong>. You will receive an OTP for verification.",warn:"Use the same number linked to your Aadhaar — the OTP will only come there."},
+    {id:"pan",title:"Verify PAN Card",time:"2 min",ico:"🪪",text:"Enter your PAN number. Fyers <strong>instantly verifies with NSDL</strong> and auto-fills your name and date of birth.",tip:"PAN must be active and KYC-compliant."},
+    {id:"kyc",title:"Aadhaar e-KYC",time:"3 min",ico:"✅",text:"Enter your Aadhaar number — an OTP is sent to your linked mobile for <strong>instant identity verification</strong>. No physical document upload needed.",warn:"If the Aadhaar OTP fails, document-based KYC will be required — adding 2–3 working days."},
+    {id:"bank",title:"Link Bank Account",time:"2 min",ico:"🏦",text:"Enter your savings account number and IFSC code. Fyers does a <strong>penny-drop</strong> to confirm ownership.",tip:"Use your primary savings account. Joint accounts may slow down verification."},
+    {id:"ipv",title:"Video KYC (IPV)",time:"2 min",ico:"📷",text:"In a live video, <strong>show your PAN card to the camera</strong> and say a few words. Fully online, under 2 minutes.",tip:"Good lighting + plain background = instant pass."},
+    {id:"wait",title:"Account Activation",time:"1–4 hours",ico:"⏳",text:"Submitted! On working days, most accounts are <strong>activated within 1–4 hours</strong>. Your Client ID will arrive via SMS — something like FY12345.",warn:"If submitted on a weekend or holiday, activation carries over to the next working day.",isWait:true}
+  ]},
+  {id:"mpin",num:"02",title:"Set MPIN",sub:"Secure trading PIN",time:"3 min",ico:"🔐",color:"var(--amber)",steps:[
+    {id:"app",title:"Download Fyers App",time:"2 min",ico:"📲",text:"Download the Fyers app from the <strong>Play Store or App Store</strong>. Log in with your Client ID and registered mobile.",action:{label:"Play Store",url:"https://play.google.com/store/apps/details?id=com.fyers.android"},tip:"Prefer desktop? Use trade.fyers.in instead."},
+    {id:"setmpin",title:"Create Your MPIN",time:"1 min",ico:"🔑",text:"On first login, you will be prompted to create a <strong>4-digit MPIN</strong> — this authorizes every API connection and trade.",warn:"NEVER use the same password for OptionLab and your MPIN. Always keep them separate.",tip:"Avoid obvious PINs: 1234, 0000, or your birth year."}
+  ]},
+  {id:"api",num:"03",title:"API App Setup",sub:"Developer access unlock",time:"5 min",ico:"⚙️",color:"var(--green)",steps:[
+    {id:"portal",title:"Register on API Portal",time:"2 min",ico:"🔒",text:"Go to <strong>myapi.fyers.in</strong> and register with your email. This is the developer portal — completely separate from your trading account.",action:{label:"myapi.fyers.in",url:"https://myapi.fyers.in"},warn:"Use a COMPLETELY DIFFERENT password here — never reuse your trading credentials."},
+    {id:"totp",title:"Enable TOTP",time:"2 min",ico:"🔐",text:"In the Fyers API portal, go to <strong>Security settings</strong> and enable TOTP. Scan the QR code with Google Authenticator.",warn:"The 32-character Secret Key is shown ONLY ONCE — copy and store it in a safe place right now!",tip:"Install Google Authenticator or Authy on your phone before this step."},
+    {id:"ipdetect",title:"Detect IP & Create App",time:"2 min",ico:"🌐",text:"Use the IP detector below to find your exact <strong>public IP</strong>, then create a new app in the Fyers API portal and whitelist your IP.",tip:"After creating the app, your API Key and Secret will be generated instantly.",isIPDetect:true}
+  ]},
+  {id:"connect",num:"04",title:"Connect OptionLab",sub:"Go live in 2 minutes",time:"2 min",ico:"🚀",color:"var(--saffron)",steps:[
+    {id:"open",title:"Open OptionLab Setup",time:"30 sec",ico:"💻",text:"In the OptionLab app, go to <strong>Settings → Broker Setup</strong>. Select Fyers. Your IP will be auto-detected.",tip:"One-time setup per device — future logins will be fully automatic."},
+    {id:"creds",title:"Enter Credentials",time:"1 min",ico:"🗝️",text:"Enter your Client ID, MPIN, TOTP 32-char Secret Key, and API Key. <strong>Everything stays only on your device</strong> — OptionLab servers never see it.",warn:"TOTP Secret = the 32-char code (e.g. 6HFALJZR3PYW…), NOT the 6-digit rotating OTP."},
+    {id:"test",title:"Test & Go Live",time:"30 sec",ico:"⚡",text:"Click <strong>Test Connection</strong>. OptionLab will authenticate with the Fyers API. Nifty 50 data will begin streaming within seconds.",tip:"If it fails, recheck your IP registration or TOTP secret. Need help? support@optionlab.in"}
+  ]}
+];
+
+const REQS_EN = [
+  {ico:"📋",label:"PAN Card",desc:"Active & KYC-verified",color:"#818cf8"},
+  {ico:"🪪",label:"Aadhaar Card",desc:"Must have linked mobile",color:"#34d399"},
+  {ico:"🏦",label:"Bank Account",desc:"Savings + IFSC ready",color:"#f59e0b"},
+  {ico:"📱",label:"Mobile Number",desc:"Aadhaar-linked SIM",color:"#ec4899"},
+  {ico:"💻",label:"Windows/Mac",desc:"For the OptionLab app",color:"#60a5fa"},
+  {ico:"📷",label:"Webcam",desc:"For Video KYC",color:"#fb923c"}
+];
+
+function T(){ return UI_TEXT[LANG]; }
+
+function setLang(lang){
+  LANG = lang;
+  document.getElementById('htmlRoot').setAttribute('lang', lang);
+  document.getElementById('btnEN').classList.toggle('active', lang==='en');
+  document.getElementById('btnHI').classList.toggle('active', lang==='hi');
+  if(lang==='en'){ PHASES.length=0; PHASES_EN.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_EN.forEach(r=>REQUIREMENTS.push(r)); }
+  else { PHASES.length=0; PHASES_HI.forEach(p=>PHASES.push(p)); REQUIREMENTS.length=0; REQS_HI.forEach(r=>REQUIREMENTS.push(r)); }
+  updateStaticText();
+  initLanding();
+  const guide=document.getElementById('guide');
+  if(guide && guide.classList.contains('show')) renderAll();
+}
+
+function updateStaticText(){
+  const t=T();
+  const badge=document.querySelector('.land-badge'); if(badge) badge.textContent=t.landBadge;
+  const h1=document.querySelector('.land-h1'); if(h1) h1.innerHTML=t.landH1;
+  const sub=document.querySelector('.land-sub'); if(sub) sub.textContent=t.landSub;
+  const reqBtn=document.getElementById('reqToggleBtn'); if(reqBtn) reqBtn.textContent=reqOpen?t.reqToggleOpen:t.reqToggle;
+  const beginBtn=document.querySelector('.btn-begin'); if(beginBtn) beginBtn.textContent=t.beginBtn;
+  const hint=document.querySelector('.begin-hint'); if(hint) hint.textContent=t.beginHint;
+  const compTitle=document.querySelector('.comp-title'); if(compTitle) compTitle.textContent=t.compTitle;
+  const compSub=document.querySelector('.comp-sub'); if(compSub) compSub.textContent=t.compSub;
+  const compBtn=document.querySelector('.btn-dash'); if(compBtn) compBtn.textContent=t.compBtn;
+  const backBtn=document.querySelector('.btn-back'); if(backBtn) backBtn.textContent=t.backBtn;
+  const pslbl=document.querySelector('.ps-lbl'); if(pslbl) pslbl.textContent=t.allPhases;
+}
 </script>
 
 </main><!-- /main role=main -->
