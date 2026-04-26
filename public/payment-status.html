@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payment Status — OptionsLab</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#030912;--bg2:#07101f;--bg3:#0c1628;--o:#ff9933;--o2:#e05a00;--green:#00e676;--red:#ff4444;--border:rgba(255,255,255,.06);--text:#dde8ff;--text2:#7a8baa}
+  body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:3rem 2.5rem;max-width:440px;width:100%;text-align:center}
+  .icon{font-size:4rem;margin-bottom:1.2rem;display:block}
+  .title{font-size:1.8rem;font-weight:700;margin-bottom:.5rem}
+  .sub{font-size:.9rem;color:var(--text2);line-height:1.7;margin-bottom:2rem}
+  .plan-badge{display:inline-block;padding:.35rem 1rem;border-radius:20px;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1.5rem}
+  .badge-daily{background:rgba(34,211,238,.12);color:#22d3ee;border:1px solid rgba(34,211,238,.25)}
+  .badge-weekly{background:rgba(255,153,51,.12);color:#ff9933;border:1px solid rgba(255,153,51,.25)}
+  .badge-monthly{background:rgba(168,85,247,.12);color:#a855f7;border:1px solid rgba(168,85,247,.25)}
+  .badge-unknown{background:rgba(0,230,118,.12);color:#00e676;border:1px solid rgba(0,230,118,.25)}
+  .btn{display:inline-block;padding:.85rem 2rem;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;border:none;transition:opacity .2s}
+  .btn:hover{opacity:.85}
+  .btn-primary{background:linear-gradient(135deg,var(--o),var(--o2));color:#fff;box-shadow:0 4px 20px rgba(255,153,51,.3)}
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2);margin-left:.8rem}
+  .divider{height:1px;background:var(--border);margin:1.5rem 0}
+  .order-id{font-family:'Space Mono',monospace;font-size:.75rem;color:var(--text2);word-break:break-all}
+  .spinner{width:48px;height:48px;border:3px solid rgba(255,153,51,.2);border-top-color:var(--o);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1.5rem}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .error-state .icon{filter:grayscale(1) opacity(.6)}
+</style>
+</head>
+<body>
+<div class="card" id="statusCard">
+  <div class="spinner" id="spinner"></div>
+  <div class="title" id="statusTitle">Verifying Payment...</div>
+  <div class="sub" id="statusSub">Please wait while we confirm your payment with Cashfree.</div>
+</div>
+
+<script>
+const API = '';
+
+function getParam(key) {
+  return new URLSearchParams(window.location.search).get(key);
+}
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
+async function apiFetch(url, opts={}) {
+  const token = localStorage.getItem('OptionsLab_token') || localStorage.getItem('ol_token');
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers||{}) };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  return fetch(url, { credentials: 'include', ...opts, headers });
+}
+
+function planBadgeClass(plan) {
+  if (!plan) return 'badge-unknown';
+  const p = plan.toLowerCase();
+  if (p === 'daily') return 'badge-daily';
+  if (p === 'weekly') return 'badge-weekly';
+  if (p === 'monthly') return 'badge-monthly';
+  return 'badge-unknown';
+}
+
+function planLabel(plan) {
+  if (!plan) return 'Active';
+  return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase() + ' Plan';
+}
+
+function showSuccess(plan, orderId) {
+  const card = document.getElementById('statusCard');
+  card.innerHTML = `
+    <span class="icon">✅</span>
+    <div class="title" style="color:#00e676">Payment Successful!</div>
+    <div class="sub">Your plan is now active. You have full access to all OptionsLab features.</div>
+    <span class="plan-badge ${planBadgeClass(plan)}">${planLabel(plan)} Activated</span>
+    <br>
+    <a class="btn btn-primary" href="/app.html">Go to Dashboard →</a>
+    <a class="btn btn-ghost" href="/">Home</a>
+    <div class="divider"></div>
+    <div class="order-id">Order ID: ${orderId || 'N/A'}</div>
+  `;
+}
+
+function showPending(orderId) {
+  const card = document.getElementById('statusCard');
+  card.innerHTML = `
+    <span class="icon">⏳</span>
+    <div class="title" style="color:#ff9933">Payment Pending</div>
+    <div class="sub">Your payment is being processed. This can take a few minutes. Your plan will be activated automatically once confirmed.</div>
+    <a class="btn btn-primary" href="/app.html">Go to Dashboard</a>
+    <div class="divider"></div>
+    <div class="order-id">Order ID: ${orderId || 'N/A'}</div>
+  `;
+}
+
+function showFailed(orderId, msg) {
+  const card = document.getElementById('statusCard');
+  card.classList.add('error-state');
+  card.innerHTML = `
+    <span class="icon">❌</span>
+    <div class="title" style="color:#ff4444">Payment Failed</div>
+    <div class="sub">${msg || 'Your payment could not be processed. No amount has been deducted. Please try again.'}</div>
+    <a class="btn btn-primary" href="/app.html">Try Again</a>
+    <a class="btn btn-ghost" href="/">Home</a>
+    <div class="divider"></div>
+    <div class="order-id">Order ID: ${orderId || 'N/A'}</div>
+  `;
+}
+
+async function checkStatus() {
+  const orderId = getParam('order_id');
+  if (!orderId) {
+    showFailed(null, 'Invalid payment link. No order ID found.');
+    return;
+  }
+
+  try {
+    const res = await apiFetch(`/api/payments/verify/${orderId}`);
+    
+    if (res.status === 401) {
+      // Not logged in — redirect to login with return URL
+      window.location.href = '/?login=1&return=' + encodeURIComponent(window.location.href);
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data.status === 'PAID') {
+      showSuccess(data.plan, orderId);
+    } else if (data.status === 'FAILED') {
+      showFailed(orderId, 'Payment was declined. Please try a different payment method.');
+    } else {
+      // PENDING — poll once more after 4 seconds
+      setTimeout(async () => {
+        try {
+          const res2 = await apiFetch(`/api/payments/verify/${orderId}`);
+          const data2 = await res2.json();
+          if (data2.status === 'PAID') showSuccess(data2.plan, orderId);
+          else showPending(orderId);
+        } catch (e) {
+          showPending(orderId);
+        }
+      }, 4000);
+    }
+  } catch (err) {
+    showFailed(orderId, 'Could not reach the server. Please check your internet connection and try again.');
+  }
+}
+
+checkStatus();
+</script>
+</body>
+</html>
