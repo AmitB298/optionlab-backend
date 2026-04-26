@@ -314,6 +314,33 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
 
 </div>
 </div>
+   <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-nav">
+    <a class="drawer-tab active" id="dtab-home" onclick="showPage('home');closeDrawer()"><span>🏠</span> Home</a>
+    <a class="drawer-tab" id="dtab-terminal" onclick="showPage('terminal');closeDrawer()"><span>📊</span> Terminal</a>
+    <a class="drawer-tab" id="dtab-analytics" onclick="showPage('analytics');closeDrawer()"><span>🔬</span> Analytics</a>
+    <a class="drawer-tab" id="dtab-smartmoney" onclick="showPage('smartmoney');closeDrawer()"><span>🧠</span> Smart Money</a>
+    <div class="drawer-divider"></div>
+    <a class="drawer-tab" id="dtab-academy" onclick="showPage('academy');closeDrawer()"><span>🎓</span> Academy</a>
+    <a class="drawer-tab" id="dtab-pricing" onclick="showPage('pricing');closeDrawer()"><span>₹</span> Pricing</a>
+    <a class="drawer-tab" id="dtab-why" onclick="showPage('why');closeDrawer()"><span>✦</span> Why Us</a>
+    <a class="drawer-tab" id="dtab-about" onclick="showPage('about');closeDrawer()"><span>👤</span> About</a>
+    <a class="drawer-tab" id="dtab-setup" onclick="showPage('setup');closeDrawer()"><span>⚙️</span> Setup</a>
+    <a class="drawer-tab" onclick="window.open('https://www.optionslab.in/blog/','_blank');closeDrawer()" style="color:var(--saffron)"><span>✦</span> Blog</a>
+    <div class="drawer-divider"></div>
+    <div id="drawer-auth-out" style="padding:.4rem 0;">
+      <button onclick="window.location.href='/register.html'" style="width:100%;padding:.45rem;background:var(--accentGlow2);border:1px solid var(--borderB);border-radius:6px;font-family:var(--font-m);font-size:.6rem;color:var(--text);cursor:pointer;margin-bottom:.35rem;">Sign In</button>
+    </div>
+    <div id="drawer-auth-in" style="display:none;padding:.4rem 0;">
+      <button onclick="window.location.href='/app'" style="width:100%;padding:.45rem;background:var(--accentGlow2);border:1px solid var(--borderB);border-radius:6px;font-family:var(--font-m);font-size:.6rem;color:var(--text);cursor:pointer;margin-bottom:.35rem;">👤 My Profile</button>
+      <button onclick="doLogout();closeDrawer()" style="width:100%;padding:.38rem;background:rgba(255,61,113,.06);border:1px solid rgba(255,61,113,.2);border-radius:6px;font-family:var(--font-m);font-size:.56rem;color:var(--red);cursor:pointer;">Sign Out</button>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="drawer-cta" onclick="window.location.href='/register.html'">Get Access →</button>
+  </div>
+</div>
 <nav class="top-nav">
   <div class="nav-logo" onclick="showPage('home')"><div class="logo-box">OL</div><div class="logo-name">Options<em>Lab</em></div></div>
   <div class="nav-tabs">
