@@ -16,8 +16,9 @@ const CF_BASE    = CF_ENV === 'PROD'
   : 'https://sandbox.cashfree.com/pg';
 
 const PLANS = {
-  pro:   { amount: 1499, name: 'OptionsLab Pro',  months: 1 },
-  elite: { amount: 3499, name: 'OptionsLab Elite', months: 1 },
+  daily:   { amount: 299,  name: 'OptionsLab Daily',   days: 1  },
+  weekly:  { amount: 999,  name: 'OptionsLab Weekly',  days: 7  },
+  monthly: { amount: 1499, name: 'OptionsLab Monthly', days: 30 },
 };
 
 const { auth: authenticateToken } = require('../middleware/auth');
@@ -118,7 +119,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
       const order     = rows[0];
       const expiresAt = new Date();
-      expiresAt.setMonth(expiresAt.getMonth() + PLANS[order.plan].months);
+      expiresAt.setDate(expiresAt.getDate() + PLANS[order.plan].days);
 
       await pool.query(
         `UPDATE payment_orders SET status='PAID', cf_payment_id=$1, paid_at=NOW() WHERE order_id=$2`,
@@ -172,7 +173,7 @@ router.get('/verify/:orderId', authenticateToken, async (req, res) => {
       const cfOrder = await cashfreeRequest('GET', `/orders/${orderId}`);
       if (cfOrder.order_status === 'PAID') {
         const expiresAt = new Date();
-        expiresAt.setMonth(expiresAt.getMonth() + PLANS[order.plan].months);
+        expiresAt.setDate(expiresAt.getDate() + PLANS[order.plan].days);
         await pool.query(
           `UPDATE payment_orders SET status='PAID', paid_at=NOW() WHERE order_id=$1`, [orderId]
         );

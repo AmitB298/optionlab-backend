@@ -853,51 +853,51 @@ input,select,textarea{font-family:inherit}
         </div>
 
         <div class="section-title">Choose Your Plan</div>
-        <div class="plan-cards">
-          <div class="plan-card current" id="planFree">
+        <div class="plan-cards" style="grid-template-columns:repeat(3,1fr)">
+          <div class="plan-card" id="planDaily">
             <div class="pc-tier">Starter</div>
-            <div class="pc-name" style="color:var(--c)">FREE</div>
-            <div class="pc-price" style="color:var(--c)">₹0</div>
-            <div class="pc-period">/ forever</div>
+            <div class="pc-name" style="color:var(--c)">DAILY</div>
+            <div class="pc-price" style="color:var(--c)">₹299</div>
+            <div class="pc-period">/ day · Full access</div>
             <div class="pc-features">
               <div class="pc-feat">Full options chain</div>
-              <div class="pc-feat">Basic Greeks (Δ Γ θ ν)</div>
-              <div class="pc-feat">PCR & Max Pain</div>
-              <div class="pc-feat">19-chapter Academy</div>
-              <div class="pc-feat locked">Smart money / FII flows</div>
-              <div class="pc-feat locked">Advanced analytics</div>
-            </div>
-            <button class="pc-btn current-btn">Current Plan</button>
-          </div>
-          <div class="plan-card" id="planPro">
-            <div class="pc-tier">Professional</div>
-            <div class="pc-name" style="color:var(--o)">PRO</div>
-            <div class="pc-price" style="color:var(--o)">₹1,499</div>
-            <div class="pc-period">/ month</div>
-            <div class="pc-features">
-              <div class="pc-feat">Everything in Free</div>
               <div class="pc-feat">FII & Smart Money flows</div>
               <div class="pc-feat">GARCH, VPIN analytics</div>
               <div class="pc-feat">Strategy payoff builder</div>
               <div class="pc-feat">OI scanner & alerts</div>
               <div class="pc-feat">Priority support</div>
             </div>
-            <button class="pc-btn upgrade-btn" onclick="upgradePlan('monthly')">Upgrade to Pro</button>
+            <button class="pc-btn upgrade-btn" style="background:linear-gradient(135deg,#22d3ee,#0891b2)" onclick="upgradePlan('daily')">Get Daily Access</button>
           </div>
-          <div class="plan-card" id="planElite">
-            <div class="pc-tier">Elite</div>
-            <div class="pc-name" style="color:var(--p)">ELITE</div>
-            <div class="pc-price" style="color:var(--p)">₹3,999</div>
-            <div class="pc-period">/ quarter · Save 11%</div>
+          <div class="plan-card" id="planWeekly">
+            <div class="pc-tier">Popular</div>
+            <div class="pc-name" style="color:var(--o)">WEEKLY</div>
+            <div class="pc-price" style="color:var(--o)">₹999</div>
+            <div class="pc-period">/ week · Full access</div>
             <div class="pc-features">
-              <div class="pc-feat">Everything in Pro</div>
-              <div class="pc-feat">Angel One API integration</div>
-              <div class="pc-feat">Portfolio risk analytics</div>
-              <div class="pc-feat">Multi-expiry scanner</div>
-              <div class="pc-feat">Early feature access</div>
-              <div class="pc-feat">Direct support channel</div>
+              <div class="pc-feat">Full options chain</div>
+              <div class="pc-feat">FII & Smart Money flows</div>
+              <div class="pc-feat">GARCH, VPIN analytics</div>
+              <div class="pc-feat">Strategy payoff builder</div>
+              <div class="pc-feat">OI scanner & alerts</div>
+              <div class="pc-feat">Priority support</div>
             </div>
-            <button class="pc-btn upgrade-btn" style="background:linear-gradient(135deg,#a855f7,#7c3aed)" onclick="upgradePlan('quarterly')">Get Elite</button>
+            <button class="pc-btn upgrade-btn" onclick="upgradePlan('weekly')">Get Weekly Access</button>
+          </div>
+          <div class="plan-card" id="planMonthly">
+            <div class="pc-tier">Best Value</div>
+            <div class="pc-name" style="color:var(--p)">MONTHLY</div>
+            <div class="pc-price" style="color:var(--p)">₹1,499</div>
+            <div class="pc-period">/ month · Full access</div>
+            <div class="pc-features">
+              <div class="pc-feat">Full options chain</div>
+              <div class="pc-feat">FII & Smart Money flows</div>
+              <div class="pc-feat">GARCH, VPIN analytics</div>
+              <div class="pc-feat">Strategy payoff builder</div>
+              <div class="pc-feat">OI scanner & alerts</div>
+              <div class="pc-feat">Priority support</div>
+            </div>
+            <button class="pc-btn upgrade-btn" style="background:linear-gradient(135deg,#a855f7,#7c3aed)" onclick="upgradePlan('monthly')">Get Monthly Access</button>
           </div>
         </div>
 
@@ -1223,8 +1223,7 @@ async function requestDownload(){
 /* ── UPGRADE ── */
 async function upgradePlan(period){
   try{
-    const planMap = {monthly:'pro', quarterly:'elite'};
-    const plan = planMap[period] || period;
+    const plan = period;
     const res = await apiFetch('/api/payments/create-order',{method:'POST',body:JSON.stringify({plan})});
     const d = await res.json();
     if(d.error) throw new Error(d.error);
