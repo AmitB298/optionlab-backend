@@ -14,7 +14,7 @@
 <style>
 :root,[data-theme="dark"]{--bg:#030712;--bg2:#060d1a;--bg3:#0a1428;--card:#0d1830;--card2:#111f3a;--border:rgba(99,155,255,0.10);--borderB:rgba(99,155,255,0.18);--borderH:rgba(249,115,22,0.40);--accent:#f97316;--accentGlow:rgba(249,115,22,0.18);--accentGlow2:rgba(249,115,22,0.10);--accentGlow3:rgba(249,115,22,0.05);--green:#00e676;--greenGlow:rgba(0,230,118,0.14);--red:#ff3d71;--yellow:#fbbf24;--cyan:#22d3ee;--purple:#a855f7;--orange:#fb923c;--text:#e8f0ff;--text2:#8ba8d4;--text3:#3d5880;--nav-bg:rgba(3,7,18,0.97);--font-d:'Bebas Neue',cursive;--font-r:'Rajdhani',sans-serif;--font-m:'JetBrains Mono',monospace;--font-b:'Hind',sans-serif;--r:4px;--r2:8px;--nav-h:60px;--nav-green:#00ff88;--saffron:#ff9933;}
 [data-theme="light"]{--bg:#f0f4ff;--bg2:#e8eeff;--bg3:#dde5ff;--card:#fff;--card2:#f5f8ff;--border:rgba(249,115,22,0.15);--text:#0f172a;--text2:#334155;--text3:#64748b;--nav-bg:rgba(255,255,255,0.97);--green:#059669;--red:#dc2626;--nav-green:#059669;--saffron:#ea580c;--accentGlow3:rgba(249,115,22,0.04);--accentGlow2:rgba(249,115,22,0.08);--accentGlow:rgba(249,115,22,0.12);--borderB:rgba(249,115,22,0.25);}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden;}body{padding-top:var(--nav-h);background:var(--bg);color:var(--text);font-family:var(--font-b);overflow-x:hidden;min-height:100vh;}a{text-decoration:none;color:inherit;}button{font-family:inherit;border:none;background:none;cursor:pointer;}::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px;}img,svg,canvas{max-width:100%;}a,button,[onclick]{touch-action:manipulation;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden;}body{background:var(--bg);color:var(--text);font-family:var(--font-b);overflow-x:hidden;min-height:100vh;}a{text-decoration:none;color:inherit;}button{font-family:inherit;border:none;background:none;cursor:pointer;}::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px;}img,svg,canvas{max-width:100%;}a,button,[onclick]{touch-action:manipulation;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}@keyframes tickMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}@keyframes spin{to{transform:rotate(360deg)}}
 .reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease;}.reveal.visible{opacity:1;transform:none;}.page{display:none;animation:fadeUp .25s ease;}.page.active{display:block;}
 .top-nav{position:fixed;top:0;width:100%;z-index:300;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:var(--nav-bg);backdrop-filter:blur(32px);border-bottom:1px solid rgba(255,153,51,0.14);box-shadow:0 2px 24px rgba(0,0,0,0.5);}
@@ -371,7 +371,7 @@ function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(function(
   </div>
 </nav>
 <div class="ticker-bar"><div class="ticker-track" id="tickerTrack"></div></div>
-<main id="main-content">
+<main id="main-content" style="margin-top:var(--nav-h)">
 
 <!-- HOME -->
 <div class="page active" id="page-home">
