@@ -260,6 +260,18 @@ footer{position:relative;z-index:10;background:var(--bg);border-top:1px solid va
 <body>
 <script>
 // Early stubs -- all onclick= attributes work immediately on page load
+
+function showPlanGate(page){
+  var msgs = {
+    terminal: 'Live Terminal requires an active Daily, Weekly, or Monthly plan.',
+    analytics: 'Advanced Analytics requires an active plan.',
+    smart: 'Smart Money FII data requires an active plan.'
+  };
+  var gate = document.getElementById('planGate');
+  var msg = document.getElementById('planGateMsg');
+  if(msg) msg.textContent = msgs[page] || 'This feature requires an active plan.';
+  if(gate){ gate.style.display='flex'; }
+}
 function showPage(id,tabEl){
   if(typeof _realShowPage==='function'){_realShowPage(id,tabEl);return;}
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
@@ -2594,5 +2606,16 @@ function doLogout(){
   sessionStorage.clear();
   fetch('/api/auth/logout',{method:'POST',credentials:'include'}).catch(function(){}).finally(function(){window.location.href='/';});
 }
-</script></body>
+</script><div id="planGate" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--bg2);border:1px solid var(--borderH);border-radius:16px;padding:2.5rem;max-width:420px;width:90%;text-align:center;">
+    <div style="font-size:3rem;margin-bottom:1rem;">🔒</div>
+    <div style="font-family:var(--font-d);font-size:1.8rem;color:var(--text);margin-bottom:.5rem;">Premium Feature</div>
+    <div id="planGateMsg" style="font-family:var(--font-b);font-size:.85rem;color:var(--text2);line-height:1.7;margin-bottom:1.5rem;">This feature requires an active plan.</div>
+    <div style="display:flex;gap:.8rem;justify-content:center;">
+      <button onclick="document.getElementById(''planGate'').style.display=''none''" style="padding:.6rem 1.4rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text2);font-family:var(--font-m);cursor:pointer;">Go Back</button>
+      <button onclick="document.getElementById(''planGate'').style.display=''none'';showPage(''pricing'')" style="padding:.6rem 1.8rem;border:none;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:var(--font-r);font-weight:700;cursor:pointer;">View Plans →</button>
+    </div>
+  </div>
+</div>
+</body>
 </html>
