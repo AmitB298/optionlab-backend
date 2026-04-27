@@ -204,14 +204,27 @@ router.post('/register', registerLimiter, async (req, res) => {
 
     const mpinHash = await bcrypt.hash(mpin, SALT_ROUNDS);
 
+    // Auto-generate unique referral code — collision-safe
+    const genBase = Date.now().toString(36).toUpperCase().slice(-4)
+                  + Math.random().toString(36).substr(2,3).toUpperCase();
+    let genCode = 'OL-' + genBase;
+    // Ensure uniqueness in DB
+    const { rows: codeCheck } = await pool.query(
+      'SELECT id FROM users WHERE referral_code = $1', [genCode]
+    );
+    if (codeCheck.length) {
+      genCode = 'OL-' + Date.now().toString(36).toUpperCase().slice(-3)
+              + Math.random().toString(36).substr(2,4).toUpperCase();
+    }
+
     const { rows: [newUser] } = await pool.query(`
       INSERT INTO users
         (name, email, mobile, mpin_hash, broker_client_id,
          experience, trading_style, referral_code, plan, is_active, role, created_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'FREE', true, 'user', NOW())
-      RETURNING id, name, email, mobile, broker_client_id, plan
+      RETURNING id, name, email, mobile, broker_client_id, plan, referral_code
     `, [name.trim(), verifiedEmail, mobile, mpinHash,
-        angelId || null, experience || null, tradingStyle || null, referralCode]);
+        angelId || null, experience || null, tradingStyle || null, genCode]);
 
     const token = signToken(newUser);
     setCookie(res, token);
