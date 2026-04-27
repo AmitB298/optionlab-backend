@@ -145,6 +145,7 @@ async function start() {
       {id:'m15_ref_events', sql:`CREATE TABLE IF NOT EXISTS referral_events (id SERIAL PRIMARY KEY, referrer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, referee_id INTEGER REFERENCES users(id) ON DELETE CASCADE, event_type VARCHAR(50) NOT NULL, reward_amount INTEGER DEFAULT 0, status VARCHAR(20) DEFAULT 'pending', order_id VARCHAR(100), release_at TIMESTAMPTZ, credited_at TIMESTAMPTZ, notes TEXT, created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m16_ref_clicks',sql:`CREATE TABLE IF NOT EXISTS referral_clicks (id SERIAL PRIMARY KEY, referral_code VARCHAR(30) NOT NULL, ip_address VARCHAR(45), user_agent VARCHAR(200), created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m17_ref_code',  sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by_code VARCHAR(30)`},
+      {id:'m18_ref_backfill', sql:`UPDATE users SET referral_code = 'OL-' || UPPER(SUBSTRING(MD5(id::text || 'ol'), 1, 7)) WHERE referral_code IS NULL`},
 
       {id:'m13_announce',sql:`CREATE TABLE IF NOT EXISTS admin_announcements (id SERIAL PRIMARY KEY, title VARCHAR(255), body TEXT, type VARCHAR(50) DEFAULT 'info', target VARCHAR(20) DEFAULT 'all', is_active BOOLEAN DEFAULT true, expires_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
     ];
