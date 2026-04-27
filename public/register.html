@@ -669,6 +669,16 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
 <script>
 /* ════ BACKEND — UNCHANGED ════ */
 const API = '';
+// Auto-fill referral code from URL ?ref= param
+(function(){
+  const refParam = new URLSearchParams(window.location.search).get('ref');
+  if(refParam){
+    window.addEventListener('load', function(){
+      const el = document.getElementById('rReferral');
+      if(el) el.value = refParam.toUpperCase();
+    });
+  }
+})();
 async function apiFetch(url,opts={}){
   const controller=new AbortController();
   const timeoutId=setTimeout(()=>controller.abort(),15000);
