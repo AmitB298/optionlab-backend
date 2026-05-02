@@ -11,8 +11,9 @@
  */
 
 const jwt = require('jsonwebtoken');
+const { getUserValidPlan } = require('../cron/planExpiry');
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   // 1. Try httpOnly cookie first (web browser)
   let token = req.cookies && req.cookies.ol_tok;
 
@@ -31,6 +32,11 @@ const auth = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
+
+    // Real-time plan expiry check — updates DB if expired, returns current plan
+    const currentPlan = await getUserValidPlan(decoded.id).catch(() => decoded.plan);
+    if (currentPlan !== null) req.user.plan = currentPlan;
+
     next();
   } catch {
     // Clear stale cookie if present
