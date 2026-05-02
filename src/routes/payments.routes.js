@@ -18,7 +18,9 @@ const CF_BASE    = CF_ENV === 'PROD'
 const PLANS = {
   daily:   { amount: 299,  name: 'OptionsLab Daily',   days: 1  },
   weekly:  { amount: 999,  name: 'OptionsLab Weekly',  days: 7  },
-  monthly: { amount: 1499, name: 'OptionsLab Monthly', days: 30 },
+  monthly: { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
+  pro:     { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
+  elite:   { amount: 3499, name: 'OptionsLab Elite',   days: 30 },
 };
 
 const { auth: authenticateToken } = require('../middleware/auth');
@@ -88,7 +90,7 @@ router.post('/create-order', authenticateToken, async (req, res) => {
 });
 
 // ── POST /api/payments/webhook ───────────────────────────────────────────────
-router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+router.post('/webhook', async (req, res) => {
   try {
     const rawBody   = req.body.toString('utf8');
     const timestamp = req.headers['x-webhook-timestamp'];
@@ -182,6 +184,16 @@ router.get('/verify/:orderId', authenticateToken, async (req, res) => {
           [order.plan, expiresAt, order.user_id]
         );
         order.status = 'PAID';
+
+        // ── REFERRAL HOOK (webhook miss fallback) ──────────────────────────
+        const { rows: prevOrders } = await pool.query(
+          `SELECT id FROM payment_orders
+           WHERE user_id = $1 AND plan = $2 AND status = 'PAID' AND order_id != $3`,
+          [order.user_id, order.plan, orderId]
+        );
+        const isRenewal = prevOrders.length > 0;
+        processUpgradeReward(order.user_id, orderId, isRenewal).catch(console.error);
+        // ───────────────────────────────────────────────────────────────────
       }
     }
 
