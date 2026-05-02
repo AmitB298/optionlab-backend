@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Community — OptionsLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Hind:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+:root,[data-theme="dark"]{
+  --bg:#030712;--bg2:#060d1a;--bg3:#0a1428;--card:#0d1830;--card2:#111f3a;
+  --border:rgba(99,155,255,0.10);--borderB:rgba(99,155,255,0.18);
+  --accent:#f97316;--accentGlow:rgba(249,115,22,0.18);--accentGlow2:rgba(249,115,22,0.10);
+  --green:#00e676;--greenGlow:rgba(0,230,118,0.14);--red:#ff3d71;
+  --yellow:#fbbf24;--cyan:#22d3ee;--purple:#a855f7;--orange:#fb923c;
+  --text:#e8f0ff;--text2:#8ba8d4;--text3:#3d5880;
+  --nav-bg:rgba(3,7,18,0.97);--saffron:#ff9933;--nav-green:#00ff88;
+  --font-d:'Bebas Neue',cursive;--font-r:'Rajdhani',sans-serif;
+  --font-m:'JetBrains Mono',monospace;--font-b:'Hind',sans-serif;
+  --nav-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);overflow-x:hidden;min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;border:none;background:none;cursor:pointer;}
+
+/* NAV */
+.top-nav{position:sticky;top:0;z-index:300;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:var(--nav-bg);backdrop-filter:blur(32px);border-bottom:1px solid rgba(255,153,51,0.14);box-shadow:0 2px 24px rgba(0,0,0,0.5);}
+.nav-logo{display:flex;align-items:center;gap:.65rem;cursor:pointer;}
+.logo-box{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ff9933,#e05a00);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:.78rem;color:#fff;box-shadow:0 0 18px rgba(255,153,51,.55);}
+.logo-name{font-family:var(--font-d);font-size:1.4rem;letter-spacing:.06em;}
+.logo-name em{color:var(--saffron);font-style:normal;text-shadow:0 0 12px rgba(255,153,51,.65);}
+.nav-back{display:flex;align-items:center;gap:.4rem;font-family:var(--font-m);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);padding:.4rem .8rem;border:1px solid var(--border);border-radius:6px;transition:all .2s;}
+.nav-back:hover{color:var(--saffron);border-color:rgba(255,153,51,.35);}
+
+/* HERO */
+.hero{position:relative;padding:5rem 2rem 3.5rem;text-align:center;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,153,51,.06),transparent 65%);pointer-events:none;}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,153,51,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,153,51,.025) 1px,transparent 1px);background-size:48px 48px;}
+.hero-kicker{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--font-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--saffron);background:rgba(255,153,51,.07);border:1px solid rgba(255,153,51,.28);padding:.3rem .85rem;border-radius:20px;margin-bottom:1.2rem;}
+.hero-kicker-dot{width:6px;height:6px;border-radius:50%;background:var(--saffron);box-shadow:0 0 8px var(--saffron);animation:pulse 2s infinite;}
+.hero-h1{font-family:var(--font-d);font-size:clamp(2.8rem,7vw,5rem);letter-spacing:.05em;line-height:1;margin-bottom:.6rem;}
+.hero-h1 span{color:var(--saffron);text-shadow:0 0 30px rgba(255,153,51,.4);}
+.hero-sub{font-family:var(--font-b);font-size:.95rem;color:var(--text2);font-weight:300;max-width:520px;margin:0 auto;line-height:1.7;}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:2.5rem;margin-top:2.2rem;flex-wrap:wrap;}
+.hero-stat-num{font-family:var(--font-d);font-size:1.8rem;color:var(--saffron);line-height:1;}
+.hero-stat-lbl{font-family:var(--font-m);font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-top:.15rem;}
+
+/* PLATFORMS GRID */
+.platforms{padding:2rem 2rem 5rem;max-width:1100px;margin:0 auto;}
+.section-lbl{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-m);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--saffron);text-shadow:0 0 10px rgba(255,153,51,.45);margin-bottom:1.8rem;}
+.platforms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;}
+
+/* PLATFORM CARD */
+.plat-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;overflow:hidden;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;display:flex;flex-direction:column;gap:1rem;text-decoration:none;color:inherit;}
+.plat-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:14px;}
+.plat-card:hover{transform:translateY(-4px);}
+
+/* per-platform colors */
+.plat-card.discord::before{background:radial-gradient(circle at 80% 20%,rgba(88,101,242,.12),transparent 60%);}
+.plat-card.discord:hover{border-color:rgba(88,101,242,.45);box-shadow:0 8px 40px rgba(88,101,242,.15);}
+.plat-card.twitter::before{background:radial-gradient(circle at 80% 20%,rgba(29,161,242,.12),transparent 60%);}
+.plat-card.twitter:hover{border-color:rgba(29,161,242,.45);box-shadow:0 8px 40px rgba(29,161,242,.15);}
+.plat-card.whatsapp::before{background:radial-gradient(circle at 80% 20%,rgba(37,211,102,.12),transparent 60%);}
+.plat-card.whatsapp:hover{border-color:rgba(37,211,102,.45);box-shadow:0 8px 40px rgba(37,211,102,.15);}
+.plat-card.telegram::before{background:radial-gradient(circle at 80% 20%,rgba(0,136,204,.12),transparent 60%);}
+.plat-card.telegram:hover{border-color:rgba(0,136,204,.45);box-shadow:0 8px 40px rgba(0,136,204,.15);}
+.plat-card.youtube::before{background:radial-gradient(circle at 80% 20%,rgba(255,0,0,.12),transparent 60%);}
+.plat-card.youtube:hover{border-color:rgba(255,0,0,.45);box-shadow:0 8px 40px rgba(255,0,0,.15);}
+
+.plat-card:hover::before{opacity:1;}
+
+.plat-top{display:flex;align-items:flex-start;justify-content:space-between;}
+.plat-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.discord .plat-icon-wrap{background:rgba(88,101,242,.15);border:1px solid rgba(88,101,242,.25);}
+.twitter .plat-icon-wrap{background:rgba(29,161,242,.15);border:1px solid rgba(29,161,242,.25);}
+.whatsapp .plat-icon-wrap{background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.25);}
+.telegram .plat-icon-wrap{background:rgba(0,136,204,.15);border:1px solid rgba(0,136,204,.25);}
+.youtube .plat-icon-wrap{background:rgba(255,0,0,.15);border:1px solid rgba(255,0,0,.25);}
+
+.plat-badge{font-family:var(--font-m);font-size:.46rem;letter-spacing:.08em;text-transform:uppercase;padding:.18rem .55rem;border-radius:20px;}
+.discord .plat-badge{background:rgba(88,101,242,.12);color:#8b9bf5;border:1px solid rgba(88,101,242,.25);}
+.twitter .plat-badge{background:rgba(29,161,242,.12);color:#5bb8f5;border:1px solid rgba(29,161,242,.25);}
+.whatsapp .plat-badge{background:rgba(37,211,102,.12);color:#4cd97a;border:1px solid rgba(37,211,102,.25);}
+.telegram .plat-badge{background:rgba(0,136,204,.12);color:#33aade;border:1px solid rgba(0,136,204,.25);}
+.youtube .plat-badge{background:rgba(255,0,0,.12);color:#ff5555;border:1px solid rgba(255,0,0,.25);}
+
+.plat-name{font-family:var(--font-d);font-size:1.5rem;letter-spacing:.04em;line-height:1;}
+.plat-handle{font-family:var(--font-m);font-size:.54rem;color:var(--text3);margin-top:.15rem;}
+.plat-desc{font-family:var(--font-b);font-size:.85rem;color:var(--text2);font-weight:300;line-height:1.65;}
+
+.plat-stats{display:flex;gap:1.4rem;padding:.75rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.plat-stat-val{font-family:var(--font-d);font-size:1.1rem;line-height:1;}
+.plat-stat-lbl{font-family:var(--font-m);font-size:.44rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-top:.1rem;}
+
+.plat-cta{display:flex;align-items:center;justify-content:space-between;}
+.plat-cta-text{font-family:var(--font-r);font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.discord .plat-cta-text{color:#8b9bf5;}
+.twitter .plat-cta-text{color:#5bb8f5;}
+.whatsapp .plat-cta-text{color:#4cd97a;}
+.telegram .plat-cta-text{color:#33aade;}
+.youtube .plat-cta-text{color:#ff5555;}
+
+.plat-arrow{font-size:1.2rem;transition:transform .2s;}
+.plat-card:hover .plat-arrow{transform:translateX(4px);}
+
+/* ACTIVE SIGNAL */
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.8s infinite;display:inline-block;margin-right:.35rem;}
+
+/* BOTTOM STRIP */
+.community-strip{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;}
+.strip-h{font-family:var(--font-d);font-size:1.6rem;letter-spacing:.05em;margin-bottom:.5rem;}
+.strip-sub{font-family:var(--font-b);font-size:.88rem;color:var(--text2);font-weight:300;margin-bottom:1.4rem;}
+.strip-btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;}
+.strip-btn-primary{font-family:var(--font-r);font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;padding:.55rem 1.6rem;background:linear-gradient(135deg,#ff9933,#e05a00);color:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(255,153,51,.35);transition:all .2s;}
+.strip-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,153,51,.55);}
+.strip-btn-ghost{font-family:var(--font-r);font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;padding:.55rem 1.6rem;border:1px solid var(--borderB);color:var(--text2);border-radius:8px;transition:all .2s;}
+.strip-btn-ghost:hover{border-color:var(--saffron);color:var(--saffron);}
+
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+.plat-card{animation:fadeUp .5s ease both;}
+.plat-card:nth-child(1){animation-delay:.05s;}
+.plat-card:nth-child(2){animation-delay:.12s;}
+.plat-card:nth-child(3){animation-delay:.19s;}
+.plat-card:nth-child(4){animation-delay:.26s;}
+.plat-card:nth-child(5){animation-delay:.33s;}
+
+@media(max-width:600px){
+  .hero{padding:3.5rem 1.2rem 2rem;}
+  .platforms{padding:1.5rem 1.2rem 4rem;}
+  .hero-stats{gap:1.5rem;}
+  .plat-card{padding:1.3rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-logo" onclick="window.location.href='/index.html'">
+    <div class="logo-box">OL</div>
+    <div class="logo-name">Options<em>Lab</em></div>
+  </div>
+  <a href="/index.html" class="nav-back">← Back to Dashboard</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-kicker">
+    <span class="hero-kicker-dot"></span>
+    Community Hub
+  </div>
+  <h1 class="hero-h1">JOIN THE <span>TRIBE</span></h1>
+  <p class="hero-sub">Trade smarter with India's sharpest options community. Real-time signals, strategies & market talk — wherever you are.</p>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num">12K+</div>
+      <div class="hero-stat-lbl">Active Members</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">5</div>
+      <div class="hero-stat-lbl">Platforms</div>
+    </div>
+    <div>
+      <div class="hero-stat-num"><span class="live-dot"></span>Live</div>
+      <div class="hero-stat-lbl">Daily Signals</div>
+    </div>
+  </div>
+</section>
+
+<section class="platforms">
+  <div class="section-lbl">▸ Choose Your Platform</div>
+  <div class="platforms-grid">
+
+    <!-- Discord -->
+    <a href="https://discord.gg/32PrYqFxwg" target="_blank" class="plat-card discord">
+      <div class="plat-top">
+        <div class="plat-icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#8b9bf5"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        </div>
+        <span class="plat-badge">Server</span>
+      </div>
+      <div>
+        <div class="plat-name">Discord</div>
+        <div class="plat-handle">discord.gg/32PrYqFxwg</div>
+      </div>
+      <div class="plat-desc">Live trade rooms, signal channels, strategy breakdowns & direct access to our analysts. The most active hub.</div>
+      <div class="plat-stats">
+        <div><div class="plat-stat-val">4.2K</div><div class="plat-stat-lbl">Members</div></div>
+        <div><div class="plat-stat-val">8</div><div class="plat-stat-lbl">Channels</div></div>
+        <div><div class="plat-stat-val"><span class="live-dot"></span>Active</div><div class="plat-stat-lbl">Status</div></div>
+      </div>
+      <div class="plat-cta">
+        <span class="plat-cta-text">Join Server</span>
+        <span class="plat-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61589251376264" target="_blank" class="plat-card discord">
+      <div class="plat-top">
+        <div class="plat-icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#8b9bf5"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </div>
+        <span class="plat-badge">Page</span>
+      </div>
+      <div>
+        <div class="plat-name">Facebook</div>
+        <div class="plat-handle">Options Lab</div>
+      </div>
+      <div class="plat-desc">Market updates, trading education posts & community discussions. Follow our page for daily insights and upcoming events.</div>
+      <div class="plat-stats">
+        <div><div class="plat-stat-val">1K+</div><div class="plat-stat-lbl">Followers</div></div>
+        <div><div class="plat-stat-val">Daily</div><div class="plat-stat-lbl">Posts</div></div>
+        <div><div class="plat-stat-val">Free</div><div class="plat-stat-lbl">Access</div></div>
+      </div>
+      <div class="plat-cta">
+        <span class="plat-cta-text">Follow Page</span>
+        <span class="plat-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- Twitter / X -->
+    <a href="https://x.com/Optionslab001" target="_blank" class="plat-card twitter">
+      <div class="plat-top">
+        <div class="plat-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#5bb8f5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.745l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </div>
+        <span class="plat-badge">@handle</span>
+      </div>
+      <div>
+        <div class="plat-name">Twitter / X</div>
+        <div class="plat-handle">@Optionslab001</div>
+      </div>
+      <div class="plat-desc">Market insights, daily option flow analysis, macro takes & real-time trade commentary. No noise, only signal.</div>
+      <div class="plat-stats">
+        <div><div class="plat-stat-val">3.1K</div><div class="plat-stat-lbl">Followers</div></div>
+        <div><div class="plat-stat-val">Daily</div><div class="plat-stat-lbl">Posts</div></div>
+        <div><div class="plat-stat-val">Free</div><div class="plat-stat-lbl">Access</div></div>
+      </div>
+      <div class="plat-cta">
+        <span class="plat-cta-text">Follow Us</span>
+        <span class="plat-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/message/optionslab" target="_blank" class="plat-card whatsapp">
+      <div class="plat-top">
+        <div class="plat-icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#4cd97a"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        </div>
+        <span class="plat-badge">Channel</span>
+      </div>
+      <div>
+        <div class="plat-name">WhatsApp</div>
+        <div class="plat-handle">OptionsLab Channel</div>
+      </div>
+      <div class="plat-desc">Quick intraday alerts, expiry day setups & key levels — straight to your phone. Zero spam, max alpha.</div>
+      <div class="plat-stats">
+        <div><div class="plat-stat-val">2.8K</div><div class="plat-stat-lbl">Subscribers</div></div>
+        <div><div class="plat-stat-val">1–3</div><div class="plat-stat-lbl">Daily Alerts</div></div>
+        <div><div class="plat-stat-val">Free</div><div class="plat-stat-lbl">Access</div></div>
+      </div>
+      <div class="plat-cta">
+        <span class="plat-cta-text">Join Channel</span>
+        <span class="plat-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- Telegram -->
+    <a href="https://t.me/optionslab_in" target="_blank" class="plat-card telegram">
+      <div class="plat-top">
+        <div class="plat-icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#33aade"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </div>
+        <span class="plat-badge">Channel</span>
+      </div>
+      <div>
+        <div class="plat-name">Telegram</div>
+        <div class="plat-handle">t.me/optionslab_in</div>
+      </div>
+      <div class="plat-desc">Premium signal channel with detailed entry/exit levels, OI analysis & live market commentary during trading hours.</div>
+      <div class="plat-stats">
+        <div><div class="plat-stat-val">5.5K</div><div class="plat-stat-lbl">Members</div></div>
+        <div><div class="plat-stat-val">Live</div><div class="plat-stat-lbl">Signals</div></div>
+        <div><div class="plat-stat-val">Free</div><div class="plat-stat-lbl">Access</div></div>
+      </div>
+      <div class="plat-cta">
+        <span class="plat-cta-text">Join Channel</span>
+        <span class="plat-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- YouTube -->
+    <a href="https://www.youtube.com/@OptionLab-001" target="_blank" class="plat-card youtube">
+      <div class="plat-top">
+        <div class="plat-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#ff5555"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </div>
+        <span class="plat-badge">Channel</span>
+      </div>
+      <div>
+        <div class="plat-name">YouTube</div>
+        <div class="plat-handle">@OptionLab-001</div>
+      </div>
+      <div class="plat-desc">Weekly market analysis videos, options strategy breakdowns, platform tutorials & live trading sessions. Learn & earn.</div>
+      <div class="plat-stats">
+        <div><div class="plat-stat-val">1.8K</div><div class="plat-stat-lbl">Subscribers</div></div>
+        <div><div class="plat-stat-val">Weekly</div><div class="plat-stat-lbl">Videos</div></div>
+        <div><div class="plat-stat-val">Free</div><div class="plat-stat-lbl">Access</div></div>
+      </div>
+      <div class="plat-cta">
+        <span class="plat-cta-text">Subscribe</span>
+        <span class="plat-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="community-strip">
+  <div class="strip-h">READY TO TRADE SMARTER?</div>
+  <p class="strip-sub">Join thousands of options traders who use OptionsLab every day</p>
+  <div class="strip-btns">
+    <a href="/index.html" class="strip-btn-primary">Start Free →</a>
+    <a href="/app.html" class="strip-btn-ghost">Open Dashboard</a>
+  </div>
+</div>
+
+</body>
+</html>
