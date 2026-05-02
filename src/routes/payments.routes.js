@@ -16,11 +16,13 @@ const CF_BASE    = CF_ENV === 'PROD'
   : 'https://sandbox.cashfree.com/pg';
 
 const PLANS = {
-  daily:   { amount: 299,  name: 'OptionsLab Daily',   days: 1  },
+  daily:   { amount: 1,    name: 'OptionsLab Daily',   days: 1  },
   weekly:  { amount: 999,  name: 'OptionsLab Weekly',  days: 7  },
   monthly: { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
   pro:     { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
   elite:   { amount: 3499, name: 'OptionsLab Elite',   days: 30 },
+  // TEST plan — only works when ENABLE_TEST_PLAN=true in Railway ENV
+  test:    { amount: 1,    name: 'OptionsLab Test',    days: 1  },
 };
 
 const { auth: authenticateToken } = require('../middleware/auth');
@@ -48,6 +50,9 @@ router.post('/create-order', authenticateToken, async (req, res) => {
   try {
     const { plan } = req.body;
     if (!PLANS[plan]) return res.status(400).json({ error: 'Invalid plan' });
+    if (plan === 'test' && process.env.ENABLE_TEST_PLAN !== 'true') {
+      return res.status(400).json({ error: 'Invalid plan' });
+    }
 
     const user     = req.user;
     const planInfo = PLANS[plan];
