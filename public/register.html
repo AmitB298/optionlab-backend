@@ -370,6 +370,17 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
 </style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KR22SF63PS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KR22SF63PS', { anonymize_ip: true });
+  window.gtagEvent = function(event, params) {
+    if(typeof gtag === 'function') gtag('event', event, params || {});
+  };
+</script>
 </head>
 <body>
 <div class="bg-grid" aria-hidden="true"></div>
