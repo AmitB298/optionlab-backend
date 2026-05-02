@@ -500,6 +500,17 @@ img{max-width:100%;display:block}
   #guide-layout{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 }
 </style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KR22SF63PS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KR22SF63PS', { anonymize_ip: true });
+  window.gtagEvent = function(event, params) {
+    if(typeof gtag === 'function') gtag('event', event, params || {});
+  };
+</script>
 </head>
 <body>
 
