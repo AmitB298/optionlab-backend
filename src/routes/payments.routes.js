@@ -18,11 +18,7 @@ const CF_BASE    = CF_ENV === 'PROD'
 const PLANS = {
   daily:   { amount: 299,  name: 'OptionsLab Daily',   days: 1  },
   weekly:  { amount: 999,  name: 'OptionsLab Weekly',  days: 7  },
-  monthly: { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
-  pro:     { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
-  elite:   { amount: 3499, name: 'OptionsLab Elite',   days: 30 },
-  // TEST plan — only works when ENABLE_TEST_PLAN=true in Railway ENV
-  test:    { amount: 1,    name: 'OptionsLab Test',    days: 1  },
+  monthly: { amount: 1499, name: 'OptionsLab Monthly', days: 30 },
 };
 
 const { auth: authenticateToken } = require('../middleware/auth');
@@ -50,9 +46,6 @@ router.post('/create-order', authenticateToken, async (req, res) => {
   try {
     const { plan } = req.body;
     if (!PLANS[plan]) return res.status(400).json({ error: 'Invalid plan' });
-    if (plan === 'test' && process.env.ENABLE_TEST_PLAN !== 'true') {
-      return res.status(400).json({ error: 'Invalid plan' });
-    }
 
     const user     = req.user;
     const planInfo = PLANS[plan];
@@ -95,9 +88,18 @@ router.post('/create-order', authenticateToken, async (req, res) => {
 });
 
 // ── POST /api/payments/webhook ───────────────────────────────────────────────
-router.post('/webhook', async (req, res) => {
+// Manually collect raw body so HMAC works regardless of Content-Type header
+router.post('/webhook', (req, res, next) => {
+  let chunks = [];
+  req.on('data', chunk => chunks.push(chunk));
+  req.on('end', () => {
+    req.rawBody = Buffer.concat(chunks).toString('utf8');
+    next();
+  });
+  req.on('error', next);
+}, async (req, res) => {
   try {
-    const rawBody   = req.body.toString('utf8');
+    const rawBody   = req.rawBody || '';
     const timestamp = req.headers['x-webhook-timestamp'];
     const signature = req.headers['x-webhook-signature'];
 
@@ -179,26 +181,39 @@ router.get('/verify/:orderId', authenticateToken, async (req, res) => {
     if (order.status === 'PENDING') {
       const cfOrder = await cashfreeRequest('GET', `/orders/${orderId}`);
       if (cfOrder.order_status === 'PAID') {
+        // Fetch cf_payment_id from payments list
+        let cfPayId = null;
+        try {
+          const cfPayments = await cashfreeRequest('GET', `/orders/${orderId}/payments`);
+          // cfPayments is an array of payment objects
+          const paid = Array.isArray(cfPayments)
+            ? cfPayments.find(p => p.payment_status === 'SUCCESS')
+            : null;
+          cfPayId = paid?.cf_payment_id || null;
+        } catch (e) {
+          console.warn('[verify] Could not fetch cf_payment_id:', e.message);
+        }
+
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + PLANS[order.plan].days);
         await pool.query(
-          `UPDATE payment_orders SET status='PAID', paid_at=NOW() WHERE order_id=$1`, [orderId]
+          `UPDATE payment_orders SET status='PAID', cf_payment_id=$1, paid_at=NOW() WHERE order_id=$2`,
+          [cfPayId, orderId]
         );
         await pool.query(
-          `UPDATE users SET plan=$1, plan_expires_at=$2 WHERE id=$3`,
+          `UPDATE users SET plan=$1, plan_expires_at=$2, updated_at=NOW() WHERE id=$3`,
           [order.plan, expiresAt, order.user_id]
         );
-        order.status = 'PAID';
 
-        // ── REFERRAL HOOK (webhook miss fallback) ──────────────────────────
+        // Referral hook
         const { rows: prevOrders } = await pool.query(
-          `SELECT id FROM payment_orders
-           WHERE user_id = $1 AND plan = $2 AND status = 'PAID' AND order_id != $3`,
+          `SELECT id FROM payment_orders WHERE user_id=$1 AND plan=$2 AND status='PAID' AND order_id!=$3`,
           [order.user_id, order.plan, orderId]
         );
         const isRenewal = prevOrders.length > 0;
         processUpgradeReward(order.user_id, orderId, isRenewal).catch(console.error);
-        // ───────────────────────────────────────────────────────────────────
+
+        order.status = 'PAID';
       }
     }
 
