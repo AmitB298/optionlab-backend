@@ -16,7 +16,7 @@ const CF_BASE    = CF_ENV === 'PROD'
   : 'https://sandbox.cashfree.com/pg';
 
 const PLANS = {
-  daily:   { amount: 1,    name: 'OptionsLab Daily',   days: 1  },
+  daily:   { amount: 299,  name: 'OptionsLab Daily',   days: 1  },
   weekly:  { amount: 999,  name: 'OptionsLab Weekly',  days: 7  },
   monthly: { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
   pro:     { amount: 1499, name: 'OptionsLab Pro',     days: 30 },
