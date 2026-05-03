@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAuthStore } from '../store/authStore'
 import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
@@ -7,6 +8,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { setAuth } = useAuthStore()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -19,8 +21,7 @@ export default function LoginPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Login failed')
-      localStorage.setItem('ol_token', data.token)
-      localStorage.setItem('ol_user', JSON.stringify(data.author))
+      setAuth(data.token, data.author)
       navigate('/admin')
     } catch (err: any) {
       setError(err.message || 'Invalid credentials')
@@ -53,5 +54,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
-
