@@ -285,7 +285,7 @@ router.post('/users/:userId/reset-mpin', auditLog('RESET_USER_MPIN'), async (req
 
   const mpinResult = V.mpin(req.body?.new_mpin);
   if (!mpinResult.ok) {
-    return res.status(400).json({ error: 'new_mpin must be a 4-digit string' });
+    return res.status(400).json({ error: 'new_mpin must be exactly 8 digits' });
   }
 
   try {

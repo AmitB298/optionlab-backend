@@ -34,7 +34,7 @@ function mobile(raw) {
  */
 function mpin(raw) {
   if (typeof raw !== 'string') return { ok: false, error: 'mpin must be a string' };
-  if (!/^\d{4,6}$/.test(raw)) return { ok: false, error: 'mpin must be 4 to 6 digits' };
+  if (!/^\d{8}$/.test(raw)) return { ok: false, error: 'mpin must be exactly 8 digits' };
   return { ok: true, value: raw };
 }
 
