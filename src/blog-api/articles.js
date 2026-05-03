@@ -100,16 +100,12 @@ router.get('/:slug', async (req, res) => {
     );
     if (!rows[0]) return res.status(404).json({ error: 'Article not found' });
 
-    // Track view
-    const ipHash = crypto.createHash('sha256').update(req.ip || 'unknown').digest('hex');
-    await pool.query(
-      `INSERT INTO blog_article_views (article_id, ip_hash, user_agent) VALUES ($1,$2,$3)`,
-      [rows[0].id, ipHash, req.headers['user-agent']?.substring(0, 300)]
-    );
-    await pool.query(
-      `UPDATE blog_articles SET views_count = views_count + 1 WHERE id = $1`,
-      [rows[0].id]
-    );
+    // Track view (non-blocking)
+    try {
+      const ipHash = crypto.createHash('sha256').update(req.ip || 'unknown').digest('hex');
+      await pool.query(`INSERT INTO blog_article_views (article_id, ip_hash, user_agent) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING`, [rows[0].id, ipHash, req.headers['user-agent']?.substring(0, 300)]);
+      await pool.query(`UPDATE blog_posts SET views_count = views_count + 1 WHERE id = $1`, [rows[0].id]);
+    } catch (_) { /* silent */ }
 
     res.json(rows[0]);
   } catch (err) {
@@ -277,14 +273,3 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
