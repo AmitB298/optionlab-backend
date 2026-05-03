@@ -18,6 +18,7 @@ import DisclaimerPage from './pages/DisclaimerPage'
 import RiskDisclosurePage from './pages/RiskDisclosurePage'
 import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
+import SocialSidebar from './components/layout/SocialSidebar'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 5 * 60 * 1000 } },
@@ -50,6 +51,7 @@ function AppInner() {
         </Routes>
       </main>
       {!hideFooter && <Footer />}
+      <SocialSidebar />
     </div>
   )
 }
