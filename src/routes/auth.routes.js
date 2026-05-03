@@ -58,7 +58,7 @@ function isValidMobile(v) {
   return /^[6-9]\d{9}$/.test(v);
 }
 function isValidMpin(v) {
-  return /^\d{4,6}$/.test(v);
+  return /^\d{8}$/.test(v);
 }
 function isValidName(v) {
   return typeof v === 'string' && v.trim().length >= 2 && v.trim().length <= 100;
@@ -102,7 +102,7 @@ router.post('/login-mpin', loginLimiter, async (req, res) => {
     const mpin   = (req.body.mpin   || '').trim();
 
     if (!isValidMobile(mobile)) return res.status(400).json({ error: 'Invalid mobile number' });
-    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be 4-6 digits' });
+    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be exactly 8 digits' });
 
     const { rows } = await pool.query(
       `SELECT id, name, mobile, email, mpin_hash, broker_client_id, plan, is_active
@@ -190,7 +190,7 @@ router.post('/register', registerLimiter, async (req, res) => {
 
     if (!isValidName(name))     return res.status(400).json({ error: 'Name must be 2-100 characters' });
     if (!isValidMobile(mobile)) return res.status(400).json({ error: 'Invalid mobile number' });
-    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be 4-6 digits' });
+    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be exactly 8 digits' });
     if (!isValidReferral(referralCode)) return res.status(400).json({ error: 'Invalid referral code format' });
 
     // Check duplicates
@@ -368,7 +368,7 @@ router.post('/jobber-login', loginLimiter, async (req, res) => {
     const mpin   = (req.body.mpin   || '').trim();
 
     if (!isValidMobile(mobile)) return res.status(400).json({ error: 'Invalid mobile number' });
-    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be 4-6 digits' });
+    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be exactly 8 digits' });
 
     const { rows } = await pool.query(
       `SELECT id, name, mobile, email, mpin_hash, plan, is_active, is_admin, plan_expires_at
@@ -427,7 +427,7 @@ router.post('/jobber-register', registerLimiter, async (req, res) => {
 
     if (!isValidName(name))     return res.status(400).json({ error: 'Name must be 2-100 characters' });
     if (!isValidMobile(mobile)) return res.status(400).json({ error: 'Invalid mobile number (10 digits, starts 6-9)' });
-    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be 4-6 digits' });
+    if (!isValidMpin(mpin))     return res.status(400).json({ error: 'MPIN must be exactly 8 digits' });
 
     // Duplicate check
     const checkQuery = email
