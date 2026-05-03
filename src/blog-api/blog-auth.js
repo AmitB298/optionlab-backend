@@ -29,6 +29,7 @@ router.post('/login', async (req, res) => {
     );
 
     const { password_hash: _pw, ...safeAuthor } = author;
+    res.cookie('ol_tok', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 7*24*60*60*1000 });
     res.json({ token, author: safeAuthor });
   } catch (err) {
     console.error('[Auth] Login error:', err);
@@ -71,5 +72,3 @@ router.post('/change-password', auth, async (req, res) => {
 });
 
 module.exports = router;
-
-
