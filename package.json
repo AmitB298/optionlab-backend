@@ -1,7 +1,7 @@
 {
   "name": "optionlab-backend",
   "version": "2.0.0",
-  "description": "OptionLab API \u2014 full admin panel with device auth",
+  "description": "OptionLab API — full admin panel with device auth",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
