@@ -90,8 +90,9 @@ export default function AdminPage() {
 
 /* ── DASHBOARD ─────────────────────────────────────────────── */
 function AdminDashboard({ onNewArticle }: { onNewArticle: () => void }) {
-  const { data: stats } = useQuery({ queryKey: ['admin-stats'], queryFn: () => analyticsApi.dashboard().then(r => r.data) })
-  const { data: posts }  = useQuery({ queryKey: ['admin-posts'], queryFn: () => articlesApi.adminAll().then(r => r.data) })
+  const { token } = useAuthStore()
+  const { data: stats } = useQuery({ queryKey: ['admin-stats'], queryFn: () => analyticsApi.dashboard().then(r => r.data), enabled: !!token })
+  const { data: posts }  = useQuery({ queryKey: ['admin-posts'], queryFn: () => articlesApi.adminAll().then(r => r.data), enabled: !!token })
 
   return (
     <div>
@@ -541,7 +542,8 @@ function PostsTable({ onEdit, onNewArticle }: { onEdit: (a:any)=>void, onNewArti
 
 /* ── ANALYTICS ────────────────────────────────────────────── */
 function AnalyticsPanel() {
-  const { data: stats } = useQuery({ queryKey: ['admin-analytics'], queryFn: () => analyticsApi.dashboard().then(r => r.data) })
+  const { token } = useAuthStore()
+  const { data: stats } = useQuery({ queryKey: ['admin-analytics'], queryFn: () => analyticsApi.dashboard().then(r => r.data), enabled: !!token })
   return (
     <div>
       <div className="px-6 py-4 border-b border-line bg-ink-1 font-sans font-bold text-[17px] text-t-1">Analytics</div>
