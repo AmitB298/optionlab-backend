@@ -507,6 +507,48 @@ router.get('/subscription', async (req, res) => {
   }
 });
 
+
+// ── POST /api/auth/bind-fyers — Link Fyers Client ID to user ─────────────────
+router.post('/bind-fyers', async (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'] || '';
+    const token = authHeader.replace('Bearer ', '').trim();
+    if (!token) return res.status(401).json({ success: false, message: 'Token required' });
+
+    const jwt = require('jsonwebtoken');
+    const JWT_SECRET = process.env.JWT_SECRET;
+    let decoded;
+    try { decoded = jwt.verify(token, JWT_SECRET); }
+    catch (e) { return res.status(401).json({ success: false, message: 'Invalid or expired token' }); }
+
+    const fyersClientId = (req.body.fyersClientId || '').trim().toUpperCase();
+    if (!fyersClientId || fyersClientId.length < 3) {
+      return res.status(400).json({ success: false, message: 'Invalid Fyers client ID' });
+    }
+
+    // Check if already bound to another user
+    const existing = await pool.query(
+      'SELECT user_id FROM fyers_bindings WHERE fyers_client_id = $1 AND is_active = true',
+      [fyersClientId]
+    );
+    if (existing.rows.length > 0 && existing.rows[0].user_id !== decoded.id) {
+      return res.status(409).json({ success: false, message: 'This Fyers account is bound to another user' });
+    }
+
+    await pool.query(
+      `INSERT INTO fyers_bindings (user_id, fyers_client_id, is_active, created_at)
+       VALUES ($1, $2, true, NOW())
+       ON CONFLICT (user_id, fyers_client_id)
+       DO UPDATE SET is_active = true, last_verified = NOW()`,
+      [decoded.id, fyersClientId]
+    );
+
+    return res.json({ success: true, message: 'Fyers account linked successfully' });
+  } catch (e) {
+    console.error('[auth] bind-fyers:', e.message);
+    return res.status(500).json({ success: false, message: 'Failed to link Fyers account' });
+  }
+});
 module.exports = router;
 
 
