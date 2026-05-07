@@ -386,18 +386,25 @@ router.post('/jobber-login', loginLimiter, async (req, res) => {
     if (user.plan_expires_at && new Date(user.plan_expires_at) < new Date()) {
       plan = 'EXPIRED';
     }
-
     const token = jwt.sign(
       { id: user.id, mobile: user.mobile, email: user.email, plan, isAdmin: user.is_admin },
       JWT_SECRET,
       { expiresIn: TOKEN_EXPIRES }
     );
+    const refreshToken = jwt.sign(
+      { id: user.id, type: 'refresh' },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
 
     updateActivity(user.id, req.ip, req.headers['user-agent']?.slice(0, 100));
+
 
     return res.json({
       success: true,
       token,
+      refresh_token: refreshToken,
       user: {
         id:          user.id,
         name:        user.name,
@@ -408,7 +415,6 @@ router.post('/jobber-login', loginLimiter, async (req, res) => {
         plan_expires_at: user.plan_expires_at,
       },
     });
-  } catch (e) {
     console.error('[auth] jobber-login:', e.message);
     return res.status(500).json({ error: 'Login failed. Please try again.' });
   }
