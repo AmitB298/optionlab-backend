@@ -415,7 +415,7 @@ router.post('/jobber-login', loginLimiter, async (req, res) => {
         plan_expires_at: user.plan_expires_at,
       },
     });
-    console.error('[auth] jobber-login:', e.message);
+  } catch (e) {
     return res.status(500).json({ error: 'Login failed. Please try again.' });
   }
 });
