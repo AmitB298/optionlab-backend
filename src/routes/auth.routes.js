@@ -528,7 +528,7 @@ router.post('/bind-fyers', async (req, res) => {
 
     // Check if already bound to another user
     const existing = await pool.query(
-      'SELECT user_id FROM fyers_bindings WHERE fyers_client_id = $1 AND is_active = true',
+      'SELECT user_id FROM fyers_bindings WHERE client_id = $1 AND is_active = true',
       [fyersClientId]
     );
     if (existing.rows.length > 0 && existing.rows[0].user_id !== decoded.id) {
@@ -536,9 +536,9 @@ router.post('/bind-fyers', async (req, res) => {
     }
 
     await pool.query(
-      `INSERT INTO fyers_bindings (user_id, fyers_client_id, is_active, created_at)
+      `INSERT INTO fyers_bindings (user_id, client_id, is_active, created_at)
        VALUES ($1, $2, true, NOW())
-       ON CONFLICT (user_id, fyers_client_id)
+       ON CONFLICT (user_id, client_id)
        DO UPDATE SET is_active = true, last_verified = NOW()`,
       [decoded.id, fyersClientId]
     );
