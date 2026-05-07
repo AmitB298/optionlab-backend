@@ -57,8 +57,7 @@ const COOKIE_OPTS = {
 function isValidMobile(v) {
   return /^[6-9]\d{9}$/.test(v);
 }
-function isValidMpin(v) {
-  return /^\d{4,6}$/.test(v);
+function isValidMpin(v) { return /^\d{4,8}$/.test(v); }
 }
 function isValidName(v) {
   return typeof v === 'string' && v.trim().length >= 2 && v.trim().length <= 100;
@@ -504,3 +503,5 @@ router.get('/subscription', async (req, res) => {
 });
 
 module.exports = router;
+
+
