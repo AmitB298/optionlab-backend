@@ -539,7 +539,7 @@ router.post('/bind-fyers', async (req, res) => {
       `INSERT INTO fyers_bindings (user_id, client_id, is_active, created_at)
        VALUES ($1, $2, true, NOW())
        ON CONFLICT (user_id, client_id)
-       DO UPDATE SET is_active = true, last_verified = NOW()`,
+       DO UPDATE SET is_active = true, updated_at = NOW()`,
       [decoded.id, fyersClientId]
     );
 
