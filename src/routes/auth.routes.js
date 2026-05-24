@@ -181,7 +181,7 @@ router.post('/register', registerLimiter, async (req, res) => {
     const name         = (req.body.name             || '').trim();
     const mobile       = (req.body.mobile           || '').trim();
     const mpin         = (req.body.mpin             || '').trim();
-    const angelId      = (req.body.broker_client_id || '').trim().toUpperCase();
+    const angelId = (req.body.broker_client_id || req.body.fyers_client_id || '').trim().toUpperCase();
     const experience   = (req.body.experience       || '').trim().toLowerCase();
     const tradingStyle = (req.body.trading_style    || '').trim().toLowerCase();
     const referralCode = (req.body.referral_code    || '').trim().toUpperCase() || null;
@@ -198,6 +198,18 @@ router.post('/register', registerLimiter, async (req, res) => {
     );
     if (existing.length) {
       return res.status(409).json({ error: 'Account already exists with this mobile or email.' });
+    }
+
+    // Fyers Client ID mandatory + duplicate check
+    if (!angelId || angelId.length < 5) {
+      return res.status(400).json({ error: 'Fyers Client ID required hai.' });
+    }
+    const { rows: fyersDup } = await pool.query(
+      \SELECT id FROM users WHERE broker_client_id = \\,
+      [angelId]
+    );
+    if (fyersDup.length) {
+      return res.status(409).json({ error: 'Yeh Fyers Client ID pehle se registered hai. Ek Fyers account se sirf ek OptionLab account ban sakta hai.' });
     }
 
     const mpinHash = await bcrypt.hash(mpin, SALT_ROUNDS);
@@ -547,6 +559,21 @@ router.post('/bind-fyers', async (req, res) => {
   } catch (e) {
     console.error('[auth] bind-fyers:', e.message);
     return res.status(500).json({ success: false, message: 'Failed to link Fyers account' });
+  }
+});
+
+// -- POST /api/auth/check-fyers-id
+router.post('/check-fyers-id', async (req, res) => {
+  try {
+    const fyersId = (req.body.broker_client_id || req.body.fyers_client_id || '').trim().toUpperCase();
+    if (!fyersId || fyersId.length < 5) return res.json({ taken: false });
+    const { rows: u } = await pool.query('SELECT id FROM users WHERE broker_client_id = \ LIMIT 1', [fyersId]);
+    if (u.length) return res.json({ taken: true, error: 'Yeh Fyers Client ID pehle se registered hai. Login karo.' });
+    const { rows: b } = await pool.query('SELECT user_id FROM fyers_bindings WHERE client_id = \ AND is_active = TRUE LIMIT 1', [fyersId]);
+    if (b.length) return res.json({ taken: true, error: 'Yeh Fyers Client ID pehle se registered hai. Login karo.' });
+    return res.json({ taken: false });
+  } catch (e) {
+    return res.json({ taken: false });
   }
 });
 module.exports = router;
