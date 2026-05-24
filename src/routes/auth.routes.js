@@ -204,10 +204,7 @@ router.post('/register', registerLimiter, async (req, res) => {
     if (!angelId || angelId.length < 5) {
       return res.status(400).json({ error: 'Fyers Client ID required hai.' });
     }
-    const { rows: fyersDup } = await pool.query(
-      \SELECT id FROM users WHERE broker_client_id = \\,
-      [angelId]
-    );
+    const { rows: fyersDup } = await pool.query('SELECT id FROM users WHERE broker_client_id = $1', [angelId]);
     if (fyersDup.length) {
       return res.status(409).json({ error: 'Yeh Fyers Client ID pehle se registered hai. Ek Fyers account se sirf ek OptionLab account ban sakta hai.' });
     }
