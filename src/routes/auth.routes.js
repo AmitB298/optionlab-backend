@@ -558,6 +558,32 @@ router.post('/bind-fyers', async (req, res) => {
       return res.status(409).json({ success: false, message: 'This Fyers account is bound to another user' });
     }
 
+    // ── FRAUD CHECK: Fyers ID already used as broker_client_id on another account ──
+    // If someone registered with a fake ID and now binds their real Fyers ID
+    // which exists on another trial account → revoke current trial
+    const { rows: brokerMatch } = await pool.query(
+      `SELECT id, trial_used, plan FROM users WHERE broker_client_id = $1 AND id != $2 LIMIT 1`,
+      [fyersClientId, decoded.id]
+    );
+    if (brokerMatch.length > 0) {
+      // Real Fyers ID belongs to another registered account — revoke this user's trial
+      await pool.query(
+        `UPDATE users SET plan = 'FREE', plan_expires_at = NULL, trial_used = true WHERE id = $1`,
+        [decoded.id]
+      );
+      return res.status(409).json({
+        success: false,
+        message: 'Yeh Fyers ID ek aur account mein registered hai. Trial revoke ho gaya — paid plan lein.'
+      });
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
+
+    // Also update broker_client_id on users table if it was fake/empty
+    await pool.query(
+      `UPDATE users SET broker_client_id = $1 WHERE id = $2 AND (broker_client_id IS NULL OR broker_client_id != $1)`,
+      [fyersClientId, decoded.id]
+    );
+
     await pool.query(
       `INSERT INTO fyers_bindings (user_id, client_id, is_active, created_at)
        VALUES ($1, $2, true, NOW())
