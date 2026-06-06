@@ -1526,7 +1526,7 @@ async function loadPricingPage() {
   if (!c) return;
   c.innerHTML = '<span style="color:var(--muted);font-size:13px">Loading...</span>';
   try {
-    const r = await authFetch('/api/admin/plans');
+    const r = await api('/api/admin/plans');
     const d = await r.json();
     c.innerHTML = '';
     (d.plans || []).forEach(p => {
@@ -1560,7 +1560,7 @@ async function savePlanEdit() {
   const msg = document.getElementById('pricing-save-msg');
   msg.style.color = 'var(--muted)'; msg.textContent = 'Saving...';
   try {
-    const r = await authFetch(`/api/admin/plans/${_pricingKey}`, {
+    const r = await api(`/api/admin/plans/${_pricingKey}`, {
       method: 'PATCH', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ amount: Number(document.getElementById('pe-amount').value), name: document.getElementById('pe-name').value.trim(), days: Number(document.getElementById('pe-days').value) })
     });
@@ -1575,7 +1575,7 @@ async function resetPrices() {
   const msg = document.getElementById('pricing-save-msg');
   msg.style.color='var(--muted)'; msg.textContent='Resetting...';
   try {
-    const r = await authFetch('/api/admin/plans/reset', { method:'POST' });
+    const r = await api('/api/admin/plans/reset', { method:'POST' });
     const d = await r.json();
     if (d.success) { msg.style.color='var(--green)'; msg.textContent='Done!'; setTimeout(()=>{ document.getElementById('pricing-edit-card').style.display='none'; loadPricingPage(); }, 800); }
     else { msg.style.color='var(--red)'; msg.textContent=d.error||'Failed'; }
