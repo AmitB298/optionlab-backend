@@ -483,6 +483,7 @@ router.patch('/announcements/:id', auditLog('TOGGLE_ANNOUNCEMENT'), async (req, 
   } catch (err) { return dbError(res, err); }
 });
 
+<<<<<<< HEAD
 
 // ── GET /api/admin/plans ──────────────────────────────────────────────────────
 router.get('/plans', async (req, res) => {
@@ -508,5 +509,55 @@ router.put('/plans/:key', async (req, res) => {
     res.json({ success: true, data: rows[0] });
   } catch (err) { return dbError(res, err); }
 });
+=======
+// ════════════════════════════════════════════════════════════════════════════
+// PLAN PRICING
+// ════════════════════════════════════════════════════════════════════════════
+
+router.get('/plans', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT plan_key, amount, name, days, is_active, updated_at FROM plan_config ORDER BY days ASC`
+    );
+    return res.json({ plans: rows });
+  } catch (err) { return dbError(res, err); }
+});
+
+router.patch('/plans/:planKey', auditLog('UPDATE_PLAN_PRICE'), async (req, res) => {
+  const { planKey } = req.params;
+  if (!['daily','weekly','monthly'].includes(planKey))
+    return res.status(400).json({ error: 'Invalid plan key' });
+  const allowed = ['amount','name','days','is_active'];
+  const updates = []; const values = []; let idx = 1;
+  for (const field of allowed) {
+    if (req.body[field] !== undefined) { updates.push(`${field} = $${idx++}`); values.push(req.body[field]); }
+  }
+  if (!updates.length) return res.status(400).json({ error: 'Nothing to update' });
+  values.push(planKey);
+  try {
+    const { rowCount } = await pool.query(
+      `UPDATE plan_config SET ${updates.join(', ')}, updated_at = NOW() WHERE plan_key = $${idx}`, values
+    );
+    if (rowCount === 0) return res.status(404).json({ error: 'Plan not found' });
+    return res.json({ success: true, updated: planKey });
+  } catch (err) { return dbError(res, err); }
+});
+
+router.post('/plans/reset', auditLog('RESET_PLAN_PRICES'), async (req, res) => {
+  try {
+    await pool.query(`
+      INSERT INTO plan_config (plan_key, amount, name, days)
+      VALUES ('daily', 299, 'OptionsLab Daily', 1),
+             ('weekly', 999, 'OptionsLab Weekly', 7),
+             ('monthly', 1499, 'OptionsLab Monthly', 30)
+      ON CONFLICT (plan_key) DO UPDATE
+        SET amount = EXCLUDED.amount, name = EXCLUDED.name, days = EXCLUDED.days,
+            is_active = true, updated_at = NOW()
+    `);
+    return res.json({ success: true, message: 'Prices reset to defaults' });
+  } catch (err) { return dbError(res, err); }
+});
+
+>>>>>>> bb7367a68ad3f3b4115bbf530c23ad91527e4fbe
 module.exports = router;
 

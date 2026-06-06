@@ -146,6 +146,8 @@ async function start() {
       {id:'m16_ref_clicks',sql:`CREATE TABLE IF NOT EXISTS referral_clicks (id SERIAL PRIMARY KEY, referral_code VARCHAR(30) NOT NULL, ip_address VARCHAR(45), user_agent VARCHAR(200), created_at TIMESTAMPTZ DEFAULT NOW())`},
       {id:'m17_ref_code',  sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by_code VARCHAR(30)`},
       {id:'m18_ref_backfill', sql:`UPDATE users SET referral_code = 'OL-' || UPPER(SUBSTRING(MD5(id::text || 'ol'), 1, 7)) WHERE referral_code IS NULL`},
+      {id:'m19_plan_config',  sql:`CREATE TABLE IF NOT EXISTS plan_config (plan_key VARCHAR(20) PRIMARY KEY, amount NUMERIC(10,2) NOT NULL, name VARCHAR(100) NOT NULL, days INTEGER NOT NULL, is_active BOOLEAN DEFAULT true, updated_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m20_trial_used',   sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_used BOOLEAN DEFAULT false, ADD COLUMN IF NOT EXISTS reg_ip VARCHAR(45)`},
 
       {id:'m13_announce',sql:`CREATE TABLE IF NOT EXISTS admin_announcements (id SERIAL PRIMARY KEY, title VARCHAR(255), body TEXT, type VARCHAR(50) DEFAULT 'info', target VARCHAR(20) DEFAULT 'all', is_active BOOLEAN DEFAULT true, expires_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
     ];
@@ -161,6 +163,21 @@ async function start() {
       } catch(e) { await client.query('ROLLBACK'); console.warn('[db] skip',m.id,'-',e.message.split('\n')[0]); }
     }
     client.release(); await pool.end();
+
+    // Seed plan_config defaults
+    try {
+      const seedPool = new Pool({ connectionString: process.env.DATABASE_URL });
+      await seedPool.query(`
+        INSERT INTO plan_config (plan_key, amount, name, days) VALUES
+          ('trial',   0,    'OptionsLab Trial',   7),
+          ('daily',   299,  'OptionsLab Daily',   1),
+          ('weekly',  999,  'OptionsLab Weekly',  7),
+          ('monthly', 1499, 'OptionsLab Monthly', 30)
+        ON CONFLICT (plan_key) DO NOTHING
+      `);
+      await seedPool.end();
+      console.log('[db] plan_config seeded');
+    } catch(e) { console.warn('[db] plan_config seed skip:', e.message.split('\n')[0]); }
   } catch(e) { console.error('[db]',e.message); }
 
   try {
