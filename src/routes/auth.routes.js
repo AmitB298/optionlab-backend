@@ -224,14 +224,28 @@ router.post('/register', registerLimiter, async (req, res) => {
               + Math.random().toString(36).substr(2,4).toUpperCase();
     }
 
+    // ── IP FRAUD CHECK — max 2 accounts per IP ────────────────────────────
+    const regIp = req.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim();
+    if (regIp) {
+      const { rows: ipRows } = await pool.query(
+        `SELECT COUNT(*) FROM users WHERE reg_ip = $1 AND trial_used = true`, [regIp]
+      );
+      if (parseInt(ipRows[0].count) >= 2) {
+        return res.status(429).json({ error: 'Is IP se trial limit ho gayi hai. Paid plan lein.' });
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────
+
+    const trialExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const { rows: [newUser] } = await pool.query(`
       INSERT INTO users
         (name, email, mobile, mpin_hash, broker_client_id,
-         experience, trading_style, referral_code, plan, is_active, role, created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'FREE', true, 'user', NOW())
+         experience, trading_style, referral_code, plan, plan_expires_at, trial_used, reg_ip, is_active, role, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'TRIAL', $9, true, $10, true, 'user', NOW())
       RETURNING id, name, email, mobile, broker_client_id, plan, referral_code
     `, [name.trim(), verifiedEmail, mobile, mpinHash,
-        angelId || null, experience || null, tradingStyle || null, genCode]);
+        angelId || null, experience || null, tradingStyle || null, genCode,
+        trialExpiry, regIp || null]);
 
     const token = signToken(newUser);
     setCookie(res, token);

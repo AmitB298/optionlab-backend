@@ -147,6 +147,7 @@ async function start() {
       {id:'m17_ref_code',  sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by_code VARCHAR(30)`},
       {id:'m18_ref_backfill', sql:`UPDATE users SET referral_code = 'OL-' || UPPER(SUBSTRING(MD5(id::text || 'ol'), 1, 7)) WHERE referral_code IS NULL`},
       {id:'m19_plan_config',  sql:`CREATE TABLE IF NOT EXISTS plan_config (plan_key VARCHAR(20) PRIMARY KEY, amount NUMERIC(10,2) NOT NULL, name VARCHAR(100) NOT NULL, days INTEGER NOT NULL, is_active BOOLEAN DEFAULT true, updated_at TIMESTAMPTZ DEFAULT NOW())`},
+      {id:'m20_trial_used',   sql:`ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_used BOOLEAN DEFAULT false, ADD COLUMN IF NOT EXISTS reg_ip VARCHAR(45)`},
 
       {id:'m13_announce',sql:`CREATE TABLE IF NOT EXISTS admin_announcements (id SERIAL PRIMARY KEY, title VARCHAR(255), body TEXT, type VARCHAR(50) DEFAULT 'info', target VARCHAR(20) DEFAULT 'all', is_active BOOLEAN DEFAULT true, expires_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())`},
     ];
