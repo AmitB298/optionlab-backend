@@ -259,7 +259,7 @@ router.get('/status', authenticateToken, async (req, res) => {
 router.get('/plans', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `SELECT key, name, amount, duration_days, description FROM plan_config WHERE is_active = true ORDER BY amount ASC`
+      `SELECT plan_key, name, amount, days FROM plan_config WHERE is_active = true ORDER BY amount ASC`
     );
     if (!rows.length) {
       return res.json({ success: true, data: [
@@ -283,5 +283,6 @@ router.get('/plans', async (req, res) => {
 });
 
 module.exports = router;
+
 
 

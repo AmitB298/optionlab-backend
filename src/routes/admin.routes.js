@@ -488,7 +488,7 @@ router.patch('/announcements/:id', auditLog('TOGGLE_ANNOUNCEMENT'), async (req, 
 router.get('/plans', async (req, res) => {
   try {
     const { rows } = await pool.query(
-      `SELECT key, name, amount, duration_days, description, is_active FROM plan_config ORDER BY amount ASC`
+      `SELECT plan_key, name, amount, days, is_active FROM plan_config ORDER BY amount ASC`
     );
     res.json({ success: true, data: rows });
   } catch (err) { return dbError(res, err); }
@@ -501,8 +501,8 @@ router.put('/plans/:key', async (req, res) => {
     const { amount, name, duration_days, description } = req.body;
     if (!amount || isNaN(Number(amount))) return res.status(400).json({ error: 'Valid amount required' });
     await pool.query(
-      `UPDATE plan_config SET amount=$1, name=COALESCE($2,name), duration_days=COALESCE($3,duration_days), description=COALESCE($4,description), updated_at=NOW() WHERE key=$5`,
-      [Number(amount), name, duration_days, description, key]
+      `UPDATE plan_config SET amount=$1, name=COALESCE($2,name), days=COALESCE($3,days), updated_at=NOW() WHERE plan_key=$4`,
+      [Number(amount), name, duration_days, key]
     );
     const { rows } = await pool.query(`SELECT * FROM plan_config WHERE key=$1`, [key]);
     res.json({ success: true, data: rows[0] });
@@ -557,5 +557,6 @@ router.post('/plans/reset', auditLog('RESET_PLAN_PRICES'), async (req, res) => {
 });
 
 module.exports = router;
+
 
 
