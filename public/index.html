@@ -1442,6 +1442,8 @@ function hwDrawGreeks(spot,dte,iv){
 // ── Real Navigation ──
 var _pInited=new Set();
 _realShowPage=function(id,tabEl){
+  if(id==="pricing"){setTimeout(loadPricing,100);}
+
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.drawer-tab').forEach(function(t){t.classList.remove('active');});
@@ -2641,8 +2643,8 @@ function doLogout(){
 </script><script>
 async function loadPricing() {
   try {
-    const r = await fetch('/api/payments/plans');
-    const json = await r.json();
+    var r = await fetch('/api/payments/plans');
+    var json = await r.json();
     if (!json.success || !json.data) return;
     json.data.forEach(function(plan) {
       var el = document.getElementById('price-' + plan.plan_key);
@@ -2666,8 +2668,8 @@ async function loadPricing() {
 <script>
 async function loadPricing() {
   try {
-    const r = await fetch('/api/payments/plans');
-    const json = await r.json();
+    var r = await fetch('/api/payments/plans');
+    var json = await r.json();
     if (!json.success || !json.data) return;
     json.data.forEach(function(plan) {
       var el = document.getElementById('price-' + plan.plan_key);
@@ -2677,6 +2679,7 @@ async function loadPricing() {
 }
 </script></body>
 </html>
+
 
 
 
