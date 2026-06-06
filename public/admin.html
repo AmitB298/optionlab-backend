@@ -859,6 +859,7 @@ function showPage(id) {
   document.getElementById(id).classList.add('active');
   document.querySelector(`[data-page="${id}"]`)?.classList.add('active');
   document.getElementById('topbar-title').textContent = PAGE_TITLES[id] || 'ADMIN';
+  if (id === 'page-pricing') loadPricingPage();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1579,10 +1580,7 @@ async function resetPrices() {
   } catch(e) { msg.style.color='var(--red)'; msg.textContent=e.message; }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const orig = window.showPage;
-  if (orig) window.showPage = function(id) { orig(id); if (id==='page-pricing') loadPricingPage(); };
-});
+
 </script>
 </body>
 </html>
