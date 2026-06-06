@@ -149,6 +149,12 @@ async function processUpgradeReward(userId, orderId, isRenewal = false) {
       if (!isRenewal) {
         const isDuplicate = await alreadyRewarded(client, referrer.id, userId, 'plan_upgraded');
         if (isDuplicate) { await client.query('ROLLBACK'); return; }
+      } else {
+        const { rows: dupRenewal } = await client.query(
+          `SELECT id FROM referral_events WHERE notes = $1 AND event_type = 'plan_renewed' LIMIT 1`,
+          [`Order: ${orderId}`]
+        );
+        if (dupRenewal.length > 0) { await client.query('ROLLBACK'); console.log(`[referral] Renewal dedup: ${orderId}`); return; }
       }
 
       const releaseAt = new Date();

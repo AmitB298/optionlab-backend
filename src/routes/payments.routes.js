@@ -15,11 +15,38 @@ const CF_BASE    = CF_ENV === 'PROD'
   ? 'https://api.cashfree.com/pg'
   : 'https://sandbox.cashfree.com/pg';
 
-const PLANS = {
+const DEFAULT_PLANS = {
   daily:   { amount: 299,  name: 'OptionsLab Daily',   days: 1  },
   weekly:  { amount: 999,  name: 'OptionsLab Weekly',  days: 7  },
   monthly: { amount: 1499, name: 'OptionsLab Monthly', days: 30 },
 };
+
+async function getPlans() {
+  try {
+    const { rows } = await pool.query(`SELECT plan_key, amount, name, days FROM plan_config WHERE is_active = true`);
+    if (!rows.length) return DEFAULT_PLANS;
+    const plans = {};
+    rows.forEach(r => { plans[r.plan_key] = { amount: Number(r.amount), name: r.name, days: r.days }; });
+    return plans;
+  } catch (_) { return DEFAULT_PLANS; }
+}
+
+async function activatePlan(orderId, cfPayId, order, days) {
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + days);
+  const { rowCount } = await pool.query(
+    `UPDATE payment_orders SET status='PAID', cf_payment_id=$1, paid_at=NOW()
+     WHERE order_id=$2 AND status='PENDING'`,
+    [cfPayId, orderId]
+  );
+  if (rowCount === 0) return false;
+  await pool.query(
+    `UPDATE users SET plan=$1, plan_expires_at=$2, updated_at=NOW() WHERE id=$3`,
+    [order.plan, expiresAt, order.user_id]
+  );
+  console.log(`[payments] User ${order.user_id} -> ${order.plan} until ${expiresAt.toISOString()}`);
+  return true;
+}
 
 const { auth: authenticateToken } = require('../middleware/auth');
 
@@ -124,21 +151,12 @@ router.post('/webhook', (req, res, next) => {
       const { rows } = await pool.query(
         'SELECT * FROM payment_orders WHERE order_id = $1', [orderId]
       );
-      if (!rows.length || rows[0].status === 'PAID') return res.json({ ok: true });
-
-      const order     = rows[0];
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + PLANS[order.plan].days);
-
-      await pool.query(
-        `UPDATE payment_orders SET status='PAID', cf_payment_id=$1, paid_at=NOW() WHERE order_id=$2`,
-        [cfPayId, orderId]
-      );
-      await pool.query(
-        `UPDATE users SET plan=$1, plan_expires_at=$2, updated_at=NOW() WHERE id=$3`,
-        [order.plan, expiresAt, order.user_id]
-      );
-      console.log(`[webhook] ✅ User ${order.user_id} → ${order.plan} until ${expiresAt}`);
+      if (!rows.length) return res.json({ ok: true });
+      const order = rows[0];
+      const plans = await getPlans();
+      const days  = plans[order.plan]?.days ?? 30;
+      const activated = await activatePlan(orderId, cfPayId, order, days);
+      if (!activated) { console.log(`[webhook] Duplicate skipped: ${orderId}`); return res.json({ ok: true }); }
 
       // ── REFERRAL HOOK ───────────────────────────────────────────────────
       // Check if this is renewal (user already had this plan before) or fresh upgrade
@@ -194,16 +212,10 @@ router.get('/verify/:orderId', authenticateToken, async (req, res) => {
           console.warn('[verify] Could not fetch cf_payment_id:', e.message);
         }
 
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + PLANS[order.plan].days);
-        await pool.query(
-          `UPDATE payment_orders SET status='PAID', cf_payment_id=$1, paid_at=NOW() WHERE order_id=$2`,
-          [cfPayId, orderId]
-        );
-        await pool.query(
-          `UPDATE users SET plan=$1, plan_expires_at=$2, updated_at=NOW() WHERE id=$3`,
-          [order.plan, expiresAt, order.user_id]
-        );
+        const vPlans = await getPlans();
+        const vDays  = vPlans[order.plan]?.days ?? 30;
+        const vActivated = await activatePlan(orderId, cfPayId, order, vDays);
+        if (!vActivated) { order.status = 'PAID'; return res.json({ status: 'PAID', plan: order.plan, amount: order.amount }); }
 
         // Referral hook
         const { rows: prevOrders } = await pool.query(
@@ -239,6 +251,14 @@ router.get('/status', authenticateToken, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// ── GET /api/payments/plans ──────────────────────────────────────────────────
+router.get('/plans', async (req, res) => {
+  try {
+    const plans = await getPlans();
+    res.json({ plans });
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 module.exports = router;
