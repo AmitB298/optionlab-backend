@@ -241,4 +241,25 @@ router.get('/status', authenticateToken, async (req, res) => {
   }
 });
 
+
+// ── GET /api/payments/plans — public, no auth ────────────────────────────────
+router.get('/plans', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT key, name, amount, duration_days, description FROM plan_config WHERE is_active = true ORDER BY amount ASC`
+    );
+    if (!rows.length) {
+      return res.json({ success: true, data: [
+        { key: 'daily',   name: 'OptionsLab Daily',   amount: 299,  duration_days: 1  },
+        { key: 'weekly',  name: 'OptionsLab Weekly',  amount: 999,  duration_days: 7  },
+        { key: 'monthly', name: 'OptionsLab Monthly', amount: 1499, duration_days: 30 },
+      ]});
+    }
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    console.error('[plans]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;
+

@@ -483,4 +483,30 @@ router.patch('/announcements/:id', auditLog('TOGGLE_ANNOUNCEMENT'), async (req, 
   } catch (err) { return dbError(res, err); }
 });
 
+
+// ── GET /api/admin/plans ──────────────────────────────────────────────────────
+router.get('/plans', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT key, name, amount, duration_days, description, is_active FROM plan_config ORDER BY amount ASC`
+    );
+    res.json({ success: true, data: rows });
+  } catch (err) { return dbError(res, err); }
+});
+
+// ── PUT /api/admin/plans/:key ─────────────────────────────────────────────────
+router.put('/plans/:key', async (req, res) => {
+  try {
+    const { key } = req.params;
+    const { amount, name, duration_days, description } = req.body;
+    if (!amount || isNaN(Number(amount))) return res.status(400).json({ error: 'Valid amount required' });
+    await pool.query(
+      `UPDATE plan_config SET amount=$1, name=COALESCE($2,name), duration_days=COALESCE($3,duration_days), description=COALESCE($4,description), updated_at=NOW() WHERE key=$5`,
+      [Number(amount), name, duration_days, description, key]
+    );
+    const { rows } = await pool.query(`SELECT * FROM plan_config WHERE key=$1`, [key]);
+    res.json({ success: true, data: rows[0] });
+  } catch (err) { return dbError(res, err); }
+});
 module.exports = router;
+
