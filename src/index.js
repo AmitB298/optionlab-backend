@@ -168,6 +168,7 @@ async function start() {
       const seedPool = new Pool({ connectionString: process.env.DATABASE_URL });
       await seedPool.query(`
         INSERT INTO plan_config (plan_key, amount, name, days) VALUES
+          ('trial',   199,  'OptionsLab Trial',   7),
           ('daily',   299,  'OptionsLab Daily',   1),
           ('weekly',  999,  'OptionsLab Weekly',  7),
           ('monthly', 1499, 'OptionsLab Monthly', 30)
