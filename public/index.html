@@ -2637,17 +2637,19 @@ function doLogout(){
   </a>
 </div>
 <script>
-(async function loadPricing() {
+
+</script><script>
+async function loadPricing() {
   try {
     const r = await fetch('/api/payments/plans');
     const json = await r.json();
     if (!json.success || !json.data) return;
     json.data.forEach(function(plan) {
-      var el = document.getElementById('price-' + plan.key);
-      if (el) el.textContent = '\u20B9' + Number(plan.amount).toLocaleString('en-IN');
+      var el = document.getElementById('price-' + plan.plan_key);
+      if (el) el.textContent = String.fromCharCode(8377) + Number(plan.amount).toLocaleString('en-IN');
     });
   } catch(e) { console.warn('Pricing fetch failed:', e); }
-})();
+}
 </script></body>
 (function(){
   fetch('/api/payments/plans').then(r=>r.json()).then(data=>{
@@ -2661,8 +2663,21 @@ function doLogout(){
   }).catch(function(){});
 })();
 </script>
-</body>
+<script>
+async function loadPricing() {
+  try {
+    const r = await fetch('/api/payments/plans');
+    const json = await r.json();
+    if (!json.success || !json.data) return;
+    json.data.forEach(function(plan) {
+      var el = document.getElementById('price-' + plan.plan_key);
+      if (el) el.textContent = String.fromCharCode(8377) + Number(plan.amount).toLocaleString('en-IN');
+    });
+  } catch(e) { console.warn('Pricing fetch failed:', e); }
+}
+</script></body>
 </html>
+
 
 
 
