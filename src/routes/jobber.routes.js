@@ -39,13 +39,52 @@ function verifyToken(req, res, next) {
 
 // ── POST /api/jobber/heartbeat ────────────────────────────────────────────────
 router.post('/heartbeat', verifyToken, async (req, res) => {
-  const userId          = req.user.id;
-  const app_version     = typeof req.body.app_version     === 'string'  ? req.body.app_version.slice(0, 20)  : 'unknown';
-  const platform        = typeof req.body.platform        === 'string'  ? req.body.platform.slice(0, 20)     : 'win32';
+  const userId              = req.user.id;
+  const app_version         = typeof req.body.app_version     === 'string' ? req.body.app_version.slice(0, 20) : 'unknown';
+  const platform            = typeof req.body.platform        === 'string' ? req.body.platform.slice(0, 20)    : 'win32';
   const is_market_connected = req.body.is_market_connected === true;
-  const ip_address      = req.ip || null;
+  const ip_address          = req.ip || null;
+  const fyers_client_id     = typeof req.body.fyers_client_id === 'string' ? req.body.fyers_client_id.trim().toUpperCase() : null;
 
   try {
+    // ── DB se fresh user check — plan + expiry ────────────────────────────
+    const { rows: [user] } = await pool.query(
+      `SELECT plan, plan_expires_at, is_active, broker_client_id FROM users WHERE id = $1`,
+      [userId]
+    );
+
+    if (!user || !user.is_active) {
+      return res.status(403).json({ success: false, message: 'Account inactive' });
+    }
+
+    // Plan check — FREE users Jobber use nahi kar sakte
+    const allowedPlans = ['TRIAL', 'DAILY', 'WEEKLY', 'MONTHLY'];
+    if (!allowedPlans.includes((user.plan || '').toUpperCase())) {
+      return res.status(403).json({ success: false, message: 'Active plan required to use Jobber Pro', code: 'NO_PLAN' });
+    }
+
+    // Expiry check
+    if (user.plan_expires_at && new Date(user.plan_expires_at) < new Date()) {
+      return res.status(403).json({ success: false, message: 'Plan expired. Please renew.', code: 'PLAN_EXPIRED' });
+    }
+
+    // ── Fyers ID validation ───────────────────────────────────────────────
+    if (fyers_client_id) {
+      // Check: kya yeh Fyers ID kisi aur user ki hai?
+      const { rows: otherUser } = await pool.query(
+        `SELECT id FROM users WHERE broker_client_id = $1 AND id != $2 LIMIT 1`,
+        [fyers_client_id, userId]
+      );
+      if (otherUser.length > 0) {
+        return res.status(403).json({ success: false, message: 'Fyers ID mismatch — account suspended', code: 'FYERS_FRAUD' });
+      }
+
+      // Update broker_client_id if not set
+      if (!user.broker_client_id) {
+        await pool.query(`UPDATE users SET broker_client_id = $1 WHERE id = $2`, [fyers_client_id, userId]);
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────
     await pool.query(
       `INSERT INTO app_sessions (user_id, app_version, platform, is_market_connected, last_seen_at, ip_address, created_at)
        VALUES ($1, $2, $3, $4, NOW(), $5, NOW())
@@ -59,7 +98,11 @@ router.post('/heartbeat', verifyToken, async (req, res) => {
       [userId, app_version, platform, is_market_connected, ip_address]
     );
 
-    return res.json({ success: true });
+    return res.json({
+      success: true,
+      plan: user.plan,
+      expires_at: user.plan_expires_at
+    });
   } catch (err) {
     console.error('[jobber/heartbeat]', err.message);
     return res.status(500).json({ success: false, message: 'Heartbeat failed' });
