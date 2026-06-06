@@ -483,7 +483,6 @@ router.patch('/announcements/:id', auditLog('TOGGLE_ANNOUNCEMENT'), async (req, 
   } catch (err) { return dbError(res, err); }
 });
 
-<<<<<<< HEAD
 
 // ── GET /api/admin/plans ──────────────────────────────────────────────────────
 router.get('/plans', async (req, res) => {
@@ -509,7 +508,6 @@ router.put('/plans/:key', async (req, res) => {
     res.json({ success: true, data: rows[0] });
   } catch (err) { return dbError(res, err); }
 });
-=======
 // ════════════════════════════════════════════════════════════════════════════
 // PLAN PRICING
 // ════════════════════════════════════════════════════════════════════════════
@@ -558,6 +556,6 @@ router.post('/plans/reset', auditLog('RESET_PLAN_PRICES'), async (req, res) => {
   } catch (err) { return dbError(res, err); }
 });
 
->>>>>>> bb7367a68ad3f3b4115bbf530c23ad91527e4fbe
 module.exports = router;
+
 

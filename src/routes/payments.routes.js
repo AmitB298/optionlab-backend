@@ -254,7 +254,6 @@ router.get('/status', authenticateToken, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 
 // ── GET /api/payments/plans — public, no auth ────────────────────────────────
 router.get('/plans', async (req, res) => {
@@ -275,7 +274,6 @@ router.get('/plans', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-=======
 // ── GET /api/payments/plans ──────────────────────────────────────────────────
 router.get('/plans', async (req, res) => {
   try {
@@ -284,6 +282,6 @@ router.get('/plans', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
->>>>>>> bb7367a68ad3f3b4115bbf530c23ad91527e4fbe
 module.exports = router;
+
 
