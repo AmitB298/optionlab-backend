@@ -1160,7 +1160,7 @@ async function loadUser(){
       document.getElementById('sbExpiry').style.display='block';
       document.getElementById('sbExpiryVal').textContent = exp.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
       document.getElementById('sbExpiryBar').style.width = Math.min(100,days/30*100)+'%';
-      document.getElementById('cpExpiry').textContent = `Expires ${exp.toLocaleDateString('en-IN')}`;
+      document.getElementById('cpExpiry').textContent = exp.getFullYear() >= 2099 ? '♾️ Lifetime Access' : 'Expires ' + exp.toLocaleDateString('en-IN');
       document.getElementById('cpDays').textContent = days;
     }
 
@@ -1366,6 +1366,7 @@ function showToast(msg, type='success'){
 })();
 </script></body>
 </html>
+
 
 
 
