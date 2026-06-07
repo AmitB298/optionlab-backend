@@ -514,7 +514,7 @@ router.get('/plans', async (req, res) => {
 
 router.patch('/plans/:planKey', auditLog('UPDATE_PLAN_PRICE'), async (req, res) => {
   const { planKey } = req.params;
-  if (!['daily','weekly','monthly'].includes(planKey))
+  if (!['daily','weekly','monthly','trial'].includes(planKey))
     return res.status(400).json({ error: 'Invalid plan key' });
   const allowed = ['amount','name','days','is_active'];
   const updates = []; const values = []; let idx = 1;
@@ -548,6 +548,7 @@ router.post('/plans/reset', auditLog('RESET_PLAN_PRICES'), async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
