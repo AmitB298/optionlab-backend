@@ -227,8 +227,8 @@ router.get('/me', async (req, res) => {
         email:               u.email,
         mobile:              u.mobile,
         plan:                u.plan,
-        plan_expires_at:     u.plan_expires_at,
-        subscription_end:    u.plan_expires_at,  // alias for frontend compatibility
+        plan_expires_at:      (u.plan === 'TRIAL' && !u.plan_expires_at) ? new Date(Date.now() + 7*24*60*60*1000) : u.plan_expires_at,
+        subscription_end:     (u.plan === 'TRIAL' && !u.plan_expires_at) ? new Date(Date.now() + 7*24*60*60*1000) : u.plan_expires_at,  // alias for frontend compatibility
         referral_code:       u.referral_code,
         broker_client_id:    u.broker_client_id,
         angel_one_client_id: u.angel_one_client_id,
