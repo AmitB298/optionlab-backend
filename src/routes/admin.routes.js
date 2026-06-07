@@ -484,15 +484,6 @@ router.patch('/announcements/:id', auditLog('TOGGLE_ANNOUNCEMENT'), async (req, 
 });
 
 
-// ── GET /api/admin/plans ──────────────────────────────────────────────────────
-router.get('/plans', async (req, res) => {
-  try {
-    const { rows } = await pool.query(
-      `SELECT plan_key, name, amount, days, is_active FROM plan_config ORDER BY amount ASC`
-    );
-    res.json({ success: true, data: rows });
-  } catch (err) { return dbError(res, err); }
-});
 
 // ── PUT /api/admin/plans/:key ─────────────────────────────────────────────────
 router.put('/plans/:key', async (req, res) => {
@@ -557,6 +548,9 @@ router.post('/plans/reset', auditLog('RESET_PLAN_PRICES'), async (req, res) => {
 });
 
 module.exports = router;
+
+
+
 
 
 
