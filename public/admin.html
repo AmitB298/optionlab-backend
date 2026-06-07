@@ -1219,6 +1219,14 @@ function showChangePlan(uid, currentPlan) {
       <input class="inp" id="plan-reason" placeholder="e.g. Paid via UPI" style="width:100%"/>
     </div>
   `;
+    <div style="margin-bottom:14px">
+      <div class="detail-label" style="margin-bottom:6px">Expiry Date (optional)</div>
+      <input class="inp" type="date" id="plan-expiry" style="width:100%;margin-bottom:6px"/>
+      <label style="font-size:12px;color:var(--accent);cursor:pointer;display:flex;align-items:center;gap:6px;">
+        <input type="checkbox" id="plan-lifetime" onchange="if(this.checked){document.getElementById('plan-expiry').value='2099-12-31';document.getElementById('plan-expiry').disabled=true;}else{document.getElementById('plan-expiry').value='';document.getElementById('plan-expiry').disabled=false;}">
+        ♾️ Lifetime Access
+      </label>
+    </div>
   pendingAction = async () => {
     const data = await api(`/users/${uid}/plan`, {
       method:'PATCH',
