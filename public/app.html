@@ -868,7 +868,7 @@ input,select,textarea{font-family:inherit}
           <div class="plan-card" id="planDaily">
             <div class="pc-tier">Starter</div>
             <div class="pc-name" style="color:var(--c)">DAILY</div>
-            <div class="pc-price" style="color:var(--c)">₹299</div>
+            <div class="pc-price" style="color:var(--c)" id="app-price-daily">₹299</div>
             <div class="pc-period">/ day · Full access</div>
             <div class="pc-features">
               <div class="pc-feat">Full options chain</div>
@@ -883,7 +883,7 @@ input,select,textarea{font-family:inherit}
           <div class="plan-card" id="planWeekly">
             <div class="pc-tier">Popular</div>
             <div class="pc-name" style="color:var(--o)">WEEKLY</div>
-            <div class="pc-price" style="color:var(--o)">₹999</div>
+            <div class="pc-price" style="color:var(--o)" id="app-price-weekly">₹999</div>
             <div class="pc-period">/ week · Full access</div>
             <div class="pc-features">
               <div class="pc-feat">Full options chain</div>
@@ -898,7 +898,7 @@ input,select,textarea{font-family:inherit}
           <div class="plan-card" id="planMonthly">
             <div class="pc-tier">Best Value</div>
             <div class="pc-name" style="color:var(--p)">MONTHLY</div>
-            <div class="pc-price" style="color:var(--p)">₹1,499</div>
+            <div class="pc-price" style="color:var(--p)" id="app-price-monthly">₹1,499</div>
             <div class="pc-period">/ month · Full access</div>
             <div class="pc-features">
               <div class="pc-feat">Full options chain</div>
@@ -1350,5 +1350,20 @@ function showToast(msg, type='success'){
     </div>
   </div>
 </div>
-</body>
+<script>
+(async function() {
+  try {
+    var r = await fetch('/api/payments/plans');
+    var json = await r.json();
+    if (!json.success || !json.data) return;
+    var map = {daily:'app-price-daily', weekly:'app-price-weekly', monthly:'app-price-monthly'};
+    json.data.forEach(function(plan) {
+      var id = map[plan.plan_key];
+      var el = id && document.getElementById(id);
+      if (el) el.textContent = String.fromCharCode(8377) + Number(plan.amount).toLocaleString('en-IN');
+    });
+  } catch(e) {}
+})();
+</script></body>
 </html>
+
