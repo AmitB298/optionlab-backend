@@ -266,7 +266,8 @@ router.patch('/users/:userId/plan', auditLog('CHANGE_USER_PLAN'), async (req, re
     if (!rows.length) return res.status(404).json({ error: 'User not found' });
 
     const oldPlan = rows[0].plan;
-    await pool.query(`UPDATE users SET plan = $1 WHERE id = $2`, [planResult.value, uid]);
+    const expiryVal = req.body?.plan_expires_at || null;
+    await pool.query(`UPDATE users SET plan = $1, plan_expires_at = COALESCE($3::TIMESTAMPTZ, plan_expires_at) WHERE id = $2`, [planResult.value, uid, expiryVal]);
     await pool.query(
       `INSERT INTO subscription_history
          (user_id, plan_from, plan_to, changed_by, reason, amount, payment_ref)
