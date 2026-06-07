@@ -1226,7 +1226,6 @@ function showChangePlan(uid, currentPlan) {
         &#x221e; Lifetime Access
       </label>
     </div>
-  `;
     const data = await api(`/users/${uid}/plan`, {
       method:'PATCH',
       body:{
