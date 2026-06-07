@@ -2557,7 +2557,7 @@ window.suToggleBreakdown=function(){
 (function(){
   const tok=localStorage.getItem('OptionsLab_token')||localStorage.getItem('ol_token');
   if(!tok) return;
-  fetch('/api/user/me',{headers:{Authorization:'Bearer '+tok}})
+  tok && fetch('/api/user/me',{headers:{Authorization:'Bearer '+tok}})
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d||(!d.user&&!d.id)) return;
@@ -2679,6 +2679,7 @@ async function loadPricing() {
 }
 </script></body>
 </html>
+
 
 
 
