@@ -1227,6 +1227,7 @@ function showChangePlan(uid, currentPlan) {
         reason:     document.getElementById('plan-reason').value,
         amount:     document.getElementById('plan-amount').value || null,
         payment_ref:document.getElementById('plan-payref').value || null,
+        plan_expires_at: document.getElementById('plan-expiry')?.value || null,
       }
     });
     if (data?.success) { toast(data.message,'ok'); loadUsers(currentPage); }
@@ -1584,3 +1585,4 @@ async function resetPrices() {
 </script>
 </body>
 </html>
+
