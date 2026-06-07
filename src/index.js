@@ -1,4 +1,5 @@
 ﻿'use strict';
+require('./db/migrate');
 
 // Bug #5: JWT_SECRET guard — server refuses to start without it
 if (!process.env.JWT_SECRET) {
