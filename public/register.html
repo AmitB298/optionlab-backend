@@ -427,7 +427,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
       <div class="form-head">
         <div class="form-eyebrow">Secure Login</div>
         <div class="form-title">Welcome back</div>
-        <div class="form-sub">Enter your registered mobile number and 6-digit MPIN.</div>
+        <div class="form-sub">Enter your registered mobile number and 8-digit MPIN.</div>
       </div>
       <div class="msg err" id="loginErr" role="alert"></div>
       <div class="ig">
@@ -437,7 +437,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
         </div>
       </div>
       <div class="ig">
-        <label class="il">6-Digit MPIN</label>
+        <label class="il">8-digit MPIN</label>
         <div class="mprow" id="lMpinRow" role="group" aria-label="Enter MPIN">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 1">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 2">
@@ -445,6 +445,8 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 4">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 5">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 6">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 7">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 8">
         </div>
         <div class="mp-hint">Tap the first box and type your MPIN</div>
       </div>
@@ -628,7 +630,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
         <div class="form-head">
           <div class="form-eyebrow">Step 5 of 5</div>
           <div class="form-title">Set your MPIN</div>
-          <div class="form-sub">Your 6-digit login PIN &mdash; keep it secret, keep it safe.</div>
+          <div class="form-sub">Your 8-digit login PIN &mdash; keep it secret, keep it safe.</div>
         </div>
         <label class="il">Create MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinRow" role="group" aria-label="Create MPIN">
@@ -638,8 +640,10 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 4">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 5">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 6">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 7">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="MPIN digit 8">
         </div>
-        <div class="mp-hint">Enter any 6 digits</div>
+        <div class="mp-hint">Enter any 8 digits</div>
         <label class="il" style="margin-top:clamp(12px,2vw,18px);">Confirm MPIN <span class="req">*</span></label>
         <div class="mprow" id="rMpinCRow" role="group" aria-label="Confirm MPIN">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 1">
@@ -648,6 +652,8 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 4">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 5">
           <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 6">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 7">
+          <input type="password" class="mpb" maxlength="1" inputmode="numeric" aria-label="Confirm MPIN digit 8">
         </div>
         <div class="mp-warn">&#9888; Keep this MPIN different from your Fyers trading PIN</div>
         <div class="sumcard" style="margin-top:clamp(10px,2vw,16px);">
@@ -793,7 +799,7 @@ async function doLogin(){
   const mob=document.getElementById('lMob').value.trim();
   const mpin=getBoxVal('lMpinRow');
   if(!/^\d{10}$/.test(mob))return showErr('loginErr','Enter a valid 10-digit mobile number');
-  if(mpin.length!==6)return showErr('loginErr','Enter your complete 6-digit MPIN');
+  if(mpin.length!==8)return showErr('loginErr','Enter your complete 8-digit MPIN');
   const btn=document.getElementById('loginBtn');btn.disabled=true;btn.innerHTML='<div class="spin"></div> Logging in&hellip;';
   try{
     const res=await apiFetch(API+'/api/auth/login-mpin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,mpin})});
@@ -982,7 +988,7 @@ function toStep4Back(){
 async function doRegister(){
   hideErr('regErr');
   const mpin=getBoxVal('rMpinRow'),conf=getBoxVal('rMpinCRow');
-  if(mpin.length!==6)return showErr('regErr','Enter a complete 6-digit MPIN');
+  if(mpin.length!==8)return showErr('regErr','Enter a complete 8-digit MPIN');
   if(mpin!==conf)return showErr('regErr','MPINs do not match — please re-enter');
   if(!_rd.email_token)return showErr('regErr','Email verification expired — please start again');
   if(!_rd.angelId)return showErr('regErr','Fyers Client ID missing — please go back');
@@ -1026,3 +1032,5 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 </nav>
 </body>
 </html>
+
+
