@@ -2652,19 +2652,6 @@ async function loadPricing() {
     });
   } catch(e) { console.warn('Pricing fetch failed:', e); }
 }
-</script></body>
-(function(){
-  fetch('/api/payments/plans').then(r=>r.json()).then(data=>{
-    var plans = data.plans || [];
-    var fmt = function(n){ return '&#x20b9;' + Number(n).toLocaleString('en-IN'); };
-    plans.forEach(function(p){
-      var key = (p.plan_key||'').toLowerCase();
-      var el = document.getElementById('price-'+key);
-      if(el) el.innerHTML = fmt(p.amount);
-    });
-  }).catch(function(){});
-})();
-</script>
 <script>
 async function loadPricing() {
   try {
