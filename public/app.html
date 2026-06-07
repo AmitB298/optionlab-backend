@@ -1154,7 +1154,7 @@ async function loadUser(){
     pb.innerHTML = `<span class="plan-dot"></span>${plan} PLAN`;
 
     // Plan expiry
-    if(u.plan_expires_at && plan!=='FREE'){
+    if(u.plan_expires_at && plan!=='FREE' || u.plan_expires_at && plan==='TRIAL'){
       const exp = new Date(u.plan_expires_at);
       const days = Math.max(0,Math.ceil((exp-Date.now())/(1000*60*60*24)));
       document.getElementById('sbExpiry').style.display='block';
@@ -1366,5 +1366,7 @@ function showToast(msg, type='success'){
 })();
 </script></body>
 </html>
+
+
 
 
