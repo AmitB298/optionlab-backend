@@ -1227,6 +1227,7 @@ function showChangePlan(uid, currentPlan) {
       </label>
     </div>
   `;
+  pendingAction = async () => {
     const data = await api(`/users/${uid}/plan`, {
       method:'PATCH',
       body:{
