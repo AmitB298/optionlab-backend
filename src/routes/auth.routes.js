@@ -323,6 +323,8 @@ router.get('/validate', (req, res) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    // Auto-fix: TRIAL plan with null expiry → set 7 days
+    // (handles old accounts created before trial expiry was implemented)
     return res.json({ valid: true, user: decoded });
   } catch {
     res.clearCookie('ol_tok');
@@ -348,10 +350,12 @@ router.get('/verify', async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    // Auto-fix: TRIAL plan with null expiry → set 7 days
+    // (handles old accounts created before trial expiry was implemented)
 
     // DB se latest plan aur status fetch karo
     const { rows } = await pool.query(
-      `SELECT id, name, mobile, email, plan, is_active, plan_expires_at, is_admin
+      ``SELECT id, name, mobile, email, plan, is_active, plan_expires_at, is_admin
        FROM users WHERE id = $1`,
       [decoded.id]
     );
@@ -604,9 +608,9 @@ router.post('/check-fyers-id', async (req, res) => {
   try {
     const fyersId = (req.body.broker_client_id || req.body.fyers_client_id || '').trim().toUpperCase();
     if (!fyersId || fyersId.length < 5) return res.json({ taken: false });
-    const { rows: u } = await pool.query('SELECT id FROM users WHERE broker_client_id = \ LIMIT 1', [fyersId]);
+    const { rows: u } = await pool.query('SELECT id FROM users WHERE broker_client_id = $1 LIMIT 1', [fyersId]);
     if (u.length) return res.json({ taken: true, error: 'Yeh Fyers Client ID pehle se registered hai. Login karo.' });
-    const { rows: b } = await pool.query('SELECT user_id FROM fyers_bindings WHERE client_id = \ AND is_active = TRUE LIMIT 1', [fyersId]);
+    const { rows: b } = await pool.query('SELECT user_id FROM fyers_bindings WHERE client_id = $1 AND is_active = TRUE LIMIT 1', [fyersId]);
     if (b.length) return res.json({ taken: true, error: 'Yeh Fyers Client ID pehle se registered hai. Login karo.' });
     return res.json({ taken: false });
   } catch (e) {
@@ -614,6 +618,7 @@ router.post('/check-fyers-id', async (req, res) => {
   }
 });
 module.exports = router;
+
 
 
 

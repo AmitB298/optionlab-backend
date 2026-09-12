@@ -73,6 +73,7 @@ async function cashfreeRequest(method, path, body = null) {
 router.post('/create-order', authenticateToken, async (req, res) => {
   try {
     const { plan } = req.body;
+    const PLANS    = await getPlans(); // FIX: PLANS was undefined - now sourced from DB (falls back to DEFAULT_PLANS)
     if (!PLANS[plan]) return res.status(400).json({ error: 'Invalid plan' });
 
     const user     = req.user;

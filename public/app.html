@@ -1323,6 +1323,8 @@ function showToast(msg, type='success'){
 
 /* ── AUTH CHECK & INIT ── */
 (function init(){
+    // FIX: load-screen hide is now guaranteed regardless of token/redirect outcome below
+    setTimeout(()=>{ const l = document.getElementById('load'); if(l) l.classList.add('gone'); }, 1200);
   const tok = getToken();
   if(!tok){ console.error('NO TOKEN FOUND', Object.keys(localStorage)); window.location.replace('/register.html'); return; }
 
@@ -1335,7 +1337,7 @@ function showToast(msg, type='success'){
   loadUser();
 
   // Hide load screen after 1.2s
-  setTimeout(()=>{ document.getElementById('load').classList.add('gone'); }, 1200);
+  // (old load-screen hide removed - now handled unconditionally above)
 })();
 </script>
 

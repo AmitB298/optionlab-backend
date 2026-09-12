@@ -26,7 +26,7 @@ app.use(cors({
       ...(process.env.ALLOWED_ORIGINS||'').split(',').filter(Boolean)];
     if (allowed.some(o => origin.startsWith(o)) || process.env.NODE_ENV!=='production')
       return cb(null, true);
-    cb(null, true); // permissive until domain locked
+    cb(null, false); // FIX: was always allowing — now actually denies non-allowlisted origins
   },
   credentials: true,
 }));

@@ -19,7 +19,7 @@ require('dotenv').config();
 
 const { auditLog, requireAdmin, adminSecurityHeaders } = require('../middleware/admin.middleware');
 
-const pool    = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool    = require('../db/pool'); // FIX: was opening its own Pool — now shares the app pool
 const MAX_ROWS = 10_000;
 
 // Auth on all export routes
