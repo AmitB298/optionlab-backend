@@ -225,16 +225,9 @@ router.post('/register', registerLimiter, async (req, res) => {
               + Math.random().toString(36).substr(2,4).toUpperCase();
     }
 
-    // ── IP FRAUD CHECK — max 2 accounts per IP ────────────────────────────
+    // ── IP FRAUD CHECK — DISABLED (unlimited trial accounts per IP) ────────
     const regIp = req.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim();
-    if (regIp) {
-      const { rows: ipRows } = await pool.query(
-        `SELECT COUNT(*) FROM users WHERE reg_ip = $1 AND trial_used = true`, [regIp]
-      );
-      if (parseInt(ipRows[0].count) >= 2) {
-        return res.status(429).json({ error: 'Is IP se trial limit ho gayi hai. Paid plan lein.' });
-      }
-    }
+    // Limit check removed on request — no cap on trial accounts per IP.
     // ─────────────────────────────────────────────────────────────────────
 
     const trialExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
