@@ -11,6 +11,7 @@
 
 const express  = require('express');
 const bcrypt   = require('bcryptjs');
+const { sendResetLink } = require('../services/emailService');
 const jwt      = require('jsonwebtoken');
 const pool     = require('../db/pool');
 const { createLimiter } = require('../lib/rateLimit');
@@ -615,6 +616,90 @@ router.post('/check-fyers-id', async (req, res) => {
     return res.json({ taken: false });
   } catch (e) {
     return res.json({ taken: false });
+  }
+});
+
+// ============================================================
+// POST /api/auth/forgot-mpin
+// ============================================================
+router.post('/forgot-mpin', async (req, res) => {
+  try {
+    const email = (req.body.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const { rows } = await pool.query(
+      `SELECT id, name, email, mpin_hash FROM users WHERE email = $1`,
+      [email]
+    );
+
+    if (!rows.length) {
+      return res.json({ success: true, message: 'If an account exists, a reset link has been sent.' });
+    }
+
+    const user = rows[0];
+    const resetToken = jwt.sign(
+      { id: user.id, purpose: 'mpin_reset', mh: user.mpin_hash },
+      JWT_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    const resetLink = `${process.env.APP_URL || 'https://www.optionslab.in'}/reset-mpin.html?token=${resetToken}`;
+
+    try {
+      await sendResetLink({ to: user.email, resetLink, expiresInMinutes: 15 });
+    } catch (mailErr) {
+      console.error('[auth] forgot-mpin email send failed:', mailErr.message);
+      return res.status(500).json({ error: 'Could not send reset email. Try again later.' });
+    }
+
+    return res.json({ success: true, message: 'If an account exists, a reset link has been sent.' });
+  } catch (e) {
+    console.error('[auth] forgot-mpin:', e.message);
+    return res.status(500).json({ error: 'Something went wrong. Try again later.' });
+  }
+});
+
+// ============================================================
+// POST /api/auth/reset-mpin
+// ============================================================
+router.post('/reset-mpin', async (req, res) => {
+  try {
+    const resetToken = (req.body.token || '').trim();
+    const mpin = (req.body.mpin || '').trim();
+
+    if (!resetToken) return res.status(400).json({ error: 'Reset token is required' });
+    if (!isValidMpin(mpin)) return res.status(400).json({ error: 'MPIN must be 4-6 digits' });
+
+    let payload;
+    try {
+      payload = jwt.verify(resetToken, JWT_SECRET);
+    } catch (e) {
+      return res.status(400).json({ error: 'Link expired or invalid. Request a new one.' });
+    }
+
+    if (payload.purpose !== 'mpin_reset') {
+      return res.status(400).json({ error: 'Invalid reset token.' });
+    }
+
+    const { rows } = await pool.query(
+      `SELECT id, mpin_hash FROM users WHERE id = $1`,
+      [payload.id]
+    );
+
+    if (!rows.length) return res.status(404).json({ error: 'Account not found' });
+
+    const user = rows[0];
+    if (payload.mh !== user.mpin_hash) {
+      return res.status(400).json({ error: 'Link already used or expired. Request a new one.' });
+    }
+
+    const newMpinHash = await bcrypt.hash(mpin, SALT_ROUNDS);
+    await pool.query(`UPDATE users SET mpin_hash = $1 WHERE id = $2`, [newMpinHash, user.id]);
+
+    return res.json({ success: true, message: 'MPIN reset successful. You can now log in.' });
+  } catch (e) {
+    console.error('[auth] reset-mpin:', e.message);
+    return res.status(500).json({ error: 'Something went wrong. Try again later.' });
   }
 });
 module.exports = router;

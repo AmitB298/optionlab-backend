@@ -199,4 +199,14 @@ async function sendMagicLink({ to, magicLink, expiresInMinutes = 15 }) {
   return sendEmail({ to, subject, html });
 }
 
-module.exports = { sendEmail, sendMagicLink };
+async function sendResetLink({ to, resetLink, expiresInMinutes = 15 }) {
+  const subject = `Reset your ${APP_NAME} MPIN`;
+  const html = `<!DOCTYPE html><html><body style="background:#050709;color:#fff;font-family:sans-serif;padding:40px;">
+  <h2 style="color:#f97316;">Reset your OptionsLab MPIN</h2>
+  <p>Click below to reset your MPIN. This link expires in ${expiresInMinutes} minutes.</p>
+  <a href="${resetLink}" style="display:inline-block;background:#f97316;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;">Reset my MPIN</a>
+  <p style="font-size:12px;color:#888;">If the button doesn't work, paste this link: ${resetLink}</p>
+  </body></html>`;
+  return sendEmail({ to, subject, html });
+}
+module.exports = { sendEmail, sendMagicLink, sendResetLink };
