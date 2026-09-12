@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Smart Money Dashboard — Track FII/DII flows, participant OI war room, global radar and AI pattern analysis for Nifty F&O.">
+<meta property="og:title" content="Smart Money Dashboard — OptionsLab">
+<meta property="og:description" content="Smart Money Dashboard — Track FII/DII flows, participant OI war room, global radar and AI pattern analysis for Nifty F&O.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://optionslab.in/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://optionslab.in/og-image.png">
+<meta property="og:url" content="https://optionslab.in/smart-money">
+<title>Smart Money — OptionsLab</title>
+<link rel="stylesheet" href="../../style.css">
+<script src="/shared.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.flow-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:12px;position:relative;overflow:hidden;}
+.flow-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:0 0 12px 12px;}
+.flow-card.fii::after{background:var(--blue);}
+.flow-card.dii::after{background:var(--green);}
+.flow-card.pro::after{background:var(--purple);}
+.flow-card.cli::after{background:var(--yellow);}
+.fc-label{font-size:9px;font-weight:700;letter-spacing:0.8px;color:var(--t3);text-transform:uppercase;margin-bottom:2px;display:flex;justify-content:space-between;}
+.fc-entity{font-size:8px;padding:1px 5px;border-radius:3px;background:var(--bg3);}
+.fc-val{font-family:var(--sans);font-size:20px;font-weight:800;line-height:1;margin:6px 0 2px;}
+.fc-sub{font-size:10px;color:var(--t2);}
+.fc-bar{margin-top:8px;height:3px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.fc-bar-fill{height:100%;border-radius:99px;transition:width 0.8s ease;}
+
+.verdict-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;}
+.verdict-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),var(--yellow),transparent);}
+.verdict-inner{padding:14px;}
+.verdict-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.verdict-status{font-family:var(--sans);font-size:18px;font-weight:800;}
+.verdict-sub{font-size:11px;color:var(--t2);margin-top:3px;}
+.gauge{position:relative;width:64px;height:64px;flex-shrink:0;}
+.gauge svg{transform:rotate(-90deg);}
+.gauge-bg{fill:none;stroke:var(--border2);stroke-width:5;}
+.gauge-fill{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.gauge-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:18px;font-weight:800;}
+.sbar-track{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:4px;}
+.sbar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--red),var(--yellow),var(--green));transition:width 0.8s ease;}
+.sbar-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--t3);}
+
+.war-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.war-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.pill-tabs{display:flex;background:var(--bg3);border-radius:6px;padding:2px;gap:2px;}
+.ptab{font-size:10px;font-weight:600;font-family:var(--mono);padding:4px 9px;border-radius:4px;cursor:pointer;color:var(--t3);border:none;background:none;transition:all 0.15s;}
+.ptab.active{background:var(--bg4);color:var(--t1);}
+.war-tbl{width:100%;border-collapse:collapse;}
+.war-tbl th{font-size:8px;font-weight:700;letter-spacing:0.8px;color:var(--t3);text-transform:uppercase;padding:8px 14px;background:var(--bg3);border-bottom:1px solid var(--border);text-align:left;}
+.war-tbl th:not(:first-child){text-align:right;}
+.war-tbl td{padding:10px 14px;font-size:11px;border-bottom:1px solid rgba(26,37,64,0.5);}
+.war-tbl td:not(:first-child){text-align:right;font-weight:600;}
+.war-tbl tr:last-child td{border-bottom:none;}
+.par-name{display:flex;align-items:center;gap:7px;font-family:var(--sans);font-size:12px;font-weight:700;}
+.par-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.bias{display:inline-flex;align-items:center;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:uppercase;}
+.bias.bull{background:var(--green-dim);color:var(--green);}
+.bias.bear{background:var(--red-dim);color:var(--red);}
+.bias.warn{background:var(--yellow-dim);color:var(--yellow);}
+.war-footer{padding:8px 14px;background:var(--bg3);border-top:1px solid var(--border);font-size:10px;color:var(--t3);}
+
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.radar-item{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:11px 8px;text-align:center;}
+.r-icon{font-size:16px;margin-bottom:4px;}
+.r-name{font-size:8px;font-weight:700;letter-spacing:0.5px;color:var(--t3);text-transform:uppercase;}
+.r-val{font-family:var(--sans);font-size:14px;font-weight:800;margin:3px 0 1px;}
+.r-chg{font-size:9px;font-weight:600;}
+
+.pattern-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:14px;}
+.p-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.p-badge{font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:var(--yellow-dim);border:1px solid rgba(234,179,8,0.25);color:var(--yellow);}
+.p-name{font-family:var(--sans);font-size:15px;font-weight:800;}
+.p-desc{font-size:11px;color:var(--t2);line-height:1.6;}
+.p-stats{display:flex;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.pstat{flex:1;text-align:center;border-right:1px solid var(--border);}
+.pstat:last-child{border-right:none;}
+.pstat label{display:block;font-size:8px;color:var(--t3);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px;}
+.pstat span{font-family:var(--sans);font-size:15px;font-weight:800;}
+
+.expiry-banner{background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(234,179,8,0.05));border:1px solid rgba(239,68,68,0.25);border-left:3px solid var(--red);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;}
+.eb-text h4{font-size:12px;font-weight:700;color:var(--red);margin-bottom:2px;font-family:var(--sans);}
+.eb-text p{font-size:11px;color:var(--t2);}
+.eb-days{margin-left:auto;text-align:center;flex-shrink:0;}
+.eb-num{font-size:28px;font-weight:800;color:var(--red);line-height:1;font-family:var(--sans);}
+.eb-lbl{font-size:9px;color:var(--t3);}
+
+.signal-card{background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(249,115,22,0.02));border:1px solid rgba(249,115,22,0.2);border-radius:var(--radius);padding:14px;}
+.s-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.s-who{font-size:10px;font-weight:700;width:52px;flex-shrink:0;}
+.s-bar-wrap{flex:1;height:8px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.s-bar-fill{height:100%;border-radius:99px;transition:width 0.8s ease;}
+.s-pct{font-size:10px;font-weight:700;width:60px;text-align:right;flex-shrink:0;}
+
+/* Tab panel CSS */
+.tab-panel { display: none; flex-direction: column; gap: 12px; }
+.tab-panel.active { display: flex; }
+/* skeleton now defined in style.css — no duplicate needed */
+
+/* Source badges */
+.src-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.src-live{background:var(--green-dim);color:var(--green);}
+.src-cache{background:var(--yellow-dim);color:var(--yellow);}
+.src-demo{background:var(--bg3);color:var(--t3);border:1px solid var(--border);}
+
+/* Error banner */
+.err-bar{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--red);display:none;gap:8px;align-items:center;}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"></noscript>
+<link rel="canonical" href="https://optionslab.in/smart-money">
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="/" class="nav-logo"><div class="logo-box">OL</div><div class="logo-wordmark">OPTIONS<span>LAB</span></div></a>
+  <div class="nav-actions">
+    <div class="btn-icon" onclick="toggleDark()" title="Toggle dark/light mode" style="cursor:pointer">🌙</div>
+    <a href="/register" class="btn-signin">Sign In</a>
+    <a href="/pricing" class="btn-orange">Get Access</a>
+  </div>
+</nav>
+
+<div class="ticker-wrap"><div class="ticker-track">
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">INDIA VIX</span><span class="ticker-val">14.23</span><span class="dn">-2.1%</span></span>
+  <span class="ticker-item"><span class="ticker-name">SENSEX</span><span class="ticker-val">74,119.2</span><span class="up">+0.54%</span></span>
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">INDIA VIX</span><span class="ticker-val">14.23</span><span class="dn">-2.1%</span></span>
+  <span class="ticker-item"><span class="ticker-name">SENSEX</span><span class="ticker-val">74,119.2</span><span class="up">+0.54%</span></span>
+</div></div>
+
+<div class="page-header">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+    <div class="page-pill"><span class="live-dot"></span>FII/DII FLOW DATA — EDUCATIONAL TOOL</div>
+    <span class="src-badge src-demo" id="srcBadge">⏳ LOADING</span>
+  </div>
+  <div class="page-title"><span style="color:var(--orange)">SMART</span> MONEY<br><span style="color:var(--t3)">DASHBOARD</span></div>
+  <div class="page-subtitle">FII flows, participant OI, global radar — sab ek jagah. EOD data, SEBI compliant.</div>
+</div>
+
+<div class="scroll-tabs">
+  <button class="stab active" onclick="switchTab('overview')">Overview</button>
+  <button class="stab" onclick="switchTab('cashflow')">Cash Flow</button>
+  <button class="stab" onclick="switchTab('foflow')">F&amp;O Flow</button>
+  <button class="stab" onclick="switchTab('warroom')">War Room</button>
+  <button class="stab" onclick="switchTab('global')">Global</button>
+  <button class="stab" onclick="switchTab('history')">History</button>
+</div>
+
+<div class="content">
+
+  <!-- ERROR BAR -->
+  <div class="err-bar" id="errBar"><span>⚠️</span><span id="errMsg">NSE unreachable.</span></div>
+
+  <!-- ═══ TAB: OVERVIEW ═══ -->
+  <div class="tab-panel active" id="panel-overview">
+
+  <!-- STAT STRIP -->
+  <div class="stat-strip anim anim-1">
+    <div class="stat-item"><div class="stat-label">Nifty 50</div><div class="stat-val">22,513</div></div>
+    <div class="stat-item"><div class="stat-label">India VIX</div><div class="stat-val" style="color:var(--red)">14.23</div></div>
+    <div class="stat-item"><div class="stat-label">PCR</div><div class="stat-val up">1.08</div></div>
+    <div class="stat-item"><div class="stat-label">Max Pain</div><div class="stat-val orange">22,400</div></div>
+    <div class="stat-item"><div class="stat-label">ATM</div><div class="stat-val">22,500</div></div>
+    <div class="stat-item"><div class="stat-label">IV Rank</div><div class="stat-val orange">38%ile</div></div>
+  </div>
+
+  <!-- EXPIRY BANNER -->
+  <div class="expiry-banner anim anim-2" id="expiryBanner">
+    <div style="font-size:20px;flex-shrink:0">⚠️</div>
+    <div class="eb-text">
+      <h4>EXPIRY WEEK ACTIVE</h4>
+      <p>FII behavior shifts near expiry. Max Pain pinning likely.</p>
+    </div>
+    <div class="eb-days"><div class="eb-num" id="expiryDays">—</div><div class="eb-lbl">DAYS LEFT</div></div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="sec-label anim anim-3">
+    <div class="sec-label-text">Today's Verdict</div>
+    <div style="font-size:9px;color:var(--t3)" id="dataDate">NSE · EOD</div>
+  </div>
+  <div class="verdict-card anim anim-3">
+    <div class="verdict-inner">
+      <div class="verdict-row">
+        <div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">FII Flow Score (data only)</div>
+          <div class="verdict-status" id="verdictStatus" style="color:var(--yellow)">⏳ Loading...</div>
+          <div class="verdict-sub" id="verdictSub">Fetching NSE data...</div>
+        </div>
+        <div class="gauge">
+          <svg viewBox="0 0 64 64" width="64" height="64">
+            <circle class="gauge-bg" cx="32" cy="32" r="27"/>
+            <circle class="gauge-fill" id="gaugeFill" cx="32" cy="32" r="27"
+              stroke="#eab308" stroke-dasharray="169.6" stroke-dashoffset="169.6"/>
+          </svg>
+          <div class="gauge-num" id="gaugeNum" style="color:var(--yellow)">—</div>
+        </div>
+      </div>
+      <div>
+        <div class="sbar-track"><div class="sbar-fill" id="sbarFill" style="width:50%"></div></div>
+        <div class="sbar-labels"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
+      </div>
+      <div class="ai-box" style="margin-top:10px">
+        <div class="ai-box-label">📊 PARTICIPANT FLOW SUMMARY</div>
+        <p id="aiText">Fetching NSE participant flow data...</p>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /panel-overview -->
+
+  <!-- ═══ TAB: CASH FLOW ═══ -->
+  <div class="tab-panel" id="panel-cashflow">
+
+  <!-- CASH FLOW CARDS -->
+  <div class="sec-label anim anim-4">
+    <div class="sec-label-text">Cash Market Flow</div>
+    <div style="font-size:9px;color:var(--t3)">NSE · EOD</div>
+  </div>
+  <div class="flow-grid anim anim-4">
+    <div class="flow-card fii">
+      <div class="fc-label">FII Net <span class="fc-entity">Foreign</span></div>
+      <div class="fc-val" id="fiiVal"><span class="skeleton" style="width:90px;height:20px">&nbsp;</span></div>
+      <div class="fc-sub" id="fiiSub">—</div>
+      <div class="fc-bar"><div class="fc-bar-fill" id="fiiBar" style="width:0%"></div></div>
+    </div>
+    <div class="flow-card dii">
+      <div class="fc-label">DII Net <span class="fc-entity">Domestic</span></div>
+      <div class="fc-val" id="diiVal"><span class="skeleton" style="width:90px;height:20px">&nbsp;</span></div>
+      <div class="fc-sub" id="diiSub">—</div>
+      <div class="fc-bar"><div class="fc-bar-fill" id="diiBar" style="width:0%"></div></div>
+    </div>
+    <div class="flow-card pro">
+      <div class="fc-label">PRO Net <span class="fc-entity">Prop</span></div>
+      <div class="fc-val" id="proVal"><span class="skeleton" style="width:90px;height:20px">&nbsp;</span></div>
+      <div class="fc-sub" id="proSub">—</div>
+      <div class="fc-bar"><div class="fc-bar-fill" id="proBar" style="width:0%"></div></div>
+    </div>
+    <div class="flow-card cli">
+      <div class="fc-label">CLIENT <span class="fc-entity">Retail</span></div>
+      <div class="fc-val" id="cliVal"><span class="skeleton" style="width:90px;height:20px">&nbsp;</span></div>
+      <div class="fc-sub" id="cliSub">—</div>
+      <div class="fc-bar"><div class="fc-bar-fill" id="cliBar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  </div><!-- /panel-cashflow -->
+
+  <!-- ═══ TAB: F&O FLOW ═══ -->
+  <div class="tab-panel" id="panel-foflow">
+
+  <!-- SMART MONEY WAR -->
+  <div class="signal-card anim anim-5">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span style="font-size:18px">⚔️</span>
+      <span style="font-family:var(--sans);font-size:14px;font-weight:800;color:var(--orange)">SMART MONEY WAR</span>
+      <span style="margin-left:auto;font-size:9px;color:var(--t3)">Cash Market · Net (₹ Cr)</span>
+    </div>
+    <div class="s-row">
+      <div class="s-who" style="color:var(--blue)">FII</div>
+      <div class="s-bar-wrap"><div class="s-bar-fill" id="wFii" style="width:0%;background:var(--green)"></div></div>
+      <div class="s-pct" id="wFiiV">—</div>
+    </div>
+    <div class="s-row">
+      <div class="s-who" style="color:var(--green)">DII</div>
+      <div class="s-bar-wrap"><div class="s-bar-fill" id="wDii" style="width:0%;background:var(--blue)"></div></div>
+      <div class="s-pct" id="wDiiV">—</div>
+    </div>
+    <div class="s-row">
+      <div class="s-who" style="color:var(--purple)">PRO</div>
+      <div class="s-bar-wrap"><div class="s-bar-fill" id="wPro" style="width:0%;background:var(--red)"></div></div>
+      <div class="s-pct" id="wProV">—</div>
+    </div>
+    <div class="s-row" style="margin-bottom:0">
+      <div class="s-who" style="color:var(--yellow)">RETAIL</div>
+      <div class="s-bar-wrap"><div class="s-bar-fill" id="wCli" style="width:0%;background:var(--yellow)"></div></div>
+      <div class="s-pct" id="wCliV">—</div>
+    </div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(249,115,22,0.15);font-size:10px;color:var(--t2)" id="warNote">Loading...</div>
+  </div>
+
+  </div><!-- /panel-foflow -->
+
+  <!-- ═══ TAB: WAR ROOM ═══ -->
+  <div class="tab-panel" id="panel-warroom">
+
+  <!-- OI WAR ROOM (static NSE EOD) -->
+  <div class="sec-label anim anim-5">
+    <div class="sec-label-text">Participant OI War Room</div>
+    <div class="src-badge src-demo">NSE EOD</div>
+  </div>
+  <div class="war-card anim anim-5">
+    <div class="war-hdr">
+      <div class="card-title">Net Open Interest</div>
+      <div class="pill-tabs">
+        <button class="ptab active" onclick="ptab(this,'fut')">Futures</button>
+        <button class="ptab" onclick="ptab(this,'opt')">Options</button>
+      </div>
+    </div>
+    <table class="war-tbl">
+      <thead><tr><th>Participant</th><th>Long</th><th>Short</th><th>Net</th><th>Bias</th></tr></thead>
+      <tbody id="warBody"></tbody>
+    </table>
+    <div class="war-footer">⚠️ <strong style="color:var(--yellow)">Note:</strong> OI data is reference EOD. PRO historically correct 70%+ of the time near expiry.</div>
+  </div>
+
+  </div><!-- /panel-warroom -->
+
+  <!-- ═══ TAB: HISTORY ═══ -->
+  <div class="tab-panel" id="panel-global">
+
+  <!-- GLOBAL RADAR (static) -->
+  <div class="sec-label anim anim-7"><div class="sec-label-text">Global Radar</div></div>
+  <div class="radar-grid anim anim-7">
+    <div class="radar-item"><div class="r-icon">💵</div><div class="r-name">DXY</div><div class="r-val up">103.2</div><div class="r-chg dn">-0.3%</div></div>
+    <div class="radar-item"><div class="r-icon">😱</div><div class="r-name">US VIX</div><div class="r-val up">16.4</div><div class="r-chg dn">-4.2%</div></div>
+    <div class="radar-item"><div class="r-icon">📈</div><div class="r-name">US 10Y</div><div class="r-val dn">4.52%</div><div class="r-chg dn">+0.05</div></div>
+    <div class="radar-item"><div class="r-icon">🛢️</div><div class="r-name">Crude</div><div class="r-val up">$82.1</div><div class="r-chg up">+0.8%</div></div>
+    <div class="radar-item"><div class="r-icon">₹</div><div class="r-name">USD/INR</div><div class="r-val">83.42</div><div class="r-chg up">+0.1%</div></div>
+    <div class="radar-item"><div class="r-icon">🇸🇬</div><div class="r-name">SGX Nifty</div><div class="r-val up">22,580</div><div class="r-chg up">+0.3%</div></div>
+  </div>
+  <div class="ai-box anim anim-7">
+    <div class="ai-box-label">🌍 Global Market Data</div>
+    <p>DXY weak → historically correlates with EM inflows. US VIX lower → lower global risk aversion. US 10Y higher → mild headwind for EM flows. These are historical correlations, not predictions. Data observation only.</p>
+  </div>
+
+  <a href="/pricing" class="cta-primary anim anim-8">🔓 UNLOCK LIVE DATA — PRO ₹1,499/MO →</a>
+
+  </div><!-- /panel-global -->
+
+  <!-- ═══ TAB: GLOBAL ═══ -->
+  <div class="tab-panel" id="panel-history">
+
+  <!-- HISTORY CHART -->
+  <div class="sec-label anim anim-6">
+    <div class="sec-label-text">30-Day Flow History</div>
+    <div class="src-badge src-demo" id="chartSrc">LOADING</div>
+  </div>
+  <div class="card anim anim-6">
+    <div class="card-header">
+      <div class="card-title">FII vs DII — Daily Net (₹ Cr)</div>
+      <div style="display:flex;gap:10px">
+        <span style="display:flex;align-items:center;gap:4px;font-size:9px;color:var(--t2)"><span style="width:8px;height:8px;border-radius:2px;background:var(--orange);display:inline-block"></span>FII</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:9px;color:var(--t2)"><span style="width:8px;height:8px;border-radius:2px;background:var(--blue);display:inline-block"></span>DII</span>
+      </div>
+    </div>
+    <div style="padding:14px"><div style="position:relative;height:160px"><canvas id="flowChart"></canvas></div></div>
+  </div>
+
+  <!-- FII DNA PATTERN -->
+  <div class="sec-label anim anim-6"><div class="sec-label-text">FII DNA — Pattern Detected</div></div>
+  <div class="pattern-card anim anim-6">
+    <div class="p-top">
+      <span class="p-badge" id="patBadge">⏳ Analyzing</span>
+      <span class="p-name" id="patName">Detecting...</span>
+    </div>
+    <div class="p-desc" id="patDesc">Data load ho raha hai...</div>
+    <div id="patNote" style="margin-top:8px;font-size:10px;color:var(--t3);font-style:italic"></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--t3)">
+      ⚠️ Pattern labels are data observations only. OptionsLab is NOT SEBI registered.
+      This is not investment advice. Past configurations do not predict future results.
+    </div>
+  </div>
+
+  </div><!-- /panel-history -->
+
+</div><!-- /content -->
+
+<!-- SEBI Compliance Bar — always visible -->
+<div style="position:fixed;bottom:64px;left:0;right:0;background:rgba(8,9,26,0.97);border-top:1px solid rgba(239,68,68,0.2);padding:6px 16px;font-size:9px;color:var(--t3);text-align:center;z-index:350;backdrop-filter:blur(10px)">
+  ⚠ NOT SEBI REGISTERED · Analytics &amp; data tools only · Not investment advice · F&amp;O trading has substantial risk of loss
+</div>
+
+<nav class="bottom-nav">
+  <div class="bnav-row">
+    <a href="/"            class="bnav-btn"><div class="bnav-icon">🏠</div><span>HOME</span></a>
+    <a href="/terminal"    class="bnav-btn"><div class="bnav-icon">📊</div><span>TERMINAL</span></a>
+    <a href="/smart-money" class="bnav-btn active"><div class="bnav-icon">🧠</div><span>SMART</span></a>
+    <a href="/academy"     class="bnav-btn"><div class="bnav-icon">🎓</div><span>ACADEMY</span></a>
+    <a href="/app"   class="bnav-btn"><div class="bnav-icon">👤</div><span>PROFILE</span></a>
+  </div>
+</nav>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   CONFIG — Railway backend URL
+   ═══════════════════════════════════════════════════════ */
+/* API defined in shared.js */ // ← apna Railway URL
+
+/* ═══════════════════════════════════════════════════════
+   STATIC WAR ROOM — OI (separate NSE endpoint, static for now)
+   ═══════════════════════════════════════════════════════ */
+// Tab router — ID-based (not index-based, so DOM order doesn't matter)
+const TABS = ['overview','cashflow','foflow','warroom','global','history'];
+const TAB_BTNS = ['Overview','Cash Flow','F&O Flow','War Room','Global','History'];
+function switchTab(id) {
+  document.querySelectorAll('.stab').forEach((btn, i) => {
+    btn.classList.toggle('active', TABS[i] === id);
+  });
+  TABS.forEach(t => {
+    const p = document.getElementById('panel-' + t);
+    if (p) p.classList.toggle('active', t === id);
+  });
+  // Bug #2 fix: null guard before resize
+  if (id === 'history' && chart) {
+    setTimeout(() => chart.resize(), 50);
+  }
+}
+
+const futD=[
+  {n:'FII',c:'#3b82f6',l:'1,24,850',s:'82,300',net:'+42,550',b:'bull',bl:'▲ Bull'},
+  {n:'PRO',c:'#a855f7',l:'68,200',s:'1,10,400',net:'-42,200',b:'bear',bl:'▼ Bear'},
+  {n:'DII',c:'#22c55e',l:'12,400',s:'9,800',net:'+2,600',b:'bull',bl:'▲ Bull'},
+  {n:'CLIENT',c:'#eab308',l:'92,100',s:'44,500',net:'+47,600',b:'warn',bl:'⚠ Bull'},
+];
+const optD=[
+  {n:'FII',c:'#3b82f6',l:'2,18,400',s:'1,04,200',net:'+1,14,200',b:'bull',bl:'▲ Bull'},
+  {n:'PRO',c:'#a855f7',l:'88,100',s:'1,98,600',net:'-1,10,500',b:'bear',bl:'▼ Bear'},
+  {n:'DII',c:'#22c55e',l:'4,200',s:'2,100',net:'+2,100',b:'bull',bl:'▲ Bull'},
+  {n:'CLIENT',c:'#eab308',l:'3,42,100',s:'1,28,400',net:'+2,13,700',b:'warn',bl:'⚠ Bull'},
+];
+function renderWar(d){
+  document.getElementById('warBody').innerHTML=d.map(r=>`
+    <tr><td><div class="par-name"><div class="par-dot" style="background:${r.c}"></div>${r.n}</div></td>
+    <td class="up">${r.l}</td><td class="dn">${r.s}</td>
+    <td class="${r.net[0]==='+'?'up':'dn'}">${r.net}</td>
+    <td><span class="bias ${r.b}">${r.bl}</span></td></tr>`).join('');
+}
+function ptab(el,t){
+  document.querySelectorAll('.ptab').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active'); renderWar(t==='fut'?futD:optD);
+}
+renderWar(futD);
+
+/* ═══════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════ */
+const fmtCr = v => {
+  if(v==null) return '—';
+  const s = Math.abs(v).toLocaleString('en-IN',{maximumFractionDigits:0});
+  return (v>=0?'+₹':'-₹') + s + ' Cr';
+};
+
+const bw = (v, max) => Math.min(95, Math.round(Math.abs(v)/Math.max(max,1)*95));
+
+function calcScore(c) {
+  if(!c||!c.fii) return 50;
+  let s = 50;
+  s += Math.min(25, Math.max(-25, (c.fii?.net||0)/400));
+  s += Math.min(10, Math.max(-10, (c.dii?.net||0)/400));
+  s -= Math.min(10, Math.max(-10, (c.pro?.net||0)/400));
+  return Math.round(Math.min(85, Math.max(15, s)));
+}
+
+function detectPattern(c) {
+  // DATA OBSERVATION ONLY — not advice, not signals. SEBI compliant.
+  // Accuracy % removed: unregistered entities cannot publish performance claims.
+  if(!c||!c.fii) return {badge:'⚪ No Data',name:'Insufficient Data',desc:'Participant data unavailable.',note:''};
+  const f=c.fii?.net||0, p=c.pro?.net||0, cl=c.client?.net||0, d=c.dii?.net||0;
+  if(f>0 && p<0 && cl>0)
+    return {badge:'🟡 Observed',name:'FII Buy / PRO Net Short Config',
+      desc:'FII net positive (cash), PRO net short (futures), Client net positive. Participant positioning data only — not a trading recommendation.',
+      note:'Past configurations do not predict future outcomes.'};
+  if(f>2000 && p<-1000)
+    return {badge:'🟡 Observed',name:'Large FII Buy / PRO Hedge Config',
+      desc:'FII aggregate cash buy >₹2,000 Cr. PRO net short >₹1,000 Cr. Observed positioning data only — not a buy/sell signal.',
+      note:'Data shows positioning, not future direction.'};
+  if(f<-1000 && p>0)
+    return {badge:'🟡 Observed',name:'FII Net Sell / PRO Net Long Config',
+      desc:'FII aggregate cash negative, PRO net long. Observed participant flow data only — no trading conclusions should be drawn.',
+      note:'Multiple factors influence market outcomes.'};
+  if(f>0 && d>0)
+    return {badge:'🟡 Observed',name:'FII + DII Both Net Positive',
+      desc:'Both FII and DII show aggregate net positive flow. Data observation only — not a directional indicator.',
+      note:'Data observation — not investment advice.'};
+  return {badge:'⚪ Mixed',name:'Mixed Participant Flow',
+    desc:'No dominant configuration in current data. Flows are mixed.',
+    note:''};
+}
+
+function getVerdict(score) {
+  // Note: Labels describe data only — NOT trading signals or advice
+  if(score>=65) return {s:'📊 NET INSTITUTIONAL BUY',  sub:'Aggregate FII+DII flow net positive — data observation only',c:'var(--green)'};
+  if(score>=55) return {s:'📊 MIXED FLOW',              sub:'Cash positive, futures mixed — no directional conclusion',c:'var(--yellow)'};
+  if(score>=45) return {s:'📊 BALANCED FLOW',           sub:'Participant flows roughly balanced in observed period',c:'var(--t2)'};
+  if(score>=35) return {s:'📊 NET SELLING OBSERVED',    sub:'FII aggregate net negative — data observation only',c:'var(--yellow)'};
+  return          {s:'📊 NET INSTITUTIONAL SELL',       sub:'Aggregate institutional flow negative in observed period',c:'var(--red)'};
+}
+
+function daysToExpiry() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun, 4=Thu
+  let left = (4 - day + 7) % 7;
+  if (left === 0) {
+    // Today is Thursday — check if past market close (15:30 IST)
+    const h = now.getHours(), m = now.getMinutes();
+    if (h > 15 || (h === 15 && m >= 30)) left = 7;
+  }
+  return left === 0 ? 'TODAY' : left;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDER — update all DOM elements with data
+   ═══════════════════════════════════════════════════════ */
+function render(data) {
+  const cash = data.cash || {};
+  const fii  = cash.fii    || {net:0};
+  const dii  = cash.dii    || {net:0};
+  const pro  = cash.pro    || {net:0};
+  const cli  = cash.client || {net:0};
+  const maxA = Math.max(Math.abs(fii.net),Math.abs(dii.net),Math.abs(pro.net),Math.abs(cli.net),1);
+
+  // Date label
+  document.getElementById('dataDate').textContent = (data.date||'Today') + ' · NSE EOD';
+
+  // Flow cards
+  const setCard = (prefix, val, upColor, downColor, barColorUp, barColorDn) => {
+    const c = val>=0?upColor:downColor;
+    document.getElementById(prefix+'Val').innerHTML = `<span style="color:${c}">${fmtCr(val)}</span>`;
+    document.getElementById(prefix+'Sub').innerHTML = `<span style="color:${c}">${val>=0?'▲ Net Buyer':'▼ Net Seller'}</span>`;
+    document.getElementById(prefix+'Bar').style.cssText = `width:${bw(val,maxA)}%;background:${val>=0?barColorUp:barColorDn}`;
+  };
+  setCard('fii', fii.net, 'var(--green)', 'var(--red)',    'var(--green)', 'var(--red)');
+  setCard('dii', dii.net, 'var(--blue)',  'var(--red)',    'var(--blue)',  'var(--red)');
+  setCard('pro', pro.net, 'var(--green)', 'var(--purple)', 'var(--green)','var(--purple)');
+
+  // Client with retail trap warning
+  const trap = cli.net>0 && pro.net<0; // internal logic var — no UI label implies trading advice
+  const cliC = trap ? 'var(--yellow)' : (cli.net>=0?'var(--green)':'var(--red)');
+  document.getElementById('cliVal').innerHTML = `<span style="color:${cliC}">${fmtCr(cli.net)}</span>`;
+  document.getElementById('cliSub').innerHTML = trap
+    ? `<span style="color:var(--yellow)">⚠ Client Net Positive (note: PRO net negative)</span>`
+    : `<span style="color:${cliC}">${cli.net>=0?'▲ Net Buyer':'▼ Net Seller'}</span>`;
+  document.getElementById('cliBar').style.cssText = `width:${bw(cli.net,maxA)}%;background:${cliC}`;
+
+  // War bars
+  const setWar=(barId,valId,val,barC,valC)=>{
+    document.getElementById(barId).style.cssText=`width:${bw(val,maxA)}%;background:${barC}`;
+    const el=document.getElementById(valId);
+    el.textContent=fmtCr(val); el.style.color=valC;
+  };
+  setWar('wFii','wFiiV',fii.net, fii.net>=0?'var(--green)':'var(--red)',    fii.net>=0?'var(--green)':'var(--red)');
+  setWar('wDii','wDiiV',dii.net, dii.net>=0?'var(--blue)' :'var(--red)',    dii.net>=0?'var(--green)':'var(--red)');
+  setWar('wPro','wProV',pro.net, pro.net>=0?'var(--green)':'var(--purple)',  pro.net>=0?'var(--green)':'var(--red)');
+  setWar('wCli','wCliV',cli.net, trap?'var(--yellow)':'var(--green)',        trap?'var(--yellow)':(cli.net>=0?'var(--green)':'var(--red)'));
+
+  // Neutral data observation language — no directional advice (SEBI compliance)
+  document.getElementById('warNote').innerHTML = '📊 Participant flow data is for informational purposes only. OptionsLab is NOT SEBI registered. This is not investment advice.';
+
+  // Gauge + verdict
+  const score=calcScore(cash);
+  const off = 169.6 - (score/100)*169.6;
+  const gClr= score>=60?'#22c55e':score>=45?'#eab308':'#ef4444';
+  document.getElementById('gaugeFill').setAttribute('stroke-dashoffset',off);
+  document.getElementById('gaugeFill').setAttribute('stroke',gClr);
+  document.getElementById('gaugeNum').textContent=score;
+  document.getElementById('gaugeNum').style.color=gClr;
+  document.getElementById('sbarFill').style.width=score+'%';
+  const v=getVerdict(score);
+  document.getElementById('verdictStatus').textContent=v.s;
+  document.getElementById('verdictStatus').style.color=v.c;
+  document.getElementById('verdictSub').textContent=v.sub;
+
+  // AI text
+  const fDir=fii.net>=0?`₹${Math.abs(fii.net).toFixed(0)} Cr cash mein BUY kiya`:`₹${Math.abs(fii.net).toFixed(0)} Cr SELL kiya`;
+  const pDir=pro.net<0?'PRO traders bear side pe hain':'PRO traders bull side pe hain';
+  document.getElementById('aiText').innerHTML=`FII aggregate: <strong>${fDir}</strong>. PRO aggregate: ${pDir}. <em style="font-size:10px;color:var(--t3)">(Data observation only — not investment advice)</em>`;
+
+  // Pattern
+  const pat=detectPattern(cash);
+  document.getElementById('patBadge').textContent=pat.badge;
+  document.getElementById('patName').textContent=pat.name;
+  document.getElementById('patDesc').textContent=pat.desc;
+  document.getElementById('patNote').textContent=pat.note||'';
+
+  // Expiry
+  const exp=daysToExpiry();
+  document.getElementById('expiryDays').textContent=exp;
+  document.getElementById('expiryBanner').style.display=(exp==='TODAY'||exp<=3)?'flex':'none';
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHART
+   ═══════════════════════════════════════════════════════ */
+let chart=null;
+function renderChart(history){
+  const labels=history.map(h=>{
+    const p=h.date.split('-'); // DD-Mon-YYYY
+    return p.length>=2?`${p[1]} ${p[0]}`:h.date;
+  });
+  const fiiD=history.map(h=>h.fii_net);
+  const diiD=history.map(h=>h.dii_net);
+  if(chart){chart.destroy();chart=null;}
+  chart=new Chart(document.getElementById('flowChart').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'FII',data:fiiD,backgroundColor:fiiD.map(v=>v>=0?'rgba(249,115,22,0.75)':'rgba(239,68,68,0.55)'),borderRadius:3,borderSkipped:false},
+      {label:'DII',data:diiD,backgroundColor:'rgba(59,130,246,0.5)',borderRadius:3,borderSkipped:false},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d1225',borderColor:'#1a2540',borderWidth:1,titleColor:'#8899bb',bodyColor:'#fff',
+        callbacks:{label:c=>`${c.dataset.label}: ₹${c.parsed.y>0?'+':''}${c.parsed.y.toLocaleString('en-IN')} Cr`}}},
+      scales:{
+        x:{ticks:{color:'#3d4f6e',font:{size:8,family:"'JetBrains Mono'"}},grid:{color:'rgba(26,37,64,0.5)'},border:{color:'transparent'}},
+        y:{ticks:{color:'#3d4f6e',font:{size:8,family:"'JetBrains Mono'"},callback:v=>`₹${(Math.abs(v)/1000).toFixed(1)}k`},grid:{color:'rgba(26,37,64,0.5)'},border:{color:'transparent'}},
+      }},
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   FALLBACKS
+   ═══════════════════════════════════════════════════════ */
+const FB_DATA={
+  date:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),
+  cash:{fii:{net:2847},dii:{net:1204},pro:{net:-1891},client:{net:741}},
+};
+const FB_HIST=[
+  {date:'19-Mar-2026',fii_net:1200,dii_net:800},{date:'21-Mar-2026',fii_net:-3400,dii_net:2900},
+  {date:'25-Mar-2026',fii_net:2800,dii_net:400},{date:'27-Mar-2026',fii_net:4100,dii_net:600},
+  {date:'01-Apr-2026',fii_net:-2200,dii_net:3100},{date:'03-Apr-2026',fii_net:1800,dii_net:900},
+  {date:'07-Apr-2026',fii_net:-800,dii_net:2400},{date:'09-Apr-2026',fii_net:3200,dii_net:400},
+  {date:'11-Apr-2026',fii_net:2100,dii_net:1200},{date:'14-Apr-2026',fii_net:-1400,dii_net:4800},
+  {date:'16-Apr-2026',fii_net:900,dii_net:2100},{date:'17-Apr-2026',fii_net:2847,dii_net:1204},
+];
+
+/* ═══════════════════════════════════════════════════════
+   BADGE + ERROR
+   ═══════════════════════════════════════════════════════ */
+function badge(src){
+  const b=document.getElementById('srcBadge');
+  if(src==='nse'){b.className='src-badge src-live';b.textContent='● NSE LIVE';}
+  else if(src==='cache'||src==='stale-cache'){b.className='src-badge src-cache';b.textContent='⏱ CACHED';}
+  else{b.className='src-badge src-demo';b.textContent='○ DEMO DATA';}
+}
+function showErr(msg){
+  const b=document.getElementById('errBar');
+  document.getElementById('errMsg').textContent=msg;
+  b.style.display='flex';
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN FETCH
+   ═══════════════════════════════════════════════════════ */
+// AbortController with timeout — works on all browsers (no AbortSignal.timeout)
+function fetchWithTimeout(url, ms) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, {signal: ctrl.signal}).finally(() => clearTimeout(tid));
+}
+
+async function loadAll(){
+  // 1. Today's FII data
+  try{
+    const r=await fetchWithTimeout(`${API}/api/fii/data`, 8000);
+    const j=await r.json();
+    if(!j.success) throw new Error('API error');
+    badge(j.source);
+    render(j);
+    if(j.stale) showErr('NSE unreachable — showing last cached data.');
+  }catch(e){
+    console.warn('[smart-money] /api/fii/data failed:',e.message);
+    badge('fallback');
+    render(FB_DATA);
+    showErr('Backend unreachable — showing demo data. Deploy backend for live NSE data.');
+  }
+
+  // 2. History chart
+  try{
+    const r=await fetchWithTimeout(`${API}/api/fii/history`, 8000);
+    const j=await r.json();
+    if(!j.success||!j.history?.length) throw new Error('No history');
+    renderChart(j.history);
+    const cs=document.getElementById('chartSrc');
+    cs.className='src-badge src-live'; cs.textContent='● NSE 30D';
+  }catch(e){
+    console.warn('[smart-money] /api/fii/history failed:',e.message);
+    renderChart(FB_HIST);
+    const cs=document.getElementById('chartSrc');
+    cs.className='src-badge src-demo'; cs.textContent='○ DEMO';
+  }
+}
+
+loadAll();
+</script>
+</body>
+</html>

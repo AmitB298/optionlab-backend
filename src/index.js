@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 require('./db/migrate');
 
 // Bug #5: JWT_SECRET guard — server refuses to start without it
@@ -102,17 +102,43 @@ try {
   console.log('[boot] blog OK');
 } catch(e) { console.error('[boot] blog FAILED:', e.message); }
 
+// Clean-URL map: every page maps to its real file on disk, served with no .html in the address bar
+const CLEAN_PAGES = {
+  '/admin':          'admin.html',
+  '/app':            'app.html',
+  '/profile':        'profile.html',
+  '/verify':         'verify.html',
+  '/payment-status': 'payment-status.html',
+  '/setup':          'setup.html',
+  '/register':       'register.html',
+  '/forgot-mpin':    'forgot-mpin.html',
+  '/reset-mpin':     'reset-mpin.html',
+  '/community':      'community.html',
+  '/roadmap':        'roadmap.html',
+  '/jobber-demo':    'jobber_demo.html',
+};
+
+// Kisi purane bookmark/typed URL mein abhi bhi .html aaye to 301 redirect kar do clean URL pe
+app.get(/^\/([a-zA-Z0-9_-]+)\.html$/, (req, res, next) => {
+  const clean = '/' + req.params[0].replace(/^index$/, '');
+  if (CLEAN_PAGES[clean] || clean === '/') {
+    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    return res.redirect(301, (clean === '/' ? '/' : clean) + qs);
+  }
+  next();
+});
+
 // Static
-app.use(express.static(path.join(__dirname,'..','public')));
+app.use(express.static(path.join(__dirname,'..','public'), { index: 'index.html' }));
 app.use('/blog', express.static(path.join(__dirname,'..','public','blog')));
 app.get('/blog/*',(req,res)=>res.sendFile(path.join(__dirname,'..','public','blog','index.html')));
-app.get('/admin',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','admin.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
-app.get('/app',     (req,res)=>res.sendFile(path.join(__dirname,'..','public','app.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
-app.get('/profile', (req,res)=>res.sendFile(path.join(__dirname,'..','public','profile.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
-app.get('/verify',  (req,res)=>res.sendFile(path.join(__dirname,'..','public','verify.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
-app.get('/payment-status',(req,res)=>res.sendFile(require('path').join(__dirname,'..','public','payment-status.html')));
-app.get('/setup',   (req,res)=>res.sendFile(path.join(__dirname,'..','public','setup.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
-app.get('/register',(req,res)=>res.sendFile(path.join(__dirname,'..','public','register.html'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
+
+for (const [route, file] of Object.entries(CLEAN_PAGES)) {
+  app.get(route, (req, res) => res.sendFile(
+    path.join(__dirname, '..', 'public', file),
+    { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+  ));
+}
 
 // Bug #1: Sentry error handler after routes
 monitoring.errorHandler(app);

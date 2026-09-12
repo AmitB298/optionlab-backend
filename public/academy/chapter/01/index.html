@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="What are Options? CE and PE explained — Free F&O Academy Chapter 1. Learn call options, put options, and how they work.">
+<meta property="og:title" content="Chapter 1: What are Options? CE & PE — OptionsLab Academy">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://optionslab.in/academy/chapter/01">
+<meta property="og:image" content="https://optionslab.in/og-image.png">
+<link rel="canonical" href="https://optionslab.in/academy/chapter/01">
+<title>Chapter 1: What are Options? — OptionsLab Academy</title>
+<link rel="stylesheet" href="../../../style.css">
+<script src="/shared.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
+<style>
+.chapter-body { padding: 16px 16px 90px; max-width: 680px; margin: 0 auto; }
+.chapter-nav-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.chapter-num { font-size: 9px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; background: var(--orange-dim); padding: 3px 8px; border-radius: 4px; }
+.chapter-progress { font-size: 10px; color: var(--t3); }
+.chapter-title { font-family: var(--sans); font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+.chapter-meta { font-size: 11px; color: var(--t3); margin-bottom: 20px; display: flex; gap: 12px; }
+.chapter-body h2 { font-family: var(--sans); font-size: 18px; font-weight: 800; margin: 24px 0 10px; color: var(--orange); }
+.chapter-body h3 { font-family: var(--sans); font-size: 15px; font-weight: 700; margin: 16px 0 8px; color: var(--t1); }
+.chapter-body p { font-size: 13px; color: var(--t2); line-height: 1.8; margin-bottom: 14px; }
+.chapter-body p strong { color: var(--t1); }
+.concept-box { background: var(--bg4); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin: 16px 0; }
+.concept-title { font-family: var(--sans); font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+.concept-body  { font-size: 12px; color: var(--t2); line-height: 1.7; }
+.concept-body strong { color: var(--t1); }
+.analogy-box { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2); border-left: 3px solid var(--blue); border-radius: 10px; padding: 14px; margin: 16px 0; }
+.analogy-label { font-size: 9px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.key-terms { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+.key-term { background: var(--bg4); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; gap: 12px; }
+.term-name  { font-family: var(--sans); font-size: 13px; font-weight: 800; color: var(--orange); min-width: 80px; flex-shrink: 0; }
+.term-def   { font-size: 12px; color: var(--t2); line-height: 1.5; }
+.term-def strong { color: var(--t1); }
+.quiz-box { background: var(--bg4); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin: 20px 0; }
+.quiz-q { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+.quiz-opt { padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; font-size: 12px; color: var(--t2); cursor: pointer; transition: all 0.15s; }
+.quiz-opt:hover { border-color: var(--border2); color: var(--t1); }
+.quiz-opt.correct { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.quiz-opt.wrong   { background: var(--red-dim);   border-color: var(--red);   color: var(--red); }
+.chapter-footer { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+.disclaimer-box { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 12px; margin-top: 16px; }
+.disclaimer-box p { font-size: 11px; color: var(--t3); line-height: 1.6; margin: 0; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="/" class="nav-logo"><div class="logo-box">OL</div><div class="logo-wordmark">OPTIONS<span>LAB</span></div></a>
+  <div class="nav-actions">
+    <div class="btn-icon" onclick="toggleDark()" style="cursor:pointer">🌙</div>
+    <a href="/register" class="btn-signin">Sign In</a>
+    <a href="/pricing" class="btn-orange">Get Access</a>
+  </div>
+</nav>
+
+<div class="ticker-wrap"><div class="ticker-track">
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+</div></div>
+
+<div class="chapter-body">
+  <div class="chapter-nav-top">
+    <a href="/academy" style="font-size:12px;color:var(--t2);text-decoration:none">← Academy</a>
+    <span class="chapter-progress">Chapter 1 of 19</span>
+  </div>
+
+  <div class="chapter-num">Module 1 — Foundations</div>
+  <h1 class="chapter-title">What are Options? CE & PE Explained</h1>
+  <div class="chapter-meta">
+    <span>⏱ 8 min read</span>
+    <span class="pill pill-blue" style="font-size:9px">EN</span>
+    <span>🆓 Free Chapter</span>
+  </div>
+
+  <h2>Options Kya Hote Hain?</h2>
+  <p>Options ek type ke financial contracts hain jo aapko <strong>ek specific price pe ek specific date tak</strong> kuch kharidne ya bechne ka <strong>adhikar (right) dete hain — obligation nahi.</strong></p>
+  <p>India mein NSE pe Nifty 50 aur BankNifty ke weekly aur monthly options available hain. Har option contract mein 50 shares (Nifty) ya 15 shares (BankNifty) hote hain — ise <strong>lot size</strong> kehte hain.</p>
+
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Simple Analogy</div>
+    <p style="font-size:12px;color:var(--t2);line-height:1.6;margin:0">Socho ki ek flat ₹50 lakh ka hai. Developer aapko kehta hai: <em>"₹1 lakh do, aur agle 3 mahine mein ₹50 lakh mein kharidne ka adhikar tumhara."</em> Agar flat ki price ₹60 lakh ho gayi, tum ₹50 lakh mein khareed ke ₹10 lakh profit mein bech sakte ho. Agar price nahi badhi, sirf ₹1 lakh jaata hai. Yahi concept options mein hai — aap premium pay karte ho right ke liye, obligation ke liye nahi.</p>
+  </div>
+
+  <h2>Do Types: CE aur PE</h2>
+
+  <div class="concept-box">
+    <div class="concept-title" style="color:var(--red)">📈 Call Option (CE — Call European)</div>
+    <div class="concept-body">
+      CE option aapko ek <strong>specific price (strike price) pe asset kharidne ka adhikar</strong> deta hai, ek specific date (expiry) tak.<br><br>
+      <strong>Example:</strong> Nifty 22,500 CE — aapko Nifty ko 22,500 pe kharidne ka adhikar milta hai. Agar Nifty 23,000 jaata hai, aapka CE valuable ho jaata hai kyunki aap still 22,500 mein khareed sakte ho.
+    </div>
+  </div>
+
+  <div class="concept-box">
+    <div class="concept-title" style="color:var(--green)">📉 Put Option (PE — Put European)</div>
+    <div class="concept-body">
+      PE option aapko ek <strong>specific price pe asset bechne ka adhikar</strong> deta hai.<br><br>
+      <strong>Example:</strong> Nifty 22,500 PE — aapko Nifty ko 22,500 pe bechne ka adhikar milta hai. Agar Nifty 22,000 girta hai, aapka PE valuable ho jaata hai kyunki aap still 22,500 mein bech sakte ho.
+    </div>
+  </div>
+
+  <h2>Key Terms</h2>
+  <div class="key-terms">
+    <div class="key-term"><div class="term-name">Strike Price</div><div class="term-def">Woh fixed price jis pe aap option exercise kar sakte ho. Example: 22,500 CE mein 22,500 strike price hai.</div></div>
+    <div class="key-term"><div class="term-name">Expiry Date</div><div class="term-def">Woh date jis ke baad option expire ho jaata hai. Nifty ke <strong>weekly Thursday expiry</strong> hote hain, monthly last Thursday.</div></div>
+    <div class="key-term"><div class="term-name">Premium</div><div class="term-def">Option ki current market price — yahi aap pay karte ho right ke liye. Premium buyer ke liye cost hai, seller ke liye income.</div></div>
+    <div class="key-term"><div class="term-name">Lot Size</div><div class="term-def">Ek contract mein kitne underlying units hain. Nifty = 50 units, BankNifty = 15 units. 22,500 CE premium ₹100 hai toh ek lot cost = ₹100 × 50 = ₹5,000.</div></div>
+    <div class="key-term"><div class="term-name">ITM / ATM / OTM</div><div class="term-def"><strong>ITM (In The Money):</strong> Strike price has value. <strong>ATM (At The Money):</strong> Strike ≈ current price. <strong>OTM (Out of The Money):</strong> Strike has no intrinsic value yet.</div></div>
+  </div>
+
+  <h2>Buyer vs Seller</h2>
+  <p>Options mein do sides hoti hain:</p>
+  <p><strong>Option Buyer (Long):</strong> Premium pay karta hai, unlimited profit potential (CE mein), limited risk (sirf premium lost hota hai agar wrong).</p>
+  <p><strong>Option Seller (Short/Writer):</strong> Premium receive karta hai, limited profit (sirf premium), but theoretically higher risk if market moves strongly against the position.</p>
+
+  <div class="analogy-box">
+    <div class="analogy-label">📊 Important Data Point</div>
+    <p style="font-size:12px;color:var(--t2);line-height:1.6;margin:0">SEBI ke 2023 study ke anusaar, 90% retail F&O traders ne losses face kiye. Yeh statistic isliye important hai kyunki options ki complexity aur leverage ki wajah se risk management absolutely essential hai. Yeh educational data hai — koi prediction nahi.</p>
+  </div>
+
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-q">❓ Agar aap sochte ho ki Nifty upar jaayega, toh aap kaunsa option buy karoge?</div>
+    <div class="quiz-opt" onclick="quizAnswer(this, true)">A) Call Option (CE)</div>
+    <div class="quiz-opt" onclick="quizAnswer(this, false)">B) Put Option (PE)</div>
+    <div class="quiz-opt" onclick="quizAnswer(this, false)">C) Dono equal hain</div>
+    <div id="quizFeedback" style="margin-top:10px;font-size:12px;color:var(--t2);display:none"></div>
+  </div>
+
+  <div class="disclaimer-box">
+    <p>⚠️ <strong>Educational Content Only.</strong> Yeh chapter sirf options concepts samjhane ke liye hai. OptionsLab SEBI registered nahi hai. Koi bhi financial decision apne independent research aur registered advisor se consult karke karein.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <a href="/academy" class="cta-primary">← BACK TO ALL CHAPTERS →</a>
+    <a href="/academy" class="cta-outline">← All Chapters</a>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bnav-row">
+    <a href="/"            class="bnav-btn"><div class="bnav-icon">🏠</div><span>HOME</span></a>
+    <a href="/terminal"    class="bnav-btn"><div class="bnav-icon">📊</div><span>TERMINAL</span></a>
+    <a href="/smart-money" class="bnav-btn"><div class="bnav-icon">🧠</div><span>SMART</span></a>
+    <a href="/academy"     class="bnav-btn active"><div class="bnav-icon">🎓</div><span>ACADEMY</span></a>
+    <a href="/app"   class="bnav-btn"><div class="bnav-icon">👤</div><span>PROFILE</span></a>
+  </div>
+</nav>
+
+<script>
+function quizAnswer(el, correct) {
+  document.querySelectorAll('.quiz-opt').forEach(o => o.onclick = null);
+  el.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById('quizFeedback');
+  fb.style.display = 'block';
+  if (correct) {
+    fb.innerHTML = '✅ Sahi! CE (Call Option) ka value badhta hai jab underlying asset ka price badhta hai. Yeh educational understanding hai — actual trading decisions apne research ke basis par karein.';
+    fb.style.color = 'var(--green)';
+  } else {
+    fb.innerHTML = '❌ Nahi. CE (Call Option) buy karte hain jab aap price increase expect karte ho. PE (Put Option) ka value badhta hai jab price girta hai. Lekin options trading mein sirf direction sochna kaafi nahi — Greeks, time decay aur volatility bhi matter karte hain.';
+    fb.style.color = 'var(--red)';
+  }
+}
+</script>
+</body>
+</html>

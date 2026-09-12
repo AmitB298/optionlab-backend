@@ -90,7 +90,7 @@ function showSuccess(plan, orderId) {
     <div class="sub">Your plan is now active. You have full access to all OptionsLab features.</div>
     <span class="plan-badge ${planBadgeClass(plan)}">${planLabel(plan)} Activated</span>
     <br>
-    <a class="btn btn-primary" href="/app.html">Go to Dashboard →</a>
+    <a class="btn btn-primary" href="/app">Go to Dashboard →</a>
     <a class="btn btn-ghost" href="/">Home</a>
     <div class="divider"></div>
     <div class="order-id">Order ID: ${orderId || 'N/A'}</div>
@@ -103,7 +103,7 @@ function showPending(orderId) {
     <span class="icon">⏳</span>
     <div class="title" style="color:#ff9933">Payment Pending</div>
     <div class="sub">Your payment is being processed. This can take a few minutes. Your plan will be activated automatically once confirmed.</div>
-    <a class="btn btn-primary" href="/app.html">Go to Dashboard</a>
+    <a class="btn btn-primary" href="/app">Go to Dashboard</a>
     <div class="divider"></div>
     <div class="order-id">Order ID: ${orderId || 'N/A'}</div>
   `;
@@ -116,7 +116,7 @@ function showFailed(orderId, msg) {
     <span class="icon">❌</span>
     <div class="title" style="color:#ff4444">Payment Failed</div>
     <div class="sub">${msg || 'Your payment could not be processed. No amount has been deducted. Please try again.'}</div>
-    <a class="btn btn-primary" href="/app.html">Try Again</a>
+    <a class="btn btn-primary" href="/app">Try Again</a>
     <a class="btn btn-ghost" href="/">Home</a>
     <div class="divider"></div>
     <div class="order-id">Order ID: ${orderId || 'N/A'}</div>

@@ -284,7 +284,7 @@ main{position:relative;z-index:5;width:100%;max-width:520px;padding:72px 20px 20
           <div class="auto-track"><div class="auto-fill auto-fill-gn" id="retFill"></div></div>
         </div>
 
-        <a href="profile.html" class="skip-btn skip-btn-gn" style="margin-top:14px;">
+        <a href="/profile" class="skip-btn skip-btn-gn" style="margin-top:14px;">
           Go Now →
         </a>
       </div>
@@ -298,7 +298,7 @@ main{position:relative;z-index:5;width:100%;max-width:520px;padding:72px 20px 20
       <div class="err-ico">⚠</div>
       <div class="err-title">Verification Failed</div>
       <div class="err-msg" id="errMsg">This magic link has expired or has already been used. Each link is single-use and valid for 15 minutes.</div>
-      <a href="register.html?tab=register" class="err-btn">← Request a new link</a>
+      <a href="/register?tab=register" class="err-btn">← Request a new link</a>
       <div class="err-code" id="errCode"></div>
     </div>
   </div>
@@ -419,7 +419,7 @@ function autoRedirect(fillId, cdId, dest, dur) {
       localStorage.setItem('ol_token', sessionToken);
       document.getElementById('retEmail').textContent = email;
       show('stReturn');
-      autoRedirect('retFill', 'retCd', '/index.html', 3000);
+      autoRedirect('retFill', 'retCd', '/', 3000);
 
     } else {
       // ── NEW USER — store in sessionStorage, auto-advance ──
@@ -428,7 +428,7 @@ function autoRedirect(fillId, cdId, dest, dur) {
 
       document.getElementById('newEmail').textContent = email;
 
-      const dest = '/register.html?tab=register';
+      const dest = '/register?tab=register';
       const skipBtn = document.getElementById('skipNewBtn');
       if (skipBtn) skipBtn.href = dest;
 

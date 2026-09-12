@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Options Terminal — Live Nifty & BankNifty option chain, OI scanner, IV skew and strategy builder.">
+<meta property="og:title" content="Options Terminal — OptionsLab">
+<meta property="og:description" content="Options Terminal — Live Nifty & BankNifty option chain, OI scanner, IV skew and strategy builder.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://optionslab.in/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://optionslab.in/og-image.png">
+<meta property="og:url" content="https://optionslab.in/terminal">
+<title>Options Terminal — OptionsLab</title>
+<link rel="stylesheet" href="../../style.css">
+<script src="/shared.js" defer></script>
+<style>
+.lock-overlay{position:relative;}
+.lock-blur{filter:blur(3px);pointer-events:none;user-select:none;}
+.lock-badge{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;background:rgba(8,9,26,0.7);border-radius:var(--radius);gap:8px;}
+.lock-badge h3{font-family:var(--sans);font-size:16px;font-weight:800;}
+.lock-badge p{font-size:11px;color:var(--t2);text-align:center;padding:0 20px;}
+.chain-hdr{display:grid;grid-template-columns:repeat(4,1fr) 80px repeat(4,1fr);font-size:8px;font-weight:700;color:var(--t3);letter-spacing:0.5px;text-transform:uppercase;padding:8px 10px;background:var(--bg3);border-bottom:1px solid var(--border);text-align:center;}
+.chain-hdr .strike-col{background:rgba(249,115,22,0.08);color:var(--orange);}
+.chain-row{display:grid;grid-template-columns:repeat(4,1fr) 80px repeat(4,1fr);font-size:11px;padding:7px 10px;border-bottom:1px solid rgba(26,37,64,0.4);text-align:center;transition:background 0.1s;}
+.chain-row:hover{background:rgba(255,255,255,0.02);}
+.chain-row.atm{background:rgba(249,115,22,0.05);}
+.chain-row.atm .strike-cell{background:rgba(249,115,22,0.12);color:var(--orange);font-weight:800;font-family:var(--sans);}
+.strike-cell{font-weight:700;font-size:12px;}
+.ce{color:var(--red);}
+.pe{color:var(--green);}
+.itm-ce{background:rgba(239,68,68,0.04);}
+.itm-pe{background:rgba(34,197,94,0.04);}
+.oi-bar-cell{display:flex;align-items:center;gap:3px;font-size:10px;}
+.oi-mini{flex:1;height:3px;border-radius:99px;overflow:hidden;background:var(--bg3);}
+.oi-mini-fill{height:100%;border-radius:99px;}
+.scroll-chain{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.scroll-chain::-webkit-scrollbar{display:none;}
+.terminal-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.tpill{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;}
+.tpill.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.mini-chart{height:60px;background:var(--bg3);border-radius:8px;overflow:hidden;position:relative;}
+/* Tab panels — Bug #4 fix */
+.term-panel{display:none;flex-direction:column;gap:12px;}
+.term-panel.active{display:flex;}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"></noscript>
+<link rel="canonical" href="https://optionslab.in/terminal">
+</head>
+<body>
+<nav class="topnav">
+  <a href="/" class="nav-logo"><div class="logo-box">OL</div><div class="logo-wordmark">OPTIONS<span>LAB</span></div></a>
+  <div class="nav-actions"><div class="btn-icon" onclick="toggleDark()" title="Toggle dark/light mode" style="cursor:pointer">🌙</div><a href="/register" class="btn-signin">Sign In</a><a href="/pricing" class="btn-orange">Get Access</a></div>
+</nav>
+<div class="ticker-wrap"><div class="ticker-track">
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">INDIA VIX</span><span class="ticker-val">14.23</span><span class="dn">-2.1%</span></span>
+  <span class="ticker-item"><span class="ticker-name">SENSEX</span><span class="ticker-val">74,119.2</span><span class="up">+0.54%</span></span>
+  <span class="ticker-item"><span class="ticker-name">FINNIFTY</span><span class="ticker-val">23,840.5</span><span class="up">+0.42%</span></span>
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">INDIA VIX</span><span class="ticker-val">14.23</span><span class="dn">-2.1%</span></span>
+  <span class="ticker-item"><span class="ticker-name">SENSEX</span><span class="ticker-val">74,119.2</span><span class="up">+0.54%</span></span>
+  <span class="ticker-item"><span class="ticker-name">FINNIFTY</span><span class="ticker-val">23,840.5</span><span class="up">+0.42%</span></span>
+</div></div>
+<div class="page-header">
+  <div class="page-pill"><span class="live-dot"></span> LIVE FEED · NSE F&amp;O</div>
+  <div class="page-title"><span style="color:var(--orange)">OPTIONS</span><br>TERMINAL</div>
+  <div class="page-subtitle">Live chain, OI scanner, IV skew, Greeks — demo below. <a href="/register" style="color:var(--orange)">Sign in for live data →</a></div>
+</div>
+<div class="content">
+  <!-- INDEX + EXPIRY SELECTOR -->
+  <div class="stat-strip anim anim-1">
+    <div class="stat-item"><div class="stat-label">Nifty 50</div><div class="stat-val" style="color:var(--t1)">22,513</div></div>
+    <div class="stat-item"><div class="stat-label">India VIX</div><div class="stat-val" style="color:var(--red)">14.23</div></div>
+    <div class="stat-item"><div class="stat-label">PCR</div><div class="stat-val up">1.08</div></div>
+    <div class="stat-item"><div class="stat-label">Max Pain</div><div class="stat-val orange">22,400</div></div>
+    <div class="stat-item"><div class="stat-label">IV Rank</div><div class="stat-val orange">38%</div></div>
+    <div class="stat-item"><div class="stat-label">ATM Strike</div><div class="stat-val">22,500</div></div>
+  </div>
+
+  <!-- SYMBOL + EXPIRY -->
+  <div style="display:flex;gap:8px;align-items:center" class="anim anim-2">
+    <div class="terminal-pills">
+      <div class="tpill active">NIFTY</div>
+      <div class="tpill">BANKNIFTY</div>
+      <div class="tpill">FINNIFTY</div>
+    </div>
+    <div class="terminal-pills" style="margin-left:auto">
+      <div class="tpill active">17 Apr</div>
+      <div class="tpill">24 Apr</div>
+      <div class="tpill">May</div>
+    </div>
+  </div>
+
+  <!-- SCROLL TABS -->
+  <div class="scroll-tabs anim anim-2" style="margin:0 -16px;padding:0 16px">
+    <button class="stab active"  onclick="termTab('chain')">OPTION CHAIN</button>
+    <button class="stab"         onclick="termTab('ivskew')">IV SKEW</button>
+    <button class="stab"         onclick="termTab('strategy')">STRATEGY LAB</button>
+    <button class="stab"         onclick="termTab('greeks')">GREEKS</button>
+    <button class="stab"         onclick="termTab('oiscan')">OI SCANNER</button>
+  </div>
+
+  <!-- ═══ TAB: OPTION CHAIN ═══ -->
+  <div class="term-panel active" id="tp-chain">
+  <div class="sec-label anim anim-3"><div class="sec-label-text">Option Chain — NIFTY 17 Apr 2026</div><div class="pill pill-orange">DEMO DATA</div></div>
+  <div class="card anim anim-3" style="overflow:hidden">
+    <div class="scroll-chain">
+      <div style="min-width:600px">
+        <div class="chain-hdr">
+          <div>OI</div><div>Chg</div><div>Volume</div><div class="ce">LTP</div>
+          <div class="strike-col">STRIKE</div>
+          <div class="pe">LTP</div><div>Volume</div><div>Chg</div><div>OI</div>
+        </div>
+        <div id="chainBody"></div>
+      </div>
+    </div>
+  </div>
+  <a href="/register" class="cta-primary">SIGN IN FOR LIVE DATA →</a>
+  </div><!-- /tp-chain -->
+
+  <!-- ═══ TAB: IV SKEW (locked) ═══ -->
+  <div class="term-panel" id="tp-ivskew">
+  <div class="sec-label"><div class="sec-label-text">IV Skew Chart</div><div class="pill pill-orange">PRO</div></div>
+  <div class="lock-overlay" style="height:200px">
+    <div class="card lock-blur" style="height:200px;display:flex;align-items:center;justify-content:center">
+      <div style="text-align:center;color:var(--t3);font-size:12px">IV Smile curve here</div>
+    </div>
+    <div class="lock-badge">
+      <div style="font-size:28px">🔒</div>
+      <h3>Pro Feature</h3>
+      <p>IV Skew, IV Smile &amp; Volatility Surface</p>
+      <a href="/pricing" class="cta-primary" style="width:auto;padding:10px 20px;margin-top:4px">Unlock Pro →</a>
+    </div>
+  </div>
+  </div><!-- /tp-ivskew -->
+
+  <!-- ═══ TAB: STRATEGY LAB ═══ -->
+  <div class="term-panel" id="tp-strategy">
+  <div class="sec-label"><div class="sec-label-text">Strategy Builder</div><div class="pill pill-green">FREE</div></div>
+  <div class="card" style="padding:14px">
+    <div style="font-family:var(--sans);font-size:14px;font-weight:800;margin-bottom:10px;color:var(--orange)">STRATEGY PRESETS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+      <div class="tpill">Straddle</div><div class="tpill">Strangle</div>
+      <div class="tpill">Iron Condor</div><div class="tpill">Bull Spread</div>
+      <div class="tpill">Bear Spread</div><div class="tpill">Butterfly</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center;font-size:12px;color:var(--t2)">
+      🔗 <a href="/register" style="color:var(--orange);font-weight:600">Sign in to use Strategy Builder</a><br>
+      Build, visualize payoff &amp; paper trade strategies
+    </div>
+  </div>
+  <a href="/calculator" class="cta-outline">USE FREE CALCULATORS →</a>
+  </div><!-- /tp-strategy -->
+
+  <!-- ═══ TAB: GREEKS ENGINE ═══ -->
+  <div class="term-panel" id="tp-greeks">
+  <div class="sec-label"><div class="sec-label-text">Greeks Engine</div><div class="pill pill-green">FREE</div></div>
+  <div class="ai-box">
+    <div class="ai-box-label">📊 GREEKS CALCULATOR</div>
+    <p>Full Black-Scholes Greeks calculator with AI interpretation available in our dedicated calculator page.</p>
+  </div>
+  <a href="/calculator" class="cta-primary">OPEN GREEKS CALCULATOR →</a>
+  <div class="card" style="padding:14px;margin-top:0">
+    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px">Quick Reference</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--t2)">Δ Delta (ATM CE)</span><span style="color:var(--blue);font-weight:700">~0.50</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--t2)">Θ Theta/day (ATM, 5 DTE)</span><span style="color:var(--red);font-weight:700">~-18 ₹</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--t2)">V Vega (per 1% IV change)</span><span style="color:var(--green);font-weight:700">~+16 ₹</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0"><span style="color:var(--t2)">IV Rank (current)</span><span style="color:var(--orange);font-weight:700">38th %ile</span></div>
+    </div>
+  </div>
+  </div><!-- /tp-greeks -->
+
+  <!-- ═══ TAB: OI SCANNER ═══ -->
+  <div class="term-panel" id="tp-oiscan">
+  <div class="sec-label"><div class="sec-label-text">OI Scanner</div><div class="pill pill-orange">PRO</div></div>
+  <div class="lock-overlay" style="height:220px">
+    <div class="card lock-blur" style="height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:20px">
+      <div style="font-size:11px;color:var(--t3)">OI Buildup · Unwinding · PCR by Strike</div>
+      <div style="width:100%;height:4px;background:var(--border);border-radius:99px"></div>
+      <div style="width:70%;height:4px;background:var(--border);border-radius:99px"></div>
+      <div style="width:85%;height:4px;background:var(--border);border-radius:99px"></div>
+    </div>
+    <div class="lock-badge">
+      <div style="font-size:28px">🔒</div>
+      <h3>Pro Feature</h3>
+      <p>OI Buildup Scanner, Strike-wise PCR, OI change heatmap</p>
+      <a href="/pricing" class="cta-primary" style="width:auto;padding:10px 20px;margin-top:4px">Unlock Pro →</a>
+    </div>
+  </div>
+  </div><!-- /tp-oiscan -->
+  <div class="ai-box" style="border-left-color:var(--t3)">
+    <div class="ai-box-label" style="color:var(--t3)">⚠ SEBI COMPLIANCE NOTICE</div>
+    <p>OptionsLab is NOT SEBI registered. Option chain, OI data, and analytics are <strong>educational tools only</strong> — not trading signals or investment advice. F&O trading carries substantial risk of loss.</p>
+  </div>
+</div>
+
+<div style="position:fixed;bottom:64px;left:0;right:0;background:rgba(8,9,26,0.97);border-top:1px solid rgba(239,68,68,0.2);padding:6px 16px;font-size:9px;color:var(--t3);text-align:center;z-index:350;backdrop-filter:blur(10px)">
+  ⚠ NOT SEBI REGISTERED · Analytics &amp; data tools only · Not investment advice · F&amp;O trading has substantial risk of loss
+</div>
+<nav class="bottom-nav">
+  <div class="bnav-row">
+    <a href="/"            class="bnav-btn"><div class="bnav-icon">🏠</div><span>HOME</span></a>
+    <a href="/terminal"    class="bnav-btn active"><div class="bnav-icon">📊</div><span>TERMINAL</span></a>
+    <a href="/smart-money" class="bnav-btn"><div class="bnav-icon">🧠</div><span>SMART</span></a>
+    <a href="/academy"     class="bnav-btn"><div class="bnav-icon">🎓</div><span>ACADEMY</span></a>
+    <a href="/app"   class="bnav-btn"><div class="bnav-icon">👤</div><span>PROFILE</span></a>
+  </div>
+</nav>
+<script>
+// Tab router — Bug #4 fix
+const TERM_TABS = ['chain','ivskew','strategy','greeks','oiscan'];
+function termTab(id) {
+  document.querySelectorAll('.stab').forEach((btn,i) => btn.classList.toggle('active', TERM_TABS[i] === id));
+  TERM_TABS.forEach(t => {
+    const p = document.getElementById('tp-' + t);
+    if (p) p.classList.toggle('active', t === id);
+  });
+}
+
+// Static realistic chain data — no Math.random (values were meaningless & changed on refresh)
+const CHAIN_DATA = [
+  {k:22000,ceLTP:512,peLTP:2.5,ceOI:124,peOI:48,ceVol:82,peVol:12,ceChg:+18.5,peChg:-0.8},
+  {k:22100,ceLTP:414,peLTP:4.1,ceOI:98, peOI:62,ceVol:64,peVol:18,ceChg:+15.2,peChg:-1.2},
+  {k:22200,ceLTP:318,peLTP:7.8,ceOI:142,peOI:88,ceVol:98,peVol:24,ceChg:+12.4,peChg:-2.1},
+  {k:22300,ceLTP:228,peLTP:16, ceOI:186,peOI:118,ceVol:124,peVol:42,ceChg:+9.8,peChg:-3.4},
+  {k:22400,ceLTP:146,peLTP:34, ceOI:248,peOI:188,ceVol:168,peVol:78,ceChg:+6.2,peChg:-5.8},
+  {k:22500,ceLTP:82, peLTP:72, ceOI:488,peOI:422,ceVol:248,peVol:198,ceChg:-4.1,peChg:+4.2}, // ATM
+  {k:22600,ceLTP:38, peLTP:128,ceOI:312,peOI:286,ceVol:148,peVol:124,ceChg:-8.4,peChg:+8.1},
+  {k:22700,ceLTP:16, peLTP:208,ceOI:188,peOI:188,ceVol:82,peVol:68,ceChg:-5.2,peChg:+5.6},
+  {k:22800,ceLTP:6.5,peLTP:298,ceOI:124,peOI:128,ceVol:42,peVol:38,ceChg:-2.8,peChg:+3.2},
+  {k:22900,ceLTP:3.2,peLTP:394,ceOI:82, peOI:86,ceVol:22,peVol:18,ceChg:-1.4,peChg:+1.8},
+  {k:23000,ceLTP:1.5,peLTP:488,ceOI:64, peOI:48,ceVol:12,peVol:8,ceChg:-0.8,peChg:+1.1},
+];
+const spot = 22513;
+
+function buildChain(){
+  const body = document.getElementById('chainBody');
+  body.innerHTML = CHAIN_DATA.map(r => {
+    const isATM = r.k === 22500;
+    const itmCE = r.k < spot;
+    const itmPE = r.k > spot;
+    const ceC = r.ceChg >= 0 ? 'up' : 'dn';
+    const peC = r.peChg >= 0 ? 'up' : 'dn';
+    return `<div class="chain-row ${isATM?'atm':''} ${itmCE?'itm-ce':itmPE?'itm-pe':''}">
+      <div class="ce" style="font-size:10px">${r.ceOI}L</div>
+      <div class="${ceC}" style="font-size:10px">${r.ceChg>0?'+':''}${r.ceChg}</div>
+      <div style="font-size:10px;color:var(--t3)">${r.ceVol}K</div>
+      <div class="ce" style="font-weight:700">${r.ceLTP}</div>
+      <div class="strike-cell">${r.k}</div>
+      <div class="pe" style="font-weight:700">${r.peLTP}</div>
+      <div style="font-size:10px;color:var(--t3)">${r.peVol}K</div>
+      <div class="${peC}" style="font-size:10px">${r.peChg>0?'+':''}${r.peChg}</div>
+      <div class="pe" style="font-size:10px">${r.peOI}L</div>
+    </div>`;
+  }).join('');
+}
+buildChain();
+</script>
+</body>
+</html>

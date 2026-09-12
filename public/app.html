@@ -577,7 +577,7 @@ input,select,textarea{font-family:inherit}
   </div>
   <div style="display:flex;align-items:center;gap:.75rem;">
     <div style="font-size:.75rem;color:rgba(255,255,255,0.7);">👋 <span id="topNavName">Trader</span></div>
-    <button onclick="localStorage.removeItem(String.fromCharCode(79,112,116,105,111,110,115,76,97,98,95,116,111,107,101,110));localStorage.removeItem(String.fromCharCode(111,108,95,116,111,107,101,110));sessionStorage.clear();window.location.replace('/register.html')" style="padding:.32rem .85rem;border-radius:6px;border:1px solid rgba(255,153,51,0.4);background:transparent;color:#ff9933;font-size:.72rem;cursor:pointer;font-weight:600;">Sign Out</button>
+    <button onclick="localStorage.removeItem(String.fromCharCode(79,112,116,105,111,110,115,76,97,98,95,116,111,107,101,110));localStorage.removeItem(String.fromCharCode(111,108,95,116,111,107,101,110));sessionStorage.clear();window.location.replace('/register')" style="padding:.32rem .85rem;border-radius:6px;border:1px solid rgba(255,153,51,0.4);background:transparent;color:#ff9933;font-size:.72rem;cursor:pointer;font-weight:600;">Sign Out</button>
   </div>
 </nav>
 <div class="layout">
@@ -1108,13 +1108,13 @@ const API = '';
 
 /* ── UTILS ── */
 function getToken(){const p=new URLSearchParams(window.location.search);const urlTok=p.get('tok');if(urlTok){localStorage.setItem('OptionsLab_token',urlTok);history.replaceState({},'','/app');}return urlTok||localStorage.getItem('OptionsLab_token')||localStorage.getItem('ol_token')||sessionStorage.getItem('OptionsLab_token')}
-function doSignOut(){localStorage.removeItem("OptionsLab_token");localStorage.removeItem("ol_token");localStorage.removeItem("OptionsLab_user");sessionStorage.clear();fetch("/api/auth/logout",{method:"POST",credentials:"include"}).catch(()=>{}).finally(()=>{window.location.replace("/register.html");});}
+function doSignOut(){localStorage.removeItem("OptionsLab_token");localStorage.removeItem("ol_token");localStorage.removeItem("OptionsLab_user");sessionStorage.clear();fetch("/api/auth/logout",{method:"POST",credentials:"include"}).catch(()=>{}).finally(()=>{window.location.replace("/register");});}
 
 async function apiFetch(url, opts={}){
   const tok = getToken();
   const headers = {'Content-Type':'application/json', ...(opts.headers||{})}; if(tok) headers['Authorization'] = 'Bearer '+tok;
   const res = await fetch(API+url, {...opts, headers, credentials:'include'});
-  if(res.status===401){ window.location.replace('/register.html'); throw new Error('Unauthorized'); }
+  if(res.status===401){ window.location.replace('/register'); throw new Error('Unauthorized'); }
   return res;
 }
 
@@ -1197,7 +1197,7 @@ async function loadUser(){
     });
 
   } catch(e){
-    if(e.message!=='Unauthorized') window.location.replace('/register.html');
+    if(e.message!=='Unauthorized') window.location.replace('/register');
   }
 }
 
@@ -1291,7 +1291,7 @@ async function changeMpin(){
 /* ── REFERRAL ── */
 function copyReferral(){
   const code = document.getElementById('referralCode').textContent;
-  const link = window.location.origin+'/register.html?ref='+code;
+  const link = window.location.origin+'/register?ref='+code;
   navigator.clipboard.writeText(link).then(()=>showToast('Referral link copied! ✓','success'));
 }
 
@@ -1302,7 +1302,7 @@ async function doLogout(){
   ['ol_access_token','ol_refresh_token','ol_token','OptionsLab_token','OptionsLab_user'].forEach(k=>{
     sessionStorage.removeItem(k); localStorage.removeItem(k);
   });
-  window.location.replace('/register.html');
+  window.location.replace('/register');
 }
 
 /* ── TOAST ── */
@@ -1326,7 +1326,7 @@ function showToast(msg, type='success'){
     // FIX: load-screen hide is now guaranteed regardless of token/redirect outcome below
     setTimeout(()=>{ const l = document.getElementById('load'); if(l) l.classList.add('gone'); }, 1200);
   const tok = getToken();
-  if(!tok){ console.error('NO TOKEN FOUND', Object.keys(localStorage)); window.location.replace('/register.html'); return; }
+  if(!tok){ console.error('NO TOKEN FOUND', Object.keys(localStorage)); window.location.replace('/register'); return; }
 
   // Handle URL tab param
   const p = new URLSearchParams(window.location.search);

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Analytics Engine — GEX flip zones, GARCH volatility forecast, VPIN microstructure and kill zone countdown for F&O traders.">
+<meta property="og:title" content="Analytics Engine — OptionsLab">
+<meta property="og:description" content="Analytics Engine — GEX flip zones, GARCH volatility forecast, VPIN microstructure and kill zone countdown for F&O traders.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://optionslab.in/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://optionslab.in/og-image.png">
+<meta property="og:url" content="https://optionslab.in/analytics">
+<title>Analytics — OptionsLab</title>
+<link rel="stylesheet" href="../../style.css">
+<script src="/shared.js" defer></script>
+<style>
+.analytics-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;}
+.analytics-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.analytics-card.orange::before{background:var(--orange);}
+.analytics-card.green::before{background:var(--green);}
+.analytics-card.purple::before{background:var(--purple);}
+.analytics-card.blue::before{background:var(--blue);}
+.analytics-card.red::before{background:var(--red);}
+.analytics-card.yellow::before{background:var(--yellow);}
+.ac-icon{font-size:24px;margin-bottom:10px;}
+.ac-title{font-family:var(--sans);font-size:15px;font-weight:800;margin-bottom:6px;}
+.ac-desc{font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:10px;}
+.ac-val{font-family:var(--sans);font-size:26px;font-weight:800;line-height:1;margin-bottom:2px;}
+.ac-sub{font-size:10px;color:var(--t2);}
+.pro-tag{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--orange-dim);color:var(--orange);}
+.meter{height:8px;background:var(--bg3);border-radius:99px;overflow:hidden;margin:8px 0;}
+.meter-fill{height:100%;border-radius:99px;transition:width 1s ease;}
+.signal-list{display:flex;flex-direction:column;gap:6px;}
+.signal-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;}
+.sig-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.sig-name{font-size:12px;font-weight:600;flex:1;}
+.sig-val{font-size:11px;font-weight:700;}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"></noscript>
+<link rel="canonical" href="https://optionslab.in/analytics">
+</head>
+<body>
+<nav class="topnav">
+  <a href="/" class="nav-logo"><div class="logo-box">OL</div><div class="logo-wordmark">OPTIONS<span>LAB</span></div></a>
+  <div class="nav-actions"><div class="btn-icon" onclick="toggleDark()" title="Toggle dark/light mode" style="cursor:pointer">🌙</div><a href="/register" class="btn-signin">Sign In</a><a href="/pricing" class="btn-orange">Get Access</a></div>
+</nav>
+<div class="ticker-wrap"><div class="ticker-track">
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+</div></div>
+<div class="page-header">
+  <div class="page-pill">🔬 INSTITUTIONAL-GRADE ANALYTICS</div>
+  <div class="page-title">ANALYTICS<br><span style="color:var(--orange)">ENGINE</span></div>
+  <div class="page-subtitle">Microstructure, GARCH, dark pool — tools that hedge funds use, now for retail traders.</div>
+</div>
+<div class="content">
+  <!-- REGIME CLASSIFIER -->
+  <div class="sec-label anim anim-1"><div class="sec-label-text">Market Regime</div><div class="pro-tag">PRO</div></div>
+  <div class="analytics-card orange anim anim-1">
+    <div class="ac-icon">🧭</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="ac-title">Regime Classifier</div>
+      <div class="pill pill-yellow">TRENDING</div>
+    </div>
+    <div class="ac-desc">Current market regime based on volatility clustering, trend strength, and institutional flow patterns.</div>
+    <div class="signal-list">
+      <div class="signal-item"><div class="sig-dot" style="background:var(--green)"></div><div class="sig-name">Trend Strength</div><div class="sig-val up">72/100</div></div>
+      <div class="signal-item"><div class="sig-dot" style="background:var(--yellow)"></div><div class="sig-name">Volatility Regime</div><div class="sig-val" style="color:var(--yellow)">Low-Medium</div></div>
+      <div class="signal-item"><div class="sig-dot" style="background:var(--blue)"></div><div class="sig-name">Institutional Flow</div><div class="sig-val up">Accumulation</div></div>
+    </div>
+  </div>
+
+  <!-- GEX -->
+  <div class="sec-label anim anim-2"><div class="sec-label-text">Gamma Exposure (GEX)</div><div class="pro-tag">PRO</div></div>
+  <div class="analytics-card green anim anim-2">
+    <div class="ac-icon">⚡</div>
+    <div class="ac-title">GEX Flip Zone</div>
+    <div class="ac-val" style="color:var(--orange)">22,400–22,600</div>
+    <div class="ac-sub">Market maker hedging range — Gamma pins spot here near expiry</div>
+    <div class="meter"><div class="meter-fill" style="width:65%;background:linear-gradient(90deg,var(--red),var(--yellow),var(--green))"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3)"><span>Negative GEX</span><span>Positive GEX</span></div>
+    <div class="ai-box" style="margin-top:12px;border-left-color:var(--green)">
+      <div class="ai-box-label" style="color:var(--green)">📊 GEX Analysis</div>
+      <p>Positive GEX environment — in positive GEX regimes, market maker delta hedging activity historically correlates with lower realized volatility. This is an educational data point, not a trading signal or prediction.</p>
+    </div>
+  </div>
+
+  <!-- VPIN / MICROSTRUCTURE -->
+  <div class="sec-label anim anim-3"><div class="sec-label-text">VPIN — Order Flow Toxicity</div><div class="pro-tag">PRO</div></div>
+  <div class="analytics-card purple anim anim-3">
+    <div class="ac-icon">🔬</div>
+    <div class="ac-title">Microstructure Data</div>
+    <div class="signal-list">
+      <div class="signal-item"><div class="sig-dot" style="background:var(--green)"></div><div class="sig-name">VPIN Score</div><div class="sig-val up">0.34 (Low)</div></div>
+      <div class="signal-item"><div class="sig-dot" style="background:var(--yellow)"></div><div class="sig-name">Kyle's Lambda</div><div class="sig-val" style="color:var(--yellow)">0.0018</div></div>
+      <div class="signal-item"><div class="sig-dot" style="background:var(--blue)"></div><div class="sig-name">Amihud Illiquidity</div><div class="sig-val up">Low</div></div>
+      <div class="signal-item"><div class="sig-dot" style="background:var(--green)"></div><div class="sig-name">Order Flow Imbalance</div><div class="sig-val up">+0.12</div></div>
+    </div>
+  </div>
+
+  <!-- GARCH -->
+  <div class="sec-label anim anim-4"><div class="sec-label-text">GARCH Volatility Forecast</div><div class="pro-tag">PRO</div></div>
+  <div class="analytics-card blue anim anim-4">
+    <div class="ac-icon">📈</div>
+    <div class="ac-title">GARCH(1,1) Model</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+      <div style="text-align:center;background:var(--bg3);border-radius:8px;padding:10px">
+        <div style="font-size:9px;color:var(--t3);margin-bottom:4px">1D Forecast</div>
+        <div style="font-family:var(--sans);font-size:18px;font-weight:800;color:var(--orange)">14.8%</div>
+      </div>
+      <div style="text-align:center;background:var(--bg3);border-radius:8px;padding:10px">
+        <div style="font-size:9px;color:var(--t3);margin-bottom:4px">3D Forecast</div>
+        <div style="font-family:var(--sans);font-size:18px;font-weight:800;color:var(--yellow)">15.2%</div>
+      </div>
+      <div style="text-align:center;background:var(--bg3);border-radius:8px;padding:10px">
+        <div style="font-size:9px;color:var(--t3);margin-bottom:4px">5D Forecast</div>
+        <div style="font-family:var(--sans);font-size:18px;font-weight:800;color:var(--blue)">15.6%</div>
+      </div>
+    </div>
+    <div class="ac-sub" style="margin-top:8px">IV rank: 38th percentile — options are relatively cheap. GARCH suggests volatility will stay stable or rise slightly.</div>
+  </div>
+
+  <!-- DARK POOL -->
+  <div class="sec-label anim anim-5"><div class="sec-label-text">Dark Pool OI Score</div><div class="pill pill-orange" style="font-size:8px">ELITE ONLY</div></div>
+  <div class="analytics-card red anim anim-5" style="opacity:0.6">
+    <div class="ac-icon">🌑</div>
+    <div class="ac-title">Dark Pool Signal</div>
+    <div style="text-align:center;padding:20px;font-size:40px">🔒</div>
+    <div style="text-align:center">
+      <div style="font-family:var(--sans);font-size:14px;font-weight:700;margin-bottom:6px">Elite Plan Required</div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:12px">Dark Pool OI Score, Block Trade Flow &amp; Spoofing Detection</div>
+      <a href="/pricing" class="cta-primary" style="font-size:11px;padding:10px">Upgrade to Elite →</a>
+    </div>
+  </div>
+
+  <!-- KILL ZONES -->
+  <div class="sec-label anim anim-6"><div class="sec-label-text">Kill Zone Countdown</div><div class="pro-tag">PRO</div></div>
+  <div class="analytics-card yellow anim anim-6">
+    <div class="ac-icon">🕐</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="ac-title">Kill Zone Countdown</div>
+    </div>
+    <div id="killZoneLabel" style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">Detecting...</div>
+    <div style="font-family:var(--sans);font-size:28px;font-weight:800;color:var(--orange);margin-bottom:12px" id="killCountdown">—</div>
+    <style>
+      .kz-row{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px;transition:border-color 0.2s,background 0.2s;}
+      .kz-row:last-child{margin-bottom:0;}
+      .kz-active{border-color:var(--orange)!important;background:rgba(249,115,22,0.07)!important;}
+      .kz-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+      .kz-name{font-size:12px;font-weight:600;flex:1;}
+      .kz-time{font-size:10px;color:var(--t3);}
+    </style>
+    <div class="kz-row" id="kz-open-drive">
+      <div class="kz-dot" style="background:var(--green)"></div>
+      <div class="kz-name">Open Drive</div>
+      <div class="kz-time">9:15 – 9:45</div>
+    </div>
+    <div class="kz-row" id="kz-continuation">
+      <div class="kz-dot" style="background:var(--blue)"></div>
+      <div class="kz-name">Continuation</div>
+      <div class="kz-time">10:30 – 11:30</div>
+    </div>
+    <div class="kz-row" id="kz-midday-reversal">
+      <div class="kz-dot" style="background:var(--yellow)"></div>
+      <div class="kz-name">Midday Reversal</div>
+      <div class="kz-time">12:30 – 13:30</div>
+    </div>
+    <div class="kz-row" id="kz-power-hour">
+      <div class="kz-dot" style="background:var(--orange)"></div>
+      <div class="kz-name">Power Hour</div>
+      <div class="kz-time">14:30 – 15:30</div>
+    </div>
+    <div class="kz-row" id="kz-close-auction">
+      <div class="kz-dot" style="background:var(--purple)"></div>
+      <div class="kz-name">Close Auction</div>
+      <div class="kz-time">15:20 – 15:30</div>
+    </div>
+  </div>
+
+  <a href="/pricing" class="cta-primary anim anim-7">🔓 UNLOCK ALL ANALYTICS — PRO ₹1,499/MO →</a>
+
+  <!-- SEBI DISCLAIMER — required on all pages with analytics/signals content -->
+  <div class="ai-box" style="border-left-color:var(--t3)">
+    <div class="ai-box-label" style="color:var(--t3)">⚠ IMPORTANT — SEBI COMPLIANCE NOTICE</div>
+    <p><strong style="color:var(--t1)">OptionsLab is NOT registered with SEBI</strong> as an Investment Adviser, Research Analyst, or Portfolio Manager. All analytics shown on this page — including GEX, VPIN, GARCH, Kill Zones, and regime classification — are <strong>educational data tools only</strong>. They do not constitute trading signals, recommendations, or advice. Do not make trading decisions based solely on this data. Past patterns do not predict future results. F&O trading carries substantial risk of loss.</p>
+  </div>
+
+</div>
+
+<div style="position:fixed;bottom:64px;left:0;right:0;background:rgba(8,9,26,0.97);border-top:1px solid rgba(239,68,68,0.2);padding:6px 16px;font-size:9px;color:var(--t3);text-align:center;z-index:350;backdrop-filter:blur(10px)">
+  ⚠ NOT SEBI REGISTERED · Analytics &amp; data tools only · Not investment advice · F&amp;O trading has substantial risk of loss
+</div>
+<nav class="bottom-nav">
+  <div class="bnav-row">
+    <a href="/"            class="bnav-btn"><div class="bnav-icon">🏠</div><span>HOME</span></a>
+    <a href="/terminal"    class="bnav-btn"><div class="bnav-icon">📊</div><span>TERMINAL</span></a>
+    <a href="/smart-money" class="bnav-btn"><div class="bnav-icon">🧠</div><span>SMART</span></a>
+    <a href="/academy"     class="bnav-btn"><div class="bnav-icon">🎓</div><span>ACADEMY</span></a>
+    <a href="/app"   class="bnav-btn"><div class="bnav-icon">👤</div><span>PROFILE</span></a>
+  </div>
+</nav>
+<script>
+function updateKillZone() {
+  // Kill zones: [label, startH, startM, endH, endM]
+  const zones = [
+    { label: 'Open Drive',      sh:9,  sm:15, eh:9,  em:45  },
+    { label: 'Continuation',    sh:10, sm:30, eh:11, em:30  },
+    { label: 'Midday Reversal', sh:12, sm:30, eh:13, em:30  },
+    { label: 'Power Hour',      sh:14, sm:30, eh:15, em:30  },
+    { label: 'Close Auction',   sh:15, sm:20, eh:15, em:30  },
+  ];
+
+  const now = new Date();
+  const nowM = now.getHours() * 60 + now.getMinutes(); // minutes since midnight
+
+  // Find which zone is NEXT (or currently active)
+  let nextZone = null;
+  let nextStartM = Infinity;
+  let isActive = false;
+
+  for (const z of zones) {
+    const startM = z.sh * 60 + z.sm;
+    const endM   = z.eh * 60 + z.em;
+    if (nowM >= startM && nowM < endM) {
+      // Currently inside this zone
+      nextZone  = z;
+      nextStartM = startM;
+      isActive   = true;
+      break;
+    }
+    if (startM > nowM && startM < nextStartM) {
+      nextZone  = z;
+      nextStartM = startM;
+    }
+  }
+
+  // After market (after 15:30) — show "Market Closed"
+  if (!nextZone) {
+    document.getElementById('killCountdown').textContent = 'Market Closed';
+    document.getElementById('killZoneLabel').textContent = '—';
+    return;
+  }
+
+  // Highlight correct row
+  const rows = document.querySelectorAll('.kz-row');
+  rows.forEach(r => r.classList.remove('kz-active'));
+  const activeRow = document.getElementById('kz-' + nextZone.label.replace(/\s+/g,'-').toLowerCase());
+  if (activeRow) activeRow.classList.add('kz-active');
+
+  // Countdown to end (if active) or to start (if next)
+  const targetM = isActive
+    ? nextZone.eh * 60 + nextZone.em
+    : nextStartM;
+  const diffSec = (targetM - nowM) * 60 - now.getSeconds();
+
+  const h = Math.floor(diffSec / 3600);
+  const m = Math.floor((diffSec % 3600) / 60);
+  const s = diffSec % 60;
+  const label = isActive ? `${nextZone.label} ends in` : `${nextZone.label} starts in`;
+  document.getElementById('killCountdown').textContent =
+    `${h > 0 ? h + 'h ' : ''}${m}m ${s}s`;
+  document.getElementById('killZoneLabel').textContent = label;
+}
+
+updateKillZone();
+setInterval(updateKillZone, 1000);
+</script>
+</body>
+</html>

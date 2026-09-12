@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OptionsLab — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:#030912;color:#dde8ff;font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;border:none;background:none;cursor:pointer}
+input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#ff9933;border-radius:3px}
+
+:root{
+  --bg:#030912;--bg2:#07101f;--bg3:#0c1628;
+  --card:#101e35;--card2:#131f38;
+  --border:rgba(99,155,255,.09);--borderB:rgba(99,155,255,.18);
+  --o:#ff9933;--o2:#e05a00;
+  --g:#00e676;--r:#ff3d71;--c:#22d3ee;--p:#a855f7;--y:#fbbf24;
+  --t1:#dde8ff;--t2:#7a9cc5;--t3:#2d4a6e;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --dis:'Syne',sans-serif;
+  --nav:64px;
+}
+
+/* ── LOAD SCREEN ── */
+#load{
+  position:fixed;inset:0;z-index:999;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;
+  transition:opacity .5s,visibility .5s;
+}
+#load.gone{opacity:0;visibility:hidden;pointer-events:none}
+.load-logo{font-family:var(--dis);font-size:2rem;font-weight:800;letter-spacing:-.02em}
+.load-logo span{color:var(--o)}
+.load-bar{width:200px;height:2px;background:rgba(99,155,255,.1);border-radius:2px;overflow:hidden}
+.load-fill{height:100%;width:0;background:linear-gradient(90deg,var(--o),var(--c));border-radius:2px;animation:loadbar 1.2s ease forwards}
+@keyframes loadbar{0%{width:0}100%{width:100%}}
+.load-txt{font-family:var(--mono);font-size:.5rem;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;animation:fadein .5s .3s both}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  scrollbar-width:none;
+}
+.sidebar::-webkit-scrollbar{display:none}
+
+/* sidebar top — user card */
+.sb-user{
+  padding:1.5rem 1.2rem 1.2rem;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.sb-user::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(255,153,51,.08),transparent 70%);
+  pointer-events:none;
+}
+.sb-ava{
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--o),var(--p));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--dis);font-size:1.4rem;font-weight:800;color:#fff;
+  margin-bottom:.75rem;position:relative;
+  box-shadow:0 0 0 3px rgba(255,153,51,.15),0 0 0 6px rgba(255,153,51,.05);
+}
+.sb-ava-online{
+  position:absolute;bottom:2px;right:2px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--g);border:2px solid var(--bg2);
+  box-shadow:0 0 6px var(--g);
+}
+.sb-name{font-family:var(--dis);font-size:1rem;font-weight:800;letter-spacing:-.01em;color:var(--t1);margin-bottom:.2rem}
+.sb-mobile{font-family:var(--mono);font-size:.48rem;color:var(--t3);letter-spacing:.04em;margin-bottom:.6rem}
+.sb-plan{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.46rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:.22rem .65rem;border-radius:20px;
+}
+.plan-FREE{background:rgba(34,211,238,.07);color:var(--c);border:1px solid rgba(34,211,238,.2)}
+.plan-PRO{background:rgba(255,153,51,.08);color:var(--o);border:1px solid rgba(255,153,51,.25)}
+.plan-ELITE{background:rgba(168,85,247,.08);color:var(--p);border:1px solid rgba(168,85,247,.25)}
+.plan-dot{width:4px;height:4px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;animation:planpulse 2s infinite}
+@keyframes planpulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* plan expiry bar */
+.sb-expiry{margin-top:.75rem}
+.sb-expiry-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
+.sb-expiry-lbl{font-family:var(--mono);font-size:.44rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em}
+.sb-expiry-val{font-family:var(--mono);font-size:.44rem;color:var(--o)}
+.sb-bar{height:3px;background:rgba(99,155,255,.08);border-radius:2px;overflow:hidden}
+.sb-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--o),var(--y));transition:width .8s}
+
+/* sidebar nav */
+.sb-nav{padding:.75rem 0;flex:1}
+.sb-section{
+  font-family:var(--mono);font-size:.42rem;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--t3);padding:.6rem 1.2rem .3rem;margin-top:.3rem;
+}
+.sb-item{
+  display:flex;align-items:center;gap:.65rem;
+  padding:.6rem 1.2rem;font-size:.9rem;font-weight:500;
+  color:var(--t2);cursor:pointer;
+  border-left:2px solid transparent;
+  transition:all .15s;position:relative;
+}
+.sb-item:hover{color:var(--t1);background:rgba(255,255,255,.025)}
+.sb-item.active{
+  color:var(--o);border-left-color:var(--o);
+  background:rgba(255,153,51,.05);
+}
+.sb-item .si-ico{font-size:1rem;width:18px;text-align:center;flex-shrink:0}
+.sb-item .si-badge{
+  margin-left:auto;font-family:var(--mono);font-size:.4rem;font-weight:700;
+  padding:.14rem .45rem;border-radius:3px;
+  background:var(--o);color:#fff;letter-spacing:.04em;
+}
+.sb-item .si-badge.new{background:var(--g);color:#000}
+
+/* sidebar bottom */
+.sb-bottom{
+  padding:.85rem 1.2rem;
+  border-top:1px solid var(--border);
+}
+.sb-logout{
+  display:flex;align-items:center;gap:.6rem;
+  width:100%;padding:.55rem .75rem;
+  font-size:.85rem;font-weight:500;color:var(--t3);
+  border-radius:8px;transition:all .2s;
+}
+.sb-logout:hover{background:rgba(255,61,113,.06);color:var(--r)}
+
+/* ── MAIN ── */
+.main{display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+
+/* top nav */
+.topnav{
+  height:var(--nav);display:flex;align-items:center;
+  padding:0 2rem;gap:1rem;
+  background:rgba(3,9,18,.88);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  flex-shrink:0;position:sticky;top:0;z-index:50;
+}
+.tn-greeting{
+  font-family:var(--dis);font-size:1.1rem;font-weight:800;
+  letter-spacing:-.01em;color:var(--t1);
+}
+.tn-greeting span{color:var(--o)}
+.tn-time{
+  font-family:var(--mono);font-size:.5rem;color:var(--t3);
+  letter-spacing:.06em;margin-top:.1rem;
+}
+.tn-right{display:flex;align-items:center;gap:.75rem;margin-left:auto}
+.tn-market{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:var(--mono);font-size:.52rem;
+  padding:.28rem .75rem;border-radius:20px;
+}
+.market-open{background:rgba(0,230,118,.07);color:var(--g);border:1px solid rgba(0,230,118,.2)}
+.market-closed{background:rgba(255,61,113,.07);color:var(--r);border:1px solid rgba(255,61,113,.2)}
+.mkt-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:planpulse 1.5s infinite}
+.tn-notif{
+  width:36px;height:36px;border-radius:9px;
+  background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;cursor:pointer;position:relative;transition:.2s;
+}
+.tn-notif:hover{border-color:var(--o)}
+.notif-dot{
+  position:absolute;top:6px;right:6px;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--o);border:1.5px solid var(--bg);
+  box-shadow:0 0 6px var(--o);
+}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:2rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.tab-panel{display:none;animation:panelin .3s ease}
+.tab-panel.active{display:block}
+@keyframes panelin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── HOME TAB ── */
+/* welcome hero */
+.welcome-hero{
+  background:linear-gradient(135deg,rgba(255,153,51,.08),rgba(168,85,247,.05));
+  border:1px solid rgba(255,153,51,.15);border-radius:20px;
+  padding:2rem 2.2rem;margin-bottom:1.5rem;
+  position:relative;overflow:hidden;
+}
+.welcome-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:220px;height:220px;
+  background:radial-gradient(circle,rgba(255,153,51,.1),transparent 70%);
+  pointer-events:none;
+}
+.wh-eyebrow{
+  font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--o);margin-bottom:.6rem;
+  display:flex;align-items:center;gap:.4rem;
+}
+.wh-dot{width:4px;height:4px;border-radius:50%;background:var(--o);box-shadow:0 0 6px var(--o);animation:planpulse 2s infinite}
+.wh-h1{
+  font-family:var(--dis);font-size:clamp(1.6rem,3vw,2.2rem);
+  font-weight:800;letter-spacing:-.03em;line-height:1;
+  color:var(--t1);margin-bottom:.5rem;
+}
+.wh-h1 span{color:var(--o)}
+.wh-sub{font-size:.9rem;color:var(--t2);font-weight:300;line-height:1.7;max-width:500px;margin-bottom:1.5rem}
+.wh-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-weight:600;font-size:.9rem;
+  padding:.62rem 1.5rem;border-radius:9px;
+  background:linear-gradient(135deg,#ff9933,#c44a00);color:#fff;
+  box-shadow:0 4px 16px rgba(255,153,51,.35);transition:all .25s;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(255,153,51,.55)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-weight:500;font-size:.88rem;
+  padding:.6rem 1.3rem;border-radius:9px;
+  border:1px solid var(--borderB);color:var(--t2);
+  background:rgba(99,155,255,.04);transition:.2s;
+}
+.btn-secondary:hover{border-color:var(--o);color:var(--t1)}
+
+/* stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.2rem 1.1rem;
+  transition:all .2s;cursor:default;position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,currentColor,transparent);
+  opacity:.3;
+}
+.stat-card:hover{border-color:rgba(255,153,51,.2);transform:translateY(-2px)}
+.sc-icon{font-size:1.4rem;margin-bottom:.7rem;display:block}
+.sc-val{
+  font-family:var(--dis);font-size:1.8rem;font-weight:800;
+  letter-spacing:-.02em;line-height:1;margin-bottom:.2rem;
+}
+.sc-lbl{font-family:var(--mono);font-size:.46rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3)}
+.sc-sub{font-size:.82rem;color:var(--t2);font-weight:300;margin-top:.2rem}
+
+/* quick actions */
+.section-title{
+  font-family:var(--dis);font-size:1.1rem;font-weight:800;
+  letter-spacing:-.01em;color:var(--t1);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.actions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.5rem}
+.action-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.4rem 1.2rem;
+  cursor:pointer;transition:all .25s;
+  display:flex;flex-direction:column;gap:.5rem;
+  position:relative;overflow:hidden;
+}
+.action-card::after{
+  content:'→';position:absolute;bottom:1rem;right:1.1rem;
+  font-size:1rem;color:var(--t3);transition:all .2s;
+}
+.action-card:hover{
+  border-color:rgba(255,153,51,.25);
+  transform:translateY(-3px);
+  box-shadow:0 8px 28px rgba(0,0,0,.3);
+}
+.action-card:hover::after{color:var(--o);transform:translateX(3px)}
+.ac-icon{font-size:1.6rem}
+.ac-title{font-family:var(--dis);font-size:1rem;font-weight:800;color:var(--t1)}
+.ac-desc{font-size:.82rem;color:var(--t2);font-weight:300;line-height:1.5;padding-right:1.5rem}
+.ac-badge{
+  font-family:var(--mono);font-size:.42rem;font-weight:700;
+  padding:.14rem .45rem;border-radius:3px;
+  background:rgba(0,230,118,.08);color:var(--g);
+  border:1px solid rgba(0,230,118,.2);
+  align-self:flex-start;
+}
+
+/* activity feed */
+.two-col{display:grid;grid-template-columns:1fr 360px;gap:1rem;margin-bottom:1.5rem}
+.activity-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.2rem;
+}
+.activity-item{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.activity-item:last-child{border-bottom:none}
+.ai-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:.28rem;
+}
+.ai-txt{font-size:.88rem;color:var(--t2);flex:1;font-weight:300;line-height:1.5}
+.ai-txt strong{color:var(--t1);font-weight:500}
+.ai-time{font-family:var(--mono);font-size:.46rem;color:var(--t3);white-space:nowrap}
+
+/* system status */
+.status-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.2rem;
+}
+.status-item{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.status-item:last-child{border-bottom:none}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.status-dot.ok{background:var(--g);box-shadow:0 0 6px var(--g)}
+.status-dot.warn{background:var(--y);box-shadow:0 0 6px var(--y)}
+.status-dot.err{background:var(--r);box-shadow:0 0 6px var(--r)}
+.status-name{font-size:.88rem;color:var(--t1);font-weight:500;flex:1}
+.status-val{font-family:var(--mono);font-size:.48rem;color:var(--t3)}
+
+/* ── DOWNLOAD TAB ── */
+.dl-hero{
+  background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(99,155,255,.05));
+  border:1px solid rgba(168,85,247,.2);border-radius:20px;
+  padding:2.5rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:2rem;
+}
+.dl-icon{font-size:4rem;flex-shrink:0}
+.dl-title{font-family:var(--dis);font-size:1.8rem;font-weight:800;letter-spacing:-.02em;color:var(--t1);margin-bottom:.35rem}
+.dl-sub{font-size:.95rem;color:var(--t2);font-weight:300;line-height:1.7;margin-bottom:1.2rem}
+.dl-meta{
+  display:flex;gap:1.2rem;margin-top:.85rem;flex-wrap:wrap;
+}
+.dl-meta-item{
+  display:flex;align-items:center;gap:.4rem;
+  font-family:var(--mono);font-size:.5rem;color:var(--t3);
+}
+.dl-meta-item::before{content:'✓';color:var(--g)}
+
+.setup-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.step-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.4rem;
+  display:flex;flex-direction:column;gap:.6rem;
+}
+.step-num{
+  font-family:var(--dis);font-size:2rem;font-weight:800;
+  color:rgba(255,153,51,.2);line-height:1;
+}
+.step-title{font-family:var(--dis);font-size:1rem;font-weight:800;color:var(--t1)}
+.step-desc{font-size:.85rem;color:var(--t2);font-weight:300;line-height:1.6}
+
+/* ── SUBSCRIPTION TAB ── */
+.current-plan{
+  background:linear-gradient(135deg,rgba(255,153,51,.07),rgba(168,85,247,.04));
+  border:1px solid rgba(255,153,51,.2);border-radius:20px;
+  padding:2rem 2.2rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:2rem;
+  flex-wrap:wrap;
+}
+.cp-left{}
+.cp-label{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:.4rem}
+.cp-plan{font-family:var(--dis);font-size:2.5rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.3rem}
+.cp-plan.FREE{color:var(--c)}.cp-plan.PRO{color:var(--o)}.cp-plan.ELITE{color:var(--p)}
+.cp-desc{font-size:.9rem;color:var(--t2);font-weight:300}
+.cp-right{text-align:right}
+.cp-expiry{font-family:var(--mono);font-size:.5rem;color:var(--t3);margin-bottom:.3rem}
+.cp-days{font-family:var(--dis);font-size:2rem;font-weight:800;color:var(--o)}
+.cp-days-lbl{font-family:var(--mono);font-size:.44rem;color:var(--t3)}
+
+.plan-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.plan-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:1.6rem;transition:all .25s;
+}
+.plan-card:hover{transform:translateY(-3px);border-color:rgba(255,153,51,.2)}
+.plan-card.current{border-color:rgba(255,153,51,.35);background:var(--card2)}
+.pc-tier{font-family:var(--mono);font-size:.46rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:.4rem}
+.pc-name{font-family:var(--dis);font-size:1.8rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.4rem}
+.pc-price{font-family:var(--dis);font-size:2.4rem;font-weight:800;line-height:1;margin-bottom:.25rem}
+.pc-period{font-family:var(--mono);font-size:.5rem;color:var(--t3)}
+.pc-features{margin:1rem 0;display:flex;flex-direction:column;gap:.4rem}
+.pc-feat{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--t2);font-weight:300}
+.pc-feat::before{content:'✓';color:var(--g);font-size:.75rem;flex-shrink:0}
+.pc-feat.locked{opacity:.35}
+.pc-feat.locked::before{content:'✗';color:var(--t3)}
+.pc-btn{
+  width:100%;padding:.6rem;border-radius:9px;
+  font-weight:600;font-size:.88rem;cursor:pointer;border:none;
+  transition:all .2s;margin-top:.5rem;
+}
+.pc-btn.current-btn{background:rgba(255,153,51,.1);color:var(--o);border:1px solid rgba(255,153,51,.25)}
+.pc-btn.upgrade-btn{background:linear-gradient(135deg,#ff9933,#c44a00);color:#fff;box-shadow:0 4px 14px rgba(255,153,51,.35)}
+.pc-btn.upgrade-btn:hover{box-shadow:0 6px 20px rgba(255,153,51,.55)}
+
+/* ── DEVICES TAB ── */
+.device-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.2rem 1.4rem;margin-bottom:.75rem;
+  display:flex;align-items:center;gap:1.2rem;
+  transition:all .2s;
+}
+.device-card:hover{border-color:rgba(99,155,255,.2)}
+.device-card.current-device{border-color:rgba(0,230,118,.2)}
+.device-icon{font-size:1.8rem;flex-shrink:0}
+.device-info{flex:1}
+.device-name{font-weight:600;font-size:.95rem;color:var(--t1);margin-bottom:.2rem}
+.device-meta{font-family:var(--mono);font-size:.48rem;color:var(--t3);letter-spacing:.04em}
+.device-status{
+  font-family:var(--mono);font-size:.46rem;font-weight:700;
+  padding:.2rem .6rem;border-radius:20px;
+}
+.ds-active{background:rgba(0,230,118,.08);color:var(--g);border:1px solid rgba(0,230,118,.2)}
+.ds-inactive{background:rgba(255,255,255,.04);color:var(--t3);border:1px solid var(--border)}
+.device-action{
+  font-family:var(--mono);font-size:.48rem;color:var(--r);
+  cursor:pointer;padding:.3rem .6rem;border-radius:5px;
+  border:1px solid rgba(255,61,113,.2);background:rgba(255,61,113,.04);
+  transition:.2s;
+}
+.device-action:hover{background:rgba(255,61,113,.1)}
+
+/* ── SETTINGS TAB ── */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.settings-section{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.4rem;
+}
+.ss-title{
+  font-family:var(--dis);font-size:.95rem;font-weight:800;
+  color:var(--t1);margin-bottom:1rem;
+  padding-bottom:.75rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.5rem;
+}
+.field-row{margin-bottom:.85rem}
+.field-label{font-family:var(--mono);font-size:.46rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:.35rem}
+.field-input{
+  width:100%;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:.5rem .75rem;
+  font-size:.88rem;color:var(--t1);outline:none;
+  transition:border-color .15s;
+}
+.field-input:focus{border-color:var(--o)}
+.field-input:disabled{opacity:.5;cursor:not-allowed}
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.toggle-row:last-child{border-bottom:none}
+.toggle-label{font-size:.88rem;color:var(--t2);font-weight:400}
+.toggle-sub{font-size:.78rem;color:var(--t3);font-weight:300;margin-top:.1rem}
+.toggle{
+  width:36px;height:20px;border-radius:20px;
+  background:var(--bg3);border:1px solid var(--border);
+  cursor:pointer;position:relative;transition:all .2s;flex-shrink:0;
+}
+.toggle.on{background:var(--o);border-color:var(--o)}
+.toggle::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:14px;height:14px;border-radius:50%;
+  background:#fff;transition:transform .2s;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.toggle.on::after{transform:translateX(16px)}
+
+/* ── REFERRAL TAB ── */
+.referral-hero{
+  background:linear-gradient(135deg,rgba(0,230,118,.07),rgba(34,211,238,.04));
+  border:1px solid rgba(0,230,118,.18);border-radius:20px;
+  padding:2rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:2rem;
+}
+.rh-code-wrap{
+  background:var(--bg3);border:1px solid var(--borderB);
+  border-radius:12px;padding:.85rem 1.2rem;
+  display:flex;align-items:center;gap:.85rem;flex-shrink:0;
+}
+.rh-code{font-family:var(--mono);font-size:1.4rem;font-weight:700;color:var(--g);letter-spacing:.08em}
+.rh-copy{
+  font-family:var(--mono);font-size:.48rem;font-weight:700;
+  padding:.3rem .7rem;border-radius:6px;
+  background:rgba(0,230,118,.1);color:var(--g);
+  border:1px solid rgba(0,230,118,.25);cursor:pointer;
+  transition:.2s;white-space:nowrap;
+}
+.rh-copy:hover{background:rgba(0,230,118,.18)}
+.rh-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;flex:1}
+.rh-stat{text-align:center;padding:.85rem;background:rgba(0,0,0,.2);border-radius:10px;border:1px solid rgba(255,255,255,.04)}
+.rh-stat-val{font-family:var(--dis);font-size:1.6rem;font-weight:800;color:var(--g);line-height:1}
+.rh-stat-lbl{font-family:var(--mono);font-size:.44rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+
+/* ── ANNOUNCEMENT BANNER ── */
+.announce-banner{
+  background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.18);
+  border-radius:12px;padding:.85rem 1.1rem;margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.85rem;
+}
+.ab-icon{font-size:1.1rem;flex-shrink:0}
+.ab-txt{font-size:.88rem;color:var(--t2);font-weight:300;flex:1}
+.ab-txt strong{color:var(--t1)}
+.ab-close{font-size:.8rem;color:var(--t3);cursor:pointer;padding:.2rem;transition:.15s}
+.ab-close:hover{color:var(--t1)}
+
+/* ── MOBILE ── */
+@media(max-width:1024px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .actions-grid{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+  .settings-grid{grid-template-columns:1fr}
+  .plan-cards{grid-template-columns:1fr}
+  .setup-steps{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .content{padding:1rem}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .actions-grid{grid-template-columns:1fr}
+  .welcome-hero{padding:1.4rem}
+  .dl-hero{flex-direction:column;text-align:center}
+  .current-plan{flex-direction:column}
+  .cp-right{text-align:left}
+  .referral-hero{flex-direction:column}
+  .rh-stats{grid-template-columns:1fr 1fr 1fr}
+}
+</style>
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script><!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KR22SF63PS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KR22SF63PS', { anonymize_ip: true });
+  window.gtagEvent = function(event, params) {
+    if(typeof gtag === 'function') gtag('event', event, params || {});
+  };
+</script>
+</head>
+<body>
+
+<!-- LOAD SCREEN -->
+<div id="load">
+  <div class="load-logo">Options<span>Lab</span></div>
+  <div class="load-bar"><div class="load-fill"></div></div>
+  <div class="load-txt">Loading your dashboard</div>
+</div>
+
+<nav style="position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(5,10,24,0.95);backdrop-filter:blur(32px);border-bottom:1px solid rgba(255,153,51,0.14);box-shadow:0 2px 24px rgba(0,0,0,0.5);">
+  <div style="display:flex;align-items:center;gap:1.5rem;">
+    <div onclick="window.location.href='/'" style="display:flex;align-items:center;gap:.4rem;cursor:pointer;">
+      <div style="width:32px;height:32px;background:linear-gradient(135deg,#ff9933,#e05a00);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;color:#fff;">OL</div>
+      <div style="font-size:1.05rem;font-weight:700;color:#fff;">Options<em style="color:#ff9933;font-style:normal;">Lab</em></div>
+    </div>
+    <div style="display:flex;gap:.25rem;">
+      <a href="/" style="padding:.3rem .7rem;border-radius:5px;font-size:.75rem;color:rgba(255,255,255,0.6);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Home</a>
+      <a href="/#terminal" style="padding:.3rem .7rem;border-radius:5px;font-size:.75rem;color:rgba(255,255,255,0.6);text-decoration:none;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Terminal</a>
+      <a href="/#pricing" style="padding:.3rem .7rem;border-radius:5px;font-size:.75rem;color:rgba(255,255,255,0.6);text-decoration:none;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Pricing</a>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:.75rem;">
+    <div style="font-size:.75rem;color:rgba(255,255,255,0.7);">👋 <span id="topNavName">Trader</span></div>
+    <button onclick="localStorage.removeItem(String.fromCharCode(79,112,116,105,111,110,115,76,97,98,95,116,111,107,101,110));localStorage.removeItem(String.fromCharCode(111,108,95,116,111,107,101,110));sessionStorage.clear();window.location.replace('/register.html')" style="padding:.32rem .85rem;border-radius:6px;border:1px solid rgba(255,153,51,0.4);background:transparent;color:#ff9933;font-size:.72rem;cursor:pointer;font-weight:600;">Sign Out</button>
+  </div>
+</nav>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-user">
+      <div class="sb-ava" id="sbAva">
+        A
+        <div class="sb-ava-online"></div>
+      </div>
+      <div class="sb-name" id="sbName">Loading...</div>
+      <div class="sb-mobile" id="sbMobile">+91 ••••••••••</div>
+      <div class="sb-plan plan-FREE" id="sbPlan">
+        <span class="plan-dot"></span>
+        FREE PLAN
+      </div>
+      <div class="sb-expiry" id="sbExpiry" style="display:none">
+        <div class="sb-expiry-row">
+          <span class="sb-expiry-lbl">Plan Expires</span>
+          <span class="sb-expiry-val" id="sbExpiryVal">—</span>
+        </div>
+        <div class="sb-bar"><div class="sb-bar-fill" id="sbExpiryBar" style="width:70%"></div></div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-section">Dashboard</div>
+      <div class="sb-item active" onclick="showTab('home')">
+        <span class="si-ico">⚡</span> Overview
+      </div>
+      <div class="sb-item" onclick="showTab('download')">
+        <span class="si-ico">⬇</span> Download App
+        <span class="si-badge new">NEW</span>
+      </div>
+
+      <div class="sb-section">Account</div>
+      <div class="sb-item" onclick="showTab('subscription')">
+        <span class="si-ico">💎</span> Subscription
+      </div>
+      <div class="sb-item" onclick="showTab('referral')">
+        <span class="si-ico">🎁</span> Referral
+      </div>
+      <div class="sb-item" onclick="showTab('devices')">
+        <span class="si-ico">🖥</span> Devices
+      </div>
+      <div class="sb-item" onclick="showTab('settings')">
+        <span class="si-ico">⚙</span> Settings
+      </div>
+
+      <div class="sb-section">Support</div>
+      <div class="sb-item" onclick="window.location.href='/?page=academy'"><span class="si-ico">📖</span> Academy</div>
+      <div class="sb-item" onclick="window.open('https://wa.me/917648007580','_blank')"><span class="si-ico">💬</span> Support</div>
+    </nav>
+
+    <div class="sb-bottom">
+      <button class="sb-logout" onclick="doLogout()">
+        <span>🚪</span> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOP NAV -->
+    <div class="topnav">
+      <div>
+        <div class="tn-greeting">Good <span id="timeOfDay">morning</span>, <span id="tnName">Trader</span> 👋</div>
+        <div class="tn-time" id="tnTime">—</div>
+      </div>
+      <div class="tn-right">
+        <div class="tn-market market-closed" id="marketStatus">
+          <span class="mkt-dot"></span>
+          NSE CLOSED
+        </div>
+        <div class="tn-notif">
+          🔔
+          <div class="notif-dot" id="notifDot" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ANNOUNCEMENT -->
+      <div class="announce-banner" id="announceBanner" style="display:none">
+        <span class="ab-icon">📢</span>
+        <div class="ab-txt" id="announceTxt"><strong>New update available!</strong> Jobber Pro v1.1 is here with GEX War Room improvements.</div>
+        <span class="ab-close" onclick="this.parentElement.style.display='none'">✕</span>
+      </div>
+
+      <!-- ── HOME TAB ── -->
+      <div class="tab-panel active" id="tab-home">
+
+        <div class="welcome-hero">
+          <div class="wh-eyebrow"><span class="wh-dot"></span> Jobber Pro Dashboard</div>
+          <div class="wh-h1">Welcome back, <span id="heroName">Trader</span>.</div>
+          <div class="wh-sub">Your institutional-grade options intelligence platform is ready. Download Jobber Pro to start analysing live OI, FII flows, and Greeks.</div>
+          <div class="wh-actions">
+            <button class="btn-primary" onclick="showTab('download')">⬇ Download Jobber Pro</button>
+            <button class="btn-secondary" onclick="showTab('subscription')">💎 View Plans</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" style="color:var(--o)">
+            <span class="sc-icon">📊</span>
+            <div class="sc-val" id="statPlan">FREE</div>
+            <div class="sc-lbl">Current Plan</div>
+            <div class="sc-sub">Upgrade for full access</div>
+          </div>
+          <div class="stat-card" style="color:var(--g)">
+            <span class="sc-icon">⬇</span>
+            <div class="sc-val" id="statDL">0</div>
+            <div class="sc-lbl">Total Downloads</div>
+            <div class="sc-sub">Jobber Pro installations</div>
+          </div>
+          <div class="stat-card" style="color:var(--c)">
+            <span class="sc-icon">🖥</span>
+            <div class="sc-val" id="statDevices">1</div>
+            <div class="sc-lbl">Active Devices</div>
+            <div class="sc-sub">Licensed sessions</div>
+          </div>
+          <div class="stat-card" style="color:var(--p)">
+            <span class="sc-icon">🎁</span>
+            <div class="sc-val" id="statReferrals">0</div>
+            <div class="sc-lbl">Referrals</div>
+            <div class="sc-sub">Traders you've invited</div>
+          </div>
+        </div>
+
+        <div class="section-title">Quick Actions</div>
+        <div class="actions-grid">
+          <div class="action-card" onclick="showTab('download')">
+            <span class="ac-icon">⬇</span>
+            <div class="ac-title">Download Jobber Pro</div>
+            <div class="ac-desc">Get the latest version of the desktop app for Windows 10/11.</div>
+            <span class="ac-badge">v1.0 Ready</span>
+          </div>
+          <div class="action-card" onclick="showTab('subscription')">
+            <span class="ac-icon">💎</span>
+            <div class="ac-title">Upgrade to Pro</div>
+            <div class="ac-desc">Unlock FII flows, GARCH analytics, and smart money signals.</div>
+          </div>
+          <div class="action-card" onclick="showTab('referral')">
+            <span class="ac-icon">🎁</span>
+            <div class="ac-title">Refer & Earn</div>
+            <div class="ac-desc">Share your referral code and earn rewards for every trader you invite.</div>
+          </div>
+          <div class="action-card" onclick="showTab('devices')">
+            <span class="ac-icon">🖥</span>
+            <div class="ac-title">Manage Devices</div>
+            <div class="ac-desc">View and revoke active Jobber Pro sessions across your devices.</div>
+          </div>
+          <div class="action-card">
+            <span class="ac-icon">📖</span>
+            <div class="ac-title">Free Academy</div>
+            <div class="ac-desc">19 chapters on F&O trading, Greeks, and reading institutional flows.</div>
+            <span class="ac-badge">19 Chapters</span>
+          </div>
+          <div class="action-card" onclick="showTab('settings')">
+            <span class="ac-icon">⚙</span>
+            <div class="ac-title">Account Settings</div>
+            <div class="ac-desc">Update your profile, change MPIN, and manage notifications.</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="activity-card">
+            <div class="section-title" style="margin-bottom:.75rem;font-size:.95rem">Recent Activity</div>
+            <div id="activityFeed">
+              <div class="activity-item">
+                <div class="ai-dot" style="background:var(--g)"></div>
+                <div class="ai-txt"><strong>Account created</strong> — Welcome to OptionsLab</div>
+                <div class="ai-time">Just now</div>
+              </div>
+              <div class="activity-item">
+                <div class="ai-dot" style="background:var(--o)"></div>
+                <div class="ai-txt"><strong>Email verified</strong> — Account activated</div>
+                <div class="ai-time">Today</div>
+              </div>
+              <div class="activity-item">
+                <div class="ai-dot" style="background:var(--c)"></div>
+                <div class="ai-txt">Jobber Pro <strong>v1.0 available</strong> — Download ready</div>
+                <div class="ai-time">Today</div>
+              </div>
+            </div>
+          </div>
+          <div class="status-card">
+            <div class="section-title" style="margin-bottom:.75rem;font-size:.95rem">System Status</div>
+            <div class="status-item">
+              <div class="status-dot ok"></div>
+              <div class="status-name">API Server</div>
+              <div class="status-val">Operational</div>
+            </div>
+            <div class="status-item">
+              <div class="status-dot ok"></div>
+              <div class="status-name">Auth Service</div>
+              <div class="status-val">Operational</div>
+            </div>
+            <div class="status-item">
+              <div class="status-dot ok"></div>
+              <div class="status-name">Download CDN</div>
+              <div class="status-val">Operational</div>
+            </div>
+            <div class="status-item">
+              <div class="status-dot warn"></div>
+              <div class="status-name">NSE Data Feed</div>
+              <div class="status-val">Market Closed</div>
+            </div>
+            <div class="status-item">
+              <div class="status-dot ok"></div>
+              <div class="status-name">Payment Gateway</div>
+              <div class="status-val">Operational</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DOWNLOAD TAB ── -->
+      <div class="tab-panel" id="tab-download">
+        <div class="dl-hero">
+          <div class="dl-icon">🖥</div>
+          <div>
+            <div class="dl-title">Jobber Pro — Desktop App</div>
+            <div class="dl-sub">Institutional-grade options intelligence for Windows. Live OI tracking, Greeks engine, FII flows, and GARCH analytics — all in one desktop application.</div>
+            <button class="btn-primary" id="dlBtn" onclick="requestDownload()">
+              ⬇ Download Jobber Pro v1.0
+            </button>
+            <div class="dl-meta">
+              <div class="dl-meta-item">Windows 10/11 · 64-bit</div>
+              <div class="dl-meta-item">~80MB installer</div>
+              <div class="dl-meta-item">Angel One SmartAPI</div>
+              <div class="dl-meta-item">2.2s data refresh</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Setup Guide</div>
+        <div class="setup-steps">
+          <div class="step-card">
+            <div class="step-num">01</div>
+            <div class="step-title">Download & Install</div>
+            <div class="step-desc">Click the download button above. Run the installer as Administrator. Jobber Pro installs to your Desktop automatically.</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">02</div>
+            <div class="step-title">Connect Angel One</div>
+            <div class="step-desc">Open Jobber Pro → Settings → Broker. Enter your Angel One Client ID. Generate an API key from your Angel One dashboard.</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">03</div>
+            <div class="step-title">Start Trading Smarter</div>
+            <div class="step-desc">The Options Chain loads automatically at market open. All 50+ analytics signals update every 2.2 seconds.</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="section-title" style="margin-bottom:.75rem;font-size:.95rem">System Requirements</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+            <div class="status-item"><div class="status-dot ok"></div><div class="status-name">Operating System</div><div class="status-val">Windows 10/11 64-bit</div></div>
+            <div class="status-item"><div class="status-dot ok"></div><div class="status-name">RAM</div><div class="status-val">4GB minimum, 8GB recommended</div></div>
+            <div class="status-item"><div class="status-dot ok"></div><div class="status-name">Internet</div><div class="status-val">Stable broadband connection</div></div>
+            <div class="status-item"><div class="status-dot ok"></div><div class="status-name">Broker</div><div class="status-val">Angel One account required</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SUBSCRIPTION TAB ── -->
+      <div class="tab-panel" id="tab-subscription">
+        <div class="current-plan">
+          <div class="cp-left">
+            <div class="cp-label">Current Plan</div>
+            <div class="cp-plan FREE" id="cpPlanName">FREE</div>
+            <div class="cp-desc" id="cpPlanDesc">Full options chain access · Basic Greeks · PCR & Max Pain · 19-chapter Academy</div>
+          </div>
+          <div class="cp-right">
+            <div class="cp-expiry" id="cpExpiry">No expiry</div>
+            <div class="cp-days" id="cpDays">∞</div>
+            <div class="cp-days-lbl">DAYS REMAINING</div>
+          </div>
+        </div>
+
+        <div class="section-title">Choose Your Plan</div>
+        <div class="plan-cards" style="grid-template-columns:repeat(3,1fr)">
+          <div class="plan-card" id="planDaily">
+            <div class="pc-tier">Starter</div>
+            <div class="pc-name" style="color:var(--c)">DAILY</div>
+            <div class="pc-price" style="color:var(--c)" id="app-price-daily">₹299</div>
+            <div class="pc-period">/ day · Full access</div>
+            <div class="pc-features">
+              <div class="pc-feat">Full options chain</div>
+              <div class="pc-feat">FII & Smart Money flows</div>
+              <div class="pc-feat">GARCH, VPIN analytics</div>
+              <div class="pc-feat">Strategy payoff builder</div>
+              <div class="pc-feat">OI scanner & alerts</div>
+              <div class="pc-feat">Priority support</div>
+            </div>
+            <button class="pc-btn upgrade-btn" style="background:linear-gradient(135deg,#22d3ee,#0891b2)" onclick="upgradePlan('daily')">Get Daily Access</button>
+          </div>
+          <div class="plan-card" id="planWeekly">
+            <div class="pc-tier">Popular</div>
+            <div class="pc-name" style="color:var(--o)">WEEKLY</div>
+            <div class="pc-price" style="color:var(--o)" id="app-price-weekly">₹999</div>
+            <div class="pc-period">/ week · Full access</div>
+            <div class="pc-features">
+              <div class="pc-feat">Full options chain</div>
+              <div class="pc-feat">FII & Smart Money flows</div>
+              <div class="pc-feat">GARCH, VPIN analytics</div>
+              <div class="pc-feat">Strategy payoff builder</div>
+              <div class="pc-feat">OI scanner & alerts</div>
+              <div class="pc-feat">Priority support</div>
+            </div>
+            <button class="pc-btn upgrade-btn" onclick="upgradePlan('weekly')">Get Weekly Access</button>
+          </div>
+          <div class="plan-card" id="planMonthly">
+            <div class="pc-tier">Best Value</div>
+            <div class="pc-name" style="color:var(--p)">MONTHLY</div>
+            <div class="pc-price" style="color:var(--p)" id="app-price-monthly">₹1,499</div>
+            <div class="pc-period">/ month · Full access</div>
+            <div class="pc-features">
+              <div class="pc-feat">Full options chain</div>
+              <div class="pc-feat">FII & Smart Money flows</div>
+              <div class="pc-feat">GARCH, VPIN analytics</div>
+              <div class="pc-feat">Strategy payoff builder</div>
+              <div class="pc-feat">OI scanner & alerts</div>
+              <div class="pc-feat">Priority support</div>
+            </div>
+            <button class="pc-btn upgrade-btn" style="background:linear-gradient(135deg,#a855f7,#7c3aed)" onclick="upgradePlan('monthly')">Get Monthly Access</button>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="section-title" style="margin-bottom:.75rem;font-size:.95rem">Payment History</div>
+          <div id="paymentHistory" style="font-family:var(--mono);font-size:.54rem;color:var(--t3);text-align:center;padding:2rem">
+            No payment history yet.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── REFERRAL TAB ── -->
+      <div class="tab-panel" id="tab-referral">
+        <div class="referral-hero">
+          <div>
+            <div class="section-title" style="margin-bottom:.5rem">Your Referral Code</div>
+            <div style="font-size:.9rem;color:var(--t2);font-weight:300;margin-bottom:1rem">Share this code with traders. Earn rewards when they upgrade to Pro or Elite.</div>
+            <div class="rh-code-wrap">
+              <div class="rh-code" id="referralCode">LOADING...</div>
+              <button class="rh-copy" onclick="copyReferral()">📋 Copy Link</button>
+            </div>
+          </div>
+          <div class="rh-stats">
+            <div class="rh-stat">
+              <div class="rh-stat-val" id="refTotal">0</div>
+              <div class="rh-stat-lbl">Total Referred</div>
+            </div>
+            <div class="rh-stat">
+              <div class="rh-stat-val" id="refPaid">0</div>
+              <div class="rh-stat-lbl">Converted</div>
+            </div>
+            <div class="rh-stat">
+              <div class="rh-stat-val" id="refEarned">₹0</div>
+              <div class="rh-stat-lbl">Rewards</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="section-title" style="margin-bottom:.75rem;font-size:.95rem">How It Works</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding:.5rem 0">
+            <div style="text-align:center;padding:1rem">
+              <div style="font-size:2rem;margin-bottom:.5rem">🔗</div>
+              <div style="font-family:var(--dis);font-weight:800;font-size:.95rem;color:var(--t1);margin-bottom:.3rem">Share Your Code</div>
+              <div style="font-size:.82rem;color:var(--t2);font-weight:300">Send your referral link to fellow F&O traders</div>
+            </div>
+            <div style="text-align:center;padding:1rem">
+              <div style="font-size:2rem;margin-bottom:.5rem">✅</div>
+              <div style="font-family:var(--dis);font-weight:800;font-size:.95rem;color:var(--t1);margin-bottom:.3rem">They Sign Up</div>
+              <div style="font-size:.82rem;color:var(--t2);font-weight:300">Your referral registers and upgrades to a paid plan</div>
+            </div>
+            <div style="text-align:center;padding:1rem">
+              <div style="font-size:2rem;margin-bottom:.5rem">🎁</div>
+              <div style="font-family:var(--dis);font-weight:800;font-size:.95rem;color:var(--t1);margin-bottom:.3rem">You Earn</div>
+              <div style="font-size:.82rem;color:var(--t2);font-weight:300">Rewards credited to your account automatically</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DEVICES TAB ── -->
+      <div class="tab-panel" id="tab-devices">
+        <div class="section-title">Active Sessions</div>
+        <div id="devicesList">
+          <div class="device-card current-device">
+            <div class="device-icon">🖥</div>
+            <div class="device-info">
+              <div class="device-name">This Device — Jobber Pro</div>
+              <div class="device-meta" id="deviceMeta">Last seen: Just now · Windows 11</div>
+            </div>
+            <div class="device-status ds-active">● ACTIVE</div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.2rem;padding:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:14px">
+          <div style="font-family:var(--mono);font-size:.48rem;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem">Device Limit</div>
+          <div style="font-size:.9rem;color:var(--t2);font-weight:300">
+            FREE plan allows <strong style="color:var(--t1)">1 device</strong>. 
+            Upgrade to Pro for <strong style="color:var(--o)">3 devices</strong> or Elite for <strong style="color:var(--p)">unlimited devices</strong>.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS TAB ── -->
+      <div class="tab-panel" id="tab-settings">
+        <div class="section-title">Account Settings</div>
+        <div class="settings-grid">
+          <div class="settings-section">
+            <div class="ss-title">👤 Profile</div>
+            <div class="field-row">
+              <div class="field-label">Full Name</div>
+              <input class="field-input" type="text" id="settingName" placeholder="Your name">
+            </div>
+            <div class="field-row">
+              <div class="field-label">Email Address</div>
+              <input class="field-input" type="email" id="settingEmail" readonly style="opacity:0.6;cursor:not-allowed" placeholder="your@email.com">
+            </div>
+            <div class="field-row">
+              <div class="field-label">Mobile Number</div>
+              <input class="field-input" type="text" id="settingMobile" disabled placeholder="+91 •••••••••• ">
+            </div>
+            <div class="field-row">
+              <div class="field-label">Trading Experience</div>
+              <select class="field-input" id="settingExp">
+                <option value="">Select experience</option>
+                <option value="beginner">Beginner (&lt; 1 year)</option>
+                <option value="intermediate">Intermediate (1-3 years)</option>
+                <option value="advanced">Advanced (3+ years)</option>
+                <option value="professional">Professional trader</option>
+              </select>
+            </div>
+            <button class="btn-primary" style="width:100%;justify-content:center;margin-top:.5rem" onclick="saveProfile()">Save Changes</button>
+          </div>
+
+          <div class="settings-section">
+            <div class="ss-title">🔐 Security</div>
+            <div class="field-row">
+              <div class="field-label">Current MPIN</div>
+              <input class="field-input" type="password" id="currentMpin" placeholder="••••••" maxlength="6">
+            </div>
+            <div class="field-row">
+              <div class="field-label">New MPIN</div>
+              <input class="field-input" type="password" id="newMpin" placeholder="••••••" maxlength="6">
+            </div>
+            <div class="field-row">
+              <div class="field-label">Confirm New MPIN</div>
+              <input class="field-input" type="password" id="confirmMpin" placeholder="••••••" maxlength="6">
+            </div>
+            <button class="btn-secondary" style="width:100%;justify-content:center;margin-top:.5rem" onclick="changeMpin()">Change MPIN</button>
+
+            <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)">
+              <div class="ss-title" style="font-size:.85rem;margin-bottom:.75rem">🔔 Notifications</div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-label">Email Notifications</div>
+                  <div class="toggle-sub">Plan expiry, announcements</div>
+                </div>
+                <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div>
+                  <div class="toggle-label">Security Alerts</div>
+                  <div class="toggle-sub">New device logins</div>
+                </div>
+                <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section" style="grid-column:1/-1">
+            <div class="ss-title">🔗 Angel One Integration</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.85rem">
+              <div class="field-row" style="margin:0">
+                <div class="field-label">Client ID</div>
+                <input class="field-input" type="text" id="angelClientId" readonly style="opacity:0.6;cursor:not-allowed" readonly placeholder="Your Angel One Client ID">
+              </div>
+              <div class="field-row" style="margin:0">
+                <div class="field-label">Trading Style</div>
+                <select class="field-input" id="settingStyle">
+                  <option value="">Select style</option>
+                  <option value="intraday">Intraday</option>
+                  <option value="positional">Positional</option>
+                  <option value="hedging">Hedging / Selling</option>
+                  <option value="scalping">Scalping</option>
+                </select>
+              </div>
+              <div style="display:flex;align-items:flex-end">
+                <button class="btn-primary" style="width:100%;justify-content:center" onclick="saveAngel()">Save Broker Details</button>
+              </div>
+            </div>
+            <div style="margin-top:.85rem;font-size:.8rem;color:var(--t3);font-weight:300">
+              🔒 Your credentials are encrypted and stored only on your device. We store only your Client ID for licence validation.
+            </div>
+          </div>
+
+          <div class="settings-section" style="grid-column:1/-1;border-color:rgba(255,61,113,.15)">
+            <div class="ss-title" style="color:var(--r)">⚠ Danger Zone</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+              <div>
+                <div style="font-size:.9rem;color:var(--t1);font-weight:500;margin-bottom:.2rem">Delete Account</div>
+                <div style="font-size:.82rem;color:var(--t3);font-weight:300">Permanently delete your account and all data. This cannot be undone.</div>
+              </div>
+              <button style="font-family:var(--body);font-weight:600;font-size:.85rem;padding:.5rem 1.1rem;border-radius:8px;background:rgba(255,61,113,.08);color:var(--r);border:1px solid rgba(255,61,113,.25);cursor:pointer;transition:.2s" onmouseover="this.style.background='rgba(255,61,113,.15)'" onmouseout="this.style.background='rgba(255,61,113,.08)'">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+/* ── CONSTANTS ── */
+const TOKEN_KEY = 'OptionsLab_token';
+const API = '';
+
+/* ── UTILS ── */
+function getToken(){const p=new URLSearchParams(window.location.search);const urlTok=p.get('tok');if(urlTok){localStorage.setItem('OptionsLab_token',urlTok);history.replaceState({},'','/app');}return urlTok||localStorage.getItem('OptionsLab_token')||localStorage.getItem('ol_token')||sessionStorage.getItem('OptionsLab_token')}
+function doSignOut(){localStorage.removeItem("OptionsLab_token");localStorage.removeItem("ol_token");localStorage.removeItem("OptionsLab_user");sessionStorage.clear();fetch("/api/auth/logout",{method:"POST",credentials:"include"}).catch(()=>{}).finally(()=>{window.location.replace("/register.html");});}
+
+async function apiFetch(url, opts={}){
+  const tok = getToken();
+  const headers = {'Content-Type':'application/json', ...(opts.headers||{})}; if(tok) headers['Authorization'] = 'Bearer '+tok;
+  const res = await fetch(API+url, {...opts, headers, credentials:'include'});
+  if(res.status===401){ window.location.replace('/register.html'); throw new Error('Unauthorized'); }
+  return res;
+}
+
+/* ── TIME ── */
+function updateTime(){
+  const now = new Date();
+  const h = now.getHours();
+  document.getElementById('timeOfDay').textContent = h<12?'morning':h<17?'afternoon':'evening';
+  document.getElementById('tnTime').textContent = now.toLocaleString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const isOpen = h>=9&&h<16;
+  const ms = document.getElementById('marketStatus');
+  ms.className = 'tn-market '+(isOpen?'market-open':'market-closed');
+  ms.innerHTML = `<span class="mkt-dot"></span>NSE ${isOpen?'OPEN':'CLOSED'}`;
+}
+setInterval(updateTime,1000);
+updateTime();
+
+/* ── LOAD USER ── */
+async function loadUser(){
+  try{
+    const res = await apiFetch('/api/user/me');
+    const d = await res.json();
+    if(!d && !d.user) throw new Error('not logged in');
+    const u = d.user || d;
+    const name = u.name||'Trader';
+    const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+
+    // Sidebar
+    document.getElementById('sbAva').innerHTML = initials+'<div class="sb-ava-online"></div>';
+    document.getElementById('sbName').textContent = name;
+    document.getElementById('sbMobile').textContent = '+91 '+((u.mobile||'').replace(/(\d{3})(\d{4})(\d{3})/,'$1 $2 $3')||'••••••••••');
+
+    // Plan badge
+    const plan = (u.plan||'FREE').toUpperCase();
+    const pb = document.getElementById('sbPlan');
+    pb.className = 'sb-plan plan-'+plan;
+    pb.innerHTML = `<span class="plan-dot"></span>${plan} PLAN`;
+
+    // Plan expiry
+    if(u.plan_expires_at && plan!=='FREE' || u.plan_expires_at && plan==='TRIAL'){
+      const exp = new Date(u.plan_expires_at);
+      const days = Math.max(0,Math.ceil((exp-Date.now())/(1000*60*60*24)));
+      document.getElementById('sbExpiry').style.display='block';
+      document.getElementById('sbExpiryVal').textContent = exp.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+      document.getElementById('sbExpiryBar').style.width = Math.min(100,days/30*100)+'%';
+      document.getElementById('cpExpiry').textContent = exp.getFullYear() >= 2099 ? '♾️ Lifetime Access' : 'Expires ' + exp.toLocaleDateString('en-IN');
+      document.getElementById('cpDays').textContent = days;
+    }
+
+    // Top nav + hero
+    document.getElementById('tnName').textContent = name.split(' ')[0]; const tn=document.getElementById('topNavName'); if(tn) tn.textContent='👋 '+name.split(' ')[0];
+    document.getElementById('heroName').textContent = name.split(' ')[0];
+
+    // Stats
+    document.getElementById('statPlan').textContent = plan;
+    document.getElementById('statDL').textContent = u.total_downloads||'0';
+    document.getElementById('statDevices').textContent = u.session_count||'1';
+
+    // Subscription tab
+    document.getElementById('cpPlanName').textContent = plan;
+    document.getElementById('cpPlanName').className = 'cp-plan '+plan;
+
+    // Referral
+    const code = u.referral_code || '—';
+    document.getElementById('referralCode').textContent = code;
+    if(!u.referral_code){ document.getElementById('referralCode').style.color='#666'; }
+
+    // Settings prefill
+    if(u.name) document.getElementById('settingName').value = u.name;
+    if(u.email) document.getElementById('settingEmail').value = u.email;
+    if(u.mobile) document.getElementById('settingMobile').value = '+91 '+u.mobile;
+    if(u.experience) document.getElementById('settingExp').value = u.experience;
+    if(u.trading_style) document.getElementById('settingStyle').value = u.trading_style;
+    if(u.angel_one_client_id||u.broker_client_id) document.getElementById('angelClientId').value = u.angel_one_client_id||u.broker_client_id;
+
+    // Mark correct plan card
+    ['Free','Pro','Elite'].forEach(p=>{
+      const card = document.getElementById('plan'+p);
+      if(card) card.classList.toggle('current', plan===p.toUpperCase());
+    });
+
+  } catch(e){
+    if(e.message!=='Unauthorized') window.location.replace('/register.html');
+  }
+}
+
+/* ── TABS ── */
+function showTab(name){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  const panel = document.getElementById('tab-'+name);
+  if(panel) panel.classList.add('active');
+  // Mark sidebar item
+  document.querySelectorAll('.sb-item').forEach(i=>{
+    if(i.getAttribute('onclick')&&i.getAttribute('onclick').includes("'"+name+"'")){
+      i.classList.add('active');
+    }
+  });
+  window.scrollTo(0,0);
+}
+
+/* ── DOWNLOAD ── */
+async function requestDownload(){
+  const btn = document.getElementById('dlBtn');
+  btn.textContent = '⏳ Preparing download...';
+  btn.disabled = true;
+  try{
+    const res = await apiFetch('/api/download/jobber-pro');
+    const d = await res.json();
+    if(d.url){ window.open(d.url,'_blank'); btn.textContent = '✅ Download started!'; }
+    else { btn.textContent = '⬇ Download Jobber Pro v1.0'; alert('Download URL not yet configured. Check back soon!'); }
+  } catch(e){
+    btn.textContent = '⬇ Download Jobber Pro v1.0';
+  }
+  btn.disabled = false;
+}
+
+/* ── UPGRADE ── */
+async function upgradePlan(period){
+  try{
+    const plan = period;
+    const res = await apiFetch('/api/payments/create-order',{method:'POST',body:JSON.stringify({plan})});
+    const d = await res.json();
+    if(d.error) throw new Error(d.error);
+    const cashfree = Cashfree({mode: 'production'});
+    cashfree.checkout({
+      paymentSessionId: d.payment_session_id,
+      returnUrl: 'https://optionslab.in/payment-status?order_id='+d.order_id,
+    });
+  } catch(e){ alert('Payment failed: '+e.message); }
+}
+
+/* ── PROFILE SAVE ── */
+async function saveProfile(){
+  try{
+    const res = await apiFetch('/api/user/profile',{method:'PATCH',body:JSON.stringify({
+      name: document.getElementById('settingName').value,
+      email: document.getElementById('settingEmail').value,
+      experience: document.getElementById('settingExp').value,
+      trading_style: document.getElementById('settingStyle').value,
+    })});
+    const d = await res.json();
+    if(d.success){ showToast('Profile saved ✓','success'); loadUser(); }
+    else showToast(d.error||'Save failed','error');
+  } catch(e){ showToast('Save failed','error'); }
+}
+
+async function saveAngel(){
+  try{
+    const res = await apiFetch('/api/user/angel-credentials',{method:'POST',body:JSON.stringify({
+      client_code: document.getElementById('angelClientId').value,
+    })});
+    const d = await res.json();
+    if(d.success) showToast('Broker details saved ✓','success');
+    else showToast(d.error||'Save failed','error');
+  } catch(e){ showToast('Save failed','error'); }
+}
+
+/* ── MPIN ── */
+async function changeMpin(){
+  const cur = document.getElementById('currentMpin').value;
+  const nw = document.getElementById('newMpin').value;
+  const cf = document.getElementById('confirmMpin').value;
+  if(nw!==cf) return showToast('New MPINs do not match','error');
+  if(nw.length!==6) return showToast('MPIN must be 6 digits','error');
+  try{
+    const res = await apiFetch('/api/user/change-mpin',{method:'POST',body:JSON.stringify({currentMpin:cur,newMpin:nw})});
+    const d = await res.json();
+    if(d.success){ showToast('MPIN changed ✓','success'); document.getElementById('currentMpin').value='';document.getElementById('newMpin').value='';document.getElementById('confirmMpin').value=''; }
+    else showToast(d.error||'Failed to change MPIN','error');
+  } catch(e){ showToast('Failed','error'); }
+}
+
+/* ── REFERRAL ── */
+function copyReferral(){
+  const code = document.getElementById('referralCode').textContent;
+  const link = window.location.origin+'/register.html?ref='+code;
+  navigator.clipboard.writeText(link).then(()=>showToast('Referral link copied! ✓','success'));
+}
+
+/* ── LOGOUT ── */
+async function doLogout(){
+  if(!confirm('Sign out of OptionsLab?')) return;
+  try{ await apiFetch('/api/auth/logout',{method:'POST'}); } catch(e){}
+  ['ol_access_token','ol_refresh_token','ol_token','OptionsLab_token','OptionsLab_user'].forEach(k=>{
+    sessionStorage.removeItem(k); localStorage.removeItem(k);
+  });
+  window.location.replace('/register.html');
+}
+
+/* ── TOAST ── */
+function showToast(msg, type='success'){
+  const t = document.createElement('div');
+  t.style.cssText = `position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;
+    padding:.75rem 1.2rem;border-radius:10px;font-family:var(--mono);font-size:.56rem;
+    font-weight:600;letter-spacing:.04em;
+    background:${type==='success'?'rgba(0,230,118,.12)':'rgba(255,61,113,.12)'};
+    color:${type==='success'?'var(--g)':'var(--r)'};
+    border:1px solid ${type==='success'?'rgba(0,230,118,.3)':'rgba(255,61,113,.3)'};
+    box-shadow:0 8px 28px rgba(0,0,0,.4);
+    animation:fadein .25s ease`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 3000);
+}
+
+/* ── AUTH CHECK & INIT ── */
+(function init(){
+    // FIX: load-screen hide is now guaranteed regardless of token/redirect outcome below
+    setTimeout(()=>{ const l = document.getElementById('load'); if(l) l.classList.add('gone'); }, 1200);
+  const tok = getToken();
+  if(!tok){ console.error('NO TOKEN FOUND', Object.keys(localStorage)); window.location.replace('/register.html'); return; }
+
+  // Handle URL tab param
+  const p = new URLSearchParams(window.location.search);
+  const tab = p.get('tab');
+  if(tab) showTab(tab);
+
+  // Load user data
+  loadUser();
+
+  // Hide load screen after 1.2s
+  setTimeout(()=>{ document.getElementById('load').classList.add('gone'); }, 1200);
+})();
+</script>
+
+<div id="planExpiredBanner" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);backdrop-filter:blur(10px);align-items:center;justify-content:center;flex-direction:column;gap:1rem;">
+  <div style="text-align:center;max-width:420px;padding:2rem;">
+    <div style="font-size:3rem;margin-bottom:1rem;">⏰</div>
+    <div style="font-family:var(--font-d);font-size:2rem;color:#fff;margin-bottom:.5rem;">Plan Expired</div>
+    <div style="font-family:var(--font-b);font-size:.9rem;color:#9ca3af;line-height:1.7;margin-bottom:2rem;">Your plan has expired. Renew now to continue accessing live data, analytics and signals.</div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <button onclick="showTab('subscription');document.getElementById('planExpiredBanner').style.display='none'" style="padding:.8rem 2rem;border:none;border-radius:10px;background:linear-gradient(135deg,#ff9933,#e05a00);color:#fff;font-family:var(--font-r);font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(255,153,51,.4);">🚀 Renew Plan</button>
+      <button onclick="doLogout()" style="padding:.8rem 1.5rem;border:1px solid #374151;border-radius:10px;background:transparent;color:#9ca3af;font-family:var(--font-m);cursor:pointer;">Sign Out</button>
+    </div>
+  </div>
+</div>
+<script>
+(async function() {
+  try {
+    var r = await fetch('/api/payments/plans');
+    var json = await r.json();
+    if (!json.success || !json.data) return;
+    var map = {daily:'app-price-daily', weekly:'app-price-weekly', monthly:'app-price-monthly'};
+    json.data.forEach(function(plan) {
+      var id = map[plan.plan_key];
+      var el = id && document.getElementById(id);
+      if (el) el.textContent = String.fromCharCode(8377) + Number(plan.amount).toLocaleString('en-IN');
+    });
+  } catch(e) {}
+})();
+</script></body>
+</html>
+
+
+
+
+

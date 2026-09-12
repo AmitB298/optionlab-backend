@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OptionsLab Pricing — Free forever plan, Pro ₹1,499/mo, Elite ₹3,499/mo. Institutional F&O analytics.">
+<meta property="og:title" content="Pricing — OptionsLab">
+<meta property="og:description" content="OptionsLab Pricing — Free forever plan, Pro ₹1,499/mo, Elite ₹3,499/mo. Institutional F&O analytics.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://optionslab.in/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://optionslab.in/og-image.png">
+<meta property="og:url" content="https://optionslab.in/pricing">
+<title>Pricing — OptionsLab</title>
+<link rel="stylesheet" href="../../style.css">
+<script src="/shared.js" defer></script>
+<style>
+.plan{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:visible;}
+.plan.featured{border-color:var(--orange);}
+.featured-tag{position:absolute;top:18px;right:-10px;background:var(--orange);color:#fff;font-size:8px;font-weight:700;letter-spacing:1px;padding:3px 14px 3px 10px;border-radius:4px 0 0 4px;}
+.plan-num{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.plan-name{font-family:var(--sans);font-size:22px;font-weight:800;margin-bottom:4px;}
+.plan-price{font-family:var(--sans);font-size:32px;font-weight:800;color:var(--orange);line-height:1;}
+.plan-price span{font-size:14px;color:var(--t2);font-family:var(--mono);}
+.plan-note{font-size:11px;color:var(--t2);margin:8px 0 16px;}
+.feats{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.feat{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.4;}
+.feat .y{color:var(--green);}
+.feat .n{color:var(--t3);}
+.feat .txt{color:var(--t2);}
+.feat strong{color:var(--t1);}
+.faq-item{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:14px;font-size:13px;font-weight:600;cursor:pointer;}
+.faq-a{font-size:12px;color:var(--t2);line-height:1.6;padding:0 14px 14px;display:none;}
+.faq-item.open .faq-a{display:block;}
+.faq-icon{color:var(--orange);font-size:20px;font-weight:300;transition:transform 0.2s;flex-shrink:0;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"></noscript>
+<link rel="canonical" href="https://optionslab.in/pricing">
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+</head>
+<body>
+<nav class="topnav">
+  <a href="/" class="nav-logo"><div class="logo-box">OL</div><div class="logo-wordmark">OPTIONS<span>LAB</span></div></a>
+  <div class="nav-actions"><div class="btn-icon" onclick="toggleDark()" title="Toggle dark/light mode" style="cursor:pointer">🌙</div><a href="/register" class="btn-signin">Sign In</a><a href="/pricing" class="btn-orange">Get Access</a></div>
+</nav>
+<div class="ticker-wrap"><div class="ticker-track">
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">INDIA VIX</span><span class="ticker-val">14.23</span><span class="dn">-2.1%</span></span>
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+</div></div>
+<div class="page-header">
+  <div class="page-pill">CHOOSE YOUR EDGE</div>
+  <div class="page-title">PRICING</div>
+  <div class="page-subtitle">Start free forever. Upgrade only when you need institutional-grade intelligence.</div>
+</div>
+<div class="content">
+  <div class="plan anim anim-1">
+    <div class="plan-num">Plan 01</div>
+    <div class="plan-name">FREE</div>
+    <div class="plan-price">₹0<span>/ forever</span></div>
+    <div class="plan-note">No credit card · No expiry</div>
+    <div class="feats">
+      <div class="feat"><span class="y">✓</span><span class="txt">Live Options Chain (Nifty &amp; BankNifty)</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">OI Heatmap &amp; Max Pain</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Greeks Calculator</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Strategy Lab (payoff diagrams)</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Academy — all 19 chapters (EN + Hindi)</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">PCR, IV Rank, Skew data</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">FII/DII Smart Money Dashboard</span></div>
+      <div class="feat"><span class="n">—</span><span class="txt" style="color:var(--t3)">Smart Money FII Footprint</span></div>
+      <div class="feat"><span class="n">—</span><span class="txt" style="color:var(--t3)">Telegram Alerts</span></div>
+    </div>
+    <a href="/register" class="cta-outline">Start Free — No Card →</a>
+  </div>
+
+  <div class="plan featured anim anim-2">
+    <div class="featured-tag">POPULAR</div>
+    <div class="plan-num">Plan 02</div>
+    <div class="plan-name">PROFESSIONAL</div>
+    <div class="plan-price">₹1,499<span>/ month</span></div>
+    <div class="plan-note">7-day money-back · Cancel anytime</div>
+    <div class="feats">
+      <div class="feat"><span class="y">✓</span><span class="txt">Everything in Free</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt"><strong>Smart Money FII Footprint</strong></span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Operator Phase Detector</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Kill Zone countdown + data notifications</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Decision Engine (6-check)</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">GARCH volatility forecasting</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Regime Classifier</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt"><strong>Telegram Data Alerts</strong> <span style="font-size:10px;color:var(--t3)">(raw data updates only — no buy/sell calls)</span></span></div>
+      <div class="feat"><span class="n">—</span><span class="txt" style="color:var(--t3)">Dark Pool + Spoofing signals</span></div>
+    </div>
+    <button class="cta-primary" onclick="startPayment('pro')">GET PROFESSIONAL — ₹1,499/MO →</button>
+  </div>
+
+  <div class="plan anim anim-3">
+    <div class="plan-num">Plan 03</div>
+    <div class="plan-name">ELITE</div>
+    <div class="plan-price">₹3,499<span>/ month</span></div>
+    <div class="plan-note">7-day money-back · Cancel anytime</div>
+    <div class="feats">
+      <div class="feat"><span class="y">✓</span><span class="txt">Everything in Professional</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt"><strong>Dark Pool OI Score</strong></span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Bid-Ask Spoofing Detection</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Options Flow Monitor (live block trades)</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Volatility Cone (percentile bands)</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">Priority Support (24h)</span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt"><strong>Desktop Software (Windows 10/11)</strong></span></div>
+      <div class="feat"><span class="y">✓</span><span class="txt">API access (coming soon)</span></div>
+    </div>
+    <button class="cta-primary" onclick="startPayment('elite')" style="background:var(--purple)">GET ELITE — ₹3,499/MO →</button>
+  </div>
+
+  <div class="sec-label anim anim-4"><div class="sec-label-text">Frequently Asked Questions</div></div>
+  <div style="display:flex;flex-direction:column;gap:8px" class="anim anim-4">
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Is the Free plan really free forever? <span class="faq-icon">+</span></div><div class="faq-a">Yes. No expiry, no trial period, no credit card required. Options chain, Greeks calculator, OI heatmap, and all 19 academy chapters — free, always.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Can I cancel anytime? <span class="faq-icon">+</span></div><div class="faq-a">Yes. Cancel from your profile dashboard at any time. No lock-in. Your account reverts to the Free plan immediately.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">What payment methods are accepted? <span class="faq-icon">+</span></div><div class="faq-a">All major UPI apps (GPay, PhonePe, Paytm), credit/debit cards, and net banking — powered by Cashfree.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Is OptionsLab SEBI registered? <span class="faq-icon">+</span></div><div class="faq-a">No. OptionsLab is NOT registered with SEBI as an Investment Advisor, Research Analyst, or Portfolio Manager. We provide analytical tools only — not investment advice.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">What is the refund policy? <span class="faq-icon">+</span></div><div class="faq-a">First-time subscribers get a 7-day full refund guarantee, no questions asked. Email support@optionslab.in within 7 days.</div></div>
+  </div>
+
+  <div class="ai-box anim anim-5" style="border-left-color:var(--t3)">
+    <div class="ai-box-label" style="color:var(--t3)">⚠ RISK DISCLAIMER</div>
+    <p>OptionsLab is NOT a SEBI registered investment advisor. Analytical tools only. F&amp;O trading carries substantial risk of loss. Past performance does not guarantee future results. Trade responsibly.</p>
+  </div>
+</div>
+<nav class="bottom-nav">
+  <div class="bnav-row">
+    <a href="/"            class="bnav-btn"><div class="bnav-icon">🏠</div><span>HOME</span></a>
+    <a href="/terminal"    class="bnav-btn"><div class="bnav-icon">📊</div><span>TERMINAL</span></a>
+    <a href="/smart-money" class="bnav-btn"><div class="bnav-icon">🧠</div><span>SMART</span></a>
+    <a href="/academy"     class="bnav-btn"><div class="bnav-icon">🎓</div><span>ACADEMY</span></a>
+    <a href="/app"   class="bnav-btn"><div class="bnav-icon">👤</div><span>PROFILE</span></a>
+  </div>
+</nav>
+
+<script>
+async function startPayment(plan) {
+  const planNames = { pro: 'Professional ₹1,499/mo', elite: 'Elite ₹3,499/mo' };
+
+  // 1. Check login
+  try {
+    const auth = await fetch(`${API}/api/auth/validate`, { credentials: 'include' });
+    if (!auth.ok) { window.location.href = '/signin?next=/pricing'; return; }
+  } catch(e) { window.location.href = '/signin?next=/pricing'; return; }
+
+  const btn = event?.target || document.querySelector(`[onclick*="${plan}"]`);
+  if (btn) { btn.textContent = '⏳ PREPARING...'; btn.disabled = true; }
+
+  // 2. Create order
+  let order;
+  try {
+    const res = await fetch(`${API}/api/payments/create-order`, {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan })
+    });
+    order = await res.json();
+    if (!res.ok) throw new Error(order.error || 'Order creation failed');
+  } catch(e) {
+    if (btn) { btn.textContent = planNames[plan]; btn.disabled = false; }
+    alert('Payment setup failed: ' + e.message + '\nPlease try again or contact support@optionslab.in');
+    return;
+  }
+
+  // 3. Open Cashfree checkout
+  try {
+    const cashfree = await load({ mode: window.location.hostname === 'localhost' ? 'sandbox' : 'production' });
+    cashfree.checkout({
+      paymentSessionId: order.payment_session_id,
+      redirectTarget:   '_modal',
+    }).then(result => {
+      if (result.error) {
+        if (btn) { btn.textContent = planNames[plan]; btn.disabled = false; }
+        alert('Payment failed: ' + result.error.message);
+      } else if (result.redirect) {
+        // Payment success — redirect to dashboard
+        window.location.href = '/dashboard?upgraded=1';
+      } else if (result.paymentDetails) {
+        window.location.href = '/dashboard?upgraded=1';
+      }
+    });
+  } catch(e) {
+    if (btn) { btn.textContent = planNames[plan]; btn.disabled = false; }
+    alert('Checkout error: ' + e.message);
+  }
+}
+

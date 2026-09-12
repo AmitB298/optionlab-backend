@@ -416,7 +416,7 @@ nav{position:sticky;top:0;z-index:100;
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a href="index.html" class="brand">
+    <a href="/" class="brand">
       <div class="brand-mark">OL</div>
       <span class="brand-name">Option<b>Lab</b></span>
     </a>
@@ -477,7 +477,7 @@ nav{position:sticky;top:0;z-index:100;
     </div>
     <div class="hero-actions">
       <button class="btn-edit" onclick="toggleEdit()">✏ Edit Profile</button>
-      <button class="btn-secondary" onclick="window.location.href = '/index.html'">← Dashboard</button>
+      <button class="btn-secondary" onclick="window.location.href = '/'">← Dashboard</button>
     </div>
   </div>
 
@@ -764,7 +764,7 @@ function authHeaders() {
 function signOut() {
   localStorage.removeItem('ol_token');
   sessionStorage.removeItem('ol_token');
-  window.location.href = '/register.html';
+  window.location.href = '/register';
 }
 
 async function signOutAll() {
@@ -785,7 +785,7 @@ async function signOutAll() {
 // ── LOAD PROFILE ──────────────────────────────────────────────────────────────
 async function loadProfile() {
   const token = getToken();
-  if (!token) { window.location.href = '/register.html'; return; }
+  if (!token) { window.location.href = '/register'; return; }
 
   try {
     const res = await fetch(API + '/api/user/profile', { headers: authHeaders() });

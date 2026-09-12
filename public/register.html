@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="prefetch" href="index.html" as="document">
+<link rel="prefetch" href="/" as="document">
 <style>
 :root{
   --or:#f97316;--or2:#ea580c;--or3:#fb923c;
@@ -393,7 +393,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
 <div class="shell">
 
   <div class="left" aria-hidden="true">
-    <a href="index.html" class="brand"><div class="brand-mark">OL</div><span class="brand-name">Option<b>Lab</b></span></a>
+    <a href="/" class="brand"><div class="brand-mark">OL</div><span class="brand-name">Option<b>Lab</b></span></a>
     <div class="left-headline">Trade with<br><em>Institutional</em><br>Intelligence</div>
     <div class="left-sub">India's most advanced NSE options platform — real-time Greeks, Smart Money signals, live OI analytics, and FII footprint detection.</div>
     <div class="feats">
@@ -450,7 +450,7 @@ input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;}
         </div>
         <div class="mp-hint">Tap the first box and type your MPIN</div>
         <div class="mp-hint" style="margin-top:10px;text-align:right;">
-          <a href="/forgot-mpin.html" style="color:var(--or);text-decoration:none;font-weight:700;">Forgot MPIN?</a>
+          <a href="/forgot-mpin" style="color:var(--or);text-decoration:none;font-weight:700;">Forgot MPIN?</a>
         </div>
       </div>
       <div class="spacer"></div>
@@ -810,7 +810,7 @@ async function doLogin(){
     saveSession(data.token,data.user);
     document.getElementById('loginForm').style.display='none';
     document.getElementById('loginOk').classList.add('show');
-    startRedirect('loginFill','loginCd',1800,'/app.html');
+    startRedirect('loginFill','loginCd',1800,'/app');
   }catch(e){
     let msg=e.message||'Connection failed';
     if(msg==='Failed to fetch'||msg.includes('fetch'))msg='Cannot reach OptionsLab server. Check your internet and try again.';
@@ -851,7 +851,7 @@ async function sendMagicLink(){
   try{
     const res=await apiFetch(API+'/api/email/send-magic-link',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email,redirect_url:window.location.origin+'/verify.html'})});
+      body:JSON.stringify({email,redirect_url:window.location.origin+'/verify'})});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed to send magic link');
     _rd.email=email;
     const em=document.getElementById('rEmail');em.readOnly=true;em.classList.add('field-locked');
@@ -901,7 +901,7 @@ async function resendMagicLink(){
   hideErr('regErr');const btn=document.getElementById('resendMagicBtn');btn.disabled=true;
   try{
     const res=await apiFetch(API+'/api/email/send-magic-link',{method:'POST',
-      headers:{'Content-Type':'application/json'},body:JSON.stringify({email:_rd.email,redirect_url:window.location.origin+'/verify.html'})});
+      headers:{'Content-Type':'application/json'},body:JSON.stringify({email:_rd.email,redirect_url:window.location.origin+'/verify'})});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed to resend');
     startMagicResendTimer(60);
   }catch(e){showErr('regErr',e.message||'Failed to resend. Try again.');btn.disabled=false;}
@@ -1017,7 +1017,7 @@ async function doRegister(){
     if(msg)msg.textContent='Account created. Taking you to your dashboard\u2026';
     document.getElementById('regForm').style.display='none';
     document.getElementById('regOk').classList.add('show');
-    startRedirect('regFill','regCd',2500,'/app.html');
+    startRedirect('regFill','regCd',2500,'/app');
   }catch(e){
     let errMsg=e.message||'Connection failed';
     if(errMsg==='Failed to fetch'||errMsg.includes('fetch'))errMsg='Cannot reach server. Check your internet and try again.';

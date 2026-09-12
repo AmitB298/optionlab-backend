@@ -1,0 +1,15 @@
+class="strategy-lab">
+      <div class="strategy-builder">
+        <div class="sb-title">Strategy Builder</div>
+        <div style="font-family:var(--font-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:.4rem">Presets</div>
+        <div class="strategy-presets"><button class="preset-btn" onclick="loadPreset('straddle')">Straddle</button><button class="preset-btn" onclick="loadPreset('strangle')">Strangle</button><button class="preset-btn" onclick="loadPreset('ic')">Iron Condor</button><button class="preset-btn" onclick="loadPreset('bs')">Bull Spread</button><button class="preset-btn" onclick="loadPreset('rs')">Bear Spread</button><button class="preset-btn" onclick="loadPreset('bfly')">Butterfly</button></div>
+        <div style="font-family:var(--font-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:.35rem">Legs</div>
+        <div id="legRows"></div>
+        <button class="add-leg-btn" onclick="addLeg()">+ Add Leg</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin:.65rem 0 .5rem"><div><label style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);display:block;margin-bottom:.18rem">SPOT</label><input class="leg-input" id="slSpot" value="22500" type="number"></div><div><label style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);display:block;margin-bottom:.18rem">DTE</label><input class="leg-input" id="slDTE" value="5" type="number"></div><div><label style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);display:block;margin-bottom:.18rem">IV%</label><input class="leg-input" id="slIV" value="14.5" type="number" step="0.1"></div><div><label style="font-family:var(--font-m);font-size:.48rem;color:var(--text3);display:block;margin-bottom:.18rem">LOT</label><input class="leg-input" id="slLot" value="25" type="number"></div></div>
+        <button class="calc-btn" onclick="calcPayoff()">Calculate Payoff &rarr;</button>
+        <div class="payoff-stats"><div class="ps-item"><div class="ps-lbl">Max Profit</div><div class="ps-val pos" id="ps-mp">--</div></div><div class="ps-item"><div class="ps-lbl">Max Loss</div><div class="ps-val neg" id="ps-ml">--</div></div><div class="ps-item"><div class="ps-lbl">Breakeven 1</div><div class="ps-val neu" id="ps-be1">--</div></div><div class="ps-item"><div class="ps-lbl">Breakeven 2</div><div class="ps-val neu" id="ps-be2">--</div></div></div>
+      </div>
+      <div>
+        <div class="chart-card" style="margin-bottom:.8rem"><div class="chart-header"><span class="chart-title">Payoff Diagram</span><div class="chart-controls"><button class="chart-btn active" onclick="setPayoffMode(this,'expiry')">At Expiry</button><button class="chart-btn" onclick="setPayoffMode(this,'today')">Today</button></div></div><canvas id="payoffCanvas" style="height:260px;width:100%;display:block"></canvas></div>
+        <div class="greeks-canvas-grid"

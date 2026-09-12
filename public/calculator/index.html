@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free Options Calculators — Black-Scholes Greeks, Max Pain and P&L calculator for Nifty & BankNifty options.">
+<meta property="og:title" content="Options Calculators — OptionsLab">
+<meta property="og:description" content="Free Options Calculators — Black-Scholes Greeks, Max Pain and P&L calculator for Nifty & BankNifty options.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://optionslab.in/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://optionslab.in/og-image.png">
+<meta property="og:url" content="https://optionslab.in/calculator">
+<title>Calculator — OptionsLab</title>
+<link rel="stylesheet" href="../../style.css">
+<script src="/shared.js" defer></script>
+<style>
+.calc-tabs{display:flex;background:var(--bg3);border-radius:10px;padding:3px;gap:3px;margin-bottom:16px;}
+.ctab{flex:1;font-size:10px;font-weight:700;font-family:var(--mono);padding:8px;border-radius:8px;cursor:pointer;color:var(--t3);border:none;background:none;text-transform:uppercase;letter-spacing:0.5px;transition:all 0.15s;text-align:center;}
+.ctab.active{background:var(--bg4);color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,0.4);}
+.calc-panel{display:none;}
+.calc-panel.active{display:flex;flex-direction:column;gap:12px;}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.inp-group{display:flex;flex-direction:column;gap:5px;}
+.inp-label{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;}
+.inp{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--t1);font-family:var(--mono);font-size:14px;font-weight:600;outline:none;width:100%;transition:border-color 0.15s;}
+.inp:focus{border-color:var(--orange);}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.result-cell{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.result-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.result-val{font-family:var(--sans);font-size:22px;font-weight:800;line-height:1;}
+.result-sub{font-size:9px;color:var(--t2);margin-top:2px;}
+.oi-input-row{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;align-items:center;padding:4px 0;}
+.oi-strike-lbl{font-size:11px;font-weight:600;width:52px;text-align:right;}
+.oi-inp{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 8px;color:var(--t1);font-family:var(--mono);font-size:12px;outline:none;width:100%;text-align:center;}
+.oi-inp:focus{border-color:var(--orange);}
+.max-pain-display{background:linear-gradient(135deg,var(--orange-dim),rgba(249,115,22,0.03));border:1px solid rgba(249,115,22,0.3);border-radius:10px;padding:16px;text-align:center;}
+.mp-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.mp-val{font-family:var(--sans);font-size:36px;font-weight:800;color:var(--orange);}
+.mp-sub{font-size:11px;color:var(--t2);margin-top:4px;}
+.pnl-result{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.pnl-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(26,37,64,0.5);font-size:12px;}
+.pnl-row:last-child{border-bottom:none;}
+.pnl-lbl{color:var(--t2);}
+.pnl-big{font-family:var(--sans);font-size:24px;font-weight:800;}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"></noscript>
+<link rel="canonical" href="https://optionslab.in/calculator">
+</head>
+<body>
+<nav class="topnav">
+  <a href="/" class="nav-logo"><div class="logo-box">OL</div><div class="logo-wordmark">OPTIONS<span>LAB</span></div></a>
+  <div class="nav-actions"><div class="btn-icon" onclick="toggleDark()" title="Toggle dark/light mode" style="cursor:pointer">🌙</div><a href="/register" class="btn-signin">Sign In</a><a href="/pricing" class="btn-orange">Get Access</a></div>
+</nav>
+<div class="ticker-wrap"><div class="ticker-track">
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+</div></div>
+<div class="page-header">
+  <div class="page-pill">🧮 FREE CALCULATORS — NO LOGIN</div>
+  <div class="page-title">OPTION<br><span style="color:var(--orange)">CALCULATORS</span></div>
+  <div class="page-subtitle">Greeks, Max Pain &amp; P&amp;L — calculate instantly, no data needed</div>
+</div>
+<div class="content">
+  <div class="calc-tabs anim anim-1">
+    <button class="ctab active" onclick="switchCalc(this,'greeks')">Greeks</button>
+    <button class="ctab" onclick="switchCalc(this,'maxpain')">Max Pain</button>
+    <button class="ctab" onclick="switchCalc(this,'pnl')">P&amp;L</button>
+  </div>
+
+  <!-- GREEKS CALCULATOR -->
+  <div class="calc-panel active" id="cp-greeks">
+    <div class="input-row anim anim-2">
+      <div class="inp-group"><div class="inp-label">Spot Price</div><input type="number" class="inp" id="spot" value="22500" oninput="calcGreeks()"></div>
+      <div class="inp-group"><div class="inp-label">Strike Price</div><input type="number" class="inp" id="strike" value="22500" oninput="calcGreeks()"></div>
+      <div class="inp-group"><div class="inp-label">DTE (days)</div><input type="number" class="inp" id="dte" value="5" oninput="calcGreeks()"></div>
+      <div class="inp-group"><div class="inp-label">IV% (annual)</div><input type="number" class="inp" id="iv" value="14.5" step="0.1" oninput="calcGreeks()"></div>
+      <div class="inp-group"><div class="inp-label">Risk-Free Rate%</div><input type="number" class="inp" id="rf" value="6.5" step="0.1" oninput="calcGreeks()"></div>
+      <div class="inp-group">
+        <div class="inp-label">Option Type</div>
+        <select class="inp" id="optType" onchange="calcGreeks()">
+          <option value="call">CALL (CE)</option>
+          <option value="put">PUT (PE)</option>
+        </select>
+      </div>
+    </div>
+    <div class="result-grid anim anim-3">
+      <div class="result-cell"><div class="result-label">Option Price</div><div class="result-val orange" id="r-price">—</div><div class="result-sub">Fair Value</div></div>
+      <div class="result-cell"><div class="result-label">Δ Delta</div><div class="result-val" style="color:var(--blue)" id="r-delta">—</div><div class="result-sub">Directional</div></div>
+      <div class="result-cell"><div class="result-label">Γ Gamma ×1000</div><div class="result-val" style="color:var(--orange)" id="r-gamma">—</div><div class="result-sub">Acceleration</div></div>
+      <div class="result-cell"><div class="result-label">Θ Theta /day</div><div class="result-val" style="color:var(--red)" id="r-theta">—</div><div class="result-sub">Time decay</div></div>
+      <div class="result-cell"><div class="result-label">V Vega</div><div class="result-val" style="color:var(--green)" id="r-vega">—</div><div class="result-sub">IV sensitivity</div></div>
+      <div class="result-cell"><div class="result-label">Intrinsic</div><div class="result-val" id="r-intrinsic">—</div><div class="result-sub">Real value</div></div>
+    </div>
+    <div class="ai-box anim anim-4">
+      <div class="ai-box-label">📊 INTERPRETATION</div>
+      <p id="greeks-insight">Enter values above to see Greeks analysis.</p>
+    </div>
+  </div>
+
+  <!-- MAX PAIN CALCULATOR -->
+  <div class="calc-panel" id="cp-maxpain">
+    <div class="ai-box anim anim-2">
+      <div class="ai-box-label">ℹ️ HOW TO USE</div>
+      <p>Enter the Open Interest (in lots) for each strike. Max Pain is where total option writer losses are minimized — market tends to expire near this level.</p>
+    </div>
+    <div class="card anim anim-2" style="overflow:hidden">
+      <div class="card-header">
+        <div class="card-title">Enter OI Data</div>
+        <div style="display:flex;gap:16px">
+          <span style="font-size:10px;color:var(--red);font-weight:600">CE OI (lots)</span>
+          <span style="font-size:10px;color:var(--green);font-weight:600">PE OI (lots)</span>
+        </div>
+      </div>
+      <div style="padding:8px 14px;font-size:10px;color:var(--t3);background:var(--bg3);border-bottom:1px solid var(--border)">📝 Sample OI data shown below — replace with actual values from NSE option chain</div>
+      <div style="padding:12px;display:flex;flex-direction:column;gap:4px" id="mpInputs"></div>
+    </div>
+    <div class="max-pain-display anim anim-3">
+      <div class="mp-label">MAX PAIN STRIKE</div>
+      <div class="mp-val" id="mpResult">—</div>
+      <div class="mp-sub" id="mpSub">Enter OI data above to calculate</div>
+    </div>
+    <button class="cta-outline anim anim-3" onclick="calcMaxPain()">CALCULATE MAX PAIN →</button>
+  </div>
+
+  <!-- P&L CALCULATOR -->
+  <div class="calc-panel" id="cp-pnl">
+    <div class="input-row anim anim-2">
+      <div class="inp-group"><div class="inp-label">Buy Price (₹)</div><input type="number" class="inp" id="buyPrice" value="120" oninput="calcPnl()"></div>
+      <div class="inp-group"><div class="inp-label">Current Price (₹)</div><input type="number" class="inp" id="currPrice" value="185" oninput="calcPnl()"></div>
+      <div class="inp-group"><div class="inp-label">Lots</div><input type="number" class="inp" id="lots" value="1" oninput="calcPnl()"></div>
+      <div class="inp-group"><div class="inp-label">Lot Size</div><input type="number" class="inp" id="lotSize" value="50" oninput="calcPnl()"></div>
+    </div>
+    <div class="pnl-result anim anim-3">
+      <div class="pnl-row"><span class="pnl-lbl">Buy Value</span><span id="buyVal">—</span></div>
+      <div class="pnl-row"><span class="pnl-lbl">Current Value</span><span id="currVal">—</span></div>
+      <div class="pnl-row"><span class="pnl-lbl">P&amp;L per Lot</span><span id="pnlLot">—</span></div>
+      <div class="pnl-row" style="border-bottom:none;margin-top:4px">
+        <span class="pnl-lbl" style="font-weight:700">Total P&amp;L</span>
+        <span class="pnl-big" id="pnlTotal">—</span>
+      </div>
+      <div class="pnl-row" style="border-bottom:none">
+        <span class="pnl-lbl">Return %</span>
+        <span id="pnlPct" style="font-weight:700;font-size:16px">—</span>
+      </div>
+    </div>
+    <div class="ai-box anim anim-4">
+      <div class="ai-box-label">💡 TIP</div>
+      <p>This calculator uses lot size × lots × (sell - buy) for total P&amp;L. For accurate brokerage, use our brokerage calculator or your broker's margin calculator.</p>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bnav-row">
+    <a href="/"            class="bnav-btn"><div class="bnav-icon">🏠</div><span>HOME</span></a>
+    <a href="/terminal"    class="bnav-btn"><div class="bnav-icon">📊</div><span>TERMINAL</span></a>
+    <a href="/smart-money" class="bnav-btn"><div class="bnav-icon">🧠</div><span>SMART</span></a>
+    <a href="/academy"     class="bnav-btn"><div class="bnav-icon">🎓</div><span>ACADEMY</span></a>
+    <a href="/app"   class="bnav-btn"><div class="bnav-icon">👤</div><span>PROFILE</span></a>
+  </div>
+</nav>
+<script>
+function switchCalc(el,id){
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.calc-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cp-'+id).classList.add('active');
+}
+
+// ── BLACK-SCHOLES ──
+function normCDF(x){const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;const sign=x<0?-1:1;x=Math.abs(x)/Math.sqrt(2);const t=1/(1+p*x);const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);return 0.5*(1+sign*y);}
+function normPDF(x){return Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);}
+
+function calcGreeks(){
+  const S=+document.getElementById('spot').value;
+  const K=+document.getElementById('strike').value;
+  const T=(+document.getElementById('dte').value)/365;
+  const iv=+document.getElementById('iv').value/100;
+  const r=+document.getElementById('rf').value/100;
+  const type=document.getElementById('optType').value;
+  if(!S||!K||!T||!iv)return;
+  const d1=(Math.log(S/K)+(r+0.5*iv*iv)*T)/(iv*Math.sqrt(T));
+  const d2=d1-iv*Math.sqrt(T);
+  let price,delta;
+  if(type==='call'){price=S*normCDF(d1)-K*Math.exp(-r*T)*normCDF(d2);delta=normCDF(d1);}
+  else{price=K*Math.exp(-r*T)*normCDF(-d2)-S*normCDF(-d1);delta=normCDF(d1)-1;}
+  const gamma=normPDF(d1)/(S*iv*Math.sqrt(T));
+  const theta=(-S*normPDF(d1)*iv/(2*Math.sqrt(T))-r*K*Math.exp(-r*T)*(type==='call'?normCDF(d2):normCDF(-d2)))/365;
+  const vega=S*normPDF(d1)*Math.sqrt(T)/100;
+  const intrinsic=Math.max(0,type==='call'?S-K:K-S);
+  document.getElementById('r-price').textContent='₹'+price.toFixed(2);
+  document.getElementById('r-delta').textContent=delta.toFixed(4);
+  document.getElementById('r-gamma').textContent=(gamma*1000).toFixed(4);
+  document.getElementById('r-theta').textContent=theta.toFixed(2);
+  document.getElementById('r-vega').textContent=vega.toFixed(2);
+  document.getElementById('r-intrinsic').textContent='₹'+intrinsic.toFixed(2);
+  const insight=`${type.toUpperCase()} option theoretical price: ₹${price.toFixed(2)} | Delta: ${delta.toFixed(3)} (option price sensitivity to ₹1 spot change) | Theta: ₹${Math.abs(theta).toFixed(2)}/day (time value decay rate). Educational data only — not advice.`;
+  document.getElementById('greeks-insight').textContent=insight;
+}
+
+// ── MAX PAIN ──
+const strikes=[21800,22000,22200,22400,22500,22600,22700,22800,23000,23200];
+// Fixed realistic OI values — no random (random changes on every render = confusing)
+const defaultOI = {
+  21800:{ce:8200, pe:42100}, 22000:{ce:14800,pe:38600},
+  22200:{ce:22400,pe:31200}, 22400:{ce:38600,pe:48800},
+  22500:{ce:48800,pe:42200}, 22600:{ce:31200,pe:28600},
+  22700:{ce:24100,pe:18400}, 22800:{ce:18600,pe:12800},
+  23000:{ce:12400,pe:8200},  23200:{ce:6800, pe:5100},
+};
+function buildMpInputs(){
+  const c=document.getElementById('mpInputs');
+  c.innerHTML=strikes.map((s,i)=>`
+    <div class="oi-input-row">
+      <div class="oi-strike-lbl" style="color:${i<5?'var(--green)':'var(--red)'}">${s}</div>
+      <input type="number" class="oi-inp" id="ce${s}" placeholder="CE OI" style="color:var(--red)" value="${defaultOI[s].ce}">
+      <input type="number" class="oi-inp" id="pe${s}" placeholder="PE OI" style="color:var(--green)" value="${defaultOI[s].pe}">
+    </div>`).join('');
+}
+function calcMaxPain(){
+  let minLoss=Infinity,maxPainStrike=0;
+  strikes.forEach(target=>{
+    let totalLoss=0;
+    strikes.forEach(s=>{
+      const ce=+document.getElementById('ce'+s).value||0;
+      const pe=+document.getElementById('pe'+s).value||0;
+      if(target>s)totalLoss+=ce*(target-s);
+      if(target<s)totalLoss+=pe*(s-target);
+    });
+    if(totalLoss<minLoss){minLoss=totalLoss;maxPainStrike=target;}
+  });
+  document.getElementById('mpResult').textContent=maxPainStrike.toLocaleString('en-IN');
+  document.getElementById('mpSub').textContent=`Option writers lose minimum at this level — market tends to expire near ₹${maxPainStrike.toLocaleString('en-IN')}`;
+}
+buildMpInputs();
+calcMaxPain();
+
+// ── P&L ──
+function calcPnl(){
+  const buy=+document.getElementById('buyPrice').value;
+  const curr=+document.getElementById('currPrice').value;
+  const lots=+document.getElementById('lots').value;
+  const ls=+document.getElementById('lotSize').value;
+  if(!buy||!curr||!lots||!ls)return;
+  const pnl=(curr-buy)*lots*ls;
+  const pct=((curr-buy)/buy*100);
+  const col=pnl>=0?'var(--green)':'var(--red)';
+  document.getElementById('buyVal').textContent='₹'+(buy*lots*ls).toLocaleString('en-IN');
+  document.getElementById('currVal').textContent='₹'+(curr*lots*ls).toLocaleString('en-IN');
+  document.getElementById('pnlLot').innerHTML=`<span style="color:${col}">${pnl>=0?'+':''}₹${((curr-buy)*ls).toFixed(0)}</span>`;
+  document.getElementById('pnlTotal').innerHTML=`<span style="color:${col}">${pnl>=0?'+':''}₹${pnl.toFixed(0)}</span>`;
+  document.getElementById('pnlPct').innerHTML=`<span style="color:${col}">${pct>=0?'+':''}${pct.toFixed(2)}%</span>`;
+}
+
+// Initialize
+calcGreeks();
+calcPnl();
+</script>
+</body>
+</html>

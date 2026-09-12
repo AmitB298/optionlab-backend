@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free F&O Academy — 19 chapters covering options basics, Greeks, market structure, strategies and expiry playbooks. Free forever.">
+<meta property="og:title" content="Free F&O Academy — OptionsLab">
+<meta property="og:description" content="Free F&O Academy — 19 chapters covering options basics, Greeks, market structure, strategies and expiry playbooks. Free forever.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://optionslab.in/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://optionslab.in/og-image.png">
+<meta property="og:url" content="https://optionslab.in/academy">
+<title>Free Academy — OptionsLab</title>
+<link rel="stylesheet" href="../../style.css">
+<script src="/shared.js" defer></script>
+<style>
+.chapter-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:border-color 0.15s;text-decoration:none;}
+.chapter-card:hover{border-color:var(--border2);}
+.ch-num{font-family:var(--sans);font-size:22px;font-weight:800;color:var(--t3);width:36px;flex-shrink:0;line-height:1;}
+.ch-num.done{color:var(--green);}
+.ch-body{flex:1;}
+.ch-title{font-family:var(--sans);font-size:14px;font-weight:700;margin-bottom:3px;}
+.ch-desc{font-size:11px;color:var(--t2);line-height:1.4;}
+.ch-meta{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.ch-lang{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--bg3);}
+.ch-lang.hi{color:var(--orange);}
+.ch-lang.en{color:var(--blue);}
+.ch-time{font-size:9px;color:var(--t3);}
+.ch-arrow{color:var(--orange);font-size:16px;flex-shrink:0;align-self:center;}
+.progress-bar{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin:8px 0;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:99px;}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"></noscript>
+<link rel="canonical" href="https://optionslab.in/academy">
+</head>
+<body>
+<nav class="topnav">
+  <a href="/" class="nav-logo"><div class="logo-box">OL</div><div class="logo-wordmark">OPTIONS<span>LAB</span></div></a>
+  <div class="nav-actions"><div class="btn-icon" onclick="toggleDark()" title="Toggle dark/light mode" style="cursor:pointer">🌙</div><a href="/register" class="btn-signin">Sign In</a><a href="/pricing" class="btn-orange">Get Access</a></div>
+</nav>
+<div class="ticker-wrap"><div class="ticker-track">
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+  <span class="ticker-item"><span class="ticker-name">INDIA VIX</span><span class="ticker-val">14.23</span><span class="dn">-2.1%</span></span>
+  <span class="ticker-item"><span class="ticker-name">NIFTY 50</span><span class="ticker-val">22,513.7</span><span class="up">+0.63%</span></span>
+  <span class="ticker-item"><span class="ticker-name">BANKNIFTY</span><span class="ticker-val">48,240.15</span><span class="up">+0.65%</span></span>
+</div></div>
+<div class="page-header">
+  <div class="page-pill">🎓 FREE FOREVER — ALL 19 CHAPTERS</div>
+  <div class="page-title"><span style="color:var(--orange)">FREE</span> ACADEMY</div>
+  <div class="page-subtitle">From options basics to expiry week playbooks — in English &amp; Hindi. No signup required.</div>
+</div>
+<div class="content">
+  <div class="card anim anim-1" style="padding:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <span style="font-size:11px;font-weight:600">Your Progress</span>
+      <span style="font-size:11px;color:var(--orange);font-weight:700">0 / 19</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+    <div style="font-size:10px;color:var(--t3)">Sign in to track progress across devices</div>
+  </div>
+
+  <div class="sec-label anim anim-2"><div class="sec-label-text">Module 1 — Foundations</div></div>
+  <div style="display:flex;flex-direction:column;gap:8px" class="anim anim-2">
+    <a href="/academy/chapter/01" class="chapter-card"><div class="ch-num">01</div><div class="ch-body"><div class="ch-title">What are Options? CE &amp; PE Explained</div><div class="ch-desc">Basics of call and put options, how they work, and why traders use them</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 8 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">02</div><div class="ch-body"><div class="ch-title">Strike Price, Expiry &amp; Lot Size</div><div class="ch-desc">Understanding ITM, ATM, OTM — and why it matters for your P&amp;L</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 10 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">03</div><div class="ch-body"><div class="ch-title">Option Pricing — Intrinsic &amp; Time Value</div><div class="ch-desc">Why does an option cost what it costs? Break down the components</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 12 min</span></div></div><div class="ch-arrow">›</div></a>
+  </div>
+
+  <div class="sec-label anim anim-3"><div class="sec-label-text">Module 2 — Greeks</div></div>
+  <div style="display:flex;flex-direction:column;gap:8px" class="anim anim-3">
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">04</div><div class="ch-body"><div class="ch-title">Delta — The Directional Greek</div><div class="ch-desc">How Delta works, hedging with Delta, and what 0.5 Delta means for you</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 10 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">05</div><div class="ch-body"><div class="ch-title">Theta — Time is Your Enemy</div><div class="ch-desc">How time decay destroys option buyers, and why sellers love Friday</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 9 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">06</div><div class="ch-body"><div class="ch-title">Vega &amp; Implied Volatility</div><div class="ch-desc">How IV changes post-event — understanding the IV environment as a data point</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 11 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">07</div><div class="ch-body"><div class="ch-title">Gamma — The Accelerator</div><div class="ch-desc">Why Gamma increases near expiry and how market makers manage it — educational mechanics</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 10 min</span></div></div><div class="ch-arrow">›</div></a>
+  </div>
+
+  <div class="sec-label anim anim-4"><div class="sec-label-text">Module 3 — Market Structure</div></div>
+  <div style="display:flex;flex-direction:column;gap:8px" class="anim anim-4">
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">08</div><div class="ch-body"><div class="ch-title">Open Interest — The Smart Money Signal</div><div class="ch-desc">How to read OI buildup, OI unwinding, and what it means for direction</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 14 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">09</div><div class="ch-body"><div class="ch-title">Max Pain Theory</div><div class="ch-desc">How option writers pin prices at expiry and how to use Max Pain in your trading</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 12 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">10</div><div class="ch-body"><div class="ch-title">PCR — Put-Call Ratio Explained</div><div class="ch-desc">Reading PCR correctly, extreme readings, and contrarian signals</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 8 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">11</div><div class="ch-body"><div class="ch-title">FII vs Retail — Who Wins?</div><div class="ch-desc">How to read institutional flow data — understanding participant positioning</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 15 min</span></div></div><div class="ch-arrow">›</div></a>
+  </div>
+
+  <div class="sec-label anim anim-5"><div class="sec-label-text">Module 4 — Strategies</div></div>
+  <div style="display:flex;flex-direction:column;gap:8px" class="anim anim-5">
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">12</div><div class="ch-body"><div class="ch-title">Straddle &amp; Strangle</div><div class="ch-desc">When and how to use volatility strategies — buying and selling</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 13 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">13</div><div class="ch-body"><div class="ch-title">Iron Condor &amp; Iron Butterfly</div><div class="ch-desc">Range-bound strategies for expiry week — setup, management, exit</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 16 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">14</div><div class="ch-body"><div class="ch-title">Bull &amp; Bear Spreads</div><div class="ch-desc">Directional strategies with defined risk — the smart way to trade trends</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 11 min</span></div></div><div class="ch-arrow">›</div></a>
+  </div>
+
+  <div class="sec-label anim anim-6"><div class="sec-label-text">Module 5 — Expiry Week Playbooks</div></div>
+  <div style="display:flex;flex-direction:column;gap:8px" class="anim anim-6">
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">15</div><div class="ch-body"><div class="ch-title">Kill Zones — 4 Windows That Matter</div><div class="ch-desc">Open Drive, Continuation, Midday Reversal, Power Hour — understanding intraday volatility patterns</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 14 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">16</div><div class="ch-body"><div class="ch-title">Expiry Day Playbook</div><div class="ch-desc">Pinning, gamma mechanics, max pain gravity — understanding expiry day market structure</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 18 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">17</div><div class="ch-body"><div class="ch-title">Risk Management for F&amp;O Traders</div><div class="ch-desc">Position sizing concepts, risk management frameworks, and understanding the statistics of retail F&O participation</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 12 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">18</div><div class="ch-body"><div class="ch-title">Building a Trading System</div><div class="ch-desc">Trade journaling, review frameworks, and how to measure consistency in your process</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 15 min</span></div></div><div class="ch-arrow">›</div></a>
+    <a href="#" onclick="return false" class="chapter-card"><div class="ch-num">19</div><div class="ch-body"><div class="ch-title">Using OptionsLab — Full Platform Guide</div><div class="ch-desc">How to use every feature of OptionsLab — data tools, calculators, flow analytics and dashboard</div><div class="ch-meta"><span class="ch-lang en">EN</span><span class="ch-lang hi">HI</span><span class="ch-time">⏱ 20 min</span></div></div><div class="ch-arrow">›</div></a>
+  </div>
+
+  <a href="/register" class="cta-primary anim anim-7">SIGN IN TO TRACK PROGRESS →</a>
+</div>
+<nav class="bottom-nav">
+  <div class="bnav-row">
+    <a href="/"            class="bnav-btn"><div class="bnav-icon">🏠</div><span>HOME</span></a>
+    <a href="/terminal"    class="bnav-btn"><div class="bnav-icon">📊</div><span>TERMINAL</span></a>
+    <a href="/smart-money" class="bnav-btn"><div class="bnav-icon">🧠</div><span>SMART</span></a>
+    <a href="/academy"     class="bnav-btn active"><div class="bnav-icon">🎓</div><span>ACADEMY</span></a>
+    <a href="/app"   class="bnav-btn"><div class="bnav-icon">👤</div><span>PROFILE</span></a>
+  </div>
+</nav>
+</body>
+</html>
