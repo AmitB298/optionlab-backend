@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Forgot MPIN | OptionsLab</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f97316">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#f97316;--or2:#ea580c;--or3:#fb923c;
+  --og:rgba(249,115,22,.18);--og2:rgba(249,115,22,.08);--og3:rgba(249,115,22,.04);
+  --bg:#06080d;--bd:rgba(255,255,255,.07);--bdo:rgba(249,115,22,.5);--bds:rgba(249,115,22,.2);
+  --tx:#e8eef8;--tx2:#7b8fa8;--gn:#10b981;--rd:#ef4444;
+  --r:10px;--r2:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);
+  min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow-x:hidden;position:relative;}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(249,115,22,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.018) 1px,transparent 1px);
+  background-size:60px 60px;}
+.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(100px);}
+.o1{width:500px;height:500px;top:-15%;left:-10%;background:radial-gradient(circle,rgba(249,115,22,.07),transparent 65%);}
+.o2{width:400px;height:400px;bottom:-15%;right:-10%;background:radial-gradient(circle,rgba(6,182,212,.04),transparent 65%);}
+
+.card{position:relative;z-index:1;width:100%;max-width:420px;background:#0a0e17;
+  border:1px solid var(--bd);border-radius:20px;padding:clamp(24px,5vw,40px);
+  box-shadow:0 0 0 1px rgba(249,115,22,.04),0 50px 130px rgba(0,0,0,.8);}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;text-decoration:none;}
+.brand-mark{width:36px;height:36px;background:linear-gradient(135deg,#f97316,#c2410c);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;
+  font-weight:800;font-size:13px;color:#fff;box-shadow:0 0 20px rgba(249,115,22,.4);flex-shrink:0;}
+.brand-name{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#e8eef8;}
+.brand-name b{color:var(--or);}
+
+.form-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:8px;
+  display:flex;align-items:center;gap:7px;}
+.form-eyebrow::before{content:'';display:block;width:20px;height:2px;background:linear-gradient(90deg,var(--or),var(--or3));border-radius:1px;}
+.form-title{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.03em;line-height:1.1;
+  background:linear-gradient(135deg,#ffffff 0%,#c8d5e8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+.form-sub{font-size:13px;color:#586880;line-height:1.6;margin-bottom:24px;}
+
+.ig{margin-bottom:18px;}
+.il{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
+input[type=email]{width:100%;padding:14px 15px;background:#050811;border:1.5px solid rgba(255,255,255,.1);
+  border-radius:14px;color:#f0f5ff;font-size:16px;font-family:'Outfit',sans-serif;outline:none;
+  transition:border-color .2s,box-shadow .2s;min-height:48px;}
+input::placeholder{color:rgba(255,255,255,.18);}
+input:focus{border-color:var(--or);box-shadow:0 0 0 3px rgba(249,115,22,.12);background:#070c15;}
+
+.btn-main{width:100%;padding:15px;background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
+  border:none;border-radius:14px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;
+  cursor:pointer;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;min-height:48px;}
+.btn-main:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(249,115,22,.45);}
+.btn-main:disabled{opacity:.55;cursor:not-allowed;}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.msg{padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:18px;display:none;
+  align-items:flex-start;gap:8px;line-height:1.5;}
+.msg.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;}
+.msg.err.show{display:flex;}
+
+.success-screen{display:none;flex-direction:column;align-items:center;text-align:center;}
+.success-screen.show{display:flex;}
+.success-ring{width:70px;height:70px;border-radius:50%;background:rgba(16,185,129,.1);
+  border:2px solid rgba(16,185,129,.35);color:var(--gn);font-size:30px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.success-title{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:10px;color:#e8eef8;}
+.success-sub{font-size:13px;color:#586880;max-width:280px;line-height:1.65;}
+.success-sub strong{color:var(--or);}
+
+.ffoot{font-size:13px;color:#485968;text-align:center;margin-top:20px;}
+.flink{color:var(--or);text-decoration:none;font-weight:700;}
+.flink:hover{opacity:.8;}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+
+<div class="card">
+  <a class="brand" href="/register.html">
+    <div class="brand-mark">OL</div>
+    <div class="brand-name">Option<b>Lab</b></div>
+  </a>
+
+  <div id="requestForm">
+    <div class="form-eyebrow">Account Recovery</div>
+    <div class="form-title">Forgot your MPIN?</div>
+    <div class="form-sub">Enter the email you registered with. We'll send you a secure link to reset your MPIN.</div>
+
+    <div class="msg err" id="fErr" role="alert"></div>
+
+    <div class="ig">
+      <label class="il" for="fEmail">Registered Email</label>
+      <input type="email" id="fEmail" placeholder="you@example.com" autocomplete="email">
+    </div>
+
+    <button class="btn-main" onclick="submitForgot()" id="fBtn">Send Reset Link</button>
+    <div class="ffoot">Remembered it? <a class="flink" href="/register.html">Back to login</a></div>
+  </div>
+
+  <div class="success-screen" id="fOk">
+    <div class="success-ring">&#9993;</div>
+    <div class="success-title">Check your inbox</div>
+    <div class="success-sub">If an account exists for <strong id="fEmailEcho"></strong>, a reset link has been sent. It expires in 15 minutes.</div>
+    <div class="ffoot">Didn't get it? Check spam, or <span class="flink" style="cursor:pointer" onclick="resetForm()">try again</span></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+function showErr(msg){
+  const el = document.getElementById('fErr');
+  el.innerHTML = '&#9888; ' + msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 6000);
+}
+function hideErr(){ document.getElementById('fErr').classList.remove('show'); }
+
+async function submitForgot(){
+  hideErr();
+  const emailInput = document.getElementById('fEmail');
+  const email = emailInput.value.trim();
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    return showErr('Enter a valid email address');
+  }
+  const btn = document.getElementById('fBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Sending&hellip;';
+  try{
+    const res = await fetch(API + '/api/auth/forgot-mpin', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Something went wrong. Try again later.');
+    document.getElementById('fEmailEcho').textContent = email;
+    document.getElementById('requestForm').style.display = 'none';
+    document.getElementById('fOk').classList.add('show');
+  }catch(e){
+    let msg = e.message || 'Connection failed';
+    if(msg === 'Failed to fetch') msg = 'Cannot reach OptionsLab server. Check your internet and try again.';
+    showErr(msg);
+    btn.disabled = false;
+    btn.innerHTML = 'Send Reset Link';
+  }
+}
+function resetForm(){
+  document.getElementById('fOk').classList.remove('show');
+  document.getElementById('requestForm').style.display = 'block';
+  document.getElementById('fBtn').disabled = false;
+  document.getElementById('fBtn').innerHTML = 'Send Reset Link';
+}
+document.getElementById('fEmail').addEventListener('keydown', e => { if(e.key === 'Enter') submitForgot(); });
+</script>
+</body>
+</html>
