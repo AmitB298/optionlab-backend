@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Reset MPIN | OptionsLab</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f97316">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#f97316;--or2:#ea580c;--or3:#fb923c;
+  --og:rgba(249,115,22,.18);--og2:rgba(249,115,22,.08);--og3:rgba(249,115,22,.04);
+  --bg:#06080d;--bd:rgba(255,255,255,.07);--bdo:rgba(249,115,22,.5);--bds:rgba(249,115,22,.2);
+  --tx:#e8eef8;--tx2:#7b8fa8;--gn:#10b981;--rd:#ef4444;
+  --r:10px;--r2:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);
+  min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow-x:hidden;position:relative;}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(249,115,22,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.018) 1px,transparent 1px);
+  background-size:60px 60px;}
+.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(100px);}
+.o1{width:500px;height:500px;top:-15%;left:-10%;background:radial-gradient(circle,rgba(249,115,22,.07),transparent 65%);}
+.o2{width:400px;height:400px;bottom:-15%;right:-10%;background:radial-gradient(circle,rgba(6,182,212,.04),transparent 65%);}
+
+.card{position:relative;z-index:1;width:100%;max-width:420px;background:#0a0e17;
+  border:1px solid var(--bd);border-radius:20px;padding:clamp(24px,5vw,40px);
+  box-shadow:0 0 0 1px rgba(249,115,22,.04),0 50px 130px rgba(0,0,0,.8);}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;text-decoration:none;}
+.brand-mark{width:36px;height:36px;background:linear-gradient(135deg,#f97316,#c2410c);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;
+  font-weight:800;font-size:13px;color:#fff;box-shadow:0 0 20px rgba(249,115,22,.4);flex-shrink:0;}
+.brand-name{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#e8eef8;}
+.brand-name b{color:var(--or);}
+
+.form-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:8px;
+  display:flex;align-items:center;gap:7px;}
+.form-eyebrow::before{content:'';display:block;width:20px;height:2px;background:linear-gradient(90deg,var(--or),var(--or3));border-radius:1px;}
+.form-title{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.03em;line-height:1.1;
+  background:linear-gradient(135deg,#ffffff 0%,#c8d5e8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+.form-sub{font-size:13px;color:#586880;line-height:1.6;margin-bottom:24px;}
+
+.ig{margin-bottom:18px;}
+.il{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
+
+.mprow{display:flex;gap:8px;justify-content:center;margin:4px 0;}
+.mpb{flex:1 1 0;min-width:0;max-width:44px;height:52px;background:#050811;
+  border:1.5px solid rgba(255,255,255,.1);border-radius:11px;text-align:center;
+  font-size:20px;font-weight:700;color:#f0f5ff;outline:none;font-family:'JetBrains Mono',monospace;
+  transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
+.mpb:focus{border-color:var(--or);box-shadow:0 0 0 3px rgba(249,115,22,.12);background:#070c15;}
+.mpb.fl{border-color:rgba(249,115,22,.6);color:var(--or);}
+.mp-hint{font-size:11px;color:#4e6278;text-align:center;margin-top:7px;font-family:'JetBrains Mono',monospace;}
+
+.btn-main{width:100%;padding:15px;background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;
+  border:none;border-radius:14px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;
+  cursor:pointer;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;
+  margin-top:10px;min-height:48px;}
+.btn-main:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(249,115,22,.45);}
+.btn-main:disabled{opacity:.55;cursor:not-allowed;}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.msg{padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:18px;display:none;
+  align-items:flex-start;gap:8px;line-height:1.5;}
+.msg.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;}
+.msg.err.show{display:flex;}
+
+.success-screen{display:none;flex-direction:column;align-items:center;text-align:center;}
+.success-screen.show{display:flex;}
+.success-ring{width:70px;height:70px;border-radius:50%;background:rgba(16,185,129,.1);
+  border:2px solid rgba(16,185,129,.35);color:var(--gn);font-size:30px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.success-title{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:10px;color:#e8eef8;}
+.success-sub{font-size:13px;color:#586880;max-width:280px;line-height:1.65;}
+
+.invalid-screen{display:none;flex-direction:column;align-items:center;text-align:center;}
+.invalid-screen.show{display:flex;}
+.invalid-ring{width:70px;height:70px;border-radius:50%;background:rgba(239,68,68,.1);
+  border:2px solid rgba(239,68,68,.35);color:var(--rd);font-size:30px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+
+.ffoot{font-size:13px;color:#485968;text-align:center;margin-top:20px;}
+.flink{color:var(--or);text-decoration:none;font-weight:700;}
+.flink:hover{opacity:.8;}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+
+<div class="card">
+  <a class="brand" href="/register.html">
+    <div class="brand-mark">OL</div>
+    <div class="brand-name">Option<b>Lab</b></div>
+  </a>
+
+  <div id="resetFormWrap">
+    <div class="form-eyebrow">Account Recovery</div>
+    <div class="form-title">Set a new MPIN</div>
+    <div class="form-sub">Choose a fresh 4&ndash;8 digit MPIN for your account.</div>
+
+    <div class="msg err" id="rErr" role="alert"></div>
+
+    <div class="ig">
+      <label class="il">New MPIN</label>
+      <div class="mprow" id="newMpinRow">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+      </div>
+      <div class="mp-hint">4 to 8 digits</div>
+    </div>
+
+    <div class="ig">
+      <label class="il">Confirm MPIN</label>
+      <div class="mprow" id="confMpinRow">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+        <input class="mpb" maxlength="1" inputmode="numeric" type="password">
+      </div>
+    </div>
+
+    <button class="btn-main" onclick="submitReset()" id="rBtn">Reset MPIN</button>
+  </div>
+
+  <div class="success-screen" id="rOk">
+    <div class="success-ring">&#10003;</div>
+    <div class="success-title">MPIN reset!</div>
+    <div class="success-sub">You can now log in with your new MPIN.</div>
+    <a class="btn-main" style="display:block;text-align:center;text-decoration:none;margin-top:20px" href="/register.html">Go to Login</a>
+  </div>
+
+  <div class="invalid-screen" id="rInvalid">
+    <div class="invalid-ring">&#9888;</div>
+    <div class="success-title">Link expired or invalid</div>
+    <div class="success-sub">This reset link is no longer valid. Request a new one to continue.</div>
+    <a class="btn-main" style="display:block;text-align:center;text-decoration:none;margin-top:20px" href="/forgot-mpin.html">Request New Link</a>
+  </div>
+</div>
+
+<script>
+const API = '';
+const params = new URLSearchParams(window.location.search);
+const token = (params.get('token') || '').trim();
+
+if(!token){
+  document.getElementById('resetFormWrap').style.display = 'none';
+  document.getElementById('rInvalid').classList.add('show');
+}
+
+function wireBoxes(id){
+  const boxes = Array.from(document.querySelectorAll('#'+id+' .mpb'));
+  boxes.forEach((box,i)=>{
+    box.addEventListener('input', e=>{
+      const v = e.target.value.replace(/\D/g,'');
+      e.target.value = v ? v[v.length-1] : '';
+      e.target.classList.toggle('fl', !!e.target.value);
+      if(e.target.value && i < boxes.length-1) boxes[i+1].focus();
+    });
+    box.addEventListener('keydown', e=>{
+      if(e.key === 'Backspace' && !box.value && i > 0) boxes[i-1].focus();
+    });
+    box.addEventListener('paste', e=>{
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      boxes.forEach((b,j)=>{ b.value = text[j] || ''; b.classList.toggle('fl', !!b.value); });
+      const last = Math.min(text.length, boxes.length) - 1;
+      if(last >= 0) boxes[last].focus();
+    });
+  });
+}
+wireBoxes('newMpinRow');
+wireBoxes('confMpinRow');
+function getBoxVal(id){ return Array.from(document.querySelectorAll('#'+id+' .mpb')).map(b=>b.value).join(''); }
+
+function showErr(msg){
+  const el = document.getElementById('rErr');
+  el.innerHTML = '&#9888; ' + msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 6000);
+}
+function hideErr(){ document.getElementById('rErr').classList.remove('show'); }
+
+async function submitReset(){
+  hideErr();
+  const mpin = getBoxVal('newMpinRow');
+  const confirm = getBoxVal('confMpinRow');
+  if(mpin.length < 4) return showErr('Enter a 4-8 digit MPIN');
+  if(mpin !== confirm) return showErr('MPINs do not match — please re-enter');
+
+  const btn = document.getElementById('rBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Resetting&hellip;';
+  try{
+    const res = await fetch(API + '/api/auth/reset-mpin', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token, mpin })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Something went wrong. Try again later.');
+    document.getElementById('resetFormWrap').style.display = 'none';
+    document.getElementById('rOk').classList.add('show');
+  }catch(e){
+    let msg = e.message || 'Connection failed';
+    if(msg === 'Failed to fetch') msg = 'Cannot reach OptionsLab server. Check your internet and try again.';
+    showErr(msg);
+    btn.disabled = false;
+    btn.innerHTML = 'Reset MPIN';
+  }
+}
+</script>
+</body>
+</html>
