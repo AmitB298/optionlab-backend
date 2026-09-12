@@ -355,7 +355,7 @@ router.get('/verify', async (req, res) => {
 
     // DB se latest plan aur status fetch karo
     const { rows } = await pool.query(
-      ``SELECT id, name, mobile, email, plan, is_active, plan_expires_at, is_admin
+      `SELECT id, name, mobile, email, plan, is_active, plan_expires_at, is_admin
        FROM users WHERE id = $1`,
       [decoded.id]
     );
